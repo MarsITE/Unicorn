@@ -6,8 +6,8 @@ com/academy/workSearch/dao/UserDAOImpl.java
  com.academy.workSearch.dao.UserDAOImpl
 com/academy/workSearch/exceptionHandling/UserIncorrectData.java
  com.academy.workSearch.exceptionHandling.UserIncorrectData
-com/academy/workSearch/controller/UserController.java
- com.academy.workSearch.controller.UserController
+com/academy/workSearch/exceptionHandling/UserGlobalExceptionHandler.java
+ com.academy.workSearch.exceptionHandling.UserGlobalExceptionHandler
 com/academy/workSearch/WorkSearchApplication.java
  com.academy.workSearch.WorkSearchApplication
 com/academy/workSearch/service/UserService.java
@@ -18,5 +18,5 @@ com/academy/workSearch/configuration/HibernateConfig.java
  com.academy.workSearch.configuration.HibernateConfig
 com/academy/workSearch/model/User.java
  com.academy.workSearch.model.User
-com/academy/workSearch/exceptionHandling/UserGlobalExceptionHandler.java
- com.academy.workSearch.exceptionHandling.UserGlobalExceptionHandler
+com/academy/workSearch/controller/UserController.java
+ com.academy.workSearch.controller.UserController

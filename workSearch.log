@@ -36,3 +36,41 @@
 2021-03-12 12:25:00.694  INFO 792 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2021-03-12 12:25:00.695  INFO 792 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
 2021-03-12 12:25:00.713  INFO 792 --- [http-nio-8080-exec-1] c.a.w.controller.UserController          : Show all users
+2021-03-12 12:49:39.738  INFO 12628 --- [main] c.a.workSearch.WorkSearchApplication     : Starting WorkSearchApplication using Java 11.0.6 on DESKTOP-H2V2M69 with PID 12628 (F:\IT\nroman\unicorn\build\classes\java\main started by mars0 in F:\IT\nroman\unicorn)
+2021-03-12 12:49:39.741  INFO 12628 --- [main] c.a.workSearch.WorkSearchApplication     : No active profile set, falling back to default profiles: default
+2021-03-12 12:49:40.693  INFO 12628 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2021-03-12 12:49:40.701  INFO 12628 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-03-12 12:49:40.702  INFO 12628 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.43]
+2021-03-12 12:49:40.793  INFO 12628 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-03-12 12:49:40.793  INFO 12628 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1010 ms
+2021-03-12 12:49:40.929  INFO 12628 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.28.Final
+2021-03-12 12:49:41.049  INFO 12628 --- [main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-03-12 12:49:41.314  INFO 12628 --- [main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2021-03-12 12:49:41.859  INFO 12628 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-03-12 12:49:42.026  INFO 12628 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-03-12 12:49:42.146  WARN 12628 --- [main] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates or check your Thymeleaf configuration)
+2021-03-12 12:49:42.255  INFO 12628 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2021-03-12 12:49:42.267  INFO 12628 --- [main] c.a.workSearch.WorkSearchApplication     : Started WorkSearchApplication in 2.999 seconds (JVM running for 3.808)
+2021-03-12 12:50:59.178  INFO 12628 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-03-12 12:50:59.179  INFO 12628 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-03-12 12:50:59.180  INFO 12628 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2021-03-12 12:50:59.200  INFO 12628 --- [http-nio-8080-exec-1] c.a.w.controller.UserController          : Show all users
+2021-03-12 12:58:59.914  INFO 9500 --- [main] c.a.workSearch.WorkSearchApplication     : Starting WorkSearchApplication using Java 11.0.6 on DESKTOP-H2V2M69 with PID 9500 (F:\IT\nroman\unicorn\build\classes\java\main started by mars0 in F:\IT\nroman\unicorn)
+2021-03-12 12:58:59.917  INFO 9500 --- [main] c.a.workSearch.WorkSearchApplication     : No active profile set, falling back to default profiles: default
+2021-03-12 12:59:00.929  INFO 9500 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2021-03-12 12:59:00.937  INFO 9500 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-03-12 12:59:00.937  INFO 9500 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.43]
+2021-03-12 12:59:01.035  INFO 9500 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-03-12 12:59:01.035  INFO 9500 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1076 ms
+2021-03-12 12:59:01.175  INFO 9500 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.28.Final
+2021-03-12 12:59:01.294  INFO 9500 --- [main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-03-12 12:59:01.573  INFO 9500 --- [main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2021-03-12 12:59:02.169  INFO 9500 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-03-12 12:59:02.335  INFO 9500 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-03-12 12:59:02.453  WARN 9500 --- [main] ion$DefaultTemplateResolverConfiguration : Cannot find template location: classpath:/templates/ (please add some templates or check your Thymeleaf configuration)
+2021-03-12 12:59:02.558  INFO 9500 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2021-03-12 12:59:02.570  INFO 9500 --- [main] c.a.workSearch.WorkSearchApplication     : Started WorkSearchApplication in 3.004 seconds (JVM running for 3.802)
+2021-03-12 12:59:15.467  INFO 9500 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-03-12 12:59:15.468  INFO 9500 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-03-12 12:59:15.469  INFO 9500 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2021-03-12 12:59:15.489  INFO 9500 --- [http-nio-8080-exec-1] c.a.w.controller.UserController          : Show all users
