@@ -32,7 +32,9 @@ public class UserController {
     @GetMapping("/users/{id}")
     public User getUser(@PathVariable UUID id) {
         User user = userService.getUser(id);
+        logger.info("Find user with ID = " + id);
         if (user == null) {
+            logger.error("There is no user with ID = " + id + " in Database");
             throw new NoSuchUserException("There is no user with ID = " + id + " in Database");
         }
         return user;
@@ -41,22 +43,25 @@ public class UserController {
     @PostMapping("/users")
     public User addNewUser(@RequestBody User user){
         userService.saveUser(user);
+        logger.info("Add user with ID = " + user.getId());
         return user;
     }
 
     @PutMapping("/users")
     public User updateUser(@RequestBody User user){
         userService.saveUser(user);
+        logger.info("Update user with ID = " + user.getId());
         return user;
     }
 
     @DeleteMapping("/users/{id}")
-    public String deleteUser(@PathVariable UUID id){
+    public void deleteUser(@PathVariable UUID id){
         User user = userService.getUser(id);
         if (user == null) {
+            logger.error("There is no user with ID = " + id + " in Database");
             throw new NoSuchUserException("There is no user with ID = " + id + " in Database");
         }
         userService.deleteUser(id);
-        return "User with ID = " + id + " was deleted";
+        logger.info("Delete user with ID = " + user.getId());
     }
 }
