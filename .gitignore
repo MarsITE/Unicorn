@@ -157,3 +157,22 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,windows,java
+
+###################################################################################
+#for front
+
+# dependencies
+/node_modules
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+/build
+/.gradle
+/.idea
+/gradle
