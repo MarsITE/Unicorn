@@ -162,4 +162,4 @@ workSearch.log
 
 src/main/resources/application.properties
 
-build
+build/
