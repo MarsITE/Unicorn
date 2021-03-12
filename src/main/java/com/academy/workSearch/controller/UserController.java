@@ -2,7 +2,8 @@ package com.academy.workSearch.controller;
 
 import com.academy.workSearch.exceptionHandling.NoSuchUserException;
 import com.academy.workSearch.model.User;
-import com.academy.workSearch.service.CrudService;
+import com.academy.workSearch.service.UserService;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,16 +14,12 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
+@AllArgsConstructor
 public class UserController {
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    private final CrudService<User> userService;
-
     @Autowired
-    public UserController(CrudService<User> userService) {
-        this.userService = userService;
-    }
-
+    private final UserService userService;
 
     @GetMapping("/users")
     public List<User> showUsers() {

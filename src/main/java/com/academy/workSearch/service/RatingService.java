@@ -13,26 +13,23 @@ import java.util.UUID;
 @Service
 @Transactional
 @AllArgsConstructor
-public class RatingService implements CrudService<Rating> {
+public class RatingService {
+
     @Autowired
     private final CrudDAO<Rating> ratingDAO;
 
-    @Override
     public List<Rating> findAll() {
         return ratingDAO.findAll();
     }
 
-    @Override
     public void save(Rating rating) {
         ratingDAO.save(rating);
     }
 
-    @Override
     public Rating get(UUID id) {
         return ratingDAO.get(id);
     }
 
-    @Override
     public void delete(UUID id) {
         ratingDAO.delete(id);
     }

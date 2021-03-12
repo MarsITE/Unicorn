@@ -13,27 +13,23 @@ import java.util.UUID;
 @Service
 @Transactional
 @AllArgsConstructor
-public class SkillService implements CrudService<Skill> {
+public class SkillService {
 
     @Autowired
     private final CrudDAO<Skill> skillDAO;
 
-    @Override
     public List<Skill> findAll() {
         return skillDAO.findAll();
     }
 
-    @Override
     public void save(Skill skill) {
         skillDAO.save(skill);
     }
 
-    @Override
     public Skill get(UUID id) {
         return skillDAO.get(id);
     }
 
-    @Override
     public void delete(UUID id) {
         skillDAO.delete(id);
     }

@@ -13,27 +13,23 @@ import java.util.UUID;
 @Service
 @Transactional
 @AllArgsConstructor
-public class RoleService implements CrudService<Role> {
+public class RoleService {
 
     @Autowired
     private final CrudDAO<Role> roleDAO;
 
-    @Override
     public List<Role> findAll() {
         return roleDAO.findAll();
     }
 
-    @Override
     public void save(Role role) {
         roleDAO.save(role);
     }
 
-    @Override
     public Role get(UUID id) {
         return roleDAO.get(id);
     }
 
-    @Override
     public void delete(UUID id) {
         roleDAO.delete(id);
     }
