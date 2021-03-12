@@ -7,11 +7,11 @@ import java.util.UUID;
 
 public interface UserDAO {
 
-    public List<User> findAll();
+    List<User> findAll();
 
-    public void saveUser(User user);
+    void saveUser(User user);
 
-    public User getUser(UUID id);
+    User getUser(UUID id);
 
-    public void deleteUser(UUID id);
+    void deleteUser(UUID id);
 }
