@@ -1,6 +1,6 @@
 package com.academy.workSearch.dao;
 
-import com.academy.workSearch.model.User;
+import com.academy.workSearch.model.Rating;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -11,34 +11,35 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public class UserDAO implements CrudDAO<User> {
+public class RatingDAO implements CrudDAO<Rating> {
 
     @Autowired
     private SessionFactory sessionFactory;
 
-    public List<User> findAll() {
+    @Override
+    public List<Rating> findAll() {
         Session session = sessionFactory.getCurrentSession();
-        Query<User> query = session.createQuery("from User", User.class);
+        Query<Rating> query = session.createQuery("from Rating", Rating.class);
         return query.getResultList();
     }
 
     @Override
-    public void save(User user) {
+    public void save(Rating rating) {
         Session session = sessionFactory.getCurrentSession();
-        session.saveOrUpdate(user);
+        session.saveOrUpdate(rating);
     }
 
     @Override
-    public User get(UUID id) {
+    public Rating get(UUID id) {
         Session session = sessionFactory.getCurrentSession();
-        return session.get(User.class, id);
+        return session.get(Rating.class, id);
     }
 
     @Override
     public void delete(UUID id) {
         Session session = sessionFactory.getCurrentSession();
-        Query<User> query = session.createQuery("delete from User where id =:userId");
-        query.setParameter("userId", id);
+        Query<Rating> query = session.createQuery("delete from Rating where id =:raitingId");
+        query.setParameter("raitingId", id);
         query.executeUpdate();
     }
 }

@@ -1,6 +1,6 @@
 package com.academy.workSearch.dao;
 
-import com.academy.workSearch.model.User;
+import com.academy.workSearch.model.Role;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -11,34 +11,35 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public class UserDAO implements CrudDAO<User> {
+public class RoleDAO implements CrudDAO<Role> {
 
     @Autowired
     private SessionFactory sessionFactory;
 
-    public List<User> findAll() {
+    @Override
+    public List<Role> findAll() {
         Session session = sessionFactory.getCurrentSession();
-        Query<User> query = session.createQuery("from User", User.class);
+        Query<Role> query = session.createQuery("from Role", Role.class);
         return query.getResultList();
     }
 
     @Override
-    public void save(User user) {
+    public void save(Role role) {
         Session session = sessionFactory.getCurrentSession();
-        session.saveOrUpdate(user);
+        session.saveOrUpdate(role);
     }
 
     @Override
-    public User get(UUID id) {
+    public Role get(UUID id) {
         Session session = sessionFactory.getCurrentSession();
-        return session.get(User.class, id);
+        return session.get(Role.class, id);
     }
 
     @Override
     public void delete(UUID id) {
         Session session = sessionFactory.getCurrentSession();
-        Query<User> query = session.createQuery("delete from User where id =:userId");
-        query.setParameter("userId", id);
+        Query<Role> query = session.createQuery("delete from Role where id =:roleId");
+        query.setParameter("roleId", id);
         query.executeUpdate();
     }
 }
