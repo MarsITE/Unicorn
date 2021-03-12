@@ -3,6 +3,8 @@ package com.academy.workSearch.controller;
 import com.academy.workSearch.exceptionHandling.NoSuchUserException;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +14,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api")
 public class UserController {
+    Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private UserService userService;
 
@@ -22,6 +25,7 @@ public class UserController {
 
     @GetMapping("/users")
     public List<User> showUsers() {
+        logger.info("Show all users");
         return userService.findAll();
     }
 
