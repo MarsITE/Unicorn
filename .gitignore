@@ -168,15 +168,15 @@ build/
 #for front
 
 # dependencies
-/node_modules
+/front-end/node_modules
 
 # IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.history/*
+/front-end/.vscode/*
+!/front-end/.vscode/settings.json
+!/front-end/.vscode/tasks.json
+!/front-end/.vscode/launch.json
+!/front-end/.vscode/extensions.json
+/front-end/.history/*
 
 /.gradle
 /.idea
