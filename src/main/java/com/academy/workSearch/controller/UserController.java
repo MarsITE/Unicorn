@@ -3,6 +3,7 @@ package com.academy.workSearch.controller;
 import com.academy.workSearch.exceptionHandling.NoSuchUserException;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.service.UserService;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +14,12 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
+@AllArgsConstructor
 public class UserController {
-    Logger logger = LoggerFactory.getLogger(UserController.class);
-
-    private UserService userService;
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    private final UserService userService;
 
     @GetMapping("/users")
     public List<User> showUsers() {
@@ -29,9 +27,9 @@ public class UserController {
         return userService.findAll();
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/user/{id}")
     public User getUser(@PathVariable UUID id) {
-        User user = userService.getUser(id);
+        User user = userService.get(id);
         logger.info("Find user with ID = " + id);
         if (user == null) {
             logger.error("There is no user with ID = " + id + " in Database");
@@ -40,28 +38,28 @@ public class UserController {
         return user;
     }
 
-    @PostMapping("/users")
-    public User addNewUser(@RequestBody User user){
-        userService.saveUser(user);
-        logger.info("Add user with ID = " + user.getId());
+    @PostMapping("/user")
+    public User addNewUser(@RequestBody User user) {
+        userService.save(user);
+        logger.info("Add user with ID = " + user.getUserId());
         return user;
     }
 
-    @PutMapping("/users")
-    public User updateUser(@RequestBody User user){
-        userService.saveUser(user);
-        logger.info("Update user with ID = " + user.getId());
+    @PutMapping("/user")
+    public User updateUser(@RequestBody User user) {
+        userService.save(user);
+        logger.info("Update user with ID = " + user.getUserId());
         return user;
     }
 
-    @DeleteMapping("/users/{id}")
-    public void deleteUser(@PathVariable UUID id){
-        User user = userService.getUser(id);
+    @DeleteMapping("/user/{id}")
+    public void deleteUser(@PathVariable UUID id) {
+        User user = userService.get(id);
         if (user == null) {
             logger.error("There is no user with ID = " + id + " in Database");
             throw new NoSuchUserException("There is no user with ID = " + id + " in Database");
         }
-        userService.deleteUser(id);
-        logger.info("Delete user with ID = " + user.getId());
+        userService.delete(id);
+        logger.info("Delete user with ID = " + user.getUserId());
     }
 }

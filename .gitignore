@@ -163,3 +163,21 @@ workSearch.log
 src/main/resources/application.properties
 
 build/
+
+###################################################################################
+#for front
+
+# dependencies
+/node_modules
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+/.gradle
+/.idea
+/gradle

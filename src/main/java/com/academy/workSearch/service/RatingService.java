@@ -1,7 +1,7 @@
 package com.academy.workSearch.service;
 
 import com.academy.workSearch.dao.CrudDAO;
-import com.academy.workSearch.model.User;
+import com.academy.workSearch.model.Rating;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,24 +13,24 @@ import java.util.UUID;
 @Service
 @Transactional
 @AllArgsConstructor
-public class UserService {
+public class RatingService {
 
     @Autowired
-    private final CrudDAO<User> userDAO;
+    private final CrudDAO<Rating> ratingDAO;
 
-    public List<User> findAll() {
-        return userDAO.findAll();
+    public List<Rating> findAll() {
+        return ratingDAO.findAll();
     }
 
-    public void save(User user) {
-        userDAO.save(user);
+    public void save(Rating rating) {
+        ratingDAO.save(rating);
     }
 
-    public User get(UUID id) {
-        return userDAO.get(id);
+    public Rating get(UUID id) {
+        return ratingDAO.get(id);
     }
 
     public void delete(UUID id) {
-        userDAO.delete(id);
+        ratingDAO.delete(id);
     }
 }

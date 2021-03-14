@@ -1,6 +1,6 @@
 package com.academy.workSearch.dao;
 
-import com.academy.workSearch.model.User;
+import com.academy.workSearch.model.Project;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -11,34 +11,35 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public class UserDAO implements CrudDAO<User> {
+public class ProjectDAO implements CrudDAO<Project> {
 
     @Autowired
     private SessionFactory sessionFactory;
 
-    public List<User> findAll() {
+    @Override
+    public List<Project> findAll() {
         Session session = sessionFactory.getCurrentSession();
-        Query<User> query = session.createQuery("from User", User.class);
+        Query<Project> query = session.createQuery("from Project", Project.class);
         return query.getResultList();
     }
 
     @Override
-    public void save(User user) {
+    public void save(Project project) {
         Session session = sessionFactory.getCurrentSession();
-        session.saveOrUpdate(user);
+        session.saveOrUpdate(project);
     }
 
     @Override
-    public User get(UUID id) {
+    public Project get(UUID id) {
         Session session = sessionFactory.getCurrentSession();
-        return session.get(User.class, id);
+        return session.get(Project.class, id);
     }
 
     @Override
     public void delete(UUID id) {
         Session session = sessionFactory.getCurrentSession();
-        Query<User> query = session.createQuery("delete from User where id =:userId");
-        query.setParameter("userId", id);
+        Query<Project> query = session.createQuery("delete from Project where id =:projectId");
+        query.setParameter("projectId", id);
         query.executeUpdate();
     }
 }
