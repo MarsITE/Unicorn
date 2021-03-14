@@ -3,6 +3,8 @@ package com.academy.workSearch.controller;
 import com.academy.workSearch.exceptionHandling.NoSuchUserException;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.service.UserService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +24,16 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/users")
+    @ApiOperation(value = "Show all users", notes = "Show information about all users in DB")
     public List<User> showUsers() {
         logger.info("Show all users");
         return userService.findAll();
     }
 
     @GetMapping("/user/{id}")
-    public User getUser(@PathVariable UUID id) {
+    @ApiOperation(value = "Find user by ID", notes = "Find user in DB, if user exist")
+    public User getUser(@ApiParam(value = "ID value for user you need to retrive", required = true)
+                            @PathVariable UUID id) {
         User user = userService.get(id);
         logger.info("Find user with ID = " + id);
         if (user == null) {
