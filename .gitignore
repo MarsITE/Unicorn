@@ -158,6 +158,12 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,windows,java
 
+workSearch.log
+
+src/main/resources/application.properties
+
+build/
+
 ###################################################################################
 #for front
 
@@ -172,7 +178,6 @@ $RECYCLE.BIN/
 !.vscode/extensions.json
 .history/*
 
-/build
 /.gradle
 /.idea
 /gradle
