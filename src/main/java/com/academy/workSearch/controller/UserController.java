@@ -44,6 +44,7 @@ public class UserController {
     }
 
     @PostMapping("/user")
+    @ApiOperation(value = "Add new user", notes = "Add new user in DB")
     public User addNewUser(@RequestBody User user) {
         userService.save(user);
         logger.info("Add user with ID = " + user.getUserId());
@@ -51,6 +52,7 @@ public class UserController {
     }
 
     @PutMapping("/user")
+    @ApiOperation(value = "Update existing user", notes = "Update existing user")
     public User updateUser(@RequestBody User user) {
         userService.save(user);
         logger.info("Update user with ID = " + user.getUserId());
@@ -58,6 +60,7 @@ public class UserController {
     }
 
     @DeleteMapping("/user/{id}")
+    @ApiOperation(value = "Delete existing user", notes = "Delete existing user")
     public void deleteUser(@PathVariable UUID id) {
         User user = userService.get(id);
         if (user == null) {

@@ -37,28 +37,35 @@ public class User {
     private String email;
 
     @Column(name = "password")
+    @ApiModelProperty(notes = "Password of the user", position = 5)
     private String password;
 
     @Past
     @Column(name = "date_of_birth")
+    @ApiModelProperty(notes = "Date of birth of the user", position = 6)
     private LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "is_active_account")
+    @ApiModelProperty(notes = "Type of account", position = 7)
     private AccountStatus accountStatus;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "work_status")
+    @ApiModelProperty(notes = "Work status", position = 8)
     private WorkStatus workStatus;
 
     @Column(name = "date_of_creation")
+    @ApiModelProperty(notes = "Date of creation", position = 9)
     private LocalDate dateOfCreation;
 
     @Lob
     @Column(name = "image")
+    @ApiModelProperty(notes = "User photo", position = 10)
     private Byte[] image;
 
     @ManyToMany
+    @ApiModelProperty(notes = "User role", position = 11)
     @JoinTable(
             name = "users_roles",
             joinColumns = {@JoinColumn(name = "user_id")},
