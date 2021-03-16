@@ -1,11 +1,13 @@
 package com.academy.workSearch.model;
 
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -37,19 +39,19 @@ public class User {
     private LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "is_active_account")
+    @Column(name = "account_status")
     private AccountStatus accountStatus;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "work_status")
     private WorkStatus workStatus;
 
+    @CreationTimestamp
     @Column(name = "date_of_creation")
-    private LocalDate dateOfCreation;
+    private LocalDateTime dateOfCreation;
 
-    @Lob
-    @Column(name = "image")
-    private Byte[] image;
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @ManyToMany
     @JoinTable(
@@ -59,7 +61,4 @@ public class User {
     )
     private Set<Role> roles;
 
-    public User() {
-        dateOfCreation = LocalDate.now();
-    }
 }
