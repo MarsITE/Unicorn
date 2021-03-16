@@ -36,6 +36,9 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-logging', version: '2.3.9.RELEASE'
     implementation group: 'org.hibernate', name: 'hibernate-validator', version: '6.0.13.Final'
 
+    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+
     implementation "org.liquibase:liquibase-core"
     implementation group: 'org.liquibase', name: 'liquibase-maven-plugin', version: '4.3.1'
 }

@@ -1,6 +1,5 @@
 package com.academy.workSearch.model;
 
-
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
