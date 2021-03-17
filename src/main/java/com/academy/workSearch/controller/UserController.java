@@ -3,6 +3,8 @@ package com.academy.workSearch.controller;
 import com.academy.workSearch.exceptionHandling.NoSuchUserException;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.service.UserService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import com.academy.workSearch.service.UserServiceImpl;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -24,13 +26,16 @@ public class UserController {
 
 
     @GetMapping("/users")
+    @ApiOperation(value = "Show all users", notes = "Show information about all users in DB")
     public List<User> showUsers() {
         logger.info("Show all users");
         return userService.findAll();
     }
 
     @GetMapping("/user/{id}")
-    public User getUser(@PathVariable UUID id) {
+    @ApiOperation(value = "Find user by ID", notes = "Find user in DB, if user exist")
+    public User getUser(@ApiParam(value = "ID value for user you need to retrive", required = true)
+                            @PathVariable UUID id) {
         User user = userService.get(id);
         logger.info("Find user with ID = " + id);
         if (user == null) {
@@ -41,6 +46,7 @@ public class UserController {
     }
 
     @PostMapping("/user")
+    @ApiOperation(value = "Add new user", notes = "Add new user in DB")
     public User addNewUser(@RequestBody User user) {
         userService.save(user);
         logger.info("Add user with ID = " + user.getUserId());
@@ -48,6 +54,7 @@ public class UserController {
     }
 
     @PutMapping("/user")
+    @ApiOperation(value = "Update existing user", notes = "Update existing user")
     public User updateUser(@RequestBody User user) {
         userService.save(user);
         logger.info("Update user with ID = " + user.getUserId());
@@ -55,6 +62,7 @@ public class UserController {
     }
 
     @DeleteMapping("/user/{id}")
+    @ApiOperation(value = "Delete existing user", notes = "Delete existing user")
     public void deleteUser(@PathVariable UUID id) {
         User user = userService.get(id);
         if (user == null) {
