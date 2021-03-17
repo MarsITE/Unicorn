@@ -1,60 +1,54 @@
 package com.academy.workSearch.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
 @Data
 @Entity
 @Table(name = "users")
+@ApiModel(description = "User Info")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
+    @ApiModelProperty(notes = "The unique id of the user", position = 1)
     private UUID userId;
-
-    @Column(name = "first_name", length = 20)
-    private String firstName;
-
-    @Column(name = "last_name", length = 20)
-    private String lastName;
 
     @Email
     @NotNull
     @Column(name = "email", length = 20)
+    @ApiModelProperty(notes = "Email of the user", position = 2)
     private String email;
 
     @NotNull
     @Column(name = "password")
+    @ApiModelProperty(notes = "Password of the user", position = 3)
     private String password;
 
-    @Past
-    @Column(name = "date_of_birth")
-    private LocalDate dateOfBirth;
-
     @Enumerated(EnumType.STRING)
-    @Column(name = "is_active_account")
+    @Column(name = "account_status")
+    @ApiModelProperty(notes = "Type of account", position = 4)
     private AccountStatus accountStatus;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "work_status")
-    private WorkStatus workStatus;
-
+    @CreationTimestamp
     @Column(name = "date_of_creation")
-    private LocalDate dateOfCreation;
-
-    @Lob
-    @Column(name = "image")
-    private Byte[] image;
+    @ApiModelProperty(notes = "Date of creation", position = 5)
+    private LocalDateTime dateOfCreation;
 
     @ManyToMany
+    @ApiModelProperty(notes = "User role", position = 6)
     @JoinTable(
             name = "users_roles",
             joinColumns = {@JoinColumn(name = "user_id")},
@@ -62,7 +56,4 @@ public class User {
     )
     private Set<Role> roles;
 
-    public User() {
-        dateOfCreation = LocalDate.now();
-    }
 }
