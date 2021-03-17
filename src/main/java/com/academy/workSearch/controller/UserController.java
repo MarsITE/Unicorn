@@ -3,6 +3,7 @@ package com.academy.workSearch.controller;
 import com.academy.workSearch.exceptionHandling.NoSuchUserException;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.service.UserService;
+import com.academy.workSearch.service.UserServiceImpl;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ public class UserController {
 
     @Autowired
     private final UserService userService;
+
 
     @GetMapping("/users")
     public List<User> showUsers() {

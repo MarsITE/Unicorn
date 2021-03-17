@@ -20,7 +20,6 @@ repositories {
 
 dependencies {
 
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     runtimeOnly 'org.postgresql:postgresql'
     implementation group: 'org.threeten', name: 'threetenbp', version: '1.5.0'
@@ -28,6 +27,12 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    compile 'org.springframework.boot:spring-boot-starter-security'
+    testCompile('org.springframework.security:spring-security-test')
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-client'
+
+    implementation group: 'org.springframework', name: 'spring-tx', version: '5.3.4'
 
     implementation group: 'org.hibernate', name: 'hibernate-core'
     implementation group: 'org.springframework', name: 'spring-orm'

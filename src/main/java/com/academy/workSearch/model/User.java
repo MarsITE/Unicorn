@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
 import java.util.Set;
@@ -26,9 +27,11 @@ public class User {
     private String lastName;
 
     @Email
+    @NotNull
     @Column(name = "email", length = 20)
     private String email;
 
+    @NotNull
     @Column(name = "password")
     private String password;
 
