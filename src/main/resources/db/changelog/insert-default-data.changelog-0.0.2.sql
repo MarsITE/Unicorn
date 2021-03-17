@@ -36,4 +36,4 @@ VALUES (gen_random_uuid(), true, 'repair TV');
 -- set first admin
 INSERT INTO public.users(
     user_id, account_status, date_of_creation, email, password)
-VALUES (gen_random_uuid(), 'active',  now(), 'admin@gmail.com',  '111111');
+VALUES (gen_random_uuid(), 'ACTIVE',  now(), 'admin@gmail.com',  '111111');
