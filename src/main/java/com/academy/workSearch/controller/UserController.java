@@ -23,6 +23,7 @@ public class UserController {
     @Autowired
     private final UserService userService;
 
+
     @GetMapping("/users")
     @ApiOperation(value = "Show all users", notes = "Show information about all users in DB")
     public List<User> showUsers() {

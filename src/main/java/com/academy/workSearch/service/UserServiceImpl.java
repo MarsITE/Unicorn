@@ -1,6 +1,8 @@
 package com.academy.workSearch.service;
 
 import com.academy.workSearch.dao.CrudDAO;
+import com.academy.workSearch.dao.CrudDAOImpl;
+import com.academy.workSearch.dao.UserDAO;
 import com.academy.workSearch.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,15 +10,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @Transactional
 @AllArgsConstructor
-public class UserService {
+public class UserServiceImpl implements UserService{
 
     @Autowired
-    private final CrudDAO<User> userDAO;
+    private final UserDAO userDAO;
 
     public List<User> findAll() {
         return userDAO.findAll();
@@ -33,4 +36,11 @@ public class UserService {
     public void delete(UUID id) {
         userDAO.delete(id);
     }
-}
+
+    @Transactional(readOnly = true)
+    public Optional<User> findByEmail(String email) {
+        return userDAO.findByEmail(email);
+    }
+
+    }
+
