@@ -1,6 +1,6 @@
 package com.academy.workSearch.dao;
 
-import com.academy.workSearch.model.Skill;
+import com.academy.workSearch.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -11,35 +11,34 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public class SkillDAO implements CrudDAO<Skill> {
+public class UserDAO implements CrudDAO<User> {
 
     @Autowired
     private SessionFactory sessionFactory;
 
-    @Override
-    public List<Skill> findAll() {
+    public List<User> findAll() {
         Session session = sessionFactory.getCurrentSession();
-        Query<Skill> query = session.createQuery("from Skill", Skill.class);
+        Query<User> query = session.createQuery("from User", User.class);
         return query.getResultList();
     }
 
     @Override
-    public void save(Skill skill) {
+    public void save(User user) {
         Session session = sessionFactory.getCurrentSession();
-        session.saveOrUpdate(skill);
+        session.saveOrUpdate(user);
     }
 
     @Override
-    public Skill get(UUID id) {
+    public User get(UUID id) {
         Session session = sessionFactory.getCurrentSession();
-        return session.get(Skill.class, id);
+        return session.get(User.class, id);
     }
 
     @Override
     public void delete(UUID id) {
         Session session = sessionFactory.getCurrentSession();
-        Query<Skill> query = session.createQuery("delete from Skill where id =:skillId");
-        query.setParameter("skillId", id);
+        Query<User> query = session.createQuery("delete from User where id =:userId");
+        query.setParameter("userId", id);
         query.executeUpdate();
     }
 }
