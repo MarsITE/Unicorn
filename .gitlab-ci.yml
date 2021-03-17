@@ -33,6 +33,7 @@ test:
   only:
     - develop
     - main
+    - fix-error-gitlab
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull
