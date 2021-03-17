@@ -1,6 +1,7 @@
 package com.academy.workSearch.model;
 
 import lombok.Data;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -16,4 +17,7 @@ public class Skill {
 
     @Column(name = "name_of_skill", length = 20)
     private String name;
+
+    @Column(name = "enabled")
+    private boolean enabled;
 }

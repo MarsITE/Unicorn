@@ -1,9 +1,12 @@
 package com.academy.workSearch.model;
 
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -27,9 +30,12 @@ public class Project {
     private ProjectStatus projectStatus;
 
     @OneToOne
+    @JoinColumn(name = "worker_id")
     private User worker;
 
+    @NotNull
     @OneToOne
+    @JoinColumn(name = "owner_id")
     private User employer;
 
     @ManyToMany
@@ -42,19 +48,19 @@ public class Project {
 
 
     @OneToOne
+    @JoinColumn(name = "worker_raiting_id")
     private Rating workerRating;
 
     @OneToOne
+    @JoinColumn(name = "owner_rating_id")
     private Rating employerRating;
 
+    @CreationTimestamp
     @Column(name = "date_of_creation")
-    private LocalDate dateOfCreation;
+    private LocalDateTime dateOfCreation;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", referencedColumnName = "user_info_id", insertable = false, updatable = false)
+    @ManyToOne
+    @JoinColumn(name = "user_info_id", insertable = false, updatable = false)
     private UserInfo userInfo;
 
-    public Project() {
-        dateOfCreation = LocalDate.now();
-    }
 }

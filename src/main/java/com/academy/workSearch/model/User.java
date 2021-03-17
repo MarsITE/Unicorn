@@ -3,11 +3,13 @@ package com.academy.workSearch.model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -46,7 +48,7 @@ public class User {
     private LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "is_active_account")
+    @Column(name = "account_status")
     @ApiModelProperty(notes = "Type of account", position = 7)
     private AccountStatus accountStatus;
 
@@ -55,14 +57,14 @@ public class User {
     @ApiModelProperty(notes = "Work status", position = 8)
     private WorkStatus workStatus;
 
+    @CreationTimestamp
     @Column(name = "date_of_creation")
     @ApiModelProperty(notes = "Date of creation", position = 9)
-    private LocalDate dateOfCreation;
+    private LocalDateTime dateOfCreation;
 
-    @Lob
-    @Column(name = "image")
+    @Column(name = "image_url")
     @ApiModelProperty(notes = "User photo", position = 10)
-    private Byte[] image;
+    private String imageUrl;
 
     @ManyToMany
     @ApiModelProperty(notes = "User role", position = 11)
@@ -73,7 +75,4 @@ public class User {
     )
     private Set<Role> roles;
 
-    public User() {
-        dateOfCreation = LocalDate.now();
-    }
 }

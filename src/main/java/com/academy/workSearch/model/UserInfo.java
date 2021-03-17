@@ -35,7 +35,7 @@ public class UserInfo {
     @OneToOne
     private User user;
 
-    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userInfo")
     private Set<Project> projects;
 
     @ManyToMany
