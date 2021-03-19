@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: ${POSTGRES_PASSWORD}
+    username: ${POSTGRES_LOGIN}
+    url: ${POSTGRES_URL}
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+logging:
+  file:
+    path: ./
+    name: workSearch.log
+
