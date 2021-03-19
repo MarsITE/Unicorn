@@ -26,6 +26,8 @@ spring:
             enable: true
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
+  liquibase:
+    change-log: classpath:db/db.changelog-master.xml
 logging:
   file:
     path: ./
