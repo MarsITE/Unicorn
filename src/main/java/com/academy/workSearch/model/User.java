@@ -8,8 +8,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
@@ -47,7 +45,7 @@ public class User {
     @ApiModelProperty(notes = "Date of creation", position = 5)
     private LocalDateTime dateOfCreation;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @ApiModelProperty(notes = "User role", position = 6)
     @JoinTable(
             name = "users_roles",
@@ -56,4 +54,7 @@ public class User {
     )
     private Set<Role> roles;
 
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_info_id")
+    private UserInfo userInfo;
 }

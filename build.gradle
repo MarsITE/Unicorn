@@ -39,7 +39,8 @@ dependencies {
     implementation "org.liquibase:liquibase-core"
     implementation group: 'org.liquibase', name: 'liquibase-maven-plugin', version: '4.3.1'
 
-    implementation group: 'org.mapstruct', name: 'mapstruct', version: '1.4.2.Final'
+    implementation "org.mapstruct:mapstruct:1.4.2.Final", "org.projectlombok:lombok:1.18.16"
+    annotationProcessor "org.mapstruct:mapstruct-processor:1.4.2.Final", "org.projectlombok:lombok:1.18.16", "org.projectlombok:lombok-mapstruct-binding:0.2.0"
 }
 
 test {
