@@ -48,7 +48,7 @@ public class Project {
 
 
     @OneToOne
-    @JoinColumn(name = "worker_raiting_id")
+    @JoinColumn(name = "worker_rating_id")
     private Rating workerRating;
 
     @OneToOne
