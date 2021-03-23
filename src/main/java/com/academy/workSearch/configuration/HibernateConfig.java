@@ -1,6 +1,8 @@
 package com.academy.workSearch.configuration;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -17,12 +19,13 @@ import java.util.Properties;
 import static org.hibernate.cfg.AvailableSettings.*;
 
 @Configuration
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application.yml")
 @EnableTransactionManagement
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class HibernateConfig {
 
-    @Autowired
-    private Environment environment;
+    Environment environment;
 
     @Bean
     public LocalSessionFactoryBean sessionFactory() {
@@ -43,19 +46,19 @@ public class HibernateConfig {
 
     private Properties hibernateProperties() {
         Properties properties = new Properties();
-        properties.put(SHOW_SQL, Objects.requireNonNull(environment.getProperty("hibernate.show_sql")));
-        properties.put(HBM2DDL_AUTO, Objects.requireNonNull(environment.getProperty("hibernate.hbm2ddl.auto")));
-        properties.put(DIALECT, Objects.requireNonNull(environment.getProperty("hibernate.dialect")));
+        properties.put(SHOW_SQL, Objects.requireNonNull(environment.getProperty("spring.jpa.show-sql")));
+        properties.put(HBM2DDL_AUTO, Objects.requireNonNull(environment.getProperty("spring.jpa.hibernate.ddl-auto")));
+        properties.put(DIALECT, Objects.requireNonNull(environment.getProperty("spring.jpa.database-platform")));
         return properties;
     }
 
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(Objects.requireNonNull(environment.getProperty("postgresql.driver")));
-        dataSource.setUrl(Objects.requireNonNull(environment.getProperty("postgresql.url")));
-        dataSource.setUsername(Objects.requireNonNull(environment.getProperty("postgresql.user")));
-        dataSource.setPassword(Objects.requireNonNull(environment.getProperty("postgresql.password")));
+        dataSource.setDriverClassName(Objects.requireNonNull(environment.getProperty("spring.datasource.driver-class-name")));
+        dataSource.setUrl(Objects.requireNonNull(environment.getProperty("spring.datasource.url")));
+        dataSource.setUsername(Objects.requireNonNull(environment.getProperty("spring.datasource.username")));
+        dataSource.setPassword(Objects.requireNonNull(environment.getProperty("spring.datasource.password")));
         return dataSource;
     }
 }
