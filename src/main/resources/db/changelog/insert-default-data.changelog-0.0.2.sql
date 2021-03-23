@@ -1,13 +1,13 @@
 -- set default roles
 INSERT INTO roles(
     role_id, name_of_role)
-VALUES (gen_random_uuid(), 'admin');
+VALUES (gen_random_uuid(), 'ADMIN');
 INSERT INTO roles(
     role_id, name_of_role)
-VALUES (gen_random_uuid(), 'worker');
+VALUES (gen_random_uuid(), 'WORKER');
 INSERT INTO roles(
     role_id, name_of_role)
-VALUES (gen_random_uuid(), 'employer');
+VALUES (gen_random_uuid(), 'EMPLOYER');
 
 
 
