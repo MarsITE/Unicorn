@@ -1,11 +1,29 @@
-<div class="user-profile">
-<div>
-  <mat-card-title>
-    <label formControlName="username"></label>
-  </mat-card-title>
-  <mat-card-title>
-    <label>Email: </label>
-    <label formControlName="email"></label>
-  </mat-card-title>
-</div>
+<div class="profile">
+  <mat-card class="user-profile">
+    <picture class="photo">
+        <img mat-card-image class="photo" src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+    </picture>
+    <div class="user-info">
+      <label class="username">{{user.userInfo.firstName}} {{user.userInfo.lastName}}</label>
+    </div>
+        <label class="userStatus">{{user.accountStatus}}</label>
+        <label class="userRoles">
+          <span class *ngFor="let role of user.userRole">{{role}}</span>
+        </label>
+
+        <label>Email: {{user.email}}</label>
+        <!-- <mat-icon class="mat-icon-rtl-mirror" svgIcon="call-black-18dp"></mat-icon> -->
+        <label>Phone: {{user.userInfo.phone}}</label>
+        <label>Url: {{user.userInfo.linkToSocialNetwork}}</label>
+        <label>DateOf birth: {{user.userInfo.dateOfBirth}}</label>
+        <label>Show info: {{user.userInfo.showInfo}}</label>
+        <label>Work status: {{user.userInfo.workStatus}}</label>
+        <label>General raiting: {{user.userInfo.generalRating}}</label>
+
+        <div class="buttons">
+          <button (click) = edit(user.email) mat-button> Edit </button>
+          <button (click) = delete(user.email) mat-button>Delete</button>
+        </div>
+  </mat-card>
+  
 </div>

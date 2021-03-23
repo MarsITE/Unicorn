@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router} from '@angular/router';
 import { User } from '../common/model/user';
 import { UserHttpService } from '../common/services/user-http.service';
 
@@ -10,11 +9,10 @@ import { UserHttpService } from '../common/services/user-http.service';
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit {
-  email: string
+  email: string;
   user: User;
-  userProfileForm: FormGroup;
 
-  constructor(private userService: UserHttpService, router: ActivatedRoute) {
+  constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router) {
     this.email = router.snapshot.params['email'];
   }
 
@@ -36,4 +34,12 @@ export class UserProfileComponent implements OnInit {
     );
   }
 
+
+edit(email: String) {
+  this.router2.navigateByUrl(`user-profile-edit/${email}`);
+}
+
+delete(email: String) {
+
+}
 }

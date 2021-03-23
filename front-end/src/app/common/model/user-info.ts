@@ -3,11 +3,10 @@ export interface UserInfo {
     firstName: string;
     lastName: string;
     phone: string;
-    urlToSocialNetwork: string;
+    linkToSocialNetwork: string;
     dateOfBirth: string;
-    isShowInfo: boolean;
+    showInfo: boolean;
     workStatus: string;
     imageUrl: string;
     generalRating: string;
-  }
-  
+}

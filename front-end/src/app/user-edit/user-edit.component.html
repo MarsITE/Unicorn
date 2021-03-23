@@ -1,7 +1,7 @@
 <div class="container">
   <div class="title">User profile</div>
   <div class="content">
-    <form form="userProfileForm" class="user-form">
+    <form [formGroup]="userProfileForm" class="user-form">
       <p>
         <mat-form-field>
           <input type="text" matInput placeholder="First name" formControlName="firstName">
@@ -36,16 +36,13 @@
           <input type="text" matInput placeholder="You work status" formControlName="workStatus">
         </mat-form-field>
       </p>
-      <p>
-        <mat-form-field>
-          <input type="text" matInput placeholder="Change image" formControlName="imageUrl">
-        </mat-form-field>
-      </p>
+              
       <p>
         <mat-form-field>
           <input type="text" matInput placeholder="Do you want to show info?" formControlName="isShowInfo">
         </mat-form-field>
       </p>
+      <input type="file" (change)="loadImage($event)">
       <div class="button">
         <button (click)="submit()" mat-button>Save</button>
       </div>
