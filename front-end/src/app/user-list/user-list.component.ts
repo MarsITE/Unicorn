@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { User } from '../common/model/user';
 import { UserHttpService } from '../common/services/user-http.service';
 
@@ -10,9 +11,9 @@ import { UserHttpService } from '../common/services/user-http.service';
 export class UserListComponent implements OnInit {
 
   users: User[] = [];
-  displayedColumns: string[] = ['firstName', 'lastName', 'email'];
+  displayedColumns: string[] = ['firstName', 'lastName', 'email', 'workStatus', 'phone', 'dateOfBirth', 'userRole', 'accountStatus', 'generalRating'];
 
-  constructor(private userService: UserHttpService) {
+  constructor(private userService: UserHttpService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -31,6 +32,12 @@ export class UserListComponent implements OnInit {
         console.log("complete");
       }
     )
+  }
+
+  showUserProfile(row) {
+    console.log(row);
+    
+    this.router.navigateByUrl(`user-profile/${row.email}`);
   }
 
 }

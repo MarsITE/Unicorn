@@ -1,6 +1,8 @@
+import { UserInfo } from './user-info';
+
 export interface User {
-  id: string,
-  firstName: string,
-  lastName: string,
-  email: string
+  email: string;
+  userRole: string[];
+  accountStatus: string;
+  userInfo: UserInfo;
 }

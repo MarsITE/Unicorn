@@ -1,0 +1,55 @@
+<div class="container">
+  <div class="title">User profile</div>
+  <div class="content">
+    <form form="userProfileForm" class="user-form">
+      <p>
+        <mat-form-field>
+          <input type="text" matInput placeholder="First name" formControlName="firstName">
+        </mat-form-field>
+      </p>
+
+      <p>
+        <mat-form-field>
+          <input type="text" matInput placeholder="Last name" formControlName="lastName">
+        </mat-form-field>
+      </p>
+
+      <p>
+        <mat-form-field>
+          <input type="text" matInput placeholder="Mobile phone" formControlName="phone">
+        </mat-form-field>
+      </p>
+
+      <p>
+        <mat-form-field>
+          <input type="text" matInput placeholder="link to social network" formControlName="linkToSocialNetwork">
+        </mat-form-field>
+      </p>
+
+      <p>
+        <mat-form-field>
+          <input type="text" matInput placeholder="Date of birth" formControlName="dateOfBirth">
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field>
+          <input type="text" matInput placeholder="You work status" formControlName="workStatus">
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field>
+          <input type="text" matInput placeholder="Change image" formControlName="imageUrl">
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field>
+          <input type="text" matInput placeholder="Do you want to show info?" formControlName="isShowInfo">
+        </mat-form-field>
+      </p>
+      <div class="button">
+        <button (click)="submit()" mat-button>Save</button>
+      </div>
+    </form>
+
+  </div>
+</div>

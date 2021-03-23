@@ -49,11 +49,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { UserHttpService } from './common/services/user-http.service';
 import { UserListComponent } from './user-list/user-list.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
+import { UserEditComponent } from './user-edit/user-edit.component';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
     AppComponent,
-    UserListComponent
+    UserListComponent,
+    UserProfileComponent,
+    UserEditComponent
   ],
   imports: [
     BrowserModule,
@@ -103,7 +108,9 @@ import { UserListComponent } from './user-list/user-list.component';
     MatTreeModule,
     OverlayModule,
     PortalModule,
-    ScrollingModule
+    ScrollingModule,
+    MatFormFieldModule,
+    MatCardModule,
   ],
   providers: [UserHttpService],
   bootstrap: [AppComponent]

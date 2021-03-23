@@ -1,0 +1,19 @@
+.mat-form-field {
+  width: 100%;
+  min-width: 300px;
+}
+
+.title,
+.content {
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  padding: 20px;
+}
+
+.user-form {
+  width: fit-content;
+  height: auto;
+}

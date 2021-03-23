@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ValidationException;
@@ -55,14 +56,14 @@ public class UserController {
 
     @PutMapping("/user")
     @ApiOperation(value = "Update existing user", notes = "Update existing user")
-    public UserDTO updateUser(@RequestBody UserDTO user) {
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO user) {
         try {
-            userService.save(user);
+            return ResponseEntity.ok(userService.update(user));
         } catch (ValidationException e) {
             e.printStackTrace();
         }
         logger.info("Update user with email = " + user.getEmail());
-        return user;
+        return ResponseEntity.ok(user);
     }
 
     @DeleteMapping("/user/{email}")

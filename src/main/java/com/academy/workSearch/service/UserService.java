@@ -10,7 +10,9 @@ public interface UserService {
 
     List<UserDTO> findAll();
 
-    void save(UserDTO UserDTO) throws ValidationException;
+    void save(UserDTO UserDTO);
+
+    UserDTO update(UserDTO user) throws ValidationException;
 
     UserDTO get(UUID id);
 
