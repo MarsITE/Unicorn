@@ -43,9 +43,9 @@ public class User {
     private AccountStatus accountStatus;
 
     @CreationTimestamp
-    @Column(name = "date_of_creation")
-    @ApiModelProperty(notes = "Date of creation", position = 5)
-    private LocalDateTime dateOfCreation;
+    @Column(name = "creation_date")
+    @ApiModelProperty(notes = "Creation date", position = 5)
+    private LocalDateTime creationDate;
 
     @ManyToMany
     @ApiModelProperty(notes = "User role", position = 6)

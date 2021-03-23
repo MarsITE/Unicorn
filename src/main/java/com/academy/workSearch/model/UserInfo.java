@@ -36,9 +36,9 @@ public class UserInfo {
     private String linkToSocialNetwork;
 
     @Past
-    @Column(name = "date_of_birth")
+    @Column(name = "birth_date")
     @ApiModelProperty(notes = "Date of birth of the user")
-    private LocalDate dateOfBirth;
+    private LocalDate birthDate;
 
     @Column(name = "is_show_info")
     private boolean isShowInfo;
