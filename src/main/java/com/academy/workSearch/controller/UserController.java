@@ -56,7 +56,7 @@ public class UserController {
 
     @PutMapping("/user")
     @ApiOperation(value = "Update existing user", notes = "Update existing user")
-    public ResponseEntity<UserDTO> updateUserInfo(@RequestBody UserDTO user) {
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO user) {
         try {
             return ResponseEntity.ok(userService.update(user));
         } catch (ValidationException e) {

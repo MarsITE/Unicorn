@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../common/model/user';
+import { UserInfo } from '../common/model/user-info';
 import { WorkStatus } from '../common/model/work-status';
 import { UserHttpService } from '../common/services/user-http.service';
 
@@ -17,10 +18,10 @@ export class UserEditComponent implements OnInit, OnDestroy {
   imageURL: string;
   imageSrc: any;
   workStatuses: WorkStatus[] = [
-    { value: 'PART_TIME', viewValue: 'Part time'},
-    { value: 'FULL_TIME', viewValue: 'Full time'},
-    { value: 'OVERTIME', viewValue: 'Overtime'},
-    { value: 'BUSY', viewValue: 'Busy'}
+    { value: 'PART_TIME', viewValue: 'Part time' },
+    { value: 'FULL_TIME', viewValue: 'Full time' },
+    { value: 'OVERTIME', viewValue: 'Overtime' },
+    { value: 'BUSY', viewValue: 'Busy' }
   ];
 
   constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router) {
@@ -45,13 +46,19 @@ export class UserEditComponent implements OnInit, OnDestroy {
     imageUrl: string
   ): void {
     this.userProfileForm = new FormGroup({
-      firstName: new FormControl(firstName, [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(20), Validators.minLength(2)]),
-      lastName: new FormControl(lastName, [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(20), Validators.minLength(2)]),
-      phone: new FormControl(phone),
+      firstName: new FormControl(
+        firstName,
+        [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(20), Validators.minLength(2)]),
+      lastName: new FormControl(
+        lastName,
+        [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(20), Validators.minLength(2)]),
+      phone: new FormControl(
+        phone,
+        [Validators.pattern('^[0-9]*$')]),
       linkToSocialNetwork: new FormControl(linkToSocialNetwork),
-      dateOfBirth: new FormControl(dateOfBirth),//todo change to date
+      dateOfBirth: new FormControl(dateOfBirth),
       isShowInfo: new FormControl(isShowInfo, [Validators.required]),
-      workStatus: new FormControl(workStatus),//todo change to vipadayca
+      workStatus: new FormControl(workStatus),
       imageUrl: new FormControl(imageUrl)
     });
   }
@@ -60,7 +67,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
     this.userService.getByEmail(email).subscribe(
       (response: User) => {
         this.user = response;
-        console.log(this.user);
         this.initForm(
           this.user.userInfo.firstName,
           this.user.userInfo.lastName,
@@ -80,18 +86,34 @@ export class UserEditComponent implements OnInit, OnDestroy {
     );
   }
 
-  private saveUser(user: User) {
-    this.userService.save(user);
-  }
-
-
   submit() {
-    this.saveUser(this.user);
-    this.router2.navigateByUrl(`user-profile/${this.user.email}`);
+    const userInfo = this.user.userInfo;
+    userInfo.firstName = this.userProfileForm.controls['firstName'].value;
+    userInfo.lastName = this.userProfileForm.controls['lastName'].value;
+    userInfo.phone = this.userProfileForm.controls['phone'].value;
+    userInfo.linkToSocialNetwork = this.userProfileForm.controls['linkToSocialNetwork'].value;
+    userInfo.dateOfBirth = this.userProfileForm.controls['dateOfBirth'].value;
+    userInfo.showInfo = this.userProfileForm.controls['isShowInfo'].value;
+    userInfo.imageUrl = this.imageSrc;
+
+    // userInfo.workStatus = this.user.userInfo.workStatus;
+    // userInfo.imageUrl = this.user.userInfo.imageUrl;
+
+    this.userService.updateUserInfo(userInfo).subscribe(r => {
+      console.log(r);
+
+    },
+      er => {
+        console.log(er);
+      },
+      () => {
+        this.router2.navigateByUrl(`user-profile/${this.user.email}`);
+      });
+
   }
 
   loadImage(event) {
-    let selectedFile = <File> event.target.files[0];
+    let selectedFile = <File>event.target.files[0];
     const fd = new FormData();
     fd.append('image', selectedFile, selectedFile.name);
     const reader = new FileReader();

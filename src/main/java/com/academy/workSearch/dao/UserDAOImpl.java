@@ -17,46 +17,40 @@ public class UserDAOImpl implements CrudDAO<User>, UserDAO {
     private SessionFactory sessionFactory;
 
     public List<User> findAll() {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         Query<User> query = session.createQuery("from User", User.class);
         return query.getResultList();
     }
 
     @Override
     public void save(User user) {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         session.saveOrUpdate(user);
-        session.close();
     }
 
     @Override
     public User get(UUID id) {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         return session.get(User.class, id);
     }
 
     @Override
     public void delete(UUID id) {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         Query<User> query = session.createQuery("delete from User where id =:userId");
         query.setParameter("userId", id);
         query.executeUpdate();
-        session.close();
     }
 
     public User getByEmail(String email) {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("from User where email = :email");
         query.setParameter("email", email);
-        User e = (User) query.list().get(0);
-        session.close();
-        return e;
+        return (User) query.list().get(0);
     }
 
     public UUID getIdByEmail(String email) {
-        Session session = sessionFactory.openSession();
-        UUID e = session.get(UUID.class, email);
-        session.close();
-        return e;
+        Session session = sessionFactory.getCurrentSession();
+        return session.get(UUID.class, email);
     }
 }

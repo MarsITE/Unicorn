@@ -1,10 +1,10 @@
 <div class="profile">
   <mat-card class="user-profile">
     <picture class="photo">
-        <img mat-card-image class="photo" src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+        <img mat-card-image class="photo" [src]="imageBlobUrl" alt="User photo">
     </picture>
     <div class="user-info">
-      <label class="username">{{user.userInfo.firstName}} {{user.userInfo.lastName}}</label>
+      <label class="username">{{user.userInfo.firstName }} {{user.userInfo.lastName}}</label>
     </div>
         <label class="userRoles">
           <span class *ngFor="let role of user.userRole">{{role}}</span>
@@ -23,5 +23,5 @@
           <button (click) = delete(user.email) mat-button>Delete</button>
         </div>
   </mat-card>
-  
+
 </div>

@@ -2,16 +2,20 @@ package com.academy.workSearch.dto.mapper;
 
 import com.academy.workSearch.dto.UserInfoDTO;
 import com.academy.workSearch.model.UserInfo;
+import liquibase.pro.packaged.F;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.factory.Mappers;
 
+import java.io.File;
 import java.util.UUID;
 
 import static org.mapstruct.ReportingPolicy.IGNORE;
 
 @Mapper(unmappedTargetPolicy = IGNORE)
 public interface UserInfoMapper {
+    UserInfoMapper USER_INFO_MAPPER = Mappers.getMapper(UserInfoMapper.class);
 
     @Mapping(target = "userInfoId", qualifiedByName = "uuid")
     UserInfo toUserInfo(UserInfoDTO userInfoDto);
@@ -28,4 +32,5 @@ public interface UserInfoMapper {
     default UUID uuid(String userInfoId) {
         return UUID.fromString(userInfoId);
     }
+
 }
