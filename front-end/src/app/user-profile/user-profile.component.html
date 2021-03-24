@@ -6,13 +6,11 @@
     <div class="user-info">
       <label class="username">{{user.userInfo.firstName}} {{user.userInfo.lastName}}</label>
     </div>
-        <label class="userStatus">{{user.accountStatus}}</label>
         <label class="userRoles">
           <span class *ngFor="let role of user.userRole">{{role}}</span>
         </label>
 
         <label>Email: {{user.email}}</label>
-        <!-- <mat-icon class="mat-icon-rtl-mirror" svgIcon="call-black-18dp"></mat-icon> -->
         <label>Phone: {{user.userInfo.phone}}</label>
         <label>Url: {{user.userInfo.linkToSocialNetwork}}</label>
         <label>DateOf birth: {{user.userInfo.dateOfBirth}}</label>

@@ -4,49 +4,89 @@
     <form [formGroup]="userProfileForm" class="user-form">
       <p>
         <mat-form-field>
-          <input type="text" matInput placeholder="First name" formControlName="firstName">
+          <input
+            type="text"
+            matInput
+            placeholder="First name"
+            formControlName="firstName"
+          />
         </mat-form-field>
       </p>
 
       <p>
         <mat-form-field>
-          <input type="text" matInput placeholder="Last name" formControlName="lastName">
+          <input
+            type="text"
+            matInput
+            placeholder="Last name"
+            formControlName="lastName"
+          />
         </mat-form-field>
       </p>
 
       <p>
         <mat-form-field>
-          <input type="text" matInput placeholder="Mobile phone" formControlName="phone">
+          <input
+            type="text"
+            matInput
+            placeholder="Mobile phone"
+            formControlName="phone"
+          />
         </mat-form-field>
       </p>
 
       <p>
         <mat-form-field>
-          <input type="text" matInput placeholder="link to social network" formControlName="linkToSocialNetwork">
+          <input
+            type="text"
+            matInput
+            placeholder="link to social network"
+            formControlName="linkToSocialNetwork"
+          />
         </mat-form-field>
       </p>
 
       <p>
         <mat-form-field>
-          <input type="text" matInput placeholder="Date of birth" formControlName="dateOfBirth">
+          <input
+            type="date"
+            matInput
+            placeholder="Date of birth"
+            formControlName="dateOfBirth"
+          />
         </mat-form-field>
       </p>
+
+      <mat-select
+        [(ngModel)]="user.userInfo.workStatus"
+        name="workStatus"
+        class="work-status"
+      >
+        <mat-option
+          *ngFor="let workStatus of workStatuses"
+          [value]="workStatus.value"
+        >
+          {{ workStatus.viewValue }}
+        </mat-option>
+      </mat-select>
+
       <p>
-        <mat-form-field>
-          <input type="text" matInput placeholder="You work status" formControlName="workStatus">
-        </mat-form-field>
+        <mat-checkbox
+          formControlName="isShowInfo"
+          id="isShowInfo"
+          class="is-show-info"
+        >
+          <div>Public profile</div>
+        </mat-checkbox>
       </p>
-              
-      <p>
-        <mat-form-field>
-          <input type="text" matInput placeholder="Do you want to show info?" formControlName="isShowInfo">
-        </mat-form-field>
-      </p>
-      <input type="file" (change)="loadImage($event)">
+      <div style="display: flex; flex-direction: column">
+        <input type="file" (change)="loadImage($event)" accept=".jpg,.jpeg,.png" />
+        <img *ngIf="imageSrc" class="selected-img" [src]="imageSrc" />
+      </div>
+
       <div class="button">
         <button (click)="submit()" mat-button>Save</button>
       </div>
     </form>
-
   </div>
 </div>

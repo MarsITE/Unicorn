@@ -4,6 +4,7 @@ import com.academy.workSearch.dao.CrudDAO;
 import com.academy.workSearch.dao.UserDAOImpl;
 import com.academy.workSearch.dto.UserDTO;
 import com.academy.workSearch.model.User;
+import com.academy.workSearch.model.UserInfo;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private final CrudDAO<User> userCrudDAO;
+
+    @Autowired
+    private final CrudDAO<UserInfo> userInfoCrudDAO;
 
     private final UserDAOImpl userDAO;
 

@@ -11,7 +11,7 @@ import { UserHttpService } from '../common/services/user-http.service';
 export class UserListComponent implements OnInit {
 
   users: User[] = [];
-  displayedColumns: string[] = ['firstName', 'lastName', 'email', 'workStatus', 'phone', 'dateOfBirth', 'userRole', 'accountStatus', 'generalRating'];
+  displayedColumns: string[] = ['firstName', 'lastName', 'email', 'workStatus', 'phone', 'dateOfBirth', 'userRole', 'generalRating'];
 
   constructor(private userService: UserHttpService, private router: Router) {
   }
