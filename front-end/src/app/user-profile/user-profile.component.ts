@@ -17,10 +17,10 @@ export class UserProfileComponent implements OnInit {
   imageBlobUrl;
 
   constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router, private domSanitizer: DomSanitizer) {
-    this.email = router.snapshot.params['email'];
+    this.email = router.snapshot.params.email;
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.getUser(this.email);
   }
 
@@ -28,40 +28,37 @@ export class UserProfileComponent implements OnInit {
     this.userService.getByEmail(email).subscribe(
       (response: User) => {
         this.user = response;
-
         this.getImage(this.user.userInfo.imageUrl);
-        // this.imageUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(response.userInfo.imageUrl.name) as string;
       },
       (error) => {
-        console.log("error", error);
+        console.log('error', error);
       },
       () => {
-        console.log("complete");
+        console.log('complete');
       }
     );
   }
 
-  private getImage(imageUrl: string) {
+  private getImage(imageUrl: string): void {
     this.userService.loadImage(imageUrl).subscribe(
       (response) => {
         const objectURL = 'data:image/jpeg;base64,';
-        console.log('asdsdfd');
         this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(response));
       },
       (error) => {
-        console.log("error", error);
+        console.log('error', error);
       },
       () => {
-        console.log("complete");
+        console.log('complete');
       }
     );
   }
 
-  edit(email: String) {
+  public edit(email: string): void {
     this.router2.navigateByUrl(`user-profile-edit/${email}`);
   }
 
-  delete(email: String) {
+  public delete(email: string): void {
 
   }
 }

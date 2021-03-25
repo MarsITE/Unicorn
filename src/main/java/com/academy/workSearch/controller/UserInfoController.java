@@ -49,15 +49,17 @@ public class UserInfoController {
         }
     }
 
-    @PostMapping("/saveimage")
-    public ResponseEntity<MultipartFile> insertProduct(@RequestPart("image") MultipartFile image) {
+    @PutMapping("/save-photo/{id}")
+    public ResponseEntity<MultipartFile> insertProduct(@RequestPart("image") MultipartFile image, @PathVariable(name = "id") String id) {
         try {
-            String folder = System.getProperty("user.dir") + "/photos/";
+            final String folder = System.getProperty("user.dir") + "/photos/";
             byte[] img = image.getBytes();
-            Path path = Paths.get(folder + image.getOriginalFilename());
+            String newNameImage = id + image.getOriginalFilename();
+            Path path = Paths.get(folder + newNameImage);
             Files.write(path, img);
             logger.info(image.getOriginalFilename());
             logger.info(path.toString());
+            userInfoService.updateImage(newNameImage, id);
         } catch (IOException e) {
             logger.trace(Arrays.toString(Arrays.stream(e.getStackTrace()).toArray()));
         }
@@ -65,14 +67,13 @@ public class UserInfoController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/loadimage/{imageUrl}")
+    @GetMapping("/load-photo/{imageUrl}")
     public ResponseEntity<?> loadProduct(@PathVariable(name = "imageUrl") String imageUrl) {
         try {
-            File file = new File(System.getProperty("user.dir")+ "/photos/" + imageUrl);
+            File file = new File(
+                    System.getProperty("user.dir")+ "/photos/" + imageUrl);
             Path path = Paths.get(file.getAbsolutePath());
             ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
-
-//            logger.info(inputStream.toString());
             return ResponseEntity
                     .ok()
                     .contentLength(file.length())

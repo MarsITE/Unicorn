@@ -1,5 +1,6 @@
 package com.academy.workSearch.dao;
 
+import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.UserInfo;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -33,7 +34,7 @@ public class UserInfoDAOImpl implements CrudDAO<UserInfo>, UserInfoDAO {
     @Override
     public UserInfo get(UUID id) {
         Session session = sessionFactory.getCurrentSession();
-        return session.get(UserInfo.class, id);
+        return session.load(UserInfo.class, id);
     }
 
     @Override

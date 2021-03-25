@@ -33,6 +33,10 @@ export class UserHttpService {
   }
 
   public loadImage(imageURL: string): Observable<any> {
-    return this.http.get(`${environment.url}/user-info/loadimage/${imageURL}`, { responseType: 'blob' });
+    return this.http.get(`${environment.url}/user-info/load-photo/${imageURL}`, { responseType: 'blob' });
+  }
+
+  public saveImage(photo: any, id: string): Observable<Blob> {
+    return this.http.put<any>(`${environment.url}/user-info/save-photo/${id}`, photo);
   }
 }
