@@ -21,8 +21,7 @@ public class UserInfoDAOImpl implements CrudDAO<UserInfo>, UserInfoDAO {
     public List<UserInfo> findAll() {
         Session session = sessionFactory.getCurrentSession();
         Query<UserInfo> query = session.createQuery("from UserInfo", UserInfo.class);
-        List<UserInfo> list = query.getResultList();
-        return list;
+        return query.getResultList();
     }
 
     @Override

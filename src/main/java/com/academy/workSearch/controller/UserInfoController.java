@@ -7,32 +7,25 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import javax.naming.Binding;
 import javax.validation.ValidationException;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/user-info")
 @AllArgsConstructor
 public class UserInfoController {
-    private final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private final Logger logger = LoggerFactory.getLogger(UserInfoController.class);
     private final UserInfoService userInfoService;
 
     @PutMapping("/")
@@ -40,7 +33,7 @@ public class UserInfoController {
     public ResponseEntity<UserInfoDTO> updateUserInfo(@RequestBody UserInfoDTO user, BindingResult result) {
         try {
             logger.info("Update user-info = " + user.getUserInfoId());
-            userInfoService.update(user);
+            userInfoService.save(user);
             return ResponseEntity.ok().build();
         } catch (ValidationException e) {
             logger.trace(Arrays.toString(Arrays.stream(e.getStackTrace()).toArray()));
@@ -51,27 +44,17 @@ public class UserInfoController {
 
     @PutMapping("/save-photo/{id}")
     public ResponseEntity<MultipartFile> insertProduct(@RequestPart("image") MultipartFile image, @PathVariable(name = "id") String id) {
-        try {
-            final String folder = System.getProperty("user.dir") + "/photos/";
-            byte[] img = image.getBytes();
-            String newNameImage = id + image.getOriginalFilename();
-            Path path = Paths.get(folder + newNameImage);
-            Files.write(path, img);
-            logger.info(image.getOriginalFilename());
-            logger.info(path.toString());
-            userInfoService.updateImage(newNameImage, id);
-        } catch (IOException e) {
-            logger.trace(Arrays.toString(Arrays.stream(e.getStackTrace()).toArray()));
+        if (userInfoService.updateImage(image, id)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
         }
-
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/load-photo/{imageUrl}")
     public ResponseEntity<?> loadProduct(@PathVariable(name = "imageUrl") String imageUrl) {
         try {
-            File file = new File(
-                    System.getProperty("user.dir")+ "/photos/" + imageUrl);
+            File file = new File(System.getProperty("user.dir") + "/photos/" + imageUrl);
             Path path = Paths.get(file.getAbsolutePath());
             ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
             return ResponseEntity
