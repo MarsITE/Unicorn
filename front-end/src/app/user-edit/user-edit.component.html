@@ -31,6 +31,7 @@
             matInput
             placeholder="Mobile phone"
             formControlName="phone"
+            mask="(+000) 00 00 00 000"
           />
         </mat-form-field>
       </p>
@@ -47,29 +48,41 @@
       </p>
 
       <p>
-        <mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Date of birth</mat-label>
           <input
-            type="date"
             matInput
-            placeholder="Date of birth"
+            [matDatepicker]="picker"
+            [formControl]="user.userInfo.dateOfBirth"
             formControlName="dateOfBirth"
+            [max]="today"
           />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
       </p>
 
-      <mat-select
-        [(ngModel)]="user.userInfo.workStatus"
-        name="workStatus"
-        class="work-status"
-      >
-        <mat-option
-          *ngFor="let workStatus of workStatuses"
-          [value]="workStatus.value"
-        >
-          {{ workStatus.viewValue }}
-        </mat-option>
-      </mat-select>
-
+      <p>
+        <mat-form-field>
+          <mat-label>Work status</mat-label>
+          <mat-select
+            [(value)]="selectedWorkStatus"
+            #clientValue
+            (selectionChange)="getWorkStatus($event.value)"
+            [(ngModel)]="user.userInfo.workStatus"
+            name="workStatus"
+            class="work-status">
+            <mat-option
+              *ngFor="let workStatus of workStatuses"
+              [value]="workStatus.value">
+              {{ workStatus.viewValue }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </p>
       <p>
         <mat-checkbox
           formControlName="isShowInfo"
@@ -80,7 +93,11 @@
         </mat-checkbox>
       </p>
       <div style="display: flex; flex-direction: column">
-        <input type="file" (change)="loadImage($event)" accept=".jpg,.jpeg,.png" />
+        <input
+          type="file"
+          (change)="loadImage($event)"
+          accept=".jpg,.jpeg,.png"
+        />
         <img *ngIf="imageSrc" class="selected-img" [src]="imageSrc" />
       </div>
 

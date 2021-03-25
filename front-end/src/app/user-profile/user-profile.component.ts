@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../common/model/user';
 import { UserHttpService } from '../common/services/user-http.service';
 import { DomSanitizer, SafeUrl, SafeHtml } from '@angular/platform-browser';
+import { WorkStatus } from '../common/model/work-status';
 
 @Component({
   selector: 'app-user-profile',
@@ -15,6 +16,12 @@ export class UserProfileComponent implements OnInit {
   imageUrl: string;
   image;
   imageBlobUrl;
+  workStatuses: WorkStatus[] = [
+    { value: 'PART_TIME', viewValue: 'Part time' },
+    { value: 'FULL_TIME', viewValue: 'Full time' },
+    { value: 'OVERTIME', viewValue: 'Overtime' },
+    { value: 'BUSY', viewValue: 'Busy' }
+  ];
 
   constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router, private domSanitizer: DomSanitizer) {
     this.email = router.snapshot.params.email;
@@ -29,6 +36,7 @@ export class UserProfileComponent implements OnInit {
       (response: User) => {
         this.user = response;
         this.getImage(this.user.userInfo.imageUrl);
+        this.setViewForWorkStatus();
       },
       (error) => {
         console.log('error', error);
@@ -60,5 +68,14 @@ export class UserProfileComponent implements OnInit {
 
   public delete(email: string): void {
 
+  }
+
+  public setViewForWorkStatus(): void {
+    this.workStatuses.forEach(ws => {
+      if (ws.value === this.user.userInfo.workStatus) {
+        console.log(this.user.userInfo.workStatus);
+        this.user.userInfo.workStatus = ws.viewValue;
+      }
+    });
   }
 }

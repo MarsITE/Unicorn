@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../common/model/user';
-import { UserInfo } from '../common/model/user-info';
 import { WorkStatus } from '../common/model/work-status';
 import { UserHttpService } from '../common/services/user-http.service';
 
@@ -11,6 +10,7 @@ import { UserHttpService } from '../common/services/user-http.service';
   templateUrl: './user-edit.component.html',
   styleUrls: ['./user-edit.component.css']
 })
+
 export class UserEditComponent implements OnInit, OnDestroy {
   email: string;
   user: User;
@@ -18,6 +18,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
   imageURL: string;
   imageSrc: any;
   selectedImage: any;
+  today: Date;
+  selectedWorkStatus: WorkStatus;
   workStatuses: WorkStatus[] = [
     { value: 'PART_TIME', viewValue: 'Part time' },
     { value: 'FULL_TIME', viewValue: 'Full time' },
@@ -46,6 +48,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
     workStatus: string,
     imageUrl: string
   ): void {
+    this.today = new Date();
     this.userProfileForm = new FormGroup({
       firstName: new FormControl(
         firstName,
@@ -55,7 +58,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
         [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(20), Validators.minLength(2)]),
       phone: new FormControl(
         phone,
-        [Validators.pattern('^[0-9]*$')]),
+        [Validators.pattern('[- +()0-9]+')]),
       linkToSocialNetwork: new FormControl(linkToSocialNetwork),
       dateOfBirth: new FormControl(dateOfBirth),
       isShowInfo: new FormControl(isShowInfo, [Validators.required]),
@@ -68,6 +71,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
     this.userService.getByEmail(email).subscribe(
       (response: User) => {
         this.user = response;
+        this.setViewForWorkStatus(this.user.userInfo.workStatus);
         this.initForm(
           this.user.userInfo.firstName,
           this.user.userInfo.lastName,
@@ -95,23 +99,21 @@ export class UserEditComponent implements OnInit, OnDestroy {
     userInfo.linkToSocialNetwork = this.userProfileForm.controls.linkToSocialNetwork.value;
     userInfo.dateOfBirth = this.userProfileForm.controls.dateOfBirth.value;
     userInfo.showInfo = this.userProfileForm.controls.isShowInfo.value;
-
-    // userInfo.workStatus = this.user.userInfo.workStatus;
-
-    console.log(this.selectedImage);
-    let formData = new FormData();
-    formData.append("image", this.selectedImage);
-    this.userService.saveImage(formData, this.user.userInfo.userInfoId).subscribe(
-      response => {
-        console.log(response);
-      },
-      error => {
-        console.log(error);
-      },
-      () => {
-        console.log('image saved');
-      }
-    );
+    if (this.selectedImage != null) {
+      const formData = new FormData();
+      formData.append('image', this.selectedImage);
+      this.userService.saveImage(formData, this.user.userInfo.userInfoId).subscribe(
+        response => {
+          console.log(response);
+        },
+        error => {
+          console.log(error);
+        },
+        () => {
+          console.log('image saved');
+        }
+      );
+    }
 
     this.userService.updateUserInfo(userInfo).subscribe(response => {
       console.log(response);
@@ -127,11 +129,31 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
   public loadImage(event): void {
     this.selectedImage = event.target.files[0];
-    console.log(this.selectedImage)
     const fd = new FormData();
     fd.append('image', this.selectedImage, this.selectedImage.name);
     const reader = new FileReader();
     reader.onload = e => this.imageSrc = reader.result;
     reader.readAsDataURL(this.selectedImage);
+  }
+
+  public getWorkStatus(value): void {
+    console.log(value);
+    this.workStatuses.forEach(ws => {
+      if (ws.value === value) {
+        this.user.userInfo.workStatus = ws.value;
+        console.log(this.user.userInfo.workStatus);
+      }
+    });
+  }
+
+  public setViewForWorkStatus(value: string): void {
+    this.workStatuses.forEach(ws => {
+      if (ws.value === value) {
+        console.log(this.user.userInfo.workStatus);
+        this.user.userInfo.workStatus = ws.viewValue;
+        this.selectedWorkStatus = ws;
+        console.log(this.selectedWorkStatus);
+      }
+    });
   }
 }
