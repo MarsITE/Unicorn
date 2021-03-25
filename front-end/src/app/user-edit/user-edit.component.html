@@ -1,66 +1,42 @@
 <div class="container">
   <div class="title">User profile</div>
   <div class="content">
-    <form [formGroup]="userProfileForm" class="user-form">
+    <form *ngIf="user" [formGroup]="userProfileForm" class="user-form">
       <p>
         <mat-form-field>
-          <input
-            type="text"
-            matInput
-            placeholder="First name"
-            formControlName="firstName"
-          />
+          <input type="text" matInput placeholder="First name" formControlName="firstName" />
+          <mat-error *ngIf="userProfileForm.controls.firstName.invalid">First name must be between 2 and 20. Only
+            letters</mat-error>
         </mat-form-field>
       </p>
 
       <p>
         <mat-form-field>
-          <input
-            type="text"
-            matInput
-            placeholder="Last name"
-            formControlName="lastName"
-          />
+          <input type="text" matInput placeholder="Last name" formControlName="lastName" />
+          <mat-error *ngIf="userProfileForm.controls.lastName.invalid">Last name must be between 2 and 20. Only
+            letters.</mat-error>
         </mat-form-field>
       </p>
 
       <p>
         <mat-form-field>
-          <input
-            type="text"
-            matInput
-            placeholder="Mobile phone"
-            formControlName="phone"
-            mask="(+000) 00 00 00 000"
-          />
+          <input type="text" matInput placeholder="Mobile phone" formControlName="phone" mask="(+000) 00 00 00 000" />
+          <mat-error *ngIf="userProfileForm.controls.phone.invalid">Phone must be only numbers.</mat-error>
         </mat-form-field>
       </p>
 
       <p>
         <mat-form-field>
-          <input
-            type="text"
-            matInput
-            placeholder="link to social network"
-            formControlName="linkToSocialNetwork"
-          />
+          <input type="text" matInput placeholder="link to social network" formControlName="linkToSocialNetwork" />
         </mat-form-field>
       </p>
 
       <p>
         <mat-form-field appearance="fill">
           <mat-label>Date of birth</mat-label>
-          <input
-            matInput
-            [matDatepicker]="picker"
-            [formControl]="user.userInfo.dateOfBirth"
-            formControlName="dateOfBirth"
-            [max]="today"
-          />
-          <mat-datepicker-toggle
-            matSuffix
-            [for]="picker"
-          ></mat-datepicker-toggle>
+          <input matInput [matDatepicker]="picker" [formControl]="user.userInfo.dateOfBirth"
+            formControlName="dateOfBirth" [max]="today" />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
       </p>
@@ -68,41 +44,27 @@
       <p>
         <mat-form-field>
           <mat-label>Work status</mat-label>
-          <mat-select
-            [(value)]="selectedWorkStatus"
-            #clientValue
-            (selectionChange)="getWorkStatus($event.value)"
-            [(ngModel)]="user.userInfo.workStatus"
-            name="workStatus"
+          <mat-select [(value)]="selectedWorkStatus" #clientValue (selectionChange)="getWorkStatus($event.value)"
+            [(ngModel)]="user.userInfo.workStatus" [ngModelOptions]="{standalone: true}" name="workStatus"
             class="work-status">
-            <mat-option
-              *ngFor="let workStatus of workStatuses"
-              [value]="workStatus.value">
+            <mat-option *ngFor="let workStatus of workStatuses" [value]="workStatus.value">
               {{ workStatus.viewValue }}
             </mat-option>
           </mat-select>
         </mat-form-field>
       </p>
       <p>
-        <mat-checkbox
-          formControlName="isShowInfo"
-          id="isShowInfo"
-          class="is-show-info"
-        >
+        <mat-checkbox formControlName="isShowInfo" id="isShowInfo" class="is-show-info">
           <div>Public profile</div>
         </mat-checkbox>
       </p>
       <div style="display: flex; flex-direction: column">
-        <input
-          type="file"
-          (change)="loadImage($event)"
-          accept=".jpg,.jpeg,.png"
-        />
+        <input type="file" (change)="loadImage($event)" accept=".jpg,.jpeg,.png" />
         <img *ngIf="imageSrc" class="selected-img" [src]="imageSrc" />
       </div>
 
       <div class="button">
-        <button (click)="submit()" mat-button>Save</button>
+        <button (click)="submit()" mat-button [disabled]="!userProfileForm.valid">Save</button>
       </div>
     </form>
   </div>

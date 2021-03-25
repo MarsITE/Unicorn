@@ -20,8 +20,8 @@ export class UserHttpService {
     return this.http.post<User>(`${environment.url}/user`, user);
   }
 
-  public deleteUser(id: string): Observable<any> {
-    return this.http.delete<User>(`${environment.url}/user/${id}`);
+  public deleteUser(email: string): Observable<any> {
+    return this.http.delete<User>(`${environment.url}/user/${email}`);
   }
 
   public getByEmail(email: string): Observable<User> {

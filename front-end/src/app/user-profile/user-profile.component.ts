@@ -67,7 +67,17 @@ export class UserProfileComponent implements OnInit {
   }
 
   public delete(email: string): void {
-
+    this.userService.deleteUser(email).subscribe(
+      (response) => {
+        console.log('deleted');
+      },
+      (error) => {
+        console.log('error', error);
+      },
+      () => {
+        console.log('complete');
+      }
+    );
   }
 
   public setViewForWorkStatus(): void {

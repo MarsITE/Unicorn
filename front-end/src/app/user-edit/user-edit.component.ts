@@ -29,6 +29,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
   constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router) {
     this.email = router.snapshot.params.email;
+    this.initForm('', '', '', '', '', false, '', '');
   }
 
   ngOnInit(): void {
@@ -58,10 +59,10 @@ export class UserEditComponent implements OnInit, OnDestroy {
         [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(20), Validators.minLength(2)]),
       phone: new FormControl(
         phone,
-        [Validators.pattern('[- +()0-9]+')]),
+        [Validators.required, Validators.pattern('[- +()0-9]+')]),
       linkToSocialNetwork: new FormControl(linkToSocialNetwork),
       dateOfBirth: new FormControl(dateOfBirth),
-      isShowInfo: new FormControl(isShowInfo, [Validators.required]),
+      isShowInfo: new FormControl(isShowInfo),
       workStatus: new FormControl(workStatus),
       imageUrl: new FormControl(imageUrl)
     });
@@ -136,7 +137,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
     reader.readAsDataURL(this.selectedImage);
   }
 
-  public getWorkStatus(value): void {
+  public getWorkStatus(value: string): void {
     console.log(value);
     this.workStatuses.forEach(ws => {
       if (ws.value === value) {
