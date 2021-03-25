@@ -1,12 +1,8 @@
 package com.academy.workSearch.controller;
 
-import com.academy.workSearch.exceptionHandling.NoSuchUserException;
 import com.academy.workSearch.model.Skill;
-import com.academy.workSearch.model.User;
 import com.academy.workSearch.service.SkillService;
-import com.academy.workSearch.service.UserService;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,14 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
-@RequestMapping("/api1")
+@RequestMapping("/api/1")
 @AllArgsConstructor
 
-public class SkillController {
-    private final Logger logger = LoggerFactory.getLogger(SkillController.class);
+public class UserSkillController {
+    private final Logger logger = LoggerFactory.getLogger(UserSkillController.class);
 
     @Autowired
     private final SkillService skillService;
