@@ -8,4 +8,6 @@ public interface UserDAO {
     User getByEmail(String email);
 
     UUID getIdByEmail(String email);
+
+    void deleteByEmail(String email);
 }

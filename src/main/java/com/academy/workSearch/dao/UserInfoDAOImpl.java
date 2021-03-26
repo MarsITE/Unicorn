@@ -43,4 +43,10 @@ public class UserInfoDAOImpl implements CrudDAO<UserInfo>, UserInfoDAO {
         query.setParameter("userInfoId", id);
         query.executeUpdate();
     }
+
+    @Override
+    public UUID saveAndGetId(UserInfo userInfo) {
+        Session session = sessionFactory.getCurrentSession();
+        return (UUID) session.save(userInfo);
+    }
 }

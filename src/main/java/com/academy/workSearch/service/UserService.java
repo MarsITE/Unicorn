@@ -12,11 +12,13 @@ public interface UserService {
 
     void save(UserDTO UserDTO);
 
-    UserDTO update(UserDTO user) throws ValidationException;
+    UserDTO update(UserDTO user);
 
     UserDTO get(UUID id);
 
     void delete(UUID id);
+
+    void deleteByEmail(String email);
 
     UserDTO getByEmail(String email);
 

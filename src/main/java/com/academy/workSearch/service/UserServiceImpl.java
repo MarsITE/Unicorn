@@ -2,6 +2,7 @@ package com.academy.workSearch.service;
 
 import com.academy.workSearch.dao.CrudDAO;
 import com.academy.workSearch.dao.UserDAOImpl;
+import com.academy.workSearch.dao.UserInfoDAOImpl;
 import com.academy.workSearch.dto.UserDTO;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.UserInfo;
@@ -14,6 +15,7 @@ import javax.validation.ValidationException;
 import java.util.List;
 import java.util.UUID;
 
+import static com.academy.workSearch.dto.mapper.UserInfoMapper.USER_INFO_MAPPER;
 import static com.academy.workSearch.dto.mapper.UserMapper.USER_MAPPER;
 
 @Service
@@ -23,19 +25,20 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private final CrudDAO<User> userCrudDAO;
-
-    @Autowired
-    private final CrudDAO<UserInfo> userInfoCrudDAO;
-
     private final UserDAOImpl userDAO;
 
-    private final ValidatorService<User> validatorService = new ValidatorService<>();
+    @Autowired
+    private final UserInfoDAOImpl userInfoDAO;
 
     public List<UserDTO> findAll() {
         return USER_MAPPER.map(userCrudDAO.findAll());
     }
 
     public void save(UserDTO user) throws ValidationException {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserInfoId(userInfoDAO.saveAndGetId(userInfo));
+        userInfoDAO.save(userInfo);
+        user.setUserInfo(USER_INFO_MAPPER.toUserInfoDto(userInfo));
         userCrudDAO.save(USER_MAPPER.toUser(user));
     }
 
@@ -45,9 +48,7 @@ public class UserServiceImpl implements UserService {
         User user2 = USER_MAPPER.toUser(user);
         user2.setPassword(user1.getPassword());
         user2.setUserId(user1.getUserId());
-        if (validatorService.validate(user2).isEmpty()) {
-            userCrudDAO.save(user2);
-        } else throw new ValidationException("Something wrong");
+        userCrudDAO.save(user2);
         return USER_MAPPER.toUserDto(user2);
     }
 
@@ -57,6 +58,10 @@ public class UserServiceImpl implements UserService {
 
     public void delete(UUID id) {
         userCrudDAO.delete(id);
+    }
+
+    public void deleteByEmail(String email) {
+        userDAO.deleteByEmail(email);
     }
 
     public UserDTO getByEmail(String email) {

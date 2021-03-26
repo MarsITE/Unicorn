@@ -1,5 +1,6 @@
 package com.academy.workSearch.controller;
 
+import com.academy.workSearch.dto.PhotoDTO;
 import com.academy.workSearch.dto.UserInfoDTO;
 import com.academy.workSearch.service.UserInfoService;
 import io.swagger.annotations.ApiOperation;
@@ -9,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,7 +22,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 
 @RestController
-@RequestMapping("/api/user-info")
+@RequestMapping("/api/v1/user-profile")
 @AllArgsConstructor
 public class UserInfoController {
     private final Logger logger = LoggerFactory.getLogger(UserInfoController.class);
@@ -30,7 +30,7 @@ public class UserInfoController {
 
     @PutMapping("/")
     @ApiOperation(value = "Update existing user info", notes = "Update existing user info")
-    public ResponseEntity<UserInfoDTO> updateUserInfo(@RequestBody UserInfoDTO user, BindingResult result) {
+    public ResponseEntity<UserInfoDTO> updateUserInfo(@RequestBody UserInfoDTO user) {
         try {
             logger.info("Update user-info = " + user.getUserInfoId());
             userInfoService.save(user);
@@ -43,7 +43,8 @@ public class UserInfoController {
     }
 
     @PutMapping("/save-photo/{id}")
-    public ResponseEntity<MultipartFile> insertProduct(@RequestPart("image") MultipartFile image, @PathVariable(name = "id") String id) {
+    @ApiOperation(value = "Save user photo", notes = "Save user photo")
+    public ResponseEntity<MultipartFile> savePhoto(@RequestPart("image") MultipartFile image, @PathVariable(name = "id") String id) {
         if (userInfoService.updateImage(image, id)) {
             return ResponseEntity.ok().build();
         } else {
@@ -51,20 +52,14 @@ public class UserInfoController {
         }
     }
 
-    @GetMapping("/load-photo/{imageUrl}")
-    public ResponseEntity<?> loadProduct(@PathVariable(name = "imageUrl") String imageUrl) {
-        try {
-            File file = new File(System.getProperty("user.dir") + "/photos/" + imageUrl);
-            Path path = Paths.get(file.getAbsolutePath());
-            ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
-            return ResponseEntity
-                    .ok()
-                    .contentLength(file.length())
-                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                    .body(resource);
-        } catch (IOException e) {
-            logger.trace(Arrays.toString(Arrays.stream(e.getStackTrace()).toArray()));
-            return ResponseEntity.badRequest().build();
-        }
+    @GetMapping("/load-photo/{imageName}")
+    @ApiOperation(value = "Load user photo", notes = "Load user photo")
+    public ResponseEntity<ByteArrayResource> loadPhoto(@PathVariable(name = "imageName") String imageName) {
+        PhotoDTO photoDTO = userInfoService.loadPhoto(imageName);
+        return ResponseEntity
+                .ok()
+                .contentLength(photoDTO.getFileLength())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(photoDTO.getPhoto());
     }
 }

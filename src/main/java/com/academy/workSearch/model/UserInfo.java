@@ -39,7 +39,7 @@ public class UserInfo {
     @ApiModelProperty(notes = "Date of birth of the user")
     private LocalDate dateOfBirth;
 
-    @Column(name = "is_show_info")
+    @Column(name = "is_show_info", columnDefinition = "boolean default true")
     private boolean isShowInfo;
 
     @Enumerated(EnumType.STRING)
@@ -49,7 +49,7 @@ public class UserInfo {
 
     @Min(1)
     @Max(5)
-    @Column(name = "general_rating")
+    @Column(name = "general_rating", columnDefinition = "Float default 0")
     private Float generalRating;
 
     @Column(name = "image_url")
@@ -66,4 +66,7 @@ public class UserInfo {
             inverseJoinColumns = {@JoinColumn(name = "skill_id")}
     )
     private Set<Skill> skills;
+
+    @Column(name = "description", length = 2000)
+    private String description;
 }

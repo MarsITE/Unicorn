@@ -29,14 +29,14 @@ export class UserHttpService {
   }
 
   public updateUserInfo(userInfo: UserInfo): Observable<UserInfo> {
-    return this.http.put<UserInfo>(`${environment.url}/user-info/`, userInfo);
+    return this.http.put<UserInfo>(`${environment.url}/user-profile/`, userInfo);
   }
 
   public loadImage(imageURL: string): Observable<any> {
-    return this.http.get(`${environment.url}/user-info/load-photo/${imageURL}`, { responseType: 'blob' });
+    return this.http.get(`${environment.url}/user-profile/load-photo/${imageURL}`, { responseType: 'blob' });
   }
 
   public saveImage(photo: any, id: string): Observable<Blob> {
-    return this.http.put<any>(`${environment.url}/user-info/save-photo/${id}`, photo);
+    return this.http.put<any>(`${environment.url}/user-profile/save-photo/${id}`, photo);
   }
 }

@@ -11,12 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.ValidationException;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 @AllArgsConstructor
 public class UserController {
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -24,58 +22,45 @@ public class UserController {
 
     @GetMapping("/users")
     @ApiOperation(value = "Show all users", notes = "Show information about all users in DB")
-    public List<UserDTO> showUsers() {
+    public ResponseEntity<List<UserDTO>> showUsers() {
         logger.info("Show all users");
-        return userService.findAll();
+        return ResponseEntity.ok(userService.findAll());
     }
 
     @GetMapping("/user/{email}")
     @ApiOperation(value = "Find user by email", notes = "Find user in DB, if user exist")
-    public UserDTO getUser(@ApiParam(value = "email value for user you need to retrive", required = true)
-                           @PathVariable String email) {
+    public ResponseEntity<UserDTO> getUser(@ApiParam(value = "email value for user you need to retrive", required = true)
+                                           @PathVariable String email) {
         UserDTO user = userService.getByEmail(email);
         logger.info("Find user with email = " + email);
         if (user == null) {
             logger.error("There is no user with email = " + email + " in Database");
             throw new NoSuchUserException("There is no user with email = " + email + " in Database");
         }
-        return user;
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping("/user")
     @ApiOperation(value = "Add new user", notes = "Add new user in DB")
-    public UserDTO addNewUser(@RequestBody UserDTO user) {
-        try {
-            userService.save(user);
-        } catch (ValidationException e) {
-            e.printStackTrace();
-        }
+    public ResponseEntity<UserDTO> addNewUser(@RequestBody UserDTO user) {
+        userService.save(user);
         logger.info("Add user with email = " + user.getEmail());
-        return user;
+        return ResponseEntity.ok(user);
+
+
     }
 
     @PutMapping("/user")
     @ApiOperation(value = "Update existing user", notes = "Update existing user")
     public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO user) {
-        try {
-            return ResponseEntity.ok(userService.update(user));
-        } catch (ValidationException e) {
-            e.printStackTrace();
-        }
-        logger.info("Update user with email = " + user.getEmail());
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(userService.update(user));
     }
 
     @DeleteMapping("/user/{email}")
     @ApiOperation(value = "Delete existing user", notes = "Delete existing user")
-    public void deleteUser(@PathVariable String email) {
-        UserDTO user = userService.getByEmail(email);
-        if (user == null) {
-            logger.error("There is no user with email = " + email + " in Database");
-            throw new NoSuchUserException("There is no user with email = " + email + " in Database");
-        }
-        UUID id = userService.getIdByEmail(email);
-        userService.delete(id);
-        logger.info("Delete user with ID = " + id);
+    public ResponseEntity<?> deleteUser(@PathVariable String email) {
+        userService.deleteByEmail(email);
+        return ResponseEntity.ok().build();
     }
+
 }

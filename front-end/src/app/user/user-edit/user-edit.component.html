@@ -44,9 +44,8 @@
       <p>
         <mat-form-field>
           <mat-label>Work status</mat-label>
-          <mat-select [(value)]="selectedWorkStatus" #clientValue (selectionChange)="getWorkStatus($event.value)"
-            [(ngModel)]="user.userInfo.workStatus" [ngModelOptions]="{standalone: true}" name="workStatus"
-            class="work-status">
+          <mat-select [(value)]="selectedWorkStatus.value" #clientValue (selectionChange)="getWorkStatus($event.value)"
+            name="workStatus" class="work-status">
             <mat-option *ngFor="let workStatus of workStatuses" [value]="workStatus.value">
               {{ workStatus.viewValue }}
             </mat-option>
@@ -59,11 +58,12 @@
         </mat-checkbox>
       </p>
       <div style="display: flex; flex-direction: column">
-        <input type="file" (change)="loadImage($event)" accept=".jpg,.jpeg,.png" />
+        <input class="ng-hide" id="input-file-id"  (change)="loadImage($event)" accept=".jpg,.jpeg,.png" type="file" hidden/>
+        <label for="input-file-id" class="md-button md-raised md-primary">Choose Files</label>
         <img *ngIf="imageSrc" class="selected-img" [src]="imageSrc" />
       </div>
 
-      <div class="button">
+      <div class="button-save">
         <button (click)="submit()" mat-button [disabled]="!userProfileForm.valid">Save</button>
       </div>
     </form>
