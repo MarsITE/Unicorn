@@ -15,7 +15,7 @@ public class Skill {
     @Column(name = "skill_id")
     private UUID skillId;
 
-    @Column(name = "name_of_skill", length = 20)
+    @Column(name = "name", length = 20)
     private String name;
 
     @Column(name = "enabled")

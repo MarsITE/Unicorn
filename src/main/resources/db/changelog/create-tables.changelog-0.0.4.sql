@@ -5,20 +5,20 @@ create table if not exists projects
             primary key
         constraint fkl60dr7cx3pm32he12stq3amdw
             references users_info,
-    date_of_creation          date,
+    creation_date          date,
     description               varchar(2000),
     name                      varchar(20),
     project_status            varchar(255),
     employer_user_id          uuid
         constraint fkocqnwtcu0osp5wbuehxaohr1y
             references users,
-    employerrating_raiting_id uuid
+    employer_rating_rating_id uuid
         constraint fkc0o2hl0qbw2ndbvaowngumlct
             references ratings,
     worker_user_id            uuid
         constraint fkenorci719xxabc0pv7ub8fkre
             references users,
-    workerrating_raiting_id   uuid
+    worker_rating_rating_id   uuid
         constraint fkceyvnb0c0ilonh0oismkbepyg
             references ratings
 );
@@ -43,7 +43,7 @@ alter table projects_skills
 
 create table if not exists ratings
 (
-    raiting_id uuid not null
+    rating_id uuid not null
         constraint ratings_pkey
             primary key,
     comment    varchar(100),
@@ -60,7 +60,7 @@ create table if not exists roles
     role_id      uuid not null
         constraint roles_pkey
             primary key,
-    name_of_role varchar(20)
+    name varchar(20)
 );
 
 alter table roles
@@ -71,7 +71,7 @@ create table if not exists skills
     skill_id      uuid not null
         constraint skills_pkey
             primary key,
-    name_of_skill varchar(20)
+    name varchar(20)
 );
 
 alter table skills
@@ -83,12 +83,9 @@ create table if not exists users
         constraint users_pkey
             primary key,
     is_active_account varchar(255),
-    date_of_creation  date,
+    creation_date  date,
     email             varchar(20),
-    password          varchar(255),
-    user_info_id           uuid
-        constraint fk49cpkihie8ykk50kuq7yh242e
-            references users_info
+    password          varchar(255)
 );
 
 alter table users
@@ -105,7 +102,10 @@ create table if not exists users_info
     is_show_info           boolean,
     link_to_social_network varchar(255),
     phone                  varchar(15),
-    date_of_birth     date,
+    user_user_id           uuid
+        constraint fk49cpkihie8ykk50kuq7yh242e
+            references users,
+    birth_date     date,
     first_name        varchar(20),
     image             oid,
     last_name         varchar(20),

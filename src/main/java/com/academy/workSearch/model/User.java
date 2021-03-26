@@ -41,9 +41,9 @@ public class User {
     private AccountStatus accountStatus;
 
     @CreationTimestamp
-    @Column(name = "date_of_creation")
-    @ApiModelProperty(notes = "Date of creation", position = 5)
-    private LocalDateTime dateOfCreation;
+    @Column(name = "creation_date")
+    @ApiModelProperty(notes = "Creation date", position = 5)
+    private LocalDateTime creationDate;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @ApiModelProperty(notes = "User role", position = 6)
@@ -55,6 +55,7 @@ public class User {
     private Set<Role> roles;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ApiModelProperty(notes = "User info", position = 7)
     @JoinColumn(name = "user_info_id")
     private UserInfo userInfo;
 }

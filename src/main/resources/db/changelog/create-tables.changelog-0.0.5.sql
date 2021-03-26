@@ -1,27 +1,27 @@
  
 create table if not exists projects
 (
-    project_id        uuid not null
+    project_id       uuid not null
         constraint projects_pkey
             primary key,
-    date_of_creation  timestamp,
-    description       varchar(2000),
-    name              varchar(20),
-    project_status    varchar(255),
-    owner_id          uuid not null
+    creation_date    timestamp,
+    description      varchar(2000),
+    name             varchar(20),
+    project_status   varchar(255),
+    owner_id         uuid not null
         constraint fkmueqy6cpcwpfl8gnnag4idjt9
             references users,
-    owner_rating_id   uuid
+    owner_rating_id  uuid
         constraint fk6m9gn8ko2tjjw4b985xwp41o2
             references ratings,
-    user_info_id      uuid
+    user_info_id     uuid
         constraint fkj8qkkmwp3ij2hwxrv4ivpc0d5
             references users_info,
-    worker_id         uuid
+    worker_id        uuid
         constraint fkivvo1tyowrboqy406njlkn3ac
             references users,
-    worker_raiting_id uuid
-        constraint fkawt24jur3jmuwk2h0baputsf1
+    worker_rating_id uuid
+        constraint fkk896usk8xj0mg21d5r4ysj5aj
             references ratings
 );
 
@@ -47,11 +47,11 @@ alter table projects_skills
  
 create table if not exists ratings
 (
-    raiting_id uuid not null
+    rating_id uuid not null
         constraint ratings_pkey
             primary key,
-    comment    varchar(100),
-    rate       real
+    comment   varchar(100),
+    rate      real
         constraint ratings_rate_check
             check ((rate <= (5)::double precision) AND (rate >= (1)::double precision))
 );
@@ -62,10 +62,10 @@ alter table ratings
  
 create table if not exists roles
 (
-    role_id      uuid not null
+    role_id uuid not null
         constraint roles_pkey
             primary key,
-    name_of_role varchar(20)
+    name    varchar(20)
 );
 
 alter table roles
@@ -74,11 +74,11 @@ alter table roles
  
 create table if not exists skills
 (
-    skill_id      uuid not null
+    skill_id uuid not null
         constraint skills_pkey
             primary key,
-    enabled       boolean,
-    name_of_skill varchar(20)
+    enabled  boolean,
+    name     varchar(20)
 );
 
 alter table skills
@@ -87,14 +87,16 @@ alter table skills
  
 create table if not exists users
 (
-    user_id          uuid         not null
+    user_id        uuid         not null
         constraint users_pkey
             primary key,
-    account_status   varchar(255),
-    date_of_creation timestamp,
-    email            varchar(20)  not null,
-    password         varchar(255) not null,
-    user_info_id     uuid
+    account_status varchar(255),
+    creation_date  timestamp,
+    email          varchar(20)  not null
+        constraint uk6dotkott2kjsp8vw4d0m25fb7
+            unique,
+    password       varchar(255) not null,
+    user_info_id   uuid
         constraint fka4pav0806byoi689xgfobjqic
             references users_info
 );
@@ -108,13 +110,14 @@ create table if not exists users_info
     user_info_id           uuid not null
         constraint users_info_pkey
             primary key,
-    date_of_birth          date,
+    birth_date             date,
+    description            varchar(2000),
     first_name             varchar(20),
-    general_rating         real
+    general_rating         double precision default 0
         constraint users_info_general_rating_check
             check ((general_rating <= (5)::double precision) AND (general_rating >= (1)::double precision)),
     image_url              varchar(255),
-    is_show_info           boolean,
+    is_show_info           boolean          default true,
     last_name              varchar(20),
     link_to_social_network varchar(255),
     phone                  varchar(15),

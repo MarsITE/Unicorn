@@ -47,7 +47,7 @@ public class Project {
 
 
     @OneToOne
-    @JoinColumn(name = "worker_raiting_id")
+    @JoinColumn(name = "worker_rating_id")
     private Rating workerRating;
 
     @OneToOne
@@ -55,8 +55,8 @@ public class Project {
     private Rating employerRating;
 
     @CreationTimestamp
-    @Column(name = "date_of_creation")
-    private LocalDateTime dateOfCreation;
+    @Column(name = "creation_date")
+    private LocalDateTime creationDate;
 
     @ManyToOne
     @JoinColumn(name = "user_info_id", insertable = false, updatable = false)
