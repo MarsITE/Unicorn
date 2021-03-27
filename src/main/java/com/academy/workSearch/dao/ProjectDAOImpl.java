@@ -9,22 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.UUID;
 
 @Repository
-public class ProjectDAOImpl  implements ProjectDAO, CrudDAO<Project> {
+public class ProjectDAOImpl  extends CrudDAOImpl<Project> implements ProjectDAO {
 
     @Autowired
     private SessionFactory sessionFactory;
-
-    @Override
-    public List<Project> findAll() {
-        Session session = sessionFactory.getCurrentSession();
-        Query<Project> query = session.createQuery("from Project order by creation_date desc", Project.class);
-        query.setFirstResult(0);
-        query.setMaxResults(10);
-        return query.getResultList();
-    }
 
     @Override
     public List<Project> findLast(int page, int maxResult) {
@@ -37,25 +27,4 @@ public class ProjectDAOImpl  implements ProjectDAO, CrudDAO<Project> {
 
         return result;
     }
-
-    @Override
-    public void save(Project project) {
-        Session session = sessionFactory.getCurrentSession();
-        session.saveOrUpdate(project);
-    }
-
-    @Override
-    public Project get(UUID id) {
-        Session session = sessionFactory.getCurrentSession();
-        return session.get(Project.class, id);
-    }
-
-    @Override
-    public void delete(UUID id) {
-        Session session = sessionFactory.getCurrentSession();
-        Query<Project> query = session.createQuery("delete from Project where id =:projectId");
-        query.setParameter("projectId", id);
-        query.executeUpdate();
-    }
-
 }
