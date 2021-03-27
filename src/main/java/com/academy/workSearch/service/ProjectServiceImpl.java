@@ -4,7 +4,6 @@ import com.academy.workSearch.dao.CrudDAOImpl;
 import com.academy.workSearch.dao.ProjectDAO;
 import com.academy.workSearch.dto.ProjectDTO;
 import com.academy.workSearch.dto.mapper.ProjectMapper;
-import com.academy.workSearch.model.AccountStatus;
 import com.academy.workSearch.model.Project;
 import com.academy.workSearch.model.ProjectStatus;
 import com.academy.workSearch.model.User;
@@ -40,9 +39,6 @@ public class ProjectServiceImpl implements ProjectService {
 
         User user = new User();
         user.setUserId(UUID.fromString("8486765d-0a3b-4dea-9c22-66746c440a22"));
-        user.setAccountStatus(AccountStatus.ACTIVE);
-        user.setEmail("admin@gmail.com");
-        user.setPassword("111111");
 
         Project project = ProjectMapper.INSTANCE.toEntity(projectDto);
         project.setEmployer(user);
