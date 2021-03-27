@@ -1,7 +1,6 @@
 package com.academy.workSearch.dao;
 
 import com.academy.workSearch.model.AccountStatus;
-import com.academy.workSearch.model.Project;
 import com.academy.workSearch.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

@@ -43,6 +43,7 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = ProjectMapper.INSTANCE.toEntity(projectDto);
         project.setEmployer(user);
         project.setProjectStatus(ProjectStatus.LOOKING_FOR_WORKER);
+
         projectCrudDAO.save(project);
     }
 

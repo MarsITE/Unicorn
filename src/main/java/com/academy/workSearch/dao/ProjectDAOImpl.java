@@ -23,8 +23,6 @@ public class ProjectDAOImpl  extends CrudDAOImpl<Project> implements ProjectDAO 
         Query<Project> query = session.createQuery("from Project order by creation_date desc", Project.class);
         PaginationResult<Project> paginationResult = new PaginationResult(query, page, maxResult, 10);
 
-        List<Project> result = paginationResult.getList();
-
-        return result;
+        return paginationResult.getList();
     }
 }
