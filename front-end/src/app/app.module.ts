@@ -54,14 +54,20 @@ import { UserEditComponent } from './user/user-edit/user-edit.component';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
+import { ProjectService } from './common/services/project.service';
+import { ProjectComponent } from './project/project.component';
+import { ProjectAddComponent } from './project/project-add/project-add.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    ProjectComponent,
+    ProjectAddComponent,
     UserListComponent,
     UserProfileComponent,
     UserEditComponent
-   ],
+  ],   
+    
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -110,14 +116,15 @@ import { NgxMaskModule, IConfig } from 'ngx-mask';
     MatTreeModule,
     OverlayModule,
     PortalModule,
-    ScrollingModule,
+    FormsModule,
+    ScrollingModule,    
     MatFormFieldModule,
     MatCardModule,
     FormsModule,
     ReactiveFormsModule,
     NgxMaskModule.forRoot()
   ],
-  providers: [UserHttpService],
+  providers: [ProjectService, UserHttpService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

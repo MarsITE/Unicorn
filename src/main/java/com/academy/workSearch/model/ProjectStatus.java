@@ -1,5 +1,14 @@
 package com.academy.workSearch.model;
 
 public enum ProjectStatus {
-    LOOKING_FOR_WORKER, DEVELOPING, TESTING, CLOSED
+    LOOKING_FOR_WORKER ("Looking for worker"),
+    DEVELOPING ("Developing"),
+    TESTING ("Testing"),
+    CLOSED ("Closed");
+
+    private String name;
+
+    ProjectStatus(String name) {
+        this.name = name;
+    }
 }
