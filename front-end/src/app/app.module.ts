@@ -48,13 +48,20 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { UserHttpService } from './common/services/user-http.service';
-import { UserListComponent } from './user-list/user-list.component';
+import { UserListComponent } from './user/user-list/user-list.component';
+import { UserProfileComponent } from './user/user-profile/user-profile.component';
+import { UserEditComponent } from './user/user-edit/user-edit.component';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxMaskModule, IConfig } from 'ngx-mask';
 
 @NgModule({
   declarations: [
     AppComponent,
-    UserListComponent
-  ],
+    UserListComponent,
+    UserProfileComponent,
+    UserEditComponent
+   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -103,7 +110,12 @@ import { UserListComponent } from './user-list/user-list.component';
     MatTreeModule,
     OverlayModule,
     PortalModule,
-    ScrollingModule
+    ScrollingModule,
+    MatFormFieldModule,
+    MatCardModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgxMaskModule.forRoot()
   ],
   providers: [UserHttpService],
   bootstrap: [AppComponent]

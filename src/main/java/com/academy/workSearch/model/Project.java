@@ -5,7 +5,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
@@ -29,7 +28,7 @@ public class Project {
     @Column(name = "project_status")
     private ProjectStatus projectStatus;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "worker_id")
     private User worker;
 
