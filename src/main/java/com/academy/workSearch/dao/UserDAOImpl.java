@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public class UserDAOImpl implements CrudDAO<User>, UserDAO {
+public class UserDAOImpl  extends CrudDAOImpl<User> implements UserDAO {
 
     @Autowired
     private SessionFactory sessionFactory;

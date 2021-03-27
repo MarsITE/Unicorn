@@ -14,8 +14,8 @@
              relativeToChangelogFile="true"/>
 <!--    <include file="changelog/insert-default-data.changelog-0.0.3.sql"-->
 <!--             relativeToChangelogFile="true"/>-->
-    <include file="changelog/insert-default-data.changelog-0.0.4.sql"
-             relativeToChangelogFile="true"/>
+<!--    <include file="changelog/insert-default-data.changelog-0.0.4.sql"
+             relativeToChangelogFile="true"/>-->
 
     <changeSet id="6" author="liliana">
         <comment>Changes in Projects,Roles,Skills,Users,UsersInfo </comment>
