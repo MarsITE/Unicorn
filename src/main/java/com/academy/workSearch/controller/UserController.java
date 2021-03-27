@@ -1,5 +1,6 @@
 package com.academy.workSearch.controller;
 
+import com.academy.workSearch.dto.UserRegistrationDto;
 import com.academy.workSearch.exceptionHandling.NoSuchUserException;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.service.UserService;
@@ -11,8 +12,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ValidationException;
 import java.util.List;
 import java.util.UUID;
+
+import static com.academy.workSearch.dto.mapper.UserRegistrationMapper.USER_REGISTRATION_MAPPER;
 
 @RestController
 @RequestMapping("/api")
@@ -22,6 +26,18 @@ public class UserController {
 
     @Autowired
     private final UserService userService;
+
+    @PostMapping("/registration")
+    @ApiOperation(value = "Add new user", notes = "Add new user in DB")
+    public UserRegistrationDto registerNewUser(@RequestBody UserRegistrationDto userRegistrationDto) {
+        try {
+            userService.save(USER_REGISTRATION_MAPPER.toEntity(userRegistrationDto));
+        } catch (ValidationException e) {
+            e.printStackTrace();
+        }
+        logger.info("Add user with email = " + userRegistrationDto.getEmail());
+        return userRegistrationDto;
+    }
 
     @GetMapping("/users")
     @ApiOperation(value = "Show all users", notes = "Show information about all users in DB")
