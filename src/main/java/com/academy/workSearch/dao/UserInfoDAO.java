@@ -4,7 +4,6 @@ import com.academy.workSearch.model.UserInfo;
 
 import java.util.UUID;
 
-public interface UserInfoDAO {
+public interface UserInfoDAO extends CrudDAO<UserInfo> {
     UUID saveAndGetId(UserInfo userInfo);
-
 }

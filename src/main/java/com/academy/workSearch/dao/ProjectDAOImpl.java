@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class ProjectDAOImpl  extends CrudDAOImpl<Project> implements ProjectDAO {
+public class ProjectDAOImpl extends CrudDAOImpl<Project> implements ProjectDAO {
 
     @Autowired
     private SessionFactory sessionFactory;
