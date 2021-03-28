@@ -8,6 +8,7 @@ import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.UserInfo;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,8 @@ import static com.academy.workSearch.dto.mapper.UserMapper.USER_MAPPER;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
+
+    @Qualifier("userDAOImpl")
     @Autowired
     private final CrudDAO<User> userCrudDAO;
     private final UserDAOImpl userDAO;
