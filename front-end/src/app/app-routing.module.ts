@@ -5,6 +5,7 @@ import { UserProfileComponent } from './user/user-profile/user-profile.component
 import { UserEditComponent } from './user/user-edit/user-edit.component';
 import { ProjectComponent } from './project/project.component';
 import { ProjectAddComponent } from './project/project-add/project-add.component';
+import { UserRegistrationComponent } from './user/user-registration/user-registration.component';
 
 const routes: Routes = [
   {
@@ -16,8 +17,11 @@ const routes: Routes = [
   }, {
     path: 'user-profile-edit/:email',
     component: UserEditComponent
+  }, {
+    path: 'registration',
+    component: UserRegistrationComponent
   },
-  
+
   {path: 'projects',
    component: ProjectComponent},
 

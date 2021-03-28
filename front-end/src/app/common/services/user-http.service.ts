@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { User } from '../model/user';
 import { UserInfo } from '../model/user-info';
 import { environment } from 'src/environments/environment';
+import { UserAuth } from '../model/user-auth';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +17,8 @@ export class UserHttpService {
     return this.http.get<User[]>(`${environment.url}/users`);
   }
 
-  public save(user: User): Observable<User> {
-    return this.http.post<User>(`${environment.url}/user`, user);
+  public save(user: UserAuth): Observable<UserAuth> {
+    return this.http.post<UserAuth>(`${environment.url}/registration`, user);
   }
 
   public deleteUser(email: string): Observable<any> {
