@@ -13,7 +13,7 @@ import java.util.UUID;
 public class Rating {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "raiting_id")
+    @Column(name = "rating_id")
     private UUID ratingId;
 
     @Min(1)

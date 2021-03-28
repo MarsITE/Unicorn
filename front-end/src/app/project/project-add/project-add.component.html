@@ -1,0 +1,17 @@
+<form class="project">
+
+  <h1 mat-card-title>Create new Project</h1>
+
+  <mat-form-field class="name">
+    <mat-label>Project name</mat-label>
+    <input matInput placeholder="project name" type="text" [(ngModel)] = "project.name" id="name" name="name">
+  </mat-form-field>
+
+  <mat-form-field class="name">
+    <mat-label>Description</mat-label>
+    <textarea matInput placeholder="Some description" type="text" [(ngModel)] = "project.description" id="description" name="description"></textarea>
+  </mat-form-field>
+
+  <button mat-stroked-button (click) = create()>Create</button>
+
+</form>

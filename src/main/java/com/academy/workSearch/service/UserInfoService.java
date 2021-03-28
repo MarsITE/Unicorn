@@ -1,36 +1,13 @@
 package com.academy.workSearch.service;
 
-import com.academy.workSearch.dao.CrudDAO;
-import com.academy.workSearch.model.UserInfo;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.academy.workSearch.dto.PhotoDTO;
+import com.academy.workSearch.dto.UserInfoDTO;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.UUID;
+public interface UserInfoService {
+    void save(UserInfoDTO userInfo);
 
-@Service
-@Transactional
-@AllArgsConstructor
-public class UserInfoService {
+    boolean updateImage(MultipartFile photo, String id);
 
-    @Autowired
-    private final CrudDAO<UserInfo> userInfoDAO;
-
-    public List<UserInfo> findAll() {
-        return userInfoDAO.findAll();
-    }
-
-    public void save(UserInfo userInfo) {
-        userInfoDAO.save(userInfo);
-    }
-
-    public UserInfo get(UUID id) {
-        return userInfoDAO.get(id);
-    }
-
-    public void delete(UUID id) {
-        userInfoDAO.delete(id);
-    }
+    PhotoDTO loadPhoto(String imageName);
 }

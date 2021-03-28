@@ -1,5 +1,6 @@
 package com.academy.workSearch.dao;
 
+import com.academy.workSearch.model.AccountStatus;
 import com.academy.workSearch.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -8,22 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public class UserDAOImpl implements CrudDAO<User>, UserDAO {
+public class UserDAOImpl  extends CrudDAOImpl<User> implements UserDAO {
 
     @Autowired
     private SessionFactory sessionFactory;
-
-    private UserDAOImpl userDAO;
-
-//    @Override
-//    public Optional<User> findByEmail(String email) {
-//        return userDAO.findByEmail(email);
-//
-//    }
 
     public List<User> findAll() {
         Session session = sessionFactory.getCurrentSession();
@@ -35,6 +27,7 @@ public class UserDAOImpl implements CrudDAO<User>, UserDAO {
     public void save(User user) {
         Session session = sessionFactory.getCurrentSession();
         session.saveOrUpdate(user);
+       // session.update(user);
     }
 
     @Override
@@ -61,5 +54,15 @@ public class UserDAOImpl implements CrudDAO<User>, UserDAO {
     public UUID getIdByEmail(String email) {
         Session session = sessionFactory.getCurrentSession();
         return session.get(UUID.class, email);
+    }
+
+    /**
+     * Safety save delete user
+     */
+    @Override
+    public void deleteByEmail(String email) {
+        User user = getByEmail(email);
+        user.setAccountStatus(AccountStatus.DELETED);
+        save(user);
     }
 }

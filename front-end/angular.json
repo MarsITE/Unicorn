@@ -10,7 +10,6 @@
       "sourceRoot": "src",
       "prefix": "app",
       "architect": {
-
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
@@ -123,5 +122,8 @@
       }
     }
   },
-  "defaultProject": "jobs-ui"
+  "defaultProject": "jobs-ui",
+  "cli": {
+    "analytics": "96229683-6183-44d0-99a6-1d18b1285f72"
+  }
 }

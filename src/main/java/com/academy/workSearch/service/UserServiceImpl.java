@@ -2,18 +2,21 @@ package com.academy.workSearch.service;
 
 import com.academy.workSearch.dao.CrudDAO;
 import com.academy.workSearch.dao.UserDAOImpl;
-import com.academy.workSearch.dto.UserRegistrationDto;
+import com.academy.workSearch.dao.UserInfoDAOImpl;
+import com.academy.workSearch.dto.UserDTO;
 import com.academy.workSearch.model.User;
+import com.academy.workSearch.model.UserInfo;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.ValidationException;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-import static com.academy.workSearch.dto.mapper.UserRegistrationMapper.USER_REGISTRATION_MAPPER;
+import static com.academy.workSearch.dto.mapper.UserInfoMapper.USER_INFO_MAPPER;
+import static com.academy.workSearch.dto.mapper.UserMapper.USER_MAPPER;
 
 @Service
 @Transactional
@@ -22,38 +25,50 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private final CrudDAO<User> userCrudDAO;
-
-
-    @Autowired
-
     private final UserDAOImpl userDAO;
 
+    @Autowired
+    private final UserInfoDAOImpl userInfoDAO;
+
+    public List<UserDTO> findAll() {
+        return USER_MAPPER.map(userCrudDAO.findAll());
+    }
+
+    public void save(UserDTO user) throws ValidationException {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserInfoId(userInfoDAO.saveAndGetId(userInfo));
+        userInfoDAO.save(userInfo);
+        user.setUserInfo(USER_INFO_MAPPER.toUserInfoDto(userInfo));
+        userCrudDAO.save(USER_MAPPER.toUser(user));
+    }
 
     @Override
-    public void save(UserRegistrationDto user) {
-        user.setEmail(user.getEmail());
-        user.setPassword(user.getPassword());
-        userDAO.save(USER_REGISTRATION_MAPPER.toEntity(user));
+    public UserDTO update(UserDTO user) throws ValidationException {
+        User user1 = userDAO.getByEmail(user.getEmail());
+        User user2 = USER_MAPPER.toUser(user);
+        user2.setPassword(user1.getPassword());
+        user2.setUserId(user1.getUserId());
+        userCrudDAO.save(user2);
+        return USER_MAPPER.toUserDto(user2);
     }
 
-    public List<User> findAll() {
-        return userDAO.findAll();
-    }
-
-    public void save(User user) {
-        userDAO.save(user);
-    }
-
-    public User get(UUID id) {
-        return userDAO.get(id);
+    public UserDTO get(UUID id) {
+        return USER_MAPPER.toUserDto(userCrudDAO.get(id));
     }
 
     public void delete(UUID id) {
-        userDAO.delete(id);
+        userCrudDAO.delete(id);
     }
 
-//    public Optional<User> findByEmail(String email) {
-//        return userDAO.findByEmail(email);
-//    }
-}
+    public void deleteByEmail(String email) {
+        userDAO.deleteByEmail(email);
+    }
 
+    public UserDTO getByEmail(String email) {
+        return USER_MAPPER.toUserDto(userDAO.getByEmail(email));
+    }
+
+    public UUID getIdByEmail(String email) {
+        return userDAO.getIdByEmail(email);
+    }
+}

@@ -1,5 +1,6 @@
 package com.academy.workSearch.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -8,15 +9,13 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
 @ApiModel(description = "User Info")
 public class User {
 
@@ -43,11 +42,11 @@ public class User {
     private AccountStatus accountStatus;
 
     @CreationTimestamp
-    @Column(name = "date_of_creation")
-    @ApiModelProperty(notes = "Date of creation", position = 5)
-    private LocalDateTime dateOfCreation;
+    @Column(name = "creation_date")
+    @ApiModelProperty(notes = "Creation date", position = 5)
+    private LocalDateTime creationDate;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @ApiModelProperty(notes = "User role", position = 6)
     @JoinTable(
             name = "users_roles",
@@ -56,4 +55,8 @@ public class User {
     )
     private Set<Role> roles;
 
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ApiModelProperty(notes = "User info", position = 7)
+    @JoinColumn(name = "user_info_id")
+    private UserInfo userInfo;
 }
