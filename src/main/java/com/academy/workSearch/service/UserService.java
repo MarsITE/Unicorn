@@ -22,5 +22,4 @@ public interface UserService {
 
     UserDTO getByEmail(String email);
 
-    UUID getIdByEmail(String email);
 }

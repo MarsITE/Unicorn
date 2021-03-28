@@ -181,3 +181,6 @@ build/
 /.gradle
 /.idea
 /gradle
+
+#for log files
+/.gz

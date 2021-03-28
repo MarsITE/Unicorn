@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public class CrudDAOImpl<E> implements CrudDAO<E>{
+public class CrudDAOImpl<E> implements CrudDAO<E> {
     private Class<E> clazz;
 
     @Autowired
     private SessionFactory sessionFactory;
 
-    public void setClazz(Class<E> clazzToSet){
+    public void setClazz(Class<E> clazzToSet) {
         this.clazz = clazzToSet;
     }
 
