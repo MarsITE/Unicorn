@@ -42,4 +42,5 @@ public class SkillDAO implements CrudDAO<Skill> {
         query.setParameter("skillId", id);
         query.executeUpdate();
     }
+
 }
