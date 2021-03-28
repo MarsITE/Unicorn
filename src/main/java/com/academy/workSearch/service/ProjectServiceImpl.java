@@ -1,6 +1,5 @@
 package com.academy.workSearch.service;
 
-import com.academy.workSearch.dao.CrudDAOImpl;
 import com.academy.workSearch.dao.ProjectDAO;
 import com.academy.workSearch.dto.ProjectDTO;
 import com.academy.workSearch.dto.mapper.ProjectMapper;
@@ -11,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,13 +19,16 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
 
-    private final CrudDAOImpl<Project> projectCrudDAO;
     private final ProjectDAO projectDAO;
+
+    @PostConstruct
+    private void setTypeClass() {
+        projectDAO.setClazz(Project.class);
+    }
 
     @Override
     public List<ProjectDTO> findAll() {
-        projectCrudDAO.setClazz(Project.class);
-        return ProjectMapper.INSTANCE.toProjectsDto(projectCrudDAO.findAll());
+        return ProjectMapper.INSTANCE.toProjectsDto(projectDAO.findAll());
     }
 
     @Override
@@ -35,8 +38,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void save(ProjectDTO projectDto) {
-        projectCrudDAO.setClazz(Project.class);
-
         User user = new User();
         user.setUserId(UUID.fromString("8486765d-0a3b-4dea-9c22-66746c440a22"));
 
@@ -44,16 +45,16 @@ public class ProjectServiceImpl implements ProjectService {
         project.setEmployer(user);
         project.setProjectStatus(ProjectStatus.LOOKING_FOR_WORKER);
 
-        projectCrudDAO.save(project);
+        projectDAO.save(project);
     }
 
     @Override
     public ProjectDTO get(UUID id) {
-        return ProjectMapper.INSTANCE.toDto(projectCrudDAO.get(id));
+        return ProjectMapper.INSTANCE.toDto(projectDAO.get(id));
     }
 
     @Override
     public void delete(UUID id) {
-        projectCrudDAO.delete(id);
+        projectDAO.delete(id);
     }
 }
