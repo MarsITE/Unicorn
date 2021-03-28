@@ -2,6 +2,7 @@ package com.academy.workSearch.service;
 
 import com.academy.workSearch.dao.UserDAOImpl;
 import com.academy.workSearch.dao.UserInfoDAOImpl;
+import com.academy.workSearch.dto.UserAuthDTO;
 import com.academy.workSearch.dto.UserDTO;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.UserInfo;
@@ -14,7 +15,7 @@ import javax.validation.ValidationException;
 import java.util.List;
 import java.util.UUID;
 
-import static com.academy.workSearch.dto.mapper.UserInfoMapper.USER_INFO_MAPPER;
+import static com.academy.workSearch.dto.mapper.UserAuthMapper.USER_AUTH_MAPPER;
 import static com.academy.workSearch.dto.mapper.UserMapper.USER_MAPPER;
 
 @Service
@@ -35,12 +36,14 @@ public class UserServiceImpl implements UserService {
         return USER_MAPPER.map(userDAO.findAll());
     }
 
-    public void save(UserDTO user) throws ValidationException {
+    public UserAuthDTO save(UserAuthDTO userAuthDTO) throws ValidationException {
+        User user = USER_AUTH_MAPPER.toUser(userAuthDTO);
         UserInfo userInfo = new UserInfo();
         userInfo.setUserInfoId(userInfoDAO.saveAndGetId(userInfo));
         userInfoDAO.save(userInfo);
-        user.setUserInfo(USER_INFO_MAPPER.toUserInfoDto(userInfo));
-        userDAO.save(USER_MAPPER.toUser(user));
+        user.setUserInfo(userInfo);
+        userDAO.save(user);
+        return userAuthDTO;
     }
 
     @Override

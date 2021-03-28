@@ -48,6 +48,8 @@ dependencies {
 
     implementation "org.mapstruct:mapstruct:1.4.2.Final", "org.projectlombok:lombok:1.18.16"
     annotationProcessor "org.mapstruct:mapstruct-processor:1.4.2.Final", "org.projectlombok:lombok:1.18.16", "org.projectlombok:lombok-mapstruct-binding:0.2.0"
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 test {

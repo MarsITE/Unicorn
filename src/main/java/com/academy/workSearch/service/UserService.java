@@ -1,5 +1,6 @@
 package com.academy.workSearch.service;
 
+import com.academy.workSearch.dto.UserAuthDTO;
 import com.academy.workSearch.dto.UserDTO;
 
 import javax.validation.ValidationException;
@@ -10,7 +11,7 @@ public interface UserService {
 
     List<UserDTO> findAll();
 
-    void save(UserDTO UserDTO);
+    UserAuthDTO save(UserAuthDTO userAuthDTO);
 
     UserDTO update(UserDTO user);
 

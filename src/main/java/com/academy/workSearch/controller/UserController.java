@@ -1,5 +1,6 @@
 package com.academy.workSearch.controller;
 
+import com.academy.workSearch.dto.UserAuthDTO;
 import com.academy.workSearch.dto.UserDTO;
 import com.academy.workSearch.exceptionHandling.NoSuchUserException;
 import com.academy.workSearch.service.UserService;
@@ -40,15 +41,15 @@ public class UserController {
         }
     }
 
-    @PostMapping({"/user"})
+    @PostMapping({"/registration"})
     @ApiOperation(value = "Add new user", notes = "Add new user in DB")
-    public ResponseEntity<UserDTO> addNewUser(@RequestBody UserDTO user) {
+    public ResponseEntity<UserAuthDTO> addNewUser(@RequestBody UserAuthDTO user) {
         this.userService.save(user);
         this.logger.info("Add user with email = " + user.getEmail());
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping({"/user"})
+    @PutMapping({"/user-edit"})
     @ApiOperation(value = "Update existing user", notes = "Update existing user")
     public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO user) {
         return ResponseEntity.ok(this.userService.update(user));
