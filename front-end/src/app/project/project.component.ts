@@ -10,20 +10,22 @@ import { ProjectService } from '../common/services/project.service';
 })
 
 export class ProjectComponent implements OnInit {
+  id: String;
 
-  projects: Project[] = [];
-  displayedColumns: string[] = ['name', 'description', 'projectStatus', 'creationDate'];
+  projects: Project[] = []; 
+  
+  displayedColumns: string[] = ['name', 'projectStatus', 'creationDate'];
 
   constructor(private projectService: ProjectService, private router: Router) {
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
     this.getProjects();
   }
 
   private getProjects() {
     this.projectService.getProjects().subscribe(
-      (response: Project[]) => {
+      (response: Project[]) => {        
         this.projects = response;
       },
       (error) => {
@@ -33,6 +35,10 @@ export class ProjectComponent implements OnInit {
         console.log("complete");
       }
     )
+  }
+
+  showProjectDescription(row: any) {
+    this.router.navigateByUrl(`projects/${row.id}`);
   }
 
   createProject() {

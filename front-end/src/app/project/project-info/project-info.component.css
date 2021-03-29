@@ -1,0 +1,23 @@
+.project {
+    min-width: 100px;
+    max-width: 400px;
+    width: 100%;
+    color: rgb(31, 46, 131);
+
+    margin: auto;
+    padding-top: 3rem;
+
+  }
+
+  .project-info {
+    align-self: center;
+    align-content: center;
+    padding-top: 25px;
+    margin-bottom: 16px;
+
+    font-size: 20px;
+    font-style: italic;
+
+    display: flex;
+    flex-direction: column;
+  }
