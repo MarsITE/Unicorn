@@ -15,6 +15,7 @@ public class SkillDAO implements CrudDAO<Skill> {
 
     @Autowired
     private SessionFactory sessionFactory;
+    private Session session = sessionFactory.getCurrentSession();
 
     @Override
     public List<Skill> findAll() {
@@ -25,8 +26,11 @@ public class SkillDAO implements CrudDAO<Skill> {
 
     @Override
     public void save(Skill skill) {
-        Session session = sessionFactory.getCurrentSession();
         session.saveOrUpdate(skill);
+    }
+
+    public void saveOnly(Skill skill) {
+        session.save(skill);
     }
 
     @Override

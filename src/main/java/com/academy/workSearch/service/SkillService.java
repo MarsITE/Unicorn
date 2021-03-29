@@ -22,7 +22,7 @@ public class SkillService {
         return skillDAO.findAll();
     }
 
-    public void save(Skill skill) {
+    public boolean save(Skill skill) {
         skillDAO.save(skill);
     }
 
@@ -32,5 +32,22 @@ public class SkillService {
 
     public void delete(UUID id) {
         skillDAO.delete(id);
+    }
+
+    public boolean confirmSkill(Skill skills){
+        StringBuilder error = new StringBuilder();
+        boolean isValidSkills = true;
+        for (Skill skill: skills) {
+            if (!save(skill)) {
+                error.append(skill.getName());
+                isValidSkills=false;
+            }
+        }
+        if(!isValidSkills){
+            //exeption
+            return false;
+        }
+
+        return true;
     }
 }

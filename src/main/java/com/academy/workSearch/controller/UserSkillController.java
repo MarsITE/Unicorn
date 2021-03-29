@@ -31,8 +31,11 @@ public class UserSkillController {
 
     @PostMapping("/add_skill")
     @ApiOperation(value = "Add new skill for verification", notes = "Add new skill in DB")
-    public Skill addNewSkill(@RequestBody Skill skill) {
-        skillService.save(skill);
+    public Skill addNewSkill(@RequestBody Skill[] skills) {
+        for (Skill skill: skills) {
+            skillService.confirmSkill(skill);
+        }
+
         logger.info("Add skill with name = " + skill.getSkillId());
         return skill;
     }
