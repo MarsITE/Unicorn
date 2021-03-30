@@ -1,36 +1,26 @@
 package com.academy.workSearch.service;
 
-import com.academy.workSearch.dao.CrudDAO;
-import com.academy.workSearch.model.User;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.academy.workSearch.dto.UserDTO;
 
+import javax.validation.ValidationException;
 import java.util.List;
 import java.util.UUID;
 
-@Service
-@Transactional
-@AllArgsConstructor
-public class UserService {
+public interface UserService {
 
-    @Autowired
-    private final CrudDAO<User> userDAO;
+    List<UserDTO> findAll();
 
-    public List<User> findAll() {
-        return userDAO.findAll();
-    }
+    void save(UserDTO UserDTO);
 
-    public void save(User user) {
-        userDAO.save(user);
-    }
+    UserDTO update(UserDTO user);
 
-    public User get(UUID id) {
-        return userDAO.get(id);
-    }
+    UserDTO get(UUID id);
 
-    public void delete(UUID id) {
-        userDAO.delete(id);
-    }
+    void delete(UUID id);
+
+    void deleteByEmail(String email);
+
+    UserDTO getByEmail(String email);
+
+    UUID getIdByEmail(String email);
 }

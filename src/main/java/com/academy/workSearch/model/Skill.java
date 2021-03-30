@@ -1,22 +1,25 @@
 package com.academy.workSearch.model;
 
-import com.academy.workSearch.validators.UniqueSkillName;
 import lombok.Data;
-import org.springframework.boot.context.properties.bind.DefaultValue;
-
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "skills")
+@Table( name = "skills",
+        uniqueConstraints = {
+            @UniqueConstraint(
+                    columnNames = "name_of_skill",
+                    name = "uniqueSkillNameConstraint")
+        })
 public class Skill {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "skill_id")
     private UUID skillId;
 
-    @UniqueSkillName
+    @NotBlank(message = "The name of skill cannot be empty")
     @Column(name = "name_of_skill", length = 20, unique=true)
     private String name;
 

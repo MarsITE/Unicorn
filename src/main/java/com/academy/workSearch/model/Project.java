@@ -2,10 +2,8 @@ package com.academy.workSearch.model;
 
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
@@ -29,7 +27,7 @@ public class Project {
     @Column(name = "project_status")
     private ProjectStatus projectStatus;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "worker_id")
     private User worker;
 
@@ -48,7 +46,7 @@ public class Project {
 
 
     @OneToOne
-    @JoinColumn(name = "worker_raiting_id")
+    @JoinColumn(name = "worker_rating_id")
     private Rating workerRating;
 
     @OneToOne
@@ -56,8 +54,8 @@ public class Project {
     private Rating employerRating;
 
     @CreationTimestamp
-    @Column(name = "date_of_creation")
-    private LocalDateTime dateOfCreation;
+    @Column(name = "creation_date")
+    private LocalDateTime creationDate;
 
     @ManyToOne
     @JoinColumn(name = "user_info_id", insertable = false, updatable = false)

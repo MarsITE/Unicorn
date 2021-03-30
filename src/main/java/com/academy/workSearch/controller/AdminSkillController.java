@@ -1,79 +1,83 @@
 package com.academy.workSearch.controller;
 
+import com.academy.workSearch.dto.SkillDTO;
 import com.academy.workSearch.exceptionHandling.NoSuchSkillException;
 import com.academy.workSearch.model.Skill;
 import com.academy.workSearch.service.SkillService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
-
+import javax.validation.*;
+import java.util.*;
+import java.util.function.BiFunction;
 
 @Validated
 @RestController
 @RequestMapping("/api/1/skills/admin")
-@AllArgsConstructor
 public class AdminSkillController {
-    private final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private final Logger logger = LoggerFactory.getLogger(AdminSkillController.class);
+    private final static String MESSAGE_ADD_SKILL_WITH_NAME = "Add skill with name ";
+    private final static String MESSAGE_FAILED = " failed!";
 
-    @Autowired
-    private final SkillService skillService;
+    private SkillService skillService;
+
+    public AdminSkillController(SkillService skillService) {
+        this.skillService = skillService;
+    }
 
     @GetMapping("/")
     @ApiOperation(value = "Show all skills", notes = "Show information about all skills in DB")
-    public List<Skill> showSkills() {
+    public ResponseEntity<List<SkillDTO>> getAll() {
         logger.info("Show all skills");
-        return skillService.findAll();
+        List<SkillDTO> skillsDto = skillService.findAll();
+        return new ResponseEntity<>(skillsDto, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Find skill by ID", notes = "Find skill in DB, if skill exist")
-    public Skill getSkill(@ApiParam(value = "ID value for skill you need to retrive", required = true)
+    public ResponseEntity<SkillDTO> findById(@ApiParam(value = "ID value for skill you need to retrive", required = true)
                           @PathVariable UUID id) {
-        Skill skill = skillService.get(id);
         logger.info("Find skill with ID = " + id);
-        if (skill == null) {
+        SkillDTO skillDto = skillService.get(id);
+        if (Objects.isNull(skillDto)) {
             logger.error("There is no skill with ID = " + id + " in Database");
             throw new NoSuchSkillException("There is no skill with ID = " + id + " in Database");
         }
-        return skill;
+        return new ResponseEntity<> (skillDto, HttpStatus.OK);
     }
 
     @PostMapping("/")
     @ApiOperation(value = "Add new skill", notes = "Add new skill in DB")
-    public Skill addNewSkill(@RequestBody @Valid Skill skill) {
-        skillService.save(skill);
-        logger.info("Add skill with ID = " + skill.getSkillId());
-        return skill;
+    public ResponseEntity<SkillDTO> add(@RequestBody @Valid SkillDTO skill) {
+        BiFunction<String, Boolean, String> addSkillStatus = ( name, successful) ->
+                MESSAGE_ADD_SKILL_WITH_NAME + name + (successful ? "" : MESSAGE_FAILED);
+        try {
+            logger.info(addSkillStatus.apply(skill.getName(), true));
+            skillService.save(skill);
+            return ResponseEntity.ok().build();
+/*
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.ok().build();
+
+ */
+        } catch (Exception e) {
+            logger.trace(Arrays.toString(Arrays.stream(e.getStackTrace()).toArray()));
+            String loggerInfoStr = addSkillStatus.apply(skill.getName(), false);
+            logger.info(loggerInfoStr);
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/")
     @ApiOperation(value = "Update existing skill", notes = "Update existing skill")
-    public Skill updateSkill(@RequestBody @Valid Skill skill) {
-        skillService.save(skill);
+    public SkillDTO update(@RequestBody @Valid SkillDTO skill) {
+        skillService.update(skill);
         logger.info("Update skill with ID = " + skill.getSkillId());
         return skill;
-    }
-
-    @DeleteMapping("/{id}")
-    @ApiOperation(value = "Delete existing skill", notes = "Delete existing skill")
-    public void deleteUser(@Valid @PathVariable UUID id) {
-        Skill skill = skillService.get(id);
-        if (skill == null) {
-            logger.error("There is no skill with ID = " + id + " in Database");
-            throw new NoSuchSkillException("There is no skill with ID = " + id + " in Database");
-        }
-        skillService.delete(id);
-        logger.info("Delete user with ID = " + skill.getSkillId());
     }
 }

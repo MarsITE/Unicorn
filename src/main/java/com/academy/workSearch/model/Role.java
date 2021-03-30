@@ -16,6 +16,6 @@ public class Role {
     @Column(name = "role_id")
     private UUID roleId;
 
-    @Column(name = "name_of_role", length = 20)
+    @Column(name = "name", length = 20)
     private String name;
 }

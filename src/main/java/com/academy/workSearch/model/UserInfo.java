@@ -1,5 +1,6 @@
 package com.academy.workSearch.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -36,11 +37,11 @@ public class UserInfo {
     private String linkToSocialNetwork;
 
     @Past
-    @Column(name = "date_of_birth")
+    @Column(name = "birth_date")
     @ApiModelProperty(notes = "Date of birth of the user")
-    private LocalDate dateOfBirth;
+    private LocalDate birthDate;
 
-    @Column(name = "is_show_info")
+    @Column(name = "is_show_info", columnDefinition = "boolean default true")
     private boolean isShowInfo;
 
     @Enumerated(EnumType.STRING)
@@ -48,27 +49,26 @@ public class UserInfo {
     @ApiModelProperty(notes = "Work status")
     private WorkStatus workStatus;
 
-
     @Min(1)
     @Max(5)
-    @Column(name = "general_rating")
+    @Column(name = "general_rating", columnDefinition = "Float default 0")
     private Float generalRating;
 
     @Column(name = "image_url")
     @ApiModelProperty(notes = "User photo")
     private String imageUrl;
 
-    @OneToOne
-    private User user;
-
-    @OneToMany(mappedBy = "userInfo")
+    @OneToMany(mappedBy = "userInfo", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Project> projects;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_info_skills",
             joinColumns = {@JoinColumn(name = "user_info_id")},
             inverseJoinColumns = {@JoinColumn(name = "skill_id")}
     )
     private Set<Skill> skills;
+
+    @Column(name = "description", length = 2000)
+    private String description;
 }
