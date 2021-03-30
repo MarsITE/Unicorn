@@ -1,10 +1,11 @@
-package com.academy.workSearch.service;
+package com.academy.workSearch.service.implementation;
 
 import com.academy.workSearch.controller.UserInfoController;
 import com.academy.workSearch.dao.UserInfoDAO;
 import com.academy.workSearch.dto.PhotoDTO;
 import com.academy.workSearch.dto.UserInfoDTO;
 import com.academy.workSearch.model.UserInfo;
+import com.academy.workSearch.service.UserInfoService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

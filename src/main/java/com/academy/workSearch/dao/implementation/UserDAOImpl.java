@@ -1,6 +1,7 @@
-package com.academy.workSearch.dao;
+package com.academy.workSearch.dao.implementation;
 
-import com.academy.workSearch.model.AccountStatus;
+import com.academy.workSearch.dao.UserDAO;
+import com.academy.workSearch.model.enums.AccountStatus;
 import com.academy.workSearch.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

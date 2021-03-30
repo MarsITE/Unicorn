@@ -1,5 +1,6 @@
-package com.academy.workSearch.dao;
+package com.academy.workSearch.dao.implementation;
 
+import com.academy.workSearch.dao.UserInfoDAO;
 import com.academy.workSearch.model.UserInfo;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

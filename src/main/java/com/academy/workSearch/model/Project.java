@@ -1,5 +1,6 @@
 package com.academy.workSearch.model;
 
+import com.academy.workSearch.model.enums.ProjectStatus;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;

@@ -1,5 +1,6 @@
-package com.academy.workSearch.dao;
+package com.academy.workSearch.dao.implementation;
 
+import com.academy.workSearch.dao.CrudDAO;
 import com.academy.workSearch.model.Project;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

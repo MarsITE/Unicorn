@@ -1,4 +1,4 @@
-package com.academy.workSearch.model;
+package com.academy.workSearch.model.enums;
 
 public enum ProjectStatus {
     LOOKING_FOR_WORKER ("Looking for worker"),

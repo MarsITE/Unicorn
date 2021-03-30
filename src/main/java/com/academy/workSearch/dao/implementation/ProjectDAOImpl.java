@@ -1,5 +1,6 @@
-package com.academy.workSearch.dao;
+package com.academy.workSearch.dao.implementation;
 
+import com.academy.workSearch.dao.ProjectDAO;
 import com.academy.workSearch.dao.pagination.PaginationResult;
 import com.academy.workSearch.model.Project;
 import org.hibernate.Session;

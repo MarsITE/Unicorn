@@ -1,6 +1,6 @@
 package com.academy.workSearch.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.academy.workSearch.model.enums.AccountStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

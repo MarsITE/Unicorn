@@ -1,10 +1,11 @@
-package com.academy.workSearch.service;
+package com.academy.workSearch.service.implementation;
 
-import com.academy.workSearch.dao.UserDAOImpl;
-import com.academy.workSearch.dao.UserInfoDAOImpl;
+import com.academy.workSearch.dao.implementation.UserDAOImpl;
+import com.academy.workSearch.dao.implementation.UserInfoDAOImpl;
 import com.academy.workSearch.dto.UserDTO;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.UserInfo;
+import com.academy.workSearch.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
