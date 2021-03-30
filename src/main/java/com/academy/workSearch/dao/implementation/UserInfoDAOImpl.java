@@ -12,12 +12,9 @@ import java.util.UUID;
 @Repository
 public class UserInfoDAOImpl extends CrudDAOImpl<UserInfo> implements UserInfoDAO {
 
-    private SessionFactory sessionFactory;
-
     @Autowired
     public UserInfoDAOImpl(SessionFactory sessionFactory) {
         super(sessionFactory);
-        this.sessionFactory = sessionFactory;
     }
 
     @Override

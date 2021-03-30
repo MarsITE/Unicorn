@@ -12,7 +12,7 @@ export class ProjectService {
   constructor(private http: HttpClient) { }
 
   public getProjects(): Observable<Project[]> {
-    return this.http.get<Project[]>(`${environment.url}/projects`);
+    return this.http.get<Project[]>(`${environment.url}/projects/last/1`);
   }
 
   public save(project: Project): Observable<Project> {

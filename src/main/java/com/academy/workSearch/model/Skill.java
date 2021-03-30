@@ -1,7 +1,6 @@
 package com.academy.workSearch.model;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
 import java.util.UUID;

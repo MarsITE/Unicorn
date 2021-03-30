@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,7 +37,7 @@ public class ProjectController {
     @GetMapping("/last/{page}")
     @ApiOperation(value = "Show projects", notes = "Show information about projects from DB")
     public ResponseEntity<List<ProjectDTO>> showLastProjects(@PathVariable int page) {
-        List<ProjectDTO> projectsDto = projectService.findLast(page, 5);
+        List<ProjectDTO> projectsDto = projectService.findLast(page, 10);
         logger.info("Show projects from page = " + page);
         return new ResponseEntity<> (projectsDto, HttpStatus.OK);
     }
@@ -61,7 +60,7 @@ public class ProjectController {
 
     @PutMapping()
     @ApiOperation(value = "Update existing project", notes = "Update existing project")
-    public ResponseEntity<ProjectDTO> updateProject(@Validated @RequestBody ProjectDTO projectDto) {
+    public ResponseEntity<ProjectDTO> updateProject(@RequestBody ProjectDTO projectDto) {
         logger.info("Update project with ID = " + projectDto.getId());
         projectService.save(projectDto);
         return new ResponseEntity<> (projectDto, HttpStatus.OK);

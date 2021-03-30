@@ -15,7 +15,7 @@ import java.util.UUID;
 public class CrudDAOImpl<E> implements CrudDAO<E> {
     private Class<E> clazz;
 
-    private final SessionFactory sessionFactory;
+    protected SessionFactory sessionFactory;
 
     @Autowired
     public CrudDAOImpl(SessionFactory sessionFactory) {
