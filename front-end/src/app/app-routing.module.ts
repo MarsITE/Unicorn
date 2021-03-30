@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { UserListComponent } from './user/user-list/user-list.component';
 import { UserProfileComponent } from './user/user-profile/user-profile.component';
@@ -6,6 +6,7 @@ import { UserEditComponent } from './user/user-edit/user-edit.component';
 import { ProjectComponent } from './project/project.component';
 import { ProjectAddComponent } from './project/project-add/project-add.component';
 import { UserRegistrationComponent } from './user/user-registration/user-registration.component';
+import { UserLoginComponent } from './user/user-login/user-login.component';
 
 const routes: Routes = [
   {
@@ -20,6 +21,9 @@ const routes: Routes = [
   }, {
     path: 'registration',
     component: UserRegistrationComponent
+  }, {
+    path: 'login',
+    component: UserLoginComponent
   },
 
   {path: 'projects',

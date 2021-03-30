@@ -58,6 +58,7 @@ import { ProjectService } from './common/services/project.service';
 import { ProjectComponent } from './project/project.component';
 import { ProjectAddComponent } from './project/project-add/project-add.component';
 import { UserRegistrationComponent } from './user/user-registration/user-registration.component';
+import { UserLoginComponent } from './user/user-login/user-login.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import { UserRegistrationComponent } from './user/user-registration/user-registr
     UserListComponent,
     UserProfileComponent,
     UserEditComponent,
-    UserRegistrationComponent
+    UserRegistrationComponent,
+    UserLoginComponent
   ],
 
   imports: [

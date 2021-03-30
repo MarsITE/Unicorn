@@ -2,20 +2,18 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/common/model/user-auth';
-import { UserHttpService } from '../../common/services/user-http.service';
+import { UserHttpService } from 'src/app/common/services/user-http.service';
 
 @Component({
-  selector: 'app-user-registration',
-  templateUrl: './user-registration.component.html',
-  styleUrls: ['./user-registration.component.css']
+  selector: 'app-user-login',
+  templateUrl: './user-login.component.html',
+  styleUrls: ['./user-login.component.css']
 })
-export class UserRegistrationComponent implements OnInit, OnDestroy {
+export class UserLoginComponent implements OnInit, OnDestroy {
   user: UserAuth;
   userForm: FormGroup;
   private subscriptions: Subscription[] = [];
-  constructor(private userService: UserHttpService) {
-    this.initForm();
-  }
+  constructor(private userService: UserHttpService) { }
   ngOnDestroy(): void {
     this.subscriptions.forEach(s => {
       s.unsubscribe();
@@ -23,14 +21,13 @@ export class UserRegistrationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
+    this.initForm();
   }
-
 
   private initForm(
     email: string = '',
     password: string = '',
-    isEmployer: boolean = false
+    isLogged: boolean = false
   ): void {
     this.userForm = new FormGroup({
       email: new FormControl(
@@ -39,20 +36,26 @@ export class UserRegistrationComponent implements OnInit, OnDestroy {
       password: new FormControl(
         password,
         [Validators.required, Validators.maxLength(15), Validators.minLength(6)]),
-      isEmployer: new FormControl(isEmployer)
+      isLogged: new FormControl(isLogged)
     });
   }
 
-  private saveUser(user: UserAuth): void {
-    this.subscriptions.push(this.userService.save(user).subscribe(
+  public submit(): void {
+      const email = this.userForm.controls.email.value;
+      const password = this.userForm.controls.password.value;
+
+      this.login(email, password);
+  }
+
+  private login(email: string, password: string): void {
+    this.subscriptions.push(this.userService.login(email, password).subscribe(
       (response: UserAuth) => {
         this.user = response;
       },
       (error) => {
         this.initForm(
-          user.email,
-          user.password,
-          user.isEmployer
+          this.user.email,
+          this.user.password
         );
         console.log('error', error);
       },
@@ -60,17 +63,5 @@ export class UserRegistrationComponent implements OnInit, OnDestroy {
         console.log('complete');
       }
     ));
-  }
-
-  public submit(): void {
-    this.user = {
-      email: this.userForm.controls.email.value,
-      password: this.userForm.controls.password.value,
-      isEmployer: Boolean(this.userForm.controls.isEmployer.value) };
-
-      console.log(this.userForm.controls.isEmployer.value);
-      console.log(this.user.isEmployer);
-      console.log(this.user);
-    this.saveUser(this.user);
   }
 }

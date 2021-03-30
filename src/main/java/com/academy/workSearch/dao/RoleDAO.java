@@ -1,14 +1,8 @@
 package com.academy.workSearch.dao;
 
 import com.academy.workSearch.model.Role;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public class RoleDAO extends CrudDAOImpl<Role> {
+public interface RoleDAO extends CrudDAO<Role> {
 
-    @Autowired
-    private SessionFactory sessionFactory;
-
+    Role getByName(String name);
 }

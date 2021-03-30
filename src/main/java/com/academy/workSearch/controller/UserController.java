@@ -28,23 +28,27 @@ public class UserController {
         return ResponseEntity.ok(userService.findAll());
     }
 
-    @GetMapping({"/user/{email}"})
+    @GetMapping({"/login"})
     @ApiOperation(value = "Find user by email", notes = "Find user in DB, if user exist")
-    public ResponseEntity<UserDTO> getUser(@ApiParam(value = "email value for user you need to retrive", required = true) @PathVariable String email) {
-        UserDTO user = this.userService.getByEmail(email);
-        this.logger.info("Find user with email = " + email);
-        if (user == null) {
-            this.logger.error("There is no user with email = " + email + " in Database");
-            throw new NoSuchUserException("There is no user with email = " + email + " in Database");
-        } else {
+    public ResponseEntity<UserAuthDTO> getUser(@ApiParam(value = "email value for user you need to retrive", required = true)
+                                               @RequestParam String email, @RequestParam String password) {
+        try {
+            UserAuthDTO user = userService.get(email, password);
             return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseEntity.badRequest().build();
         }
     }
 
     @PostMapping({"/registration"})
     @ApiOperation(value = "Add new user", notes = "Add new user in DB")
     public ResponseEntity<UserAuthDTO> addNewUser(@RequestBody UserAuthDTO user) {
-        this.userService.save(user);
+        try {
+            userService.save(user);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
         this.logger.info("Add user with email = " + user.getEmail());
         return ResponseEntity.ok(user);
     }

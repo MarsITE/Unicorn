@@ -1,11 +1,11 @@
 package com.academy.workSearch.configuration;
 
-import com.academy.workSearch.service.UserSecurityService;
-import io.swagger.models.HttpMethod;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -19,14 +19,22 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private final @Qualifier(value = "UserSecurityService")
-    UserDetailsService userDetailsService;
+//    @Autowired
+//    private final @Qualifier(value = "UserServiceImpl")
+//    UserDetailsService userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+//    @Bean
+//    public AuthenticationProvider authProvider() {
+//        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+//        authenticationProvider.setUserDetailsService(userDetailsService);
+//        authenticationProvider.setPasswordEncoder(passwordEncoder());
+//        return authenticationProvider;
+//    }
 
 
     @Override
@@ -34,8 +42,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.httpBasic()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/registration", "/api/v1/users").permitAll()
-//                .antMatchers( "/**").hasAuthority("ADMIN")
+                .antMatchers("/api/v1/registration", "/api/v1/login", "/api/v1/users").permitAll()
+                .antMatchers("/api/v1/admin/*").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and().headers().frameOptions().disable().and()
                 .csrf().disable();
