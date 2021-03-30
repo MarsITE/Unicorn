@@ -57,6 +57,8 @@ import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { ProjectService } from './common/services/project.service';
 import { ProjectComponent } from './project/project.component';
 import { ProjectAddComponent } from './project/project-add/project-add.component';
+import { ProjectInfoComponent } from './project/project-info/project-info.component';
+import { ProjectEditComponent } from './project/project-edit/project-edit.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +67,9 @@ import { ProjectAddComponent } from './project/project-add/project-add.component
     ProjectAddComponent,
     UserListComponent,
     UserProfileComponent,
-    UserEditComponent
+    UserEditComponent,
+    ProjectInfoComponent,
+    ProjectEditComponent
   ],   
     
   imports: [

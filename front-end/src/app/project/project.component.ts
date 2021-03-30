@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Project } from '../common/model/project';
+import { User } from '../common/model/user';
 import { ProjectService } from '../common/services/project.service';
 
 @Component({
@@ -10,20 +11,23 @@ import { ProjectService } from '../common/services/project.service';
 })
 
 export class ProjectComponent implements OnInit {
+  id: String;
+  owner: User;
 
-  projects: Project[] = [];
-  displayedColumns: string[] = ['name', 'description', 'projectStatus', 'creationDate'];
+  projects: Project[] = []; 
+  
+  displayedColumns: string[] = ['name', 'projectStatus', 'creationDate', 'owner'];
 
   constructor(private projectService: ProjectService, private router: Router) {
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
     this.getProjects();
   }
 
   private getProjects() {
     this.projectService.getProjects().subscribe(
-      (response: Project[]) => {
+      (response: Project[]) => {        
         this.projects = response;
       },
       (error) => {
@@ -33,6 +37,10 @@ export class ProjectComponent implements OnInit {
         console.log("complete");
       }
     )
+  }
+
+  showProjectDescription(row: any) {
+    this.router.navigateByUrl(`projects/${row.id}`);
   }
 
   createProject() {

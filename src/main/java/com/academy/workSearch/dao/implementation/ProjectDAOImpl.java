@@ -1,5 +1,6 @@
-package com.academy.workSearch.dao;
+package com.academy.workSearch.dao.implementation;
 
+import com.academy.workSearch.dao.ProjectDAO;
 import com.academy.workSearch.dao.pagination.PaginationResult;
 import com.academy.workSearch.model.Project;
 import org.hibernate.Session;
@@ -11,10 +12,15 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class ProjectDAOImpl  extends CrudDAOImpl<Project> implements ProjectDAO {
+public class ProjectDAOImpl extends CrudDAOImpl<Project> implements ProjectDAO {
+
+    private final SessionFactory sessionFactory;
 
     @Autowired
-    private SessionFactory sessionFactory;
+    public ProjectDAOImpl(SessionFactory sessionFactory) {
+        super(sessionFactory);
+        this.sessionFactory = sessionFactory;
+    }
 
     @Override
     public List<Project> findLast(int page, int maxResult) {

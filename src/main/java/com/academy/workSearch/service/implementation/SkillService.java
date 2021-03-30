@@ -1,4 +1,4 @@
-package com.academy.workSearch.service;
+package com.academy.workSearch.service.implementation;
 
 import com.academy.workSearch.dto.SkillDTO;
 import com.academy.workSearch.dto.UserDTO;

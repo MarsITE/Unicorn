@@ -4,6 +4,6 @@ import com.academy.workSearch.model.Project;
 
 import java.util.List;
 
-public interface ProjectDAO extends CrudDAO<Project>{
+public interface ProjectDAO extends CrudDAO<Project> {
     List<Project> findLast(int page, int maxResult);
 }

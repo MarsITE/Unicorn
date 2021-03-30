@@ -1,20 +1,20 @@
-package com.academy.workSearch.service;
+package com.academy.workSearch.service.implementation;
 
 import com.academy.workSearch.controller.UserInfoController;
-import com.academy.workSearch.dao.CrudDAO;
+import com.academy.workSearch.dao.UserInfoDAO;
 import com.academy.workSearch.dto.PhotoDTO;
 import com.academy.workSearch.dto.UserInfoDTO;
 import com.academy.workSearch.model.UserInfo;
+import com.academy.workSearch.service.UserInfoService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -32,8 +32,12 @@ public class UserInfoServiceImpl implements UserInfoService {
     private final Logger logger = LoggerFactory.getLogger(UserInfoController.class);
     private final String pathToFolder = System.getProperty("user.dir") + "/photos/";
 
-    @Autowired
-    private final CrudDAO<UserInfo> userInfoDAO;
+    private final UserInfoDAO userInfoDAO;
+
+    @PostConstruct
+    private void setTypeClass() {
+        userInfoDAO.setClazz(UserInfo.class);
+    }
 
     public void save(UserInfoDTO userInfo) {
         userInfoDAO.save(USER_INFO_MAPPER.toUserInfo(userInfo));
@@ -64,9 +68,6 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public PhotoDTO loadPhoto(String imageName) {
-//        if (imageName == null || imageName.equals("empty") || imageName.equals("")) {
-//            imageName = "default-photo.jpg";
-//        }
         PhotoDTO photoDTO = new PhotoDTO();
         try {
             File file = new File(pathToFolder + imageName);

@@ -1,5 +1,6 @@
-package com.academy.workSearch.dao;
+package com.academy.workSearch.dao.implementation;
 
+import com.academy.workSearch.dao.CrudDAO;
 import com.academy.workSearch.model.Project;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -11,13 +12,17 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public class CrudDAOImpl<E> implements CrudDAO<E>{
+public class CrudDAOImpl<E> implements CrudDAO<E> {
     private Class<E> clazz;
 
-    @Autowired
-    private SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
 
-    public void setClazz(Class<E> clazzToSet){
+    @Autowired
+    public CrudDAOImpl(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
+    public void setClazz(Class<E> clazzToSet) {
         this.clazz = clazzToSet;
     }
 

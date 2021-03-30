@@ -12,4 +12,6 @@ public interface CrudDAO<E> {
     E get(UUID id);
 
     void delete(UUID id);
+
+    void setClazz(Class<E> clazz);
 }
