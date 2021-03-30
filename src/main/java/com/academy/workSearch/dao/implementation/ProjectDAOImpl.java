@@ -14,8 +14,13 @@ import java.util.List;
 @Repository
 public class ProjectDAOImpl extends CrudDAOImpl<Project> implements ProjectDAO {
 
+    private final SessionFactory sessionFactory;
+
     @Autowired
-    private SessionFactory sessionFactory;
+    public ProjectDAOImpl(SessionFactory sessionFactory) {
+        super(sessionFactory);
+        this.sessionFactory = sessionFactory;
+    }
 
     @Override
     public List<Project> findLast(int page, int maxResult) {

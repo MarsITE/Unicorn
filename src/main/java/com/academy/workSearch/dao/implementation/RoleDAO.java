@@ -8,7 +8,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class RoleDAO extends CrudDAOImpl<Role> {
 
-    @Autowired
     private SessionFactory sessionFactory;
 
+    @Autowired
+    public RoleDAO(SessionFactory sessionFactory) {
+        super(sessionFactory);
+        this.sessionFactory = sessionFactory;
+    }
 }

@@ -8,8 +8,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class RatingDAO extends CrudDAOImpl<Rating> {
 
+    private final SessionFactory sessionFactory;
+
     @Autowired
-    private SessionFactory sessionFactory;
-
-
+    public RatingDAO(SessionFactory sessionFactory) {
+        super(sessionFactory);
+        this.sessionFactory = sessionFactory;
+    }
 }
