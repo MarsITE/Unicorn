@@ -18,14 +18,16 @@ public interface ProjectMapper {
             @Mapping(target = "name", source = "name"),
             @Mapping(target = "description", source = "description"),
             @Mapping(target = "projectStatus", source = "projectStatus"),
-            @Mapping(target = "creationDate", source = "creationDate")})
+            @Mapping(target = "creationDate", source = "creationDate"),
+            @Mapping(target = "owner", source = "employer")})
     ProjectDTO toDto(Project project);
 
     @Mappings({ @Mapping(target = "projectId", source = "id"),
             @Mapping(target = "name", source = "name"),
             @Mapping(target = "description", source = "description"),
             @Mapping(target = "projectStatus", source = "projectStatus"),
-            @Mapping(target = "creationDate", source = "creationDate")})
+            @Mapping(target = "creationDate", source = "creationDate"),
+            @Mapping(target = "employer", source = "owner")})
     Project toEntity(ProjectDTO projectDto);
 
     List<Project> toProjects(List<ProjectDTO> projectDtos);

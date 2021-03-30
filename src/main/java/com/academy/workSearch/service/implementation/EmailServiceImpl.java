@@ -1,6 +1,7 @@
-package com.academy.workSearch.service;
+package com.academy.workSearch.service.implementation;
 
 import com.academy.workSearch.model.Mail;
+import com.academy.workSearch.service.EmailService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;

@@ -1,4 +1,4 @@
-package com.academy.workSearch.service;
+package com.academy.workSearch.service.implementation;
 
 import com.academy.workSearch.dao.CrudDAO;
 import com.academy.workSearch.model.Role;

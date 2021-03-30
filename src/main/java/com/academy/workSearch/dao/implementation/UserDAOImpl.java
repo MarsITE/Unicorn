@@ -1,6 +1,7 @@
-package com.academy.workSearch.dao;
+package com.academy.workSearch.dao.implementation;
 
-import com.academy.workSearch.model.AccountStatus;
+import com.academy.workSearch.dao.UserDAO;
+import com.academy.workSearch.model.enums.AccountStatus;
 import com.academy.workSearch.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -11,8 +12,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
 
-    @Autowired
     private SessionFactory sessionFactory;
+
+    @Autowired
+    public UserDAOImpl(SessionFactory sessionFactory) {
+        super(sessionFactory);
+        this.sessionFactory = sessionFactory;
+    }
 
     public User getByEmail(String email) {
         Session session = sessionFactory.getCurrentSession();

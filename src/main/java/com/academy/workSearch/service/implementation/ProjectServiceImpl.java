@@ -1,11 +1,11 @@
-package com.academy.workSearch.service;
+package com.academy.workSearch.service.implementation;
 
 import com.academy.workSearch.dao.ProjectDAO;
 import com.academy.workSearch.dto.ProjectDTO;
 import com.academy.workSearch.dto.mapper.ProjectMapper;
 import com.academy.workSearch.model.Project;
-import com.academy.workSearch.model.ProjectStatus;
 import com.academy.workSearch.model.User;
+import com.academy.workSearch.service.ProjectService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
