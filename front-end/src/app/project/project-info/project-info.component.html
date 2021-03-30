@@ -1,0 +1,36 @@
+<div *ngIf="project" class="project">
+
+  <div mat-card-title style="margin: auto;">
+    <button mat-stroked-button (click) = projects()>Show projects</button>
+
+    <mat-card class="project-info">       
+      <div *ngIf="project">
+        <label><b class="description">Project name:</b> {{project.name}}</label>
+      </div>
+    </mat-card>
+    
+    <mat-card class="project-info" > 
+      <div *ngIf="project">
+        <label><b class="description">Description:</b> {{project.description}}</label>        
+      </div>        
+    </mat-card>
+
+    <mat-card class="project-info"> 
+      <div *ngIf="project">
+        <label><b class="description">Date of creation:</b> {{project.creationDate|date}}</label>
+      </div>
+    </mat-card>
+
+    <mat-card class="project-info"> 
+      <div *ngIf="project">
+        <label><b class="description">Project status:</b> {{project.projectStatus}}</label>
+      </div>   
+    </mat-card>
+
+    <div class="buttons">
+      <button (click)=edit(project.id) mat-button> Edit </button>
+      <button (click)=delete(project.id) mat-button>Delete</button>
+    </div>
+  
+  </div>
+  

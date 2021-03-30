@@ -39,11 +39,10 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void save(ProjectDTO projectDto) {
         User user = new User();
-        user.setUserId(UUID.fromString("8486765d-0a3b-4dea-9c22-66746c440a22"));
+        user.setUserId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f0"));
 
         Project project = ProjectMapper.INSTANCE.toEntity(projectDto);
         project.setEmployer(user);
-        project.setProjectStatus(ProjectStatus.LOOKING_FOR_WORKER);
 
         projectDAO.save(project);
     }

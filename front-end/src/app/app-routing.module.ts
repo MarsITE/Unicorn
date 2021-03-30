@@ -5,6 +5,8 @@ import { UserProfileComponent } from './user/user-profile/user-profile.component
 import { UserEditComponent } from './user/user-edit/user-edit.component';
 import { ProjectComponent } from './project/project.component';
 import { ProjectAddComponent } from './project/project-add/project-add.component';
+import { ProjectInfoComponent } from './project/project-info/project-info.component';
+import { ProjectEditComponent } from './project/project-edit/project-edit.component';
 
 const routes: Routes = [
   {
@@ -16,13 +18,19 @@ const routes: Routes = [
   }, {
     path: 'user-profile-edit/:email',
     component: UserEditComponent
-  },
-  
-  {path: 'projects',
-   component: ProjectComponent},
-
-  {path: 'addProjects',
-   component: ProjectAddComponent}
+  }, {
+    path: 'projects',
+   component: ProjectComponent
+  }, {
+    path: 'addProjects',
+   component: ProjectAddComponent
+  }, {
+    path: 'projects/:id',
+    component:ProjectInfoComponent
+  }, {
+    path: 'editProject/:id',
+    component:ProjectEditComponent
+  }
 ];
 
 @NgModule({
