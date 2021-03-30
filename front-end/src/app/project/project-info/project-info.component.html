@@ -8,6 +8,12 @@
         <label><b class="description">Project name:</b> {{project.name}}</label>
       </div>
     </mat-card>
+
+    <mat-card class="project-info">       
+      <div *ngIf="project">
+        <label><b class="description">Project owner:</b> {{project.owner.email}}</label>
+      </div>
+    </mat-card>
     
     <mat-card class="project-info" > 
       <div *ngIf="project">

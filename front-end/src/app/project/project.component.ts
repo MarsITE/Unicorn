@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Project } from '../common/model/project';
+import { User } from '../common/model/user';
 import { ProjectService } from '../common/services/project.service';
 
 @Component({
@@ -11,10 +12,11 @@ import { ProjectService } from '../common/services/project.service';
 
 export class ProjectComponent implements OnInit {
   id: String;
+  owner: User;
 
   projects: Project[] = []; 
   
-  displayedColumns: string[] = ['name', 'projectStatus', 'creationDate'];
+  displayedColumns: string[] = ['name', 'projectStatus', 'creationDate', 'owner'];
 
   constructor(private projectService: ProjectService, private router: Router) {
   }

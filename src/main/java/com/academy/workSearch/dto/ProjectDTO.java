@@ -1,5 +1,6 @@
 package com.academy.workSearch.dto;
 
+import com.academy.workSearch.model.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,5 +24,7 @@ public class ProjectDTO {
     private String projectStatus;
 
     private String creationDate;
+
+    private User owner;
 
 }
