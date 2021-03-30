@@ -15,9 +15,14 @@
     padding-top: 25px;
     margin-bottom: 16px;
 
-    font-size: 20px;
+    font-size: 15px;
     font-style: italic;
 
     display: flex;
-    flex-direction: column;
+    flex-direction: column;    
+    
+  }
+
+  .description {      
+    color: rgb(31, 46, 131);
   }

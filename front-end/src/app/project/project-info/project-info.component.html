@@ -3,28 +3,27 @@
   <div mat-card-title style="margin: auto;">
     <button mat-stroked-button (click) = projects()>Show projects</button>
 
-    <mat-card class="project-info"> 
-      
+    <mat-card class="project-info">       
       <div *ngIf="project">
-        <label>Project name: {{project.name}}</label>
+        <label><b class="description">Project name:</b> {{project.name}}</label>
       </div>
-
     </mat-card>
-    <mat-card class="project-info"> 
+    
+    <mat-card class="project-info" > 
       <div *ngIf="project">
-        <label>Description: {{project.description}}</label>
+        <label><b class="description">Description:</b> {{project.description}}</label>        
       </div>        
     </mat-card>
 
     <mat-card class="project-info"> 
       <div *ngIf="project">
-        <label>Date of creation: {{project.creationDate|date}}</label>
+        <label><b class="description">Date of creation:</b> {{project.creationDate|date}}</label>
       </div>
     </mat-card>
 
     <mat-card class="project-info"> 
       <div *ngIf="project">
-        <label>Project status: {{project.projectStatus}}</label>
+        <label><b class="description">Project status:</b> {{project.projectStatus}}</label>
       </div>   
     </mat-card>
 
