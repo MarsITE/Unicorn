@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface SkillService {
     List<SkillDetailsDTO> findAll();
-    List<SkillDTO> findAllEnabled();
+    List<SkillDTO> findAllEnabled(Boolean enabled);
     void save(SkillDTO skill);
     SkillDetailsDTO update(SkillDetailsDTO skill);
     SkillDTO get(UUID id);

@@ -35,7 +35,7 @@ public class SkillController {
     @ApiOperation(value = "Show all skills", notes = "Show information about all skills in DB")
     public ResponseEntity<List<SkillDTO>> getAll() {
         logger.info("Show all skills");
-        return ResponseEntity.ok(skillService.findAllEnabled());
+        return ResponseEntity.ok(skillService.findAllEnabled(true));
     }
 
     @GetMapping("/{id}")

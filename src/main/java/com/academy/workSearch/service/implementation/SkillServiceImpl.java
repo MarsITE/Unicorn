@@ -29,9 +29,8 @@ public class SkillServiceImpl implements SkillService {
         return SKILL_DETAILS_MAPPER.toSkillsDto(skillCrudDAO.findAll());
     }
 
-    public List<SkillDTO> findAllEnabled(){
-        return SKILL_MAPPER.toSkillsDto(skillCrudDAO.findAll()
-                .stream().filter(skill -> skill.isEnabled()).collect(Collectors.toList()));
+    public List<SkillDTO> findAllEnabled(Boolean enabled){
+        return SKILL_MAPPER.toSkillsDto(skillDAO.getAllEnabled(enabled));
     }
 
     public void save(SkillDTO skill) throws ValidationException {
