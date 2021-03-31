@@ -2,6 +2,7 @@ package com.academy.workSearch.service;
 
 import com.academy.workSearch.dto.UserAuthDTO;
 import com.academy.workSearch.dto.UserDTO;
+import com.academy.workSearch.dto.UserLoginDTO;
 
 import java.util.List;
 
@@ -15,5 +16,5 @@ public interface UserService {
 
     void deleteByEmail(String email);
 
-    UserAuthDTO get(String email, String password);
+    UserLoginDTO get(UserAuthDTO userAuth);
 }

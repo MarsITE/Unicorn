@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/common/model/user-auth';
+import { UserLogin } from 'src/app/common/model/user-login';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
 
 @Component({
@@ -10,7 +11,8 @@ import { UserHttpService } from 'src/app/common/services/user-http.service';
   styleUrls: ['./user-login.component.css']
 })
 export class UserLoginComponent implements OnInit, OnDestroy {
-  user: UserAuth;
+  userLogin: UserLogin;
+  userAuth: UserAuth;
   userForm: FormGroup;
   private subscriptions: Subscription[] = [];
   constructor(private userService: UserHttpService) { }
@@ -20,7 +22,7 @@ export class UserLoginComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.initForm();
   }
 
@@ -44,18 +46,18 @@ export class UserLoginComponent implements OnInit, OnDestroy {
       const email = this.userForm.controls.email.value;
       const password = this.userForm.controls.password.value;
 
-      this.login(email, password);
+      this.userAuth = {email, password, isEmployer: false};
+      this.login(this.userAuth);
   }
 
-  private login(email: string, password: string): void {
-    this.subscriptions.push(this.userService.login(email, password).subscribe(
-      (response: UserAuth) => {
-        this.user = response;
+  private login(user: UserAuth): void {
+    this.subscriptions.push(this.userService.login(user).subscribe(
+      (response: UserLogin) => {
+        this.userLogin = response;
       },
       (error) => {
         this.initForm(
-          this.user.email,
-          this.user.password
+          user.email
         );
         console.log('error', error);
       },

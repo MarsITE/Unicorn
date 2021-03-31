@@ -1,41 +1,32 @@
 package com.academy.workSearch.configuration;
 
+import com.academy.workSearch.controller.jwt.TokenAuthenticationFilter;
+import com.academy.workSearch.controller.jwt.TokenAuthenticationManager;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 
 @Component
 @EnableWebSecurity
 @AllArgsConstructor
+@EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-//    @Autowired
-//    private final @Qualifier(value = "UserServiceImpl")
-//    UserDetailsService userDetailsService;
+    @Autowired
+    private final TokenAuthenticationManager tokenAuthenticationManager;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-//    @Bean
-//    public AuthenticationProvider authProvider() {
-//        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-//        authenticationProvider.setUserDetailsService(userDetailsService);
-//        authenticationProvider.setPasswordEncoder(passwordEncoder());
-//        return authenticationProvider;
-//    }
-
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -45,8 +36,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/registration", "/api/v1/login", "/api/v1/users").permitAll()
                 .antMatchers("/api/v1/admin/*").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
-                .and().headers().frameOptions().disable().and()
-                .csrf().disable();
+                .and().addFilterBefore(restTokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .headers().frameOptions().disable()
+                .and().csrf().disable();
+    }
 
+    @Bean(name = "restTokenAuthenticationFilter")
+    public TokenAuthenticationFilter restTokenAuthenticationFilter() {
+        TokenAuthenticationFilter restTokenAuthenticationFilter = new TokenAuthenticationFilter();
+        restTokenAuthenticationFilter.setAuthenticationManager(tokenAuthenticationManager);
+        return restTokenAuthenticationFilter;
     }
 }

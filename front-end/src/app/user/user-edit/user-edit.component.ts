@@ -45,14 +45,14 @@ export class UserEditComponent implements OnInit, OnDestroy {
   }
 
   private initForm(
-    firstName: string = ' ',
-    lastName: string = ' ',
+    firstName: string = '',
+    lastName: string = '',
     phone: string = '',
-    linkToSocialNetwork: string = ' ',
+    linkToSocialNetwork: string = '',
     dateOfBirth: Date = this.today,
     isShowInfo: boolean = true,
-    workStatus: string = ' ',
-    imageUrl: string = ' '
+    workStatus: string = '',
+    imageUrl: string = ''
   ): void {
     this.today = Date.now();
     this.userProfileForm = new FormGroup({

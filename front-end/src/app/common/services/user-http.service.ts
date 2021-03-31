@@ -5,6 +5,7 @@ import { User } from '../model/user';
 import { UserInfo } from '../model/user-info';
 import { environment } from 'src/environments/environment';
 import { UserAuth } from '../model/user-auth';
+import { UserLogin } from '../model/user-login';
 
 @Injectable({
   providedIn: 'root'
@@ -25,11 +26,8 @@ export class UserHttpService {
     return this.http.delete<User>(`${environment.url}/user/${email}`);
   }
 
-  public login(email: string, password: string): Observable<UserAuth> {
-    const params = new HttpParams()
-      .set('email', email)
-      .set('password', password);
-    return this.http.get<UserAuth>(`${environment.url}/login`, {params});
+  public login(user: UserAuth): Observable<UserLogin> {
+    return this.http.post<UserLogin>(`${environment.url}/login`, user);
   }
 
   public updateUserInfo(userInfo: UserInfo): Observable<UserInfo> {

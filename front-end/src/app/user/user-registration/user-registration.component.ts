@@ -68,9 +68,6 @@ export class UserRegistrationComponent implements OnInit, OnDestroy {
       password: this.userForm.controls.password.value,
       isEmployer: Boolean(this.userForm.controls.isEmployer.value) };
 
-      console.log(this.userForm.controls.isEmployer.value);
-      console.log(this.user.isEmployer);
-      console.log(this.user);
     this.saveUser(this.user);
   }
 }

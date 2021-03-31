@@ -1,40 +1,39 @@
 package com.academy.workSearch.service;
 
+import com.academy.workSearch.controller.jwt.GetTokenService;
 import com.academy.workSearch.dao.RoleDAOImpl;
-import com.academy.workSearch.dao.UserDAO;
 import com.academy.workSearch.dao.UserDAOImpl;
 import com.academy.workSearch.dao.UserInfoDAOImpl;
 import com.academy.workSearch.dto.UserAuthDTO;
 import com.academy.workSearch.dto.UserDTO;
+import com.academy.workSearch.dto.UserLoginDTO;
 import com.academy.workSearch.model.AccountStatus;
 import com.academy.workSearch.model.Role;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.UserInfo;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static com.academy.workSearch.dto.mapper.UserAuthMapper.USER_AUTH_MAPPER;
 import static com.academy.workSearch.dto.mapper.UserMapper.USER_MAPPER;
 
-@Service(value = "UserServiceImpl")
+@Service
 @Transactional
 @AllArgsConstructor
-public class UserServiceImpl implements UserDetailsService, UserService {
+public class UserServiceImpl implements UserService {
     private final UserDAOImpl userDAO;
     private final UserInfoDAOImpl userInfoDAO;
     private final RoleDAOImpl roleDAO;
-
-    @Autowired
+    private final GetTokenService tokenService;
     private final PasswordEncoder passwordEncoder;
 
     @PostConstruct
@@ -45,16 +44,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public User loadUserByUsername(String email) throws UsernameNotFoundException, BadCredentialsException {
-        User user = userDAO.getByEmail(email);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-
-        return user;//todo ask
-    }
-
-    @Override
     public List<UserDTO> findAll() {
         return USER_MAPPER.map(userDAO.findAll());
     }
@@ -62,7 +51,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public UserAuthDTO save(UserAuthDTO userAuthDTO) {
         User user = USER_AUTH_MAPPER.toUser(userAuthDTO);
-        UserInfo userInfo = new UserInfo();//todo ask
+        UserInfo userInfo = new UserInfo();
         userInfo.setUserInfoId(userInfoDAO.saveAndGetId(userInfo));
         userInfoDAO.save(userInfo);
         user.setUserInfo(userInfo);
@@ -95,13 +84,21 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public UserAuthDTO get(String email, String password) throws BadCredentialsException {
-        UserAuthDTO user = USER_AUTH_MAPPER.toUserAuthDto(loadUserByUsername(email));
-        if (!passwordEncoder.matches(password, user.getPassword())) {
+    public UserLoginDTO get(UserAuthDTO userAuth) throws BadCredentialsException {
+        UserAuthDTO user = USER_AUTH_MAPPER.toUserAuthDto(userDAO.getByEmail(userAuth.getEmail()));
+        if (!passwordEncoder.matches(userAuth.getPassword(), user.getPassword())) {
             throw new BadCredentialsException("Incorrect login or password");
         }
 
-        return user;
+        UserLoginDTO userLogin = new UserLoginDTO();
+        userLogin.setEmail(user.getEmail());
+        try {
+            userLogin.setToken(tokenService.getToken(user));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return userLogin;
     }
 
 }

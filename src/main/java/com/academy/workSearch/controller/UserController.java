@@ -2,7 +2,7 @@ package com.academy.workSearch.controller;
 
 import com.academy.workSearch.dto.UserAuthDTO;
 import com.academy.workSearch.dto.UserDTO;
-import com.academy.workSearch.exceptionHandling.NoSuchUserException;
+import com.academy.workSearch.dto.UserLoginDTO;
 import com.academy.workSearch.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -20,6 +20,7 @@ import java.util.List;
 public class UserController {
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
+//    private final JwtProvider jwtProvider;
 
     @GetMapping({"/users"})
     @ApiOperation(value = "Show all users", notes = "Show information about all users in DB")
@@ -28,13 +29,13 @@ public class UserController {
         return ResponseEntity.ok(userService.findAll());
     }
 
-    @GetMapping({"/login"})
+    @PostMapping({"/login"})
     @ApiOperation(value = "Find user by email", notes = "Find user in DB, if user exist")
-    public ResponseEntity<UserAuthDTO> getUser(@ApiParam(value = "email value for user you need to retrive", required = true)
-                                               @RequestParam String email, @RequestParam String password) {
+    public ResponseEntity<UserLoginDTO> getUser(@ApiParam(value = "email value for user you need to retrive", required = true)
+                                               @RequestBody UserAuthDTO userAuthDTO) {
         try {
-            UserAuthDTO user = userService.get(email, password);
-            return ResponseEntity.ok(user);
+            UserLoginDTO userLogin = userService.get(userAuthDTO);
+            return ResponseEntity.ok(userLogin);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return ResponseEntity.badRequest().build();
