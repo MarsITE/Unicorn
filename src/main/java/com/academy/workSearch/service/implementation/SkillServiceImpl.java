@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.validation.ValidationException;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static com.academy.workSearch.dto.mapper.SkillDetailsMapper.SKILL_DETAILS_MAPPER;
 import static com.academy.workSearch.dto.mapper.SkillMapper.SKILL_MAPPER;
@@ -20,8 +19,7 @@ import static com.academy.workSearch.dto.mapper.SkillMapper.SKILL_MAPPER;
 @Service
 @Transactional
 @AllArgsConstructor
-public class SkillServiceImpl implements SkillService {
-
+public class SkillServiceImpl  implements SkillService  {
     private final CrudDAO<Skill> skillCrudDAO;
     private final SkillDAOImpl skillDAO;
 
@@ -54,4 +52,5 @@ public class SkillServiceImpl implements SkillService {
     public SkillDTO getByName(String name) {
         return SKILL_MAPPER.toDto(skillDAO.getByName(name));
     }
+
 }

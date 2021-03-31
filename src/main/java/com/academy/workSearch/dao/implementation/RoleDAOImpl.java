@@ -6,13 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class RoleDAO extends CrudDAOImpl<Role> {
-
-    private SessionFactory sessionFactory;
+public class RoleDAOImpl extends CrudDAOImpl<Role> {
 
     @Autowired
-    public RoleDAO(SessionFactory sessionFactory) {
+    public RoleDAOImpl(SessionFactory sessionFactory) {
         super(sessionFactory);
-        this.sessionFactory = sessionFactory;
     }
 }

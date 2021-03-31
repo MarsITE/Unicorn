@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.UUID;
 
+
 @Repository
 public class SkillDAOImpl extends CrudDAOImpl<Skill> implements SkillDAO {
 
@@ -51,4 +52,5 @@ public class SkillDAOImpl extends CrudDAOImpl<Skill> implements SkillDAO {
         query.setParameter("enabled", enabled);
         return query.list();
     }
+
 }

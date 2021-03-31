@@ -1,26 +1,26 @@
 <div class="container">
 
   <div mat-card-title style="margin: auto;">
-    <button mat-stroked-button (click) = createProject()>Create new Project</button>
+    <button mat-stroked-button (click) = createProject()>Create new Project</button> 
   </div>
 
     <table mat-table [dataSource]="projects" class="mat-elevation-z8">
 
       
       <ng-container matColumnDef="name" >
-        <th mat-header-cell *matHeaderCellDef> Project name </th>
+        <th mat-header-cell *matHeaderCellDef > Project name </th>
         <td mat-cell *matCellDef="let element"> {{element.name}} </td>
       </ng-container>
 
       <ng-container matColumnDef="projectStatus">
-        <th mat-header-cell *matHeaderCellDef> Project status </th>
+        <th mat-header-cell *matHeaderCellDef > Project status </th>
         <td mat-cell *matCellDef="let element">
            {{element.projectStatus|titlecase}}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="creationDate">
-        <th mat-header-cell *matHeaderCellDef> Date of creation </th>
+        <th mat-header-cell *matHeaderCellDef (click)=projectsSort()> Date of creation </th>
         <td mat-cell *matCellDef="let element"> {{element.creationDate|date}} </td>
       </ng-container>
 
@@ -34,5 +34,11 @@
         [ngClass]="{'bg-clr': row === selectedRow}"></tr>
 
     </table>
+
+    <div mat-card-title style="margin: auto;">
+      <button mat-stroked-button (click)=projectsPrev()>prev</button>
+      <button mat-stroked-button >{{counter}}</button>
+      <button mat-stroked-button (click)=projectsNext()>next</button>    
+    </div>
 
   </div>

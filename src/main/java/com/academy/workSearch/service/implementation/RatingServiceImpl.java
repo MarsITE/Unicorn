@@ -13,7 +13,7 @@ import java.util.UUID;
 @Service
 @Transactional
 @AllArgsConstructor
-public class RatingService {
+public class RatingServiceImpl {
 
     @Autowired
     private final CrudDAO<Rating> ratingDAO;

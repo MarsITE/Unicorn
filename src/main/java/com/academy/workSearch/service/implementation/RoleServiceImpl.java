@@ -13,7 +13,7 @@ import java.util.UUID;
 @Service
 @Transactional
 @AllArgsConstructor
-public class RoleService {
+public class RoleServiceImpl {
 
     @Autowired
     private final CrudDAO<Role> roleDAO;
