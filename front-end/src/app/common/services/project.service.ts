@@ -11,8 +11,8 @@ export class ProjectService {
 
   constructor(private http: HttpClient) { }
 
-  public getProjects(): Observable<Project[]> {
-    return this.http.get<Project[]>(`${environment.url}/projects/last/1`);
+  public getProjects(params: any): Observable<Project[]> {    
+    return this.http.get<Project[]>(`${environment.url}/projects`, {params});
   }
 
   public save(project: Project): Observable<Project> {

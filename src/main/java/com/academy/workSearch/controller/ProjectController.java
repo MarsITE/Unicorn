@@ -27,18 +27,13 @@ public class ProjectController {
     }
 
     @GetMapping()
-    @ApiOperation(value = "Show all projects", notes = "Show information about all projects in DB")
-    public ResponseEntity<List<ProjectDTO>> showProjects() {
-        List<ProjectDTO> projectsDto = projectService.findAll();
-        logger.info("Show all projects");
-        return new ResponseEntity<> (projectsDto, HttpStatus.OK);
-    }
-
-    @GetMapping("/last/{page}")
     @ApiOperation(value = "Show projects", notes = "Show information about projects from DB")
-    public ResponseEntity<List<ProjectDTO>> showLastProjects(@PathVariable int page) {
-        List<ProjectDTO> projectsDto = projectService.findLast(page, 10);
-        logger.info("Show projects from page = " + page);
+    public ResponseEntity<List<ProjectDTO>> showLastProjects(@RequestParam(value = "page", defaultValue = "1") int page,
+                                                             @RequestParam(value = "sort", defaultValue = "false") boolean sort,
+                                                             @RequestParam(value = "maxResult", defaultValue = "5") int maxResult            ,
+                                                             @RequestParam(value = "maxNavigationPage", defaultValue = "100") int maxNavigationPage) {
+        List<ProjectDTO> projectsDto = projectService.findLast(page, maxResult, maxNavigationPage, sort);
+        logger.info("Show projects");
         return new ResponseEntity<> (projectsDto, HttpStatus.OK);
     }
 
