@@ -32,8 +32,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectDTO> findLast(int page, int maxResult) {
-        return ProjectMapper.INSTANCE.toProjectsDto(projectDAO.findLast(page, maxResult));
+    public List<ProjectDTO> findLast(int page, int maxResult, int maxNavigationPage, boolean sort) {
+        return ProjectMapper.INSTANCE.toProjectsDto(projectDAO.findLast(page, maxResult, maxNavigationPage, sort));
     }
 
     @Override

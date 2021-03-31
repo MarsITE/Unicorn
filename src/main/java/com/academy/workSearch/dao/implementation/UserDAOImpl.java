@@ -12,12 +12,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
 
-    private SessionFactory sessionFactory;
-
     @Autowired
     public UserDAOImpl(SessionFactory sessionFactory) {
         super(sessionFactory);
-        this.sessionFactory = sessionFactory;
     }
 
     public User getByEmail(String email) {

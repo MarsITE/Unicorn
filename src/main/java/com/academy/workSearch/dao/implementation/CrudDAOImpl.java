@@ -2,21 +2,20 @@ package com.academy.workSearch.dao.implementation;
 
 import com.academy.workSearch.dao.CrudDAO;
 import com.academy.workSearch.model.Project;
-import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 import java.util.UUID;
 
-@AllArgsConstructor
 @Repository
 public class CrudDAOImpl<E> implements CrudDAO<E> {
     private Class<E> clazz;
 
-    protected final SessionFactory sessionFactory;
+    protected SessionFactory sessionFactory;
 
     @Autowired
     public CrudDAOImpl(SessionFactory sessionFactory) {

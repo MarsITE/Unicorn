@@ -1,3 +1,4 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Project } from '../common/model/project';
@@ -13,21 +14,31 @@ import { ProjectService } from '../common/services/project.service';
 export class ProjectComponent implements OnInit {
   id: String;
   owner: User;
+  page: string;
+  sort: boolean = false;
+  counter: number = 1;  
 
   projects: Project[] = []; 
   
   displayedColumns: string[] = ['name', 'projectStatus', 'creationDate', 'owner'];
-
-  constructor(private projectService: ProjectService, private router: Router) {
+ 
+  constructor(private projectService: ProjectService, private router: Router, private http: HttpClient) {
   }
 
   ngOnInit(): void {    
     this.getProjects();
   }
 
-  private getProjects() {
-    this.projectService.getProjects().subscribe(
-      (response: Project[]) => {        
+ private getProjects() {
+
+ 
+
+  const params = new HttpParams()
+  .set('page', this.counter.toString())
+  .set('sort', (this.sort).toString())  
+
+    this.projectService.getProjects(params).subscribe(
+      (response: Project[]) => {          
         this.projects = response;
       },
       (error) => {
@@ -45,6 +56,25 @@ export class ProjectComponent implements OnInit {
 
   createProject() {
     this.router.navigateByUrl(`addProjects`);
+  }
+
+  projectsSort() {
+    this.sort = !this.sort     
+    this.getProjects() 
+  }
+
+  projectsNext() { 
+    if(this.counter < 10){
+      this.counter++; 
+    }    
+    this.getProjects()
+  }
+
+  projectsPrev() {   
+    if(this.counter > 1){
+      this.counter--; 
+    }      
+    this.getProjects()
   }
 
 }

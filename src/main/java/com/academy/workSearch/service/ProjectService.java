@@ -9,7 +9,7 @@ public interface ProjectService {
 
     List<ProjectDTO> findAll();
 
-    List<ProjectDTO> findLast(int page, int maxResult);
+    List<ProjectDTO> findLast(int page, int maxResult, int maxNavigationPage, boolean sort);
 
     void save(ProjectDTO projectDto);
 
