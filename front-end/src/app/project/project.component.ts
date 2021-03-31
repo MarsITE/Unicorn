@@ -15,13 +15,8 @@ export class ProjectComponent implements OnInit {
   id: String;
   owner: User;
   page: string;
-  sort: boolean;
-
-  counter: number = 1;
-  increment() { this.counter++; }
-  decrement() { this.counter--; }
-
-  
+  sort: boolean = false;
+  counter: number = 1;  
 
   projects: Project[] = []; 
   
@@ -39,6 +34,8 @@ export class ProjectComponent implements OnInit {
  
 
   const params = new HttpParams()
+  .set('page', this.counter.toString())
+  .set('sort', (this.sort).toString())  
 
     this.projectService.getProjects(params).subscribe(
       (response: Project[]) => {          
@@ -63,63 +60,21 @@ export class ProjectComponent implements OnInit {
 
   projectsSort() {
     this.sort = !this.sort     
- 
-    const params = new HttpParams()  
-    .set('sort', (this.sort).toString())
-  
-      this.projectService.getProjects(params).subscribe(
-        (response: Project[]) => {          
-          this.projects = response;
-        },
-        (error) => {
-          console.log("error", error);
-        },
-        () => {
-          console.log("complete");
-        }
-      )
+    this.getProjects() 
   }
 
-  projectsNext() {   
-
-    this.increment();
-    
-    const params = new HttpParams() 
-    
-    .set('page', this.counter.toString())    
-  
-      this.projectService.getProjects(params).subscribe(
-        (response: Project[]) => {          
-          this.projects = response;
-        },
-        (error) => {
-          console.log("error", error);
-        },
-        () => {
-          console.log("complete");
-        }
-      )
+  projectsNext() { 
+    if(this.counter < 10){
+      this.counter++; 
+    }    
+    this.getProjects()
   }
 
   projectsPrev() {   
-
-    this.decrement();
-    
-    const params = new HttpParams() 
-    
-    .set('page', this.counter.toString())    
-  
-      this.projectService.getProjects(params).subscribe(
-        (response: Project[]) => {          
-          this.projects = response;
-        },
-        (error) => {
-          console.log("error", error);
-        },
-        () => {
-          console.log("complete");
-        }
-      )
+    if(this.counter > 1){
+      this.counter--; 
+    }      
+    this.getProjects()
   }
 
 }
