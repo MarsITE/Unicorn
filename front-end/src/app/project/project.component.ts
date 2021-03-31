@@ -29,9 +29,7 @@ export class ProjectComponent implements OnInit {
     this.getProjects();
   }
 
- private getProjects() {
-
- 
+ private getProjects() { 
 
   const params = new HttpParams()
   .set('page', this.counter.toString())
