@@ -2,7 +2,8 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-<!--    <include file="changelog/create-tables.changelog-0.0.1.sql"
+    <include file="changelog/create-tables.changelog-0.0.1.sql"
+
              relativeToChangelogFile="true"/>
     <include file="changelog/create-tables.changelog-0.0.2.sql"
              relativeToChangelogFile="true"/>
@@ -21,5 +22,6 @@
 
     <changeSet id="5" author="Diana">
         <comment>fix bug bug with roles</comment>
-    </changeSet>-->
+    </changeSet>
+
 </databaseChangeLog>

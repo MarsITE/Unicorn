@@ -1,6 +1,5 @@
 package com.academy.workSearch.dto.mapper;
-
-import com.academy.workSearch.dto.SkillDTO;
+import com.academy.workSearch.dto.SkillDetailsDTO;
 import com.academy.workSearch.model.Skill;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -9,23 +8,23 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 @Mapper
-public interface SkillMapper {
-    SkillMapper SKILL_MAPPER = Mappers.getMapper(SkillMapper.class);
-
-
-    @Mappings({
-            @Mapping(target = "name", source = "name"),
-            @Mapping(target = "skillId", source = "skillId")
-    })
-    SkillDTO toDto(Skill skill);
+public interface SkillDetailsMapper {
+    SkillDetailsMapper SKILL_DETAILS_MAPPER = Mappers.getMapper(SkillDetailsMapper.class);
 
     @Mappings({
             @Mapping(target = "name", source = "name"),
             @Mapping(target = "skillId", source = "skillId")
     })
-    Skill toEntity(SkillDTO skillDto);
+    SkillDetailsDTO toDto(Skill skill);
 
-    List<SkillDTO> toSkillsDto(List<Skill> skills);
+    @Mappings({
+            @Mapping(target = "name", source = "name"),
+            @Mapping(target = "skillId", source = "skillId")
+    })
+    Skill toEntity(SkillDetailsDTO skillDto);
 
-    List<Skill> toSkills(List<SkillDTO> toSkillsDto);
+    List<SkillDetailsDTO> toSkillsDto(List<Skill> skills);
+
+    List<Skill> toSkills(List<SkillDetailsDTO> toSkillsDto);
+
 }

@@ -9,7 +9,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SkillDTO {
+public class SkillDetailsDTO {
     private UUID skillId;
     private String name;
+    private boolean enabled;
 }

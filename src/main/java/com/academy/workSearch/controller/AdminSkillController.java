@@ -1,13 +1,14 @@
 package com.academy.workSearch.controller;
 
 import com.academy.workSearch.dto.SkillDTO;
+import com.academy.workSearch.dto.SkillDetailsDTO;
 import com.academy.workSearch.exceptionHandling.NoSuchSkillException;
-import com.academy.workSearch.model.Skill;
 import com.academy.workSearch.service.SkillService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,7 +19,7 @@ import java.util.function.BiFunction;
 
 @Validated
 @RestController
-@RequestMapping("/api/1/skills/admin")
+@RequestMapping("/api/v1/skills/admin")
 public class AdminSkillController {
     private final Logger logger = LoggerFactory.getLogger(AdminSkillController.class);
     private final static String MESSAGE_ADD_SKILL_WITH_NAME = "Add skill with name ";
@@ -26,16 +27,17 @@ public class AdminSkillController {
 
     private SkillService skillService;
 
+    @Autowired
     public AdminSkillController(SkillService skillService) {
         this.skillService = skillService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     @ApiOperation(value = "Show all skills", notes = "Show information about all skills in DB")
-    public ResponseEntity<List<SkillDTO>> getAll() {
+    public ResponseEntity<List<SkillDetailsDTO>> getAll() {
         logger.info("Show all skills");
-        List<SkillDTO> skillsDto = skillService.findAll();
-        return new ResponseEntity<>(skillsDto, HttpStatus.OK);
+        List<SkillDetailsDTO> skillsDto = skillService.findAll();
+        return ResponseEntity.ok(skillsDto);
     }
 
     @GetMapping("/{id}")
@@ -48,36 +50,23 @@ public class AdminSkillController {
             logger.error("There is no skill with ID = " + id + " in Database");
             throw new NoSuchSkillException("There is no skill with ID = " + id + " in Database");
         }
-        return new ResponseEntity<> (skillDto, HttpStatus.OK);
+        return ResponseEntity.ok(skillDto);
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     @ApiOperation(value = "Add new skill", notes = "Add new skill in DB")
-    public ResponseEntity<SkillDTO> add(@RequestBody @Valid SkillDTO skill) {
+    public ResponseEntity<SkillDTO> add(@RequestBody @Valid SkillDTO skillDto) {
         BiFunction<String, Boolean, String> addSkillStatus = ( name, successful) ->
                 MESSAGE_ADD_SKILL_WITH_NAME + name + (successful ? "" : MESSAGE_FAILED);
-        try {
-            logger.info(addSkillStatus.apply(skill.getName(), true));
-            skillService.save(skill);
-            return ResponseEntity.ok().build();
-/*
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.ok().build();
-
- */
-        } catch (Exception e) {
-            logger.trace(Arrays.toString(Arrays.stream(e.getStackTrace()).toArray()));
-            String loggerInfoStr = addSkillStatus.apply(skill.getName(), false);
-            logger.info(loggerInfoStr);
-            return ResponseEntity.badRequest().build();
-        }
+        this.logger.info(addSkillStatus.apply(skillDto.getName(), true));
+        this.skillService.save(skillDto);
+        return ResponseEntity.ok(skillDto);
     }
 
-    @PutMapping("/")
+    @PutMapping("")
     @ApiOperation(value = "Update existing skill", notes = "Update existing skill")
-    public SkillDTO update(@RequestBody @Valid SkillDTO skill) {
-        skillService.update(skill);
+    public ResponseEntity<SkillDetailsDTO> update(@RequestBody @Valid SkillDetailsDTO skill) {
         logger.info("Update skill with ID = " + skill.getSkillId());
-        return skill;
+        return ResponseEntity.ok(this.skillService.update(skill));
     }
 }

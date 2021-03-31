@@ -10,7 +10,7 @@ import java.util.UUID;
 @Table( name = "skills",
         uniqueConstraints = {
             @UniqueConstraint(
-                    columnNames = "name_of_skill",
+                    columnNames = "name",
                     name = "uniqueSkillNameConstraint")
         })
 public class Skill {
@@ -20,7 +20,7 @@ public class Skill {
     private UUID skillId;
 
     @NotBlank(message = "The name of skill cannot be empty")
-    @Column(name = "name_of_skill", length = 20, unique=true)
+    @Column(name = "name", length = 20, unique=true)
     private String name;
 
     @Column(name = "enabled")
