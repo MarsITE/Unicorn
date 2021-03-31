@@ -9,9 +9,9 @@ import java.util.UUID;
 @Entity
 @Table( name = "skills",
         uniqueConstraints = {
-            @UniqueConstraint(
-                    columnNames = "name",
-                    name = "uniqueSkillNameConstraint")
+                @UniqueConstraint(
+                        columnNames = "name",
+                        name = "uniqueSkillNameConstraint")
         })
 public class Skill {
     @Id
@@ -26,3 +26,4 @@ public class Skill {
     @Column(name = "enabled")
     private boolean enabled;
 }
+
