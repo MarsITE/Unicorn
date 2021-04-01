@@ -4,6 +4,8 @@ import com.academy.workSearch.dto.PhotoDTO;
 import com.academy.workSearch.dto.UserInfoDTO;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.UUID;
+
 public interface UserInfoService {
     void save(UserInfoDTO userInfo);
 

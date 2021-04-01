@@ -50,11 +50,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserAuthDTO save(UserAuthDTO userAuthDTO) {
+    public UserLoginDTO save(UserAuthDTO userAuthDTO) {
         User user = USER_AUTH_MAPPER.toUser(userAuthDTO);
         UserInfo userInfo = new UserInfo();
         userInfo.setUserInfoId(userInfoDAO.saveAndGetId(userInfo));
-        userInfoDAO.save(userInfo);
         user.setUserInfo(userInfo);
         user.setAccountStatus(AccountStatus.ACTIVE);
         Role role1 = roleDAO.getByName("WORKER");
@@ -71,7 +70,10 @@ public class UserServiceImpl implements UserService {
         user.setRoles(roles);
         user.setPassword(passwordEncoder.encode(userAuthDTO.getPassword()));
         userDAO.save(user);
-        return userAuthDTO;
+
+        UserLoginDTO userLoginDTO = new UserLoginDTO();
+        userLoginDTO.setEmail(user.getEmail());
+        return userLoginDTO;
     }
 
     @Override

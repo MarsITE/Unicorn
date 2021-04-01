@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.httpBasic()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/registration", "/api/v1/login", "/api/v1/users").permitAll()
+                .antMatchers("/api/v1/registration", "/api/v1/login", "/api/v1/users", "/api/v1/user/").permitAll()
                 .antMatchers("/api/v1/admin/*").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and().addFilterBefore(restTokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)

@@ -10,7 +10,7 @@ public interface UserService {
 
     List<UserDTO> findAll();
 
-    UserAuthDTO save(UserAuthDTO userAuthDTO);
+    UserLoginDTO save(UserAuthDTO userAuthDTO);
 
     UserDTO update(UserDTO user);
 

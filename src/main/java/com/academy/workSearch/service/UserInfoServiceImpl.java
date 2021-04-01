@@ -39,7 +39,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     public void save(UserInfoDTO userInfo) {
-        userInfoDAO.save(USER_INFO_MAPPER.toUserInfo(userInfo));
+         userInfoDAO.saveAndGetId(USER_INFO_MAPPER.toUserInfo(userInfo));
     }
 
     @Override

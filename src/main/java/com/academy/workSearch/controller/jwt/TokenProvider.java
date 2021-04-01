@@ -32,12 +32,17 @@ public class TokenProvider {
     }
 
     public String getToken(User user) {
-        tokenData.put("clientType", "user");
-        tokenData.put("userID", user.getUserId().toString());
+        tokenData.put("user_id", user.getUserId().toString());
         tokenData.put("email", user.getEmail());
         tokenData.put("token_create_date", LocalDate.now());
-        tokenData.put("firstname", user.getUserInfo().getFirstName());
-        tokenData.put("larstname", user.getUserInfo().getLastName());
+        if (user.getUserInfo() != null) {
+            if(user.getUserInfo().getFirstName() != null) {
+                tokenData.put("first_name", user.getUserInfo().getFirstName());
+            }
+            if(user.getUserInfo().getLastName() != null) {
+                tokenData.put("last_name", user.getUserInfo().getLastName());
+            }
+        }
         putRolesToToken(tokenData, user.getRoles());
 
         JwtBuilder jwtBuilder = Jwts.builder();

@@ -32,7 +32,7 @@ public class UserController {
     @PostMapping({"/login"})
     @ApiOperation(value = "Find user by email", notes = "Find user in DB, if user exist")
     public ResponseEntity<UserLoginDTO> getUser(@ApiParam(value = "email value for user you need to retrive", required = true)
-                                               @RequestBody UserAuthDTO userAuthDTO) {
+                                                @RequestBody UserAuthDTO userAuthDTO) {
         try {
             UserLoginDTO userLogin = userService.get(userAuthDTO);
             return ResponseEntity.ok(userLogin);
@@ -44,14 +44,15 @@ public class UserController {
 
     @PostMapping({"/registration"})
     @ApiOperation(value = "Add new user", notes = "Add new user in DB")
-    public ResponseEntity<UserAuthDTO> addNewUser(@RequestBody UserAuthDTO user) {
+    public ResponseEntity<UserLoginDTO> addNewUser(@RequestBody UserAuthDTO user) {
+        UserLoginDTO userLoginDTO = new UserLoginDTO();
         try {
-            userService.save(user);
+            userLoginDTO = userService.save(user);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
         this.logger.info("Add user with email = " + user.getEmail());
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(userLoginDTO);
     }
 
     @PutMapping({"/user-edit"})

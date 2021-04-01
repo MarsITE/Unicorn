@@ -7,7 +7,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { CdkTableModule } from '@angular/cdk/table';
 import { CdkTreeModule } from '@angular/cdk/tree';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -51,7 +51,7 @@ import { UserHttpService } from './common/services/user-http.service';
 import { UserListComponent } from './user/user-list/user-list.component';
 import { UserProfileComponent } from './user/user-profile/user-profile.component';
 import { UserEditComponent } from './user/user-edit/user-edit.component';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { ProjectService } from './common/services/project.service';
@@ -59,6 +59,8 @@ import { ProjectComponent } from './project/project.component';
 import { ProjectAddComponent } from './project/project-add/project-add.component';
 import { UserRegistrationComponent } from './user/user-registration/user-registration.component';
 import { UserLoginComponent } from './user/user-login/user-login.component';
+import { StorageService } from './common/services/storage.service';
+import { HttpErrorInterceptor } from './common/services/http-error.interceptor';
 
 @NgModule({
   declarations: [
@@ -128,7 +130,16 @@ import { UserLoginComponent } from './user/user-login/user-login.component';
     ReactiveFormsModule,
     NgxMaskModule.forRoot()
   ],
-  providers: [ProjectService, UserHttpService],
+  providers: [
+    ProjectService,
+    UserHttpService,
+    StorageService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpErrorInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,8 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserAuth } from 'src/app/common/model/user-auth';
 import { UserLogin } from 'src/app/common/model/user-login';
+import { StorageService } from 'src/app/common/services/storage.service';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
 
 @Component({
@@ -15,7 +17,7 @@ export class UserLoginComponent implements OnInit, OnDestroy {
   userAuth: UserAuth;
   userForm: FormGroup;
   private subscriptions: Subscription[] = [];
-  constructor(private userService: UserHttpService) { }
+  constructor(private userService: UserHttpService, private router: Router, private storageService: StorageService) { }
   ngOnDestroy(): void {
     this.subscriptions.forEach(s => {
       s.unsubscribe();
@@ -48,12 +50,15 @@ export class UserLoginComponent implements OnInit, OnDestroy {
 
       this.userAuth = {email, password, isEmployer: false};
       this.login(this.userAuth);
+
+      this.router.navigateByUrl(`users-list`);
   }
 
   private login(user: UserAuth): void {
     this.subscriptions.push(this.userService.login(user).subscribe(
       (response: UserLogin) => {
         this.userLogin = response;
+        this.storageService.saveValue('token', this.userLogin.token);
       },
       (error) => {
         this.initForm(
@@ -62,6 +67,7 @@ export class UserLoginComponent implements OnInit, OnDestroy {
         console.log('error', error);
       },
       () => {
+
         console.log('complete');
       }
     ));
