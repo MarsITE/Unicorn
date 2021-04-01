@@ -34,7 +34,7 @@ export class ProjectAddComponent{
         console.log(er);
       },
       () => {
-        this.router.navigateByUrl(`projects`);
+        this.router.navigateByUrl(`projects/1/desc`);
       });
   };
 

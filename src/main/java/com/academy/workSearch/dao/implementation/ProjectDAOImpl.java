@@ -20,11 +20,11 @@ public class ProjectDAOImpl extends CrudDAOImpl<Project> implements ProjectDAO {
     }
 
     @Override
-    public List<Project> findLast(int page, int maxResult, int maxNavigationPage, boolean sort) {
+    public List<Project> findLast(int page, int maxResult, int maxNavigationPage, String sort) {
         Session session = sessionFactory.getCurrentSession();
         Query<Project> query;
 
-        if (sort){
+        if (sort.equals("asc")){
             query = session.createQuery("from Project order by creation_date asc", Project.class);
         } else {
             query = session.createQuery("from Project order by creation_date desc", Project.class);
