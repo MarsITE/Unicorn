@@ -1,6 +1,7 @@
 package com.academy.workSearch.service;
 
-import com.academy.workSearch.controller.jwt.GetTokenService;
+import com.academy.workSearch.controller.UserController;
+import com.academy.workSearch.controller.jwt.TokenProvider;
 import com.academy.workSearch.dao.RoleDAOImpl;
 import com.academy.workSearch.dao.UserDAOImpl;
 import com.academy.workSearch.dao.UserInfoDAOImpl;
@@ -12,16 +13,15 @@ import com.academy.workSearch.model.Role;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.UserInfo;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.academy.workSearch.dto.mapper.UserAuthMapper.USER_AUTH_MAPPER;
 import static com.academy.workSearch.dto.mapper.UserMapper.USER_MAPPER;
@@ -30,10 +30,11 @@ import static com.academy.workSearch.dto.mapper.UserMapper.USER_MAPPER;
 @Transactional
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserDAOImpl userDAO;
     private final UserInfoDAOImpl userInfoDAO;
     private final RoleDAOImpl roleDAO;
-    private final GetTokenService tokenService;
+    private final TokenProvider tokenService;
     private final PasswordEncoder passwordEncoder;
 
     @PostConstruct
@@ -57,11 +58,16 @@ public class UserServiceImpl implements UserService {
         user.setUserInfo(userInfo);
         user.setAccountStatus(AccountStatus.ACTIVE);
         Role role1 = roleDAO.getByName("WORKER");
-        Role role2 = new Role();
+        Role role2 = null;
         if (userAuthDTO.isEmployer()) {
             role2 = roleDAO.getByName("EMPLOYER");
         }
-        Set<Role> roles = new HashSet<>(Arrays.asList(role1, role2));
+        Set<Role> roles;
+        if (role2 != null) {
+            roles = new HashSet<>(Arrays.asList(role1, role2));
+        } else {
+            roles = new HashSet<>(Collections.singletonList(role1));
+        }
         user.setRoles(roles);
         user.setPassword(passwordEncoder.encode(userAuthDTO.getPassword()));
         userDAO.save(user);
@@ -85,7 +91,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserLoginDTO get(UserAuthDTO userAuth) throws BadCredentialsException {
-        UserAuthDTO user = USER_AUTH_MAPPER.toUserAuthDto(userDAO.getByEmail(userAuth.getEmail()));
+        User user = userDAO.getByEmail(userAuth.getEmail());
         if (!passwordEncoder.matches(userAuth.getPassword(), user.getPassword())) {
             throw new BadCredentialsException("Incorrect login or password");
         }
@@ -95,7 +101,7 @@ public class UserServiceImpl implements UserService {
         try {
             userLogin.setToken(tokenService.getToken(user));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return userLogin;

@@ -22,6 +22,10 @@ export class UserHttpService {
     return this.http.post<UserAuth>(`${environment.url}/registration`, user);
   }
 
+  public getByEmail(email: string): Observable<any> {
+    return this.http.get<User>(`${environment.url}/user/${email}`);
+  }
+
   public deleteUser(email: string): Observable<any> {
     return this.http.delete<User>(`${environment.url}/user/${email}`);
   }
