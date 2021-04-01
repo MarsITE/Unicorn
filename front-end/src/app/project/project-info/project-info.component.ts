@@ -66,7 +66,7 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
   }
 
   projects() {
-    this.router2.navigateByUrl(`projects`);
+    this.router2.navigateByUrl(`projects/1/desc`);
   }
 
   public edit(id: string): void {
@@ -83,7 +83,7 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
       },
       () => {
         console.log('complete');
-        this.router2.navigateByUrl(`projects`);
+        this.router2.navigateByUrl(`projects/1/desc`);
       }
     ));
   }

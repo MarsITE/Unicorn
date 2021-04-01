@@ -29,7 +29,7 @@ public class ProjectController {
     @GetMapping()
     @ApiOperation(value = "Show projects", notes = "Show information about projects from DB")
     public ResponseEntity<List<ProjectDTO>> showProjects(@RequestParam(value = "page", defaultValue = "1") int page,
-                                                         @RequestParam(value = "sort", defaultValue = "false") boolean sort,
+                                                         @RequestParam(value = "sort", defaultValue = "desc") String sort,
                                                          @RequestParam(value = "maxResult", defaultValue = "5") int maxResult            ,
                                                          @RequestParam(value = "maxNavigationPage", defaultValue = "100") int maxNavigationPage) {
         List<ProjectDTO> projectsDto = projectService.findLast(page, maxResult, maxNavigationPage, sort);

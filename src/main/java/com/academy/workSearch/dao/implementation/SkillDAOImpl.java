@@ -20,25 +20,6 @@ public class SkillDAOImpl extends CrudDAOImpl<Skill> implements SkillDAO {
 
     }
 
-    @Override
-    public List<Skill> findAll() {
-        Session session = sessionFactory.getCurrentSession();
-        Query<Skill> query = session.createQuery("from Skill", Skill.class);
-        return query.getResultList();
-    }
-
-    @Override
-    public void save(Skill skill) {
-        Session session = sessionFactory.getCurrentSession();
-        session.saveOrUpdate(skill);
-    }
-
-    @Override
-    public Skill get(UUID id) {
-        Session session = sessionFactory.getCurrentSession();
-        return session.get(Skill.class, id);
-    }
-
     public Skill getByName(String name) {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("from Skill where name = :name");

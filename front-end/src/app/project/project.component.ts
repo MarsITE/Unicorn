@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Project } from '../common/model/project';
 import { User } from '../common/model/user';
 import { ProjectService } from '../common/services/project.service';
@@ -13,17 +13,20 @@ import { ProjectService } from '../common/services/project.service';
 
 export class ProjectComponent implements OnInit {
   id: String;
-  owner: User;
-  page: string;
-  sort: boolean = false;
+  owner: User;  
+  sortFlag: boolean = false;
+  sort: string = "desc";
   counter: number = 1;  
 
   projects: Project[] = []; 
   
   displayedColumns: string[] = ['name', 'projectStatus', 'creationDate', 'owner'];
  
-  constructor(private projectService: ProjectService, private router: Router, private http: HttpClient) {
+  constructor(private projectService: ProjectService, private router: Router, private http: HttpClient, router2: ActivatedRoute) {
+    this.counter = router2.snapshot.params.counter;    
+    this.sort = router2.snapshot.params.sort;   
   }
+  
 
   ngOnInit(): void {    
     this.getProjects();
@@ -33,17 +36,19 @@ export class ProjectComponent implements OnInit {
 
   const params = new HttpParams()
   .set('page', this.counter.toString())
-  .set('sort', (this.sort).toString())  
+  .set('sort', this.sort)  
 
     this.projectService.getProjects(params).subscribe(
       (response: Project[]) => {          
-        this.projects = response;
+        this.projects = response;        
       },
       (error) => {
         console.log("error", error);
       },
       () => {
         console.log("complete");
+        this.router.navigateByUrl(`projects/` + this.counter + `/` + this.sort);
+        
       }
     )
   }
@@ -57,14 +62,17 @@ export class ProjectComponent implements OnInit {
   }
 
   projectsSort() {
-    this.sort = !this.sort     
+    this.sortFlag = !this.sortFlag    
+    if(this.sortFlag){
+      this.sort= "asc"
+    } else {
+      this.sort = "desc"
+    }
     this.getProjects() 
   }
 
-  projectsNext() { 
-    if(this.counter < 10){
-      this.counter++; 
-    }    
+  projectsNext() {     
+    this.counter++;       
     this.getProjects()
   }
 

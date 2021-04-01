@@ -19,7 +19,7 @@ const routes: Routes = [
     path: 'user-profile-edit/:email',
     component: UserEditComponent
   }, {
-    path: 'projects',
+    path: 'projects/:counter/:sort',
    component: ProjectComponent
   }, {
     path: 'addProjects',
