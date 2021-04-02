@@ -22,7 +22,7 @@ export class ProjectComponent implements OnInit {
 
   projects: Project[] = []; 
   
-  displayedColumns: string[] = ['name', 'projectStatus', 'creationDate', 'owner'];
+  displayedColumns: string[] = ['name', 'projectStatus', 'creationDate', 'owner', 'skills'];
  
   constructor(private projectService: ProjectService, private router: Router, private http: HttpClient, route: ActivatedRoute) {   
     route.queryParams.subscribe(params => {

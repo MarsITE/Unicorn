@@ -1,5 +1,6 @@
 package com.academy.workSearch.dto;
 
+import com.academy.workSearch.model.Skill;
 import com.academy.workSearch.model.User;
 import jdk.jfr.Timestamp;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -34,4 +36,5 @@ public class ProjectDTO {
     @NotNull
     private User owner;
 
+    private Set<Skill> skills;
 }
