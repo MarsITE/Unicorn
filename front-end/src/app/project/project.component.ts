@@ -23,8 +23,8 @@ export class ProjectComponent implements OnInit {
   
   displayedColumns: string[] = ['name', 'projectStatus', 'creationDate', 'owner'];
  
-  constructor(private projectService: ProjectService, private router: Router, private http: HttpClient, router2: ActivatedRoute) {   
-    router2.queryParams.subscribe(params => {
+  constructor(private projectService: ProjectService, private router: Router, private http: HttpClient, route: ActivatedRoute) {   
+    route.queryParams.subscribe(params => {
     this.counter = +params['page'] || 1;
     this.sort = params['sort'] || "desc";
 });
