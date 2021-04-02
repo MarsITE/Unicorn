@@ -5,6 +5,7 @@ import { Project } from '../common/model/project';
 import { User } from '../common/model/user';
 import { ProjectService } from '../common/services/project.service';
 
+
 @Component({
   selector: 'app-project',
   templateUrl: './project.component.html',
@@ -22,11 +23,12 @@ export class ProjectComponent implements OnInit {
   
   displayedColumns: string[] = ['name', 'projectStatus', 'creationDate', 'owner'];
  
-  constructor(private projectService: ProjectService, private router: Router, private http: HttpClient, router2: ActivatedRoute) {
-    this.counter = router2.snapshot.params.counter;    
-    this.sort = router2.snapshot.params.sort;   
-  }
-  
+  constructor(private projectService: ProjectService, private router: Router, private http: HttpClient, route: ActivatedRoute) {   
+    route.queryParams.subscribe(params => {
+    this.counter = params['page'] || this.counter;
+    this.sort = params['sort'] || this.sort;
+});
+  }  
 
   ngOnInit(): void {    
     this.getProjects();
@@ -46,9 +48,8 @@ export class ProjectComponent implements OnInit {
         console.log("error", error);
       },
       () => {
-        console.log("complete");
-        this.router.navigateByUrl(`projects/` + this.counter + `/` + this.sort);
-        
+        console.log("complete"); 
+        this.router.navigateByUrl(`projects?page=` + this.counter + `&sort=` + this.sort); 
       }
     )
   }
