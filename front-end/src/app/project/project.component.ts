@@ -25,8 +25,8 @@ export class ProjectComponent implements OnInit {
  
   constructor(private projectService: ProjectService, private router: Router, private http: HttpClient, route: ActivatedRoute) {   
     route.queryParams.subscribe(params => {
-    this.counter = +params['page'] || 1;
-    this.sort = params['sort'] || "desc";
+    this.counter = params['page'] || this.counter;
+    this.sort = params['sort'] || this.sort;
 });
   }  
 
