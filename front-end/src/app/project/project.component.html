@@ -20,7 +20,7 @@
       </ng-container>
 
       <ng-container matColumnDef="creationDate">
-        <th mat-header-cell *matHeaderCellDef (click)=projectsSort()> Date of creation </th>
+        <th mat-header-cell *matHeaderCellDef (click)=projectsSort()> Date of creation (⇅ {{sort}})</th>
         <td mat-cell *matCellDef="let element"> {{element.creationDate|date}} </td>
       </ng-container>
 
@@ -35,10 +35,15 @@
 
     </table>
 
-    <div mat-card-title style="margin: auto;">
+    <div mat-card-title style="margin: auto;">      
+      <button mat-stroked-button >results per page:</button>
+      <button mat-stroked-button (click)= projectsMaxResult5()>5</button>
+      <button mat-stroked-button (click)= projectsMaxResult10()>10</button>
+      <button mat-stroked-button (click)= projectsMaxResult25()>25</button>
+      <button mat-stroked-button >navigation:</button>
       <button mat-stroked-button (click)=projectsPrev()>prev</button>
       <button mat-stroked-button >{{counter}}</button>
-      <button mat-stroked-button (click)=projectsNext()>next</button>    
+      <button mat-stroked-button (click)=projectsNext()>next</button>   
     </div>
 
   </div>
