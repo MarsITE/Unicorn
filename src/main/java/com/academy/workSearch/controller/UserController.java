@@ -9,55 +9,66 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping({"/api/v1"})
+@RequestMapping({"/api/v1/users"})
 public class UserController {
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
 
-    @GetMapping({"/users"})
+    private final String USER_URL_PARAMETER_EMAIL = "/{email}";
+
+    @GetMapping()
     @ApiOperation(value = "Show all users", notes = "Show information about all users in DB")
-    public ResponseEntity<List<UserDTO>> showUsers() {
+    public ResponseEntity<List<UserDTO>> getAll() {
         this.logger.info("Show all users");
         return ResponseEntity.ok(userService.findAll());
     }
 
-    @GetMapping({"/user/{email}"})
+    @GetMapping(USER_URL_PARAMETER_EMAIL)
     @ApiOperation(value = "Find user by email", notes = "Find user in DB, if user exist")
-    public ResponseEntity<UserDTO> getUser(@ApiParam(value = "email value for user you need to retrive", required = true) @PathVariable String email) {
-        UserDTO user = this.userService.getByEmail(email);
-        this.logger.info("Find user with email = " + email);
+    public ResponseEntity<UserDTO> getUser(@ApiParam(value = "email value for user you need to retrieve", required = true) @PathVariable String email) {
+        logger.info("Find user with email = {}", email);
+        UserDTO user = this.userService.getByEmail(email)
+                .orElseThrow(() -> new NoSuchUserException("There is no user with email = {}" + email));
         if (user == null) {
-            this.logger.error("There is no user with email = " + email + " in Database");
-            throw new NoSuchUserException("There is no user with email = " + email + " in Database");
+            logger.error("There is no user with email = {} ", email);
+            throw new NoSuchUserException("There is no user with email = " + email);
         } else {
             return ResponseEntity.ok(user);
         }
     }
 
-    @PostMapping({"/user"})
+    @PostMapping()
     @ApiOperation(value = "Add new user", notes = "Add new user in DB")
-    public ResponseEntity<UserDTO> addNewUser(@RequestBody UserDTO user) {
-        this.userService.save(user);
-        this.logger.info("Add user with email = " + user.getEmail());
+    public ResponseEntity<UserDTO> add(@RequestBody UserDTO user) {
+        logger.info("Add user with email = " + user.getEmail());
+        userService.save(user);
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping({"/user"})
+    @PutMapping()
     @ApiOperation(value = "Update existing user", notes = "Update existing user")
-    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO user) {
-        return ResponseEntity.ok(this.userService.update(user));
+    public ResponseEntity<UserDTO> update(@RequestBody UserDTO user) {
+        logger.info("Update existing user {}", user.getEmail());
+        return ResponseEntity.ok(userService.update(user));
     }
 
-    @DeleteMapping({"/user/{email}"})
+    @DeleteMapping(USER_URL_PARAMETER_EMAIL)
     @ApiOperation(value = "Delete existing user", notes = "Delete existing user")
-    public ResponseEntity<?> deleteUser(@PathVariable String email) {
-        this.userService.deleteByEmail(email);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<UserDTO> delete(@PathVariable String email) {
+        logger.info("Delete existing user {}", email);
+        return ResponseEntity.ok(userService.deleteByEmail(email));
     }
 }

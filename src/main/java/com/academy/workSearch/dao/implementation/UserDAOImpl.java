@@ -1,8 +1,8 @@
 package com.academy.workSearch.dao.implementation;
 
 import com.academy.workSearch.dao.UserDAO;
-import com.academy.workSearch.model.enums.AccountStatus;
 import com.academy.workSearch.model.User;
+import com.academy.workSearch.model.enums.AccountStatus;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -25,9 +25,9 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
     }
 
     @Override
-    public void deleteByEmail(String email) {
+    public User deleteByEmail(String email) {
         User user = getByEmail(email);
         user.setAccountStatus(AccountStatus.DELETED);
-        save(user);
+        return save(user);
     }
 }

@@ -11,9 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import javax.validation.ValidationException;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 import static com.academy.workSearch.dto.mapper.UserInfoMapper.USER_INFO_MAPPER;
 import static com.academy.workSearch.dto.mapper.UserMapper.USER_MAPPER;
@@ -36,16 +35,16 @@ public class UserServiceImpl implements UserService {
         return USER_MAPPER.map(userDAO.findAll());
     }
 
-    public void save(UserDTO user) throws ValidationException {
+    public UserDTO save(UserDTO user) {
         UserInfo userInfo = new UserInfo();
         userInfo.setUserInfoId(userInfoDAO.saveAndGetId(userInfo));
         userInfoDAO.save(userInfo);
         user.setUserInfo(USER_INFO_MAPPER.toUserInfoDto(userInfo));
-        userDAO.save(USER_MAPPER.toUser(user));
+        return USER_MAPPER.toUserDto(userDAO.save(USER_MAPPER.toUser(user)));
     }
 
     @Override
-    public UserDTO update(UserDTO user) throws ValidationException {
+    public UserDTO update(UserDTO user) {
         User user1 = userDAO.getByEmail(user.getEmail());
         User user2 = USER_MAPPER.toUser(user);
         user2.setPassword(user1.getPassword());
@@ -54,20 +53,12 @@ public class UserServiceImpl implements UserService {
         return USER_MAPPER.toUserDto(user2);
     }
 
-    public UserDTO get(UUID id) {
-        return USER_MAPPER.toUserDto(userDAO.get(id));
+    public UserDTO deleteByEmail(String email) {
+        return USER_MAPPER.toUserDto(userDAO.deleteByEmail(email));
     }
 
-    public void delete(UUID id) {
-        userDAO.delete(id);
-    }
-
-    public void deleteByEmail(String email) {
-        userDAO.deleteByEmail(email);
-    }
-
-    public UserDTO getByEmail(String email) {
-        return USER_MAPPER.toUserDto(userDAO.getByEmail(email));
+    public Optional<UserDTO> getByEmail(String email) {
+        return Optional.ofNullable(USER_MAPPER.toUserDto(userDAO.getByEmail(email)));
     }
 
 }
