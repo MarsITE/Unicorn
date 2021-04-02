@@ -9,8 +9,11 @@ import com.academy.workSearch.service.SkillService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.swing.text.html.Option;
 import javax.validation.ValidationException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.academy.workSearch.dto.mapper.SkillDetailsMapper.SKILL_DETAILS_MAPPER;
@@ -36,7 +39,7 @@ public class SkillServiceImpl  implements SkillService  {
     }
 
     public SkillDetailsDTO update(SkillDetailsDTO skill) throws ValidationException {
-        Skill skill1 = skillDAO.getByName(skill.getName());
+        Skill skill1 = skillDAO.getByName(skill.getName()).get();
         Skill skill2 = SKILL_DETAILS_MAPPER.toEntity(skill);
         skill2.setSkillId(skill1.getSkillId());
         skill2.setName(skill.getName());
@@ -45,12 +48,18 @@ public class SkillServiceImpl  implements SkillService  {
         return SKILL_DETAILS_MAPPER.toDto(skill2);
     }
 
-    public SkillDTO get(UUID id) {
-        return SKILL_MAPPER.toDto(skillDAO.get(id));
+    public Optional<SkillDTO> get(UUID id) {
+       Optional<Skill> skillDTO = skillDAO.get(id);
+       Skill skill = skillDTO.get();
+       SkillDTO skillDTO1 = SKILL_MAPPER.toDto(skill);
+        return Optional.of(skillDTO1);
     }
 
-    public SkillDTO getByName(String name) {
-        return SKILL_MAPPER.toDto(skillDAO.getByName(name));
+    public Optional<SkillDTO> getByName(String name) {
+        Optional<Skill> skillDTO = skillDAO.getByName(name);
+        Skill skill = skillDTO.get();
+        SkillDTO skillDTO1 = SKILL_MAPPER.toDto(skill);
+        return Optional.of(skillDTO1);
     }
 
 }

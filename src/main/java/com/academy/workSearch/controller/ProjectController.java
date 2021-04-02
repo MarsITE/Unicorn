@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -40,9 +41,9 @@ public class ProjectController {
     @GetMapping("/{id}")
     @ApiOperation(value = "Find project by ID", notes = "Find project in DB, if project exist")
     public ResponseEntity<ProjectDTO> getProject(@PathVariable UUID id) {
-        ProjectDTO projectDto = projectService.get(id);
+        Optional<ProjectDTO> projectDto = projectService.get(id);
         logger.info("Find project with ID = " + id);
-        return new ResponseEntity<>(projectDto, HttpStatus.OK);
+        return new ResponseEntity<>(projectDto.get(), HttpStatus.OK);
     }
 
     @PostMapping()

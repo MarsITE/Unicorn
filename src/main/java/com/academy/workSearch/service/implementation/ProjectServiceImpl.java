@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -37,7 +38,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void save(ProjectDTO projectDto) {
+    public ProjectDTO save(ProjectDTO projectDto) {
         User user = new User();
         user.setUserId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f0"));
 
@@ -45,11 +46,14 @@ public class ProjectServiceImpl implements ProjectService {
         project.setEmployer(user);
 
         projectDAO.save(project);
+        return projectDto;
     }
 
     @Override
-    public ProjectDTO get(UUID id) {
-        return ProjectMapper.INSTANCE.toDto(projectDAO.get(id));
+    public Optional<ProjectDTO> get(UUID id) {
+       Optional<Project> project = projectDAO.get(id);
+       Optional<ProjectDTO> projectDTO = Optional.ofNullable(ProjectMapper.INSTANCE.toDto(project.get()));
+        return projectDTO;
     }
 
     @Override
