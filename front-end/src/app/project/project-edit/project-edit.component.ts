@@ -67,7 +67,7 @@ export class ProjectEditComponent implements OnInit, OnDestroy {
         console.log(er);
       },
       () => {
-        this.router2.navigateByUrl(`projects/1/desc`);
+        this.router2.navigateByUrl(`projects`);
       });
   };
 

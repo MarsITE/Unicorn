@@ -19,7 +19,7 @@ const routes: Routes = [
     path: 'user-profile-edit/:email',
     component: UserEditComponent
   }, {
-    path: 'projects/:counter/:sort',
+    path: 'projects',
    component: ProjectComponent
   }, {
     path: 'addProjects',
@@ -37,4 +37,5 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+ }

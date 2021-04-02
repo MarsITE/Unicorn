@@ -30,11 +30,11 @@ public class ProjectController {
     @ApiOperation(value = "Show projects", notes = "Show information about projects from DB")
     public ResponseEntity<List<ProjectDTO>> showProjects(@RequestParam(value = "page", defaultValue = "1") int page,
                                                          @RequestParam(value = "sort", defaultValue = "desc") String sort,
-                                                         @RequestParam(value = "maxResult", defaultValue = "5") int maxResult            ,
+                                                         @RequestParam(value = "maxResult", defaultValue = "5") int maxResult,
                                                          @RequestParam(value = "maxNavigationPage", defaultValue = "100") int maxNavigationPage) {
         List<ProjectDTO> projectsDto = projectService.findLast(page, maxResult, maxNavigationPage, sort);
         logger.info("Show projects");
-        return new ResponseEntity<> (projectsDto, HttpStatus.OK);
+        return new ResponseEntity<>(projectsDto, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -42,7 +42,7 @@ public class ProjectController {
     public ResponseEntity<ProjectDTO> getProject(@PathVariable UUID id) {
         ProjectDTO projectDto = projectService.get(id);
         logger.info("Find project with ID = " + id);
-        return new ResponseEntity<> (projectDto, HttpStatus.OK);
+        return new ResponseEntity<>(projectDto, HttpStatus.OK);
     }
 
     @PostMapping()
@@ -50,7 +50,7 @@ public class ProjectController {
     public ResponseEntity<ProjectDTO> addNewProject(@RequestBody ProjectDTO projectDto) {
         logger.info("Add project with ID = " + projectDto.getId());
         projectService.save(projectDto);
-        return new ResponseEntity<> (projectDto, HttpStatus.OK);
+        return new ResponseEntity<>(projectDto, HttpStatus.OK);
     }
 
     @PutMapping()
@@ -58,7 +58,7 @@ public class ProjectController {
     public ResponseEntity<ProjectDTO> updateProject(@RequestBody ProjectDTO projectDto) {
         logger.info("Update project with ID = " + projectDto.getId());
         projectService.save(projectDto);
-        return new ResponseEntity<> (projectDto, HttpStatus.OK);
+        return new ResponseEntity<>(projectDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
