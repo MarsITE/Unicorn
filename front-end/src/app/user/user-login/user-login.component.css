@@ -1,8 +1,7 @@
 .registration {
-  width: 50%;
+  width: auto;
   height: auto;
-  margin-left: calc(50% - 150px);
-  margin-top: calc(50% - 100px);
+  margin-top: calc(20% - 100px);
 }
 
 .mat-form-field {

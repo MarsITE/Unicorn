@@ -51,7 +51,7 @@ export class UserLoginComponent implements OnInit, OnDestroy {
       this.userAuth = {email, password, isEmployer: false};
       this.login(this.userAuth);
 
-      this.router.navigateByUrl(`users-list`);
+      this.router.navigateByUrl(`user-profile/${email}`);
   }
 
   private login(user: UserAuth): void {

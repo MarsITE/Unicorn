@@ -11,6 +11,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
   constructor(private storageService: StorageService, private router: Router) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+
     return next.handle(request)
       .pipe(
         catchError((error: HttpErrorResponse) => {
@@ -20,9 +21,10 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           }
           else {
             errorMsg = `Error Code: ${error.status},  Message: ${error.message}`;
-            if (error.status === 401 || error.status === 403) {
-              // this.storageService.remove('token');
-              this.router.navigateByUrl('login');
+            if (error.status === 401) {
+            //  this.router.navigateByUrl('login');
+            } else if (error.status === 403) {
+              // todo on page not found
             }
           }
           return throwError(errorMsg);

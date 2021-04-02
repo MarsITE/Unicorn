@@ -128,7 +128,6 @@ public class TokenProvider {
             try {
                 return objectMapper.readValue(token, UserDTO.class);
             } catch (Exception e) {
-                //logger.error(Arrays.toString(e.printStackTrace()));
                 logger.error(e.getMessage());
             }
         }

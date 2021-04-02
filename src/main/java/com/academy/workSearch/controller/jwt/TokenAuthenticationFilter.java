@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+    private static final String AUTHORIZATION_HEADER = "Authorization";
 
     public TokenAuthenticationFilter() {
         super("/api/v1/");
@@ -26,9 +27,8 @@ public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingF
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        String token = request.getHeader("token");
-        if (token == null)
-            token = request.getParameter("token");
+
+        String token = request.getHeader(AUTHORIZATION_HEADER);
         if (token == null) {
             TokenAuthentication authentication = new TokenAuthentication(null);
             authentication.setAuthenticated(false);

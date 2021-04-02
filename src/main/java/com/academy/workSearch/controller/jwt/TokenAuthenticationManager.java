@@ -34,11 +34,9 @@ public class TokenAuthenticationManager implements AuthenticationManager {
                 authentication.setAuthenticated(false);
                 return authentication;
             }
-        } catch (Exception ex) {
-            if (ex instanceof AuthenticationServiceException)
-                throw ex;
+        } catch (AuthenticationServiceException ex) {
+            throw new AuthenticationServiceException("Authentication error");
         }
-        return null;
     }
 
     private TokenAuthentication processAuthentication(TokenAuthentication authentication) throws AuthenticationException {

@@ -56,18 +56,14 @@ public class UserServiceImpl implements UserService {
         userInfo.setUserInfoId(userInfoDAO.saveAndGetId(userInfo));
         user.setUserInfo(userInfo);
         user.setAccountStatus(AccountStatus.ACTIVE);
+        Set<Role> roles = new HashSet<>();
         Role role1 = roleDAO.getByName("WORKER");
-        Role role2 = null;
+        roles.add(role1);
         if (userAuthDTO.isEmployer()) {
-            role2 = roleDAO.getByName("EMPLOYER");
-        }
-        Set<Role> roles;
-        if (role2 != null) {
-            roles = new HashSet<>(Arrays.asList(role1, role2));
-        } else {
-            roles = new HashSet<>(Collections.singletonList(role1));
+            roles.add(roleDAO.getByName("EMPLOYER"));
         }
         user.setRoles(roles);
+
         user.setPassword(passwordEncoder.encode(userAuthDTO.getPassword()));
         userDAO.save(user);
 
@@ -107,6 +103,10 @@ public class UserServiceImpl implements UserService {
         }
 
         return userLogin;
+    }
+
+    public UserDTO getByEmail(String email) {
+        return USER_MAPPER.toUserDto(userDAO.getByEmail(email));
     }
 
 }

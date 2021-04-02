@@ -34,10 +34,10 @@ export class UserListComponent implements OnInit, OnDestroy {
         this.users = response;
       },
       (error) => {
-        console.log("error", error);
+        console.log('error', error);
       },
       () => {
-        console.log("complete");
+        console.log('complete');
       }
     ));
   }

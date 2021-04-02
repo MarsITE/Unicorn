@@ -17,4 +17,6 @@ public interface UserService {
     void deleteByEmail(String email);
 
     UserLoginDTO get(UserAuthDTO userAuth);
+
+    UserDTO getByEmail(String email);
 }
