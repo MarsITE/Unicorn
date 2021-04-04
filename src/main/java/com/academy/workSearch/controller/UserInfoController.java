@@ -27,12 +27,12 @@ public class UserInfoController {
     @ApiOperation(value = "Update existing user info", notes = "Update existing user info")
     public ResponseEntity<UserInfoDTO> updateUserInfo(@RequestBody UserInfoDTO user) {
         try {
-            logger.info("Update user-info = " + user.getUserInfoId());
+            logger.info("Update user-info = {}", user.getUserInfoId());
             userInfoService.save(user);
             return ResponseEntity.ok().build();
         } catch (ValidationException e) {
             logger.trace(Arrays.toString(Arrays.stream(e.getStackTrace()).toArray()));
-            logger.info("Update user-info = " + user.getUserInfoId() + " failed!");
+            logger.info("Update user-info = {} ", user.getUserInfoId() + " failed!");
             return ResponseEntity.badRequest().build();
         }
     }
