@@ -17,7 +17,6 @@ public class SkillDAOImpl extends CrudDAOImpl<Skill> implements SkillDAO {
     @Autowired
     public SkillDAOImpl(SessionFactory sessionFactory) {
         super(sessionFactory);
-
     }
 
     public Skill getByName(String name) {
