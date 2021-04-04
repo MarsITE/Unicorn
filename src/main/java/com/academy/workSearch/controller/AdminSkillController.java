@@ -19,7 +19,7 @@ import java.util.function.BiFunction;
 
 @Validated
 @RestController
-@RequestMapping("/api/v1/skills/admin")
+@RequestMapping("/api/v1/admin/skills")
 public class AdminSkillController {
     private final Logger logger = LoggerFactory.getLogger(AdminSkillController.class);
     private final static String MESSAGE_ADD_SKILL_WITH_NAME = "Add skill with name ";
@@ -48,7 +48,7 @@ public class AdminSkillController {
         SkillDTO skillDto = skillService.get(id);
         if (Objects.isNull(skillDto)) {
             logger.error("There is no skill with ID = " + id + " in Database");
-            throw new NoSuchSkillException("There is no skill with ID = " + id + " in Database");
+            throw new NoSuchSkillException("There is no skill with ID " + id);
         }
         return ResponseEntity.ok(skillDto);
     }

@@ -59,6 +59,8 @@ import { ProjectComponent } from './project/project.component';
 import { ProjectAddComponent } from './project/project-add/project-add.component';
 import { ProjectInfoComponent } from './project/project-info/project-info.component';
 import { ProjectEditComponent } from './project/project-edit/project-edit.component';
+import { AdminComponent } from './admin/admin.component';
+import { SkillService } from './common/services/skill.service';
 
 @NgModule({
   declarations: [
@@ -69,7 +71,8 @@ import { ProjectEditComponent } from './project/project-edit/project-edit.compon
     UserProfileComponent,
     UserEditComponent,
     ProjectInfoComponent,
-    ProjectEditComponent
+    ProjectEditComponent,
+    AdminComponent
   ],   
     
   imports: [
@@ -128,7 +131,7 @@ import { ProjectEditComponent } from './project/project-edit/project-edit.compon
     ReactiveFormsModule,
     NgxMaskModule.forRoot()
   ],
-  providers: [ProjectService, UserHttpService],
+  providers: [ProjectService, UserHttpService, SkillService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
