@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @AllArgsConstructor
@@ -30,19 +31,19 @@ public class UserController {
     private final String USER_URL_PARAMETER_EMAIL = "/{email}";
 
     @GetMapping()
-    @ApiOperation(value = "Show all users", notes = "Show information about all users in DB")
+    @ApiOperation(value = "Show all users", notes = "Show information about all users")
     public ResponseEntity<List<UserDTO>> getAll() {
         this.logger.info("Show all users");
         return ResponseEntity.ok(userService.findAll());
     }
 
     @GetMapping(USER_URL_PARAMETER_EMAIL)
-    @ApiOperation(value = "Find user by email", notes = "Find user in DB, if user exist")
+    @ApiOperation(value = "Find user by email", notes = "Find user if user exist")
     public ResponseEntity<UserDTO> getUser(@ApiParam(value = "email value for user you need to retrieve", required = true) @PathVariable String email) {
         logger.info("Find user with email = {}", email);
         UserDTO user = this.userService.getByEmail(email)
                 .orElseThrow(() -> new NoSuchUserException("There is no user with email = {}" + email));
-        if (user == null) {
+        if (Objects.isNull(user)) {
             logger.error("There is no user with email = {} ", email);
             throw new NoSuchUserException("There is no user with email = " + email);
         } else {
@@ -51,9 +52,9 @@ public class UserController {
     }
 
     @PostMapping()
-    @ApiOperation(value = "Add new user", notes = "Add new user in DB")
+    @ApiOperation(value = "Add new user", notes = "Add new user ")
     public ResponseEntity<UserDTO> add(@RequestBody UserDTO user) {
-        logger.info("Add user with email = " + user.getEmail());
+        logger.info("Add user with email = {}", user.getEmail());
         userService.save(user);
         return ResponseEntity.ok(user);
     }
