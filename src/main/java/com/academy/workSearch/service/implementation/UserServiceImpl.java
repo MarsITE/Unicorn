@@ -3,6 +3,7 @@ package com.academy.workSearch.service.implementation;
 import com.academy.workSearch.dao.implementation.UserDAOImpl;
 import com.academy.workSearch.dao.implementation.UserInfoDAOImpl;
 import com.academy.workSearch.dto.UserDTO;
+import com.academy.workSearch.exceptionHandling.NoSuchUserException;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.UserInfo;
 import com.academy.workSearch.service.UserService;
@@ -45,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO update(UserDTO user) {
-        User user1 = userDAO.getByEmail(user.getEmail()).get();
+        User user1 = userDAO.getByEmail(user.getEmail()).orElseThrow();
         User user2 = USER_MAPPER.toUser(user);
         user2.setPassword(user1.getPassword());
         user2.setUserId(user1.getUserId());
@@ -62,8 +63,8 @@ public class UserServiceImpl implements UserService {
     }
 
     public Optional<UserDTO> getByEmail(String email) {
-        Optional<User> userDTO = userDAO.getByEmail(email);
-        User user = userDTO.get();
+        User user = userDAO.getByEmail(email)
+                .orElseThrow(() -> new NoSuchUserException("There is no user with email = {}" + email));
         UserDTO userDTO1 = USER_MAPPER.toUserDto(user);
         return Optional.of(userDTO1);
 

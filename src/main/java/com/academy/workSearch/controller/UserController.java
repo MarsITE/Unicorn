@@ -41,14 +41,14 @@ public class UserController {
     @ApiOperation(value = "Find user by email", notes = "Find user if user exist")
     public ResponseEntity<UserDTO> getUser(@ApiParam(value = "email value for user you need to retrieve", required = true) @PathVariable String email) {
         logger.info("Find user with email = {}", email);
-        UserDTO user = this.userService.getByEmail(email)
-                .orElseThrow(() -> new NoSuchUserException("There is no user with email = {}" + email));
+        UserDTO user = userService.getByEmail(email).get();
+
         if (Objects.isNull(user)) {
             logger.error("There is no user with email = {} ", email);
-            throw new NoSuchUserException("There is no user with email = " + email);
         } else {
             return ResponseEntity.ok(user);
         }
+       return ResponseEntity.ok(user);
     }
 
     @PostMapping()

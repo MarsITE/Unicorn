@@ -31,7 +31,7 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
     }
 
         @Override
-        public Optional<User> deleteByEmail(String email){
+        public Optional<User> deleteByEmail(String email){// not Optional
             Optional<User> user = getByEmail(email);
             user.stream().map(user1 -> AccountStatus.DELETED);
             return user;
