@@ -55,7 +55,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             logger.info(path.toString());
 
             UUID uuid = UUID.fromString(id);
-            UserInfo userInfo = userInfoDAO.get(uuid);
+            UserInfo userInfo = userInfoDAO.get(uuid).get();
             userInfo.setImageUrl(newNameImage);
             userInfoDAO.save(userInfo);
 

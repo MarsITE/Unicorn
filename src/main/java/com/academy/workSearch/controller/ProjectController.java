@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -27,7 +28,7 @@ public class ProjectController {
     }
 
     @GetMapping()
-    @ApiOperation(value = "Show projects", notes = "Show information about projects from DB")
+    @ApiOperation(value = "Show projects", notes = "Show information about projects")
     public ResponseEntity<List<ProjectDTO>> showProjects(@RequestParam(value = "page", defaultValue = "1") int page,
                                                          @RequestParam(value = "sort", defaultValue = "desc") String sort,
                                                          @RequestParam(value = "maxResult", defaultValue = "5") int maxResult,
@@ -40,15 +41,15 @@ public class ProjectController {
     @GetMapping("/{id}")
     @ApiOperation(value = "Find project by ID", notes = "Find project in DB, if project exist")
     public ResponseEntity<ProjectDTO> getProject(@PathVariable UUID id) {
-        ProjectDTO projectDto = projectService.get(id);
-        logger.info("Find project with ID = " + id);
-        return new ResponseEntity<>(projectDto, HttpStatus.OK);
+        Optional<ProjectDTO> projectDto = projectService.get(id);
+        logger.info("Find project with ID = {}", id);
+        return new ResponseEntity<>(projectDto.get(), HttpStatus.OK);
     }
 
     @PostMapping()
-    @ApiOperation(value = "Add new project", notes = "Add new project in DB")
+    @ApiOperation(value = "Add new project", notes = "Add new project")
     public ResponseEntity<ProjectDTO> addNewProject(@RequestBody ProjectDTO projectDto) {
-        logger.info("Add project with ID = " + projectDto.getId());
+        logger.info("Add project with ID = {}", projectDto.getId());
         projectService.save(projectDto);
         return new ResponseEntity<>(projectDto, HttpStatus.OK);
     }
@@ -56,7 +57,7 @@ public class ProjectController {
     @PutMapping()
     @ApiOperation(value = "Update existing project", notes = "Update existing project")
     public ResponseEntity<ProjectDTO> updateProject(@RequestBody ProjectDTO projectDto) {
-        logger.info("Update project with ID = " + projectDto.getId());
+        logger.info("Update project with ID = {}", projectDto.getId());
         projectService.save(projectDto);
         return new ResponseEntity<>(projectDto, HttpStatus.OK);
     }
@@ -65,6 +66,6 @@ public class ProjectController {
     @ApiOperation(value = "Delete existing user", notes = "Delete existing project")
     public void deleteProject(@PathVariable UUID id) {
         projectService.delete(id);
-        logger.info("Delete project with ID = " + id);
+        logger.info("Delete project with ID = {}", id);
     }
 }

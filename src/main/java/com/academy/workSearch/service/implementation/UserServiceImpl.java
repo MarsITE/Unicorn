@@ -3,6 +3,7 @@ package com.academy.workSearch.service.implementation;
 import com.academy.workSearch.dao.implementation.UserDAOImpl;
 import com.academy.workSearch.dao.implementation.UserInfoDAOImpl;
 import com.academy.workSearch.dto.UserDTO;
+import com.academy.workSearch.exceptionHandling.NoSuchUserException;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.UserInfo;
 import com.academy.workSearch.service.UserService;
@@ -11,9 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import javax.validation.ValidationException;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 import static com.academy.workSearch.dto.mapper.UserInfoMapper.USER_INFO_MAPPER;
 import static com.academy.workSearch.dto.mapper.UserMapper.USER_MAPPER;
@@ -36,17 +36,17 @@ public class UserServiceImpl implements UserService {
         return USER_MAPPER.map(userDAO.findAll());
     }
 
-    public void save(UserDTO user) throws ValidationException {
+    public UserDTO save(UserDTO user) {
         UserInfo userInfo = new UserInfo();
         userInfo.setUserInfoId(userInfoDAO.saveAndGetId(userInfo));
         userInfoDAO.save(userInfo);
         user.setUserInfo(USER_INFO_MAPPER.toUserInfoDto(userInfo));
-        userDAO.save(USER_MAPPER.toUser(user));
+        return USER_MAPPER.toUserDto(userDAO.save(USER_MAPPER.toUser(user)));
     }
 
     @Override
-    public UserDTO update(UserDTO user) throws ValidationException {
-        User user1 = userDAO.getByEmail(user.getEmail());
+    public UserDTO update(UserDTO user) {
+        User user1 = userDAO.getByEmail(user.getEmail()).orElseThrow();
         User user2 = USER_MAPPER.toUser(user);
         user2.setPassword(user1.getPassword());
         user2.setUserId(user1.getUserId());
@@ -54,20 +54,20 @@ public class UserServiceImpl implements UserService {
         return USER_MAPPER.toUserDto(user2);
     }
 
-    public UserDTO get(UUID id) {
-        return USER_MAPPER.toUserDto(userDAO.get(id));
-    }
-
-    public void delete(UUID id) {
-        userDAO.delete(id);
-    }
-
-    public void deleteByEmail(String email) {
+    public Optional<UserDTO> deleteByEmail(String email) {
+        Optional<User> userDTO = userDAO.getByEmail(email);
+        User user = userDTO.get();
         userDAO.deleteByEmail(email);
+        UserDTO userDTO1 = USER_MAPPER.toUserDto(user);
+        return Optional.of(userDTO1);
     }
 
-    public UserDTO getByEmail(String email) {
-        return USER_MAPPER.toUserDto(userDAO.getByEmail(email));
+    public Optional<UserDTO> getByEmail(String email) {
+        User user = userDAO.getByEmail(email)
+                .orElseThrow(() -> new NoSuchUserException("There is no user with email = {}" + email));
+        UserDTO userDTO1 = USER_MAPPER.toUserDto(user);
+        return Optional.of(userDTO1);
+
     }
 
 }
