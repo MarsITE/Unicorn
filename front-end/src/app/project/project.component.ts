@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Project } from '../common/model/project';
 import { User } from '../common/model/user';
 import { ProjectService } from '../common/services/project.service';
+import { Skill } from '../common/model/skill';
 
 
 @Component({
@@ -20,8 +21,8 @@ export class ProjectComponent implements OnInit {
   counter: number = 1;  
   maxResult: number = 5;
 
-  projects: Project[] = []; 
-  
+  projects: Project[] = [];   
+
   displayedColumns: string[] = ['name', 'projectStatus', 'creationDate', 'owner', 'skills'];
  
   constructor(private projectService: ProjectService, private router: Router, private http: HttpClient, route: ActivatedRoute) {   

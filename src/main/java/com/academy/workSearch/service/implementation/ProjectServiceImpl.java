@@ -1,6 +1,7 @@
 package com.academy.workSearch.service.implementation;
 
 import com.academy.workSearch.dao.ProjectDAO;
+import com.academy.workSearch.dao.implementation.UserDAOImpl;
 import com.academy.workSearch.dto.ProjectDTO;
 import com.academy.workSearch.dto.SkillDTO;
 import com.academy.workSearch.dto.mapper.ProjectMapper;
@@ -25,9 +26,11 @@ import java.util.UUID;
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectDAO projectDAO;
+    private final UserDAOImpl userDAO;
 
     @PostConstruct
     private void setTypeClass() {
+        userDAO.setClazz(User.class);
         projectDAO.setClazz(Project.class);
     }
 
