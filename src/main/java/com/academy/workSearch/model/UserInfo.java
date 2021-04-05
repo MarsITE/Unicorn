@@ -37,7 +37,7 @@ public class UserInfo {
     @Past
     @Column(name = "birth_date")
     @ApiModelProperty(notes = "Date of birth of the user")
-    private LocalDate birthDate;
+    private LocalDate dateOfBirth;
 
     @Column(name = "is_show_info", columnDefinition = "boolean default true")
     private boolean isShowInfo;

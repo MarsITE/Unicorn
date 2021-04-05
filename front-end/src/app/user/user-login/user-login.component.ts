@@ -65,7 +65,6 @@ export class UserLoginComponent implements OnInit, OnDestroy {
           user.email
         );
         alert(error);
-        console.log(error);
       },
       () => {
         console.log('complete');

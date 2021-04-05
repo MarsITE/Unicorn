@@ -5,6 +5,7 @@ import { UserHttpService } from '../../common/services/user-http.service';
 import { DomSanitizer, SafeUrl, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
 import { WorkStatus } from '../../common/model/work-status';
 import { Subscription } from 'rxjs';
+import { StorageService } from 'src/app/common/services/storage.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -25,9 +26,10 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     { value: 'BUSY', viewValue: 'Busy' }
   ];
 
-  constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router, private domSanitizer: DomSanitizer) {
+  constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router, private domSanitizer: DomSanitizer,
+    private storageService: StorageService) {
     this.email = router.snapshot.params.email;
-    this.imageBlobUrl =  this.domSanitizer.bypassSecurityTrustResourceUrl('../../../assets/default-profile-photo.jpg');
+    this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl('../../../assets/default-profile-photo.jpg');
   }
   ngOnDestroy(): void {
     this.subscriptions.forEach(s => {
@@ -44,7 +46,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       (response: User) => {
         this.user = response;
         if (this.user.userInfo.imageUrl != null && this.user.userInfo.imageUrl !== '') {
-        this.getImage(this.user.userInfo.imageUrl);
+          this.getImage(this.user.userInfo.imageUrl);
         }
         this.setViewForWorkStatus();
       },
@@ -98,7 +100,14 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       }
     });
   }
-  public converToPlain(str: string ): string {
+  public converToPlain(str: string): string {
     return str.toLowerCase();
   }
+
+
+  public logout(): void {
+    this.storageService.remove('token');
+    this.router2.navigateByUrl('login');
+  }
+
 }
