@@ -34,11 +34,11 @@ public class SkillServiceImpl  implements SkillService  {
         return SKILL_MAPPER.toSkillsDto(skillDAO.getAllEnabled(enabled));
     }
 
-    public void save(SkillDTO skill) throws ValidationException {
-        skillDAO.save(SKILL_MAPPER.toEntity(skill));
+    public SkillDTO save(SkillDTO skill) {
+        return SKILL_MAPPER.toDto(skillDAO.save(SKILL_MAPPER.toEntity(skill)));
     }
 
-    public SkillDetailsDTO update(SkillDetailsDTO skill) throws ValidationException {
+    public SkillDetailsDTO update(SkillDetailsDTO skill) {
         Skill skill1 = skillDAO.getByName(skill.getName()).get();
         Skill skill2 = SKILL_DETAILS_MAPPER.toEntity(skill);
         skill2.setSkillId(skill1.getSkillId());

@@ -13,7 +13,7 @@ public interface UserService {
 
     UserDTO update(UserDTO user);
 
-    UserDTO deleteByEmail(String email);
+    Optional<UserDTO> deleteByEmail(String email);
 
     Optional<UserDTO> getByEmail(String email);
 

@@ -57,7 +57,7 @@ public class ProjectController {
     @PutMapping()
     @ApiOperation(value = "Update existing project", notes = "Update existing project")
     public ResponseEntity<ProjectDTO> updateProject(@RequestBody ProjectDTO projectDto) {
-        logger.info("Update project with ID = " + projectDto.getId());
+        logger.info("Update project with ID = {}", projectDto.getId());
         projectService.save(projectDto);
         return new ResponseEntity<>(projectDto, HttpStatus.OK);
     }
@@ -66,6 +66,6 @@ public class ProjectController {
     @ApiOperation(value = "Delete existing user", notes = "Delete existing project")
     public void deleteProject(@PathVariable UUID id) {
         projectService.delete(id);
-        logger.info("Delete project with ID = " + id);
+        logger.info("Delete project with ID = {}", id);
     }
 }

@@ -12,7 +12,7 @@ public interface SkillService {
 
     List<SkillDTO> findAllEnabled(Boolean enabled);
 
-    void save(SkillDTO skill);
+    SkillDTO save(SkillDTO skill);
 
     SkillDetailsDTO update(SkillDetailsDTO skill);
 

@@ -70,6 +70,6 @@ public class UserController {
     @ApiOperation(value = "Delete existing user", notes = "Delete existing user")
     public ResponseEntity<UserDTO> delete(@PathVariable String email) {
         logger.info("Delete existing user {}", email);
-        return ResponseEntity.ok(userService.deleteByEmail(email));
+        return ResponseEntity.ok(userService.deleteByEmail(email).get());
     }
 }

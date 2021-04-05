@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO update(UserDTO user) {
-        User user1 = userDAO.getByEmail(user.getEmail());
+        User user1 = userDAO.getByEmail(user.getEmail()).get();
         User user2 = USER_MAPPER.toUser(user);
         user2.setPassword(user1.getPassword());
         user2.setUserId(user1.getUserId());
@@ -53,12 +53,20 @@ public class UserServiceImpl implements UserService {
         return USER_MAPPER.toUserDto(user2);
     }
 
-    public UserDTO deleteByEmail(String email) {
-        return USER_MAPPER.toUserDto(userDAO.deleteByEmail(email));
+    public Optional<UserDTO> deleteByEmail(String email) {
+        Optional<User> userDTO = userDAO.getByEmail(email);
+        User user = userDTO.get();
+        userDAO.deleteByEmail(email);
+        UserDTO userDTO1 = USER_MAPPER.toUserDto(user);
+        return Optional.of(userDTO1);
     }
 
     public Optional<UserDTO> getByEmail(String email) {
-        return Optional.ofNullable(USER_MAPPER.toUserDto(userDAO.getByEmail(email)));
+        Optional<User> userDTO = userDAO.getByEmail(email);
+        User user = userDTO.get();
+        UserDTO userDTO1 = USER_MAPPER.toUserDto(user);
+        return Optional.of(userDTO1);
+
     }
 
 }

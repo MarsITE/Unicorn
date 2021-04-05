@@ -32,7 +32,7 @@ public class AdminSkillController {
         this.skillService = skillService;
     }
 
-    @GetMapping("")
+    @GetMapping()
     @ApiOperation(value = "Show all skills", notes = "Show information about all skills")
     public ResponseEntity<List<SkillDetailsDTO>> getAll() {
         logger.info("Show all skills");
@@ -67,6 +67,6 @@ public class AdminSkillController {
     @ApiOperation(value = "Update existing skill", notes = "Update existing skill")
     public ResponseEntity<SkillDetailsDTO> update(@RequestBody @Valid SkillDetailsDTO skill) {
         logger.info("Update skill with ID = {}", skill.getSkillId());
-        return ResponseEntity.ok(this.skillService.update(skill));
+        return ResponseEntity.ok(skillService.update(skill));
     }
 }
