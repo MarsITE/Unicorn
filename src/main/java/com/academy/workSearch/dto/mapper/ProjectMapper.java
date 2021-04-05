@@ -19,7 +19,8 @@ public interface ProjectMapper {
             @Mapping(target = "description", source = "description"),
             @Mapping(target = "projectStatus", source = "projectStatus"),
             @Mapping(target = "creationDate", source = "creationDate"),
-            @Mapping(target = "owner", source = "employer")})
+            @Mapping(target = "owner", source = "employer"),
+            @Mapping(target = "skills", source = "skills")})
     ProjectDTO toDto(Project project);
 
     @Mappings({ @Mapping(target = "projectId", source = "id"),
@@ -27,7 +28,8 @@ public interface ProjectMapper {
             @Mapping(target = "description", source = "description"),
             @Mapping(target = "projectStatus", source = "projectStatus"),
             @Mapping(target = "creationDate", source = "creationDate"),
-            @Mapping(target = "employer", source = "owner")})
+            @Mapping(target = "employer", source = "owner"),
+            @Mapping(target = "skills", source = "skills")})
     Project toEntity(ProjectDTO projectDto);
 
     List<Project> toProjects(List<ProjectDTO> projectDtos);

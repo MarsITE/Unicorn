@@ -7,4 +7,5 @@ export class Project {
     projectStatus: string;
     creationDate: string;
     owner: User;
+    skills: string[];
   }

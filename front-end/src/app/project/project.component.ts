@@ -18,15 +18,17 @@ export class ProjectComponent implements OnInit {
   sortFlag: boolean = false;
   sort: string = "desc";
   counter: number = 1;  
+  maxResult: number = 5;
 
   projects: Project[] = []; 
   
-  displayedColumns: string[] = ['name', 'projectStatus', 'creationDate', 'owner'];
+  displayedColumns: string[] = ['name', 'projectStatus', 'creationDate', 'owner', 'skills'];
  
   constructor(private projectService: ProjectService, private router: Router, private http: HttpClient, route: ActivatedRoute) {   
     route.queryParams.subscribe(params => {
     this.counter = params['page'] || this.counter;
     this.sort = params['sort'] || this.sort;
+    this.maxResult = params['maxResult'] || this.maxResult;
 });
   }  
 
@@ -38,7 +40,8 @@ export class ProjectComponent implements OnInit {
 
   const params = new HttpParams()
   .set('page', this.counter.toString())
-  .set('sort', this.sort)  
+  .set('sort', this.sort) 
+  .set('maxResult', this.maxResult.toString()) 
 
     this.projectService.getProjects(params).subscribe(
       (response: Project[]) => {          
@@ -49,7 +52,7 @@ export class ProjectComponent implements OnInit {
       },
       () => {
         console.log("complete"); 
-        this.router.navigateByUrl(`projects?page=` + this.counter + `&sort=` + this.sort); 
+        this.router.navigateByUrl(`projects?page=` + this.counter + `&maxResult=` + this.maxResult + `&sort=` + this.sort); 
       }
     )
   }
@@ -81,6 +84,21 @@ export class ProjectComponent implements OnInit {
     if(this.counter > 1){
       this.counter--; 
     }      
+    this.getProjects()
+  }
+
+  projectsMaxResult5() {   
+    this.maxResult = 5;     
+    this.getProjects()
+  }
+
+  projectsMaxResult10() {   
+    this.maxResult = 10;     
+    this.getProjects()
+  }
+
+  projectsMaxResult25() {   
+    this.maxResult = 25;     
     this.getProjects()
   }
 
