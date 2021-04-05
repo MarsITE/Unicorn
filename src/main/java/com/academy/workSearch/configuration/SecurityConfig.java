@@ -1,7 +1,7 @@
 package com.academy.workSearch.configuration;
 
 import com.academy.workSearch.controller.jwt.JwtRequestFilter;
-import com.academy.workSearch.service.UserDetailsServiceImpl;
+import com.academy.workSearch.service.implementation.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;

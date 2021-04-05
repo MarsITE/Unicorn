@@ -1,5 +1,6 @@
 package com.academy.workSearch.model;
 
+import com.academy.workSearch.model.enums.AccountStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -15,7 +16,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
 
-import static com.academy.workSearch.model.AccountStatus.ACTIVE;
+import static com.academy.workSearch.model.enums.AccountStatus.ACTIVE;
 
 @Data
 @Entity

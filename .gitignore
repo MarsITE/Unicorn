@@ -183,8 +183,4 @@ build/
 /gradle
 
 #for log files
-/.gz
-
-*.jpg
-*.png
-*.jpeg
+*.gz

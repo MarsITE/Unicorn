@@ -1,14 +1,10 @@
 package com.academy.workSearch.dao;
 
 import com.academy.workSearch.model.Skill;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public class SkillDAO extends CrudDAOImpl<Skill> {
+import java.util.List;
 
-    @Autowired
-    private SessionFactory sessionFactory;
-
+public interface SkillDAO extends CrudDAO<Skill> {
+    Skill getByName(String name);
+    List<Skill> getAllEnabled(Boolean enabled);
 }

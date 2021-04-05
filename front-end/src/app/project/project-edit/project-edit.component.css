@@ -1,0 +1,17 @@
+.project {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+    color: rgb(31, 46, 131);
+
+    margin: auto;
+    padding-top: 3rem;
+
+  }
+
+  .name{
+    width: 100%;
+    color: rgb(31, 46, 131);
+    text-align: left;
+    
+  }

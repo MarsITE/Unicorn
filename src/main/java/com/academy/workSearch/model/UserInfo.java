@@ -1,5 +1,6 @@
 package com.academy.workSearch.model;
 
+import com.academy.workSearch.model.enums.WorkStatus;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -37,7 +38,7 @@ public class UserInfo {
     @Past
     @Column(name = "birth_date")
     @ApiModelProperty(notes = "Date of birth of the user")
-    private LocalDate dateOfBirth;
+    private LocalDate birthDate;
 
     @Column(name = "is_show_info", columnDefinition = "boolean default true")
     private boolean isShowInfo;

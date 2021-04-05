@@ -1,10 +1,16 @@
 package com.academy.workSearch.dto;
 
+import com.academy.workSearch.model.Skill;
+import com.academy.workSearch.model.User;
+import jdk.jfr.Timestamp;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.Pattern;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -12,16 +18,24 @@ import java.util.UUID;
 @NoArgsConstructor
 public class ProjectDTO {
 
+    @Id
     private UUID id;
 
-    @Pattern(regexp = "[A-Z][a-z]+",
-            message = "Must start with a capital letter followed by one or more lowercase letters")
+    @Size(min = 1, max = 20)
     private String name;
 
+    @Size(min = 5, max = 2000)
     private String description;
 
+    @NotNull
     private String projectStatus;
 
+    @Timestamp
     private String creationDate;
+
+    @NotNull
+    private UserDTO owner;
+
+    private Set<String> skills;
 
 }

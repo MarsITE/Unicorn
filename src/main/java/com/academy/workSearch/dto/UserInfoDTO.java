@@ -12,7 +12,7 @@ public class UserInfoDTO {
     private String lastName;
     private String phone;
     private String linkToSocialNetwork;
-    private String dateOfBirth;
+    private String birthDate;
     private boolean isShowInfo;
     private String workStatus;
     private String imageUrl;

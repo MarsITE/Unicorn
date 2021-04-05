@@ -57,6 +57,10 @@ import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { ProjectService } from './common/services/project.service';
 import { ProjectComponent } from './project/project.component';
 import { ProjectAddComponent } from './project/project-add/project-add.component';
+import { ProjectInfoComponent } from './project/project-info/project-info.component';
+import { ProjectEditComponent } from './project/project-edit/project-edit.component';
+import { AdminComponent } from './admin/admin.component';
+import { SkillService } from './common/services/skill.service';
 import { UserRegistrationComponent } from './user/user-registration/user-registration.component';
 import { UserLoginComponent } from './user/user-login/user-login.component';
 import { StorageService } from './common/services/storage.service';
@@ -71,7 +75,11 @@ import { HttpErrorInterceptor } from './common/services/http-error.interceptor';
     UserProfileComponent,
     UserEditComponent,
     UserRegistrationComponent,
-    UserLoginComponent
+    UserLoginComponent,
+    UserEditComponent,
+    ProjectInfoComponent,
+    ProjectEditComponent,
+    AdminComponent
   ],
 
   imports: [
@@ -134,6 +142,7 @@ import { HttpErrorInterceptor } from './common/services/http-error.interceptor';
     ProjectService,
     UserHttpService,
     StorageService,
+    SkillService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorInterceptor,
