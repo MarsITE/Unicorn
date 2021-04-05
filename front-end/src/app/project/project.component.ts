@@ -44,12 +44,13 @@ export class ProjectComponent implements OnInit {
       },
       (error) => {
         console.log("error", error);
-      },
-      () => {
-        console.log("complete");
-        this.router.navigateByUrl(`projects/` + this.counter + `/` + this.sort);
-        
       }
+      // ,
+      // () => {
+      //   console.log("complete");
+      //   this.router.navigateByUrl(`projects/` + this.counter + `/` + this.sort);
+        
+      // }
     )
   }
 

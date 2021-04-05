@@ -59,6 +59,7 @@ import { ProjectComponent } from './project/project.component';
 import { ProjectAddComponent } from './project/project-add/project-add.component';
 import { ProjectInfoComponent } from './project/project-info/project-info.component';
 import { ProjectEditComponent } from './project/project-edit/project-edit.component';
+import { StartPageComponent } from './start-page/start-page.component';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { ProjectEditComponent } from './project/project-edit/project-edit.compon
     UserProfileComponent,
     UserEditComponent,
     ProjectInfoComponent,
-    ProjectEditComponent
+    ProjectEditComponent,
+    StartPageComponent
   ],   
     
   imports: [

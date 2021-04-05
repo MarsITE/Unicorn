@@ -1,0 +1,79 @@
+
+<div class="info-box">
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="#">Work Search</a>
+    </nav>
+    <div class="search-area">
+        <form class="form-inline my-lg-0">
+            <input class="form-control mr-sm-4" type="search" placeholder="Search">
+            <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+</div>
+<div class="container" id="main-container">
+    <div *ngFor="let project of projects">
+        <mat-card class="project-card">
+            <mat-card-header>
+                <mat-card-title>{{project?.name}}</mat-card-title>
+                <mat-card-subtitle>{{project?.projectStatus|titlecase}}</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+                <p>{{project?.description}}</p>
+            </mat-card-content>
+            <mat-card-footer>
+                <mat-card-subtitle class="creating-date">{{project?.creationDate|date}}</mat-card-subtitle>
+            </mat-card-footer>
+        </mat-card>
+    </div>
+    <div mat-card-title style="margin: auto;">
+        <button mat-stroked-button (click)=projectsPrev()>prev</button>
+        <button mat-stroked-button >{{counter}}</button>
+        <button mat-stroked-button (click)=projectsNext()>next</button>    
+      </div>
+</div>
+<!-- <div class="container">
+
+    <div mat-card-title style="margin: auto;">
+      <button mat-stroked-button (click) = createProject()>Create new Project</button> 
+    </div>
+  
+      <table mat-table [dataSource]="projects" class="mat-elevation-z8">
+  
+        
+        <ng-container matColumnDef="name" >
+          <th mat-header-cell *matHeaderCellDef > Project name </th>
+          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="projectStatus">
+          <th mat-header-cell *matHeaderCellDef > Project status </th>
+          <td mat-cell *matCellDef="let element">
+             {{element.projectStatus|titlecase}}
+          </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="creationDate">
+          <th mat-header-cell *matHeaderCellDef (click)=projectsSort()> Date of creation </th>
+          <td mat-cell *matCellDef="let element"> {{element.creationDate|date}} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="owner">
+          <th mat-header-cell *matHeaderCellDef> Owner </th>
+          <td mat-cell *matCellDef="let element"> {{element.owner.email}} </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)=showProjectDescription(row)
+          [ngClass]="{'bg-clr': row === selectedRow}"></tr>
+  
+      </table>
+  
+      <div mat-card-title style="margin: auto;">
+        <button mat-stroked-button (click)=projectsPrev()>prev</button>
+        <button mat-stroked-button >{{counter}}</button>
+        <button mat-stroked-button (click)=projectsNext()>next</button>    
+      </div>
+  
+    </div> -->
+<!-- <app-project></app-project> -->
