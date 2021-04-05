@@ -25,5 +25,6 @@ public class Skill {
 
     @Column(name = "enabled")
     private boolean enabled;
+
 }
 

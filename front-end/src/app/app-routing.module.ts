@@ -7,6 +7,7 @@ import { ProjectComponent } from './project/project.component';
 import { ProjectAddComponent } from './project/project-add/project-add.component';
 import { ProjectInfoComponent } from './project/project-info/project-info.component';
 import { ProjectEditComponent } from './project/project-edit/project-edit.component';
+import { AdminComponent } from './admin/admin.component';
 
 const routes: Routes = [
   {
@@ -30,6 +31,9 @@ const routes: Routes = [
   }, {
     path: 'editProject/:id',
     component:ProjectEditComponent
+  }, {
+    path: 'admin',
+    component:AdminComponent
   }
 ];
 

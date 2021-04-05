@@ -27,7 +27,7 @@ import java.util.function.BiFunction;
 
 @Validated
 @RestController
-@RequestMapping("/api/v1/skills/admin")
+@RequestMapping("/api/v1/admin/skills")
 public class AdminSkillController {
     private final static String MESSAGE_ADD_SKILL_WITH_NAME = "Add skill with name ";
     private final static String MESSAGE_FAILED = " failed!";
