@@ -47,11 +47,9 @@ public class AdminSkillController {
         logger.info("Find skill with ID = {}", id);
         SkillDTO skillDto = skillService.get(id).get();
         if (Objects.isNull(skillDto)) {
-            logger.error("There is no skill with ID = " + id + " in Database");
-            throw new NoSuchEntityException("There is no skill with ID = " + id + " in Database");
             logger.error("There is no skill with ID = {}", id );
-            throw new NoSuchSkillException("There is no skill with ID = " + id );
-        }
+
+                   }
         return ResponseEntity.ok(skillDto);
     }
 

@@ -4,6 +4,7 @@ import com.academy.workSearch.dao.*;
 import com.academy.workSearch.dao.implementation.SkillDAOImpl;
 import com.academy.workSearch.dto.SkillDTO;
 import com.academy.workSearch.dto.SkillDetailsDTO;
+import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.model.Skill;
 import com.academy.workSearch.service.SkillService;
 import lombok.AllArgsConstructor;
@@ -49,8 +50,8 @@ public class SkillServiceImpl  implements SkillService  {
     }
 
     public Optional<SkillDTO> get(UUID id) {
-       Optional<Skill> skillDTO = skillDAO.get(id);
-       Skill skill = skillDTO.get();
+      Skill skill = skillDAO.get(id)
+               .orElseThrow(()-> new NoSuchEntityException("There is no skill with id = {}" + id));
        SkillDTO skillDTO1 = SKILL_MAPPER.toDto(skill);
         return Optional.of(skillDTO1);
     }

@@ -37,20 +37,11 @@ public class UserController {
         return ResponseEntity.ok(userService.findAll());
     }
 
-    @GetMapping({"/user/{email}"})
-    @ApiOperation(value = "Find user by email", notes = "Find user in DB, if user exist")
-    public ResponseEntity<UserDTO> getUser(@ApiParam(value = "email value for user you need to retrive", required = true) @PathVariable String email) {
-        UserDTO user = this.userService.getByEmail(email);
-        this.logger.info("Find user with email = " + email);
-        if (user == null) {
-            this.logger.error("There is no user with email = " + email + " in Database");
-            throw new NoSuchEntityException("There is no user with email = " + email + " in Database");
     @GetMapping(USER_URL_PARAMETER_EMAIL)
     @ApiOperation(value = "Find user by email", notes = "Find user if user exist")
     public ResponseEntity<UserDTO> getUser(@ApiParam(value = "email value for user you need to retrieve", required = true) @PathVariable String email) {
         logger.info("Find user with email = {}", email);
         UserDTO user = userService.getByEmail(email).get();
-
         if (Objects.isNull(user)) {
             logger.error("There is no user with email = {} ", email);
         } else {
@@ -78,6 +69,6 @@ public class UserController {
     @ApiOperation(value = "Delete existing user", notes = "Delete existing user")
     public ResponseEntity<UserDTO> delete(@PathVariable String email) {
         logger.info("Delete existing user {}", email);
-        return ResponseEntity.ok(userService.deleteByEmail(email).get());
+        return ResponseEntity.ok(userService.deleteByEmail(email).orElseThrow());
     }
 }

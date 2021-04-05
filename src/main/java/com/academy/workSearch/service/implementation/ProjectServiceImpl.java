@@ -52,8 +52,8 @@ public class ProjectServiceImpl implements ProjectService {
 
         Project project = ProjectMapper.INSTANCE.toEntity(projectDto);
         project.setEmployer(user);
-
         projectDAO.save(project);
+        return projectDto;
     }
 
     @Override
@@ -64,7 +64,6 @@ public class ProjectServiceImpl implements ProjectService {
         skills.add(skill);
         project.setSkills(skills);
         projectDAO.save(project);
-        return projectDto;
     }
 
     @Override

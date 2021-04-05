@@ -3,7 +3,7 @@ package com.academy.workSearch.service.implementation;
 import com.academy.workSearch.dao.implementation.UserDAOImpl;
 import com.academy.workSearch.dao.implementation.UserInfoDAOImpl;
 import com.academy.workSearch.dto.UserDTO;
-import com.academy.workSearch.exceptionHandling.NoSuchUserException;
+import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.UserInfo;
 import com.academy.workSearch.service.UserService;
@@ -56,7 +56,8 @@ public class UserServiceImpl implements UserService {
 
     public Optional<UserDTO> deleteByEmail(String email) {
         Optional<User> userDTO = userDAO.getByEmail(email);
-        User user = userDTO.get();
+//        User user = userDTO.get();
+        User user = userDTO.orElseThrow();
         userDAO.deleteByEmail(email);
         UserDTO userDTO1 = USER_MAPPER.toUserDto(user);
         return Optional.of(userDTO1);
@@ -64,7 +65,7 @@ public class UserServiceImpl implements UserService {
 
     public Optional<UserDTO> getByEmail(String email) {
         User user = userDAO.getByEmail(email)
-                .orElseThrow(() -> new NoSuchUserException("There is no user with email = {}" + email));
+                .orElseThrow(() -> new NoSuchEntityException("There is no user with email = {}" + email));
         UserDTO userDTO1 = USER_MAPPER.toUserDto(user);
         return Optional.of(userDTO1);
 
