@@ -1,7 +1,7 @@
 package com.academy.workSearch.controller;
 
 import com.academy.workSearch.dto.SkillDTO;
-import com.academy.workSearch.exceptionHandling.NoSuchSkillException;
+import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.service.SkillService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -46,7 +46,7 @@ public class SkillController {
         SkillDTO skillDto = skillService.get(id);
         if (Objects.isNull(skillDto)) {
             logger.error("There is no skill with ID = " + id + " in Database");
-            throw new NoSuchSkillException("There is no skill with ID = " + id + " in Database");
+            throw new NoSuchEntityException("There is no skill with ID = " + id + " in Database");
         }
         return ResponseEntity.ok(skillDto);
     }

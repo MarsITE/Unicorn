@@ -2,14 +2,13 @@ package com.academy.workSearch.controller;
 
 import com.academy.workSearch.dto.SkillDTO;
 import com.academy.workSearch.dto.SkillDetailsDTO;
-import com.academy.workSearch.exceptionHandling.NoSuchSkillException;
+import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.service.SkillService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +47,7 @@ public class AdminSkillController {
         SkillDTO skillDto = skillService.get(id);
         if (Objects.isNull(skillDto)) {
             logger.error("There is no skill with ID = " + id + " in Database");
-            throw new NoSuchSkillException("There is no skill with ID " + id);
+            throw new NoSuchEntityException("There is no skill with ID = " + id + " in Database");
         }
         return ResponseEntity.ok(skillDto);
     }

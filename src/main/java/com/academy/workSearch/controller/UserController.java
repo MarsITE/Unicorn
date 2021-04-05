@@ -1,7 +1,7 @@
 package com.academy.workSearch.controller;
 
 import com.academy.workSearch.dto.UserDTO;
-import com.academy.workSearch.exceptionHandling.NoSuchUserException;
+import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -34,7 +34,7 @@ public class UserController {
         this.logger.info("Find user with email = " + email);
         if (user == null) {
             this.logger.error("There is no user with email = " + email + " in Database");
-            throw new NoSuchUserException("There is no user with email = " + email + " in Database");
+            throw new NoSuchEntityException("There is no user with email = " + email + " in Database");
         } else {
             return ResponseEntity.ok(user);
         }
