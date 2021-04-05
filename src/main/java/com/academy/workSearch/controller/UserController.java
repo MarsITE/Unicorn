@@ -9,7 +9,14 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -31,10 +38,10 @@ public class UserController {
     @ApiOperation(value = "Find user by email", notes = "Find user if exists")
     public ResponseEntity<UserDTO> getUser(@ApiParam(value = "email value for user you need to retrieve", required = true) @PathVariable String email) {
         UserDTO user = userService.getByEmail(email);
-        logger.info("Find user with email = " + email);
+        logger.info("Find user with email = {}", email);
         if (user == null) {
-           logger.error("There is no user with email = {} ", email );
-            throw new NoSuchEntityException("There is no user with email = " + email );
+            logger.error("There is no user with email = {} ", email);
+            throw new NoSuchEntityException("There is no user with email = " + email);
         } else {
             return ResponseEntity.ok(user);
         }
@@ -44,7 +51,7 @@ public class UserController {
     @ApiOperation(value = "Add new user", notes = "Add new user ")
     public ResponseEntity<UserDTO> addNewUser(@RequestBody UserDTO user) {
         userService.save(user);
-        logger.info("Add user with email = " + user.getEmail());
+        logger.info("Add user with email = {}", user.getEmail());
         return ResponseEntity.ok(user);
     }
 
