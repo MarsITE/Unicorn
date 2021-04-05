@@ -5,6 +5,7 @@ import { Project } from '../common/model/project';
 import { User } from '../common/model/user';
 import { ProjectService } from '../common/services/project.service';
 
+
 @Component({
   selector: 'app-project',
   templateUrl: './project.component.html',
@@ -13,44 +14,43 @@ import { ProjectService } from '../common/services/project.service';
 
 export class ProjectComponent implements OnInit {
   id: String;
-  owner: User;  
+  owner: User;
   sortFlag: boolean = false;
   sort: string = "desc";
-  counter: number = 1;  
+  counter: number = 1;
 
-  projects: Project[] = []; 
-  
+  projects: Project[] = [];
+
   displayedColumns: string[] = ['name', 'projectStatus', 'creationDate', 'owner'];
- 
-  constructor(private projectService: ProjectService, private router: Router, private http: HttpClient, router2: ActivatedRoute) {
-    this.counter = router2.snapshot.params.counter;    
-    this.sort = router2.snapshot.params.sort;   
-  }
-  
 
-  ngOnInit(): void {    
+  constructor(private projectService: ProjectService, private router: Router, private http: HttpClient, route: ActivatedRoute) {
+    route.queryParams.subscribe(params => {
+    this.counter = params['page'] || this.counter;
+    this.sort = params['sort'] || this.sort;
+});
+  }
+
+  ngOnInit(): void {
     this.getProjects();
   }
 
- private getProjects() { 
+ private getProjects() {
 
   const params = new HttpParams()
   .set('page', this.counter.toString())
-  .set('sort', this.sort)  
+  .set('sort', this.sort)
 
     this.projectService.getProjects(params).subscribe(
-      (response: Project[]) => {          
-        this.projects = response;        
+      (response: Project[]) => {
+        this.projects = response;
       },
       (error) => {
         console.log("error", error);
+      },
+      () => {
+        console.log("complete");
+        this.router.navigateByUrl(`projects?page=` + this.counter + `&sort=` + this.sort);
       }
-      // ,
-      // () => {
-      //   console.log("complete");
-      //   this.router.navigateByUrl(`projects/` + this.counter + `/` + this.sort);
-        
-      // }
     )
   }
 
@@ -63,24 +63,24 @@ export class ProjectComponent implements OnInit {
   }
 
   projectsSort() {
-    this.sortFlag = !this.sortFlag    
+    this.sortFlag = !this.sortFlag
     if(this.sortFlag){
       this.sort= "asc"
     } else {
       this.sort = "desc"
     }
-    this.getProjects() 
-  }
-
-  projectsNext() {     
-    this.counter++;       
     this.getProjects()
   }
 
-  projectsPrev() {   
+  projectsNext() {
+    this.counter++;
+    this.getProjects()
+  }
+
+  projectsPrev() {
     if(this.counter > 1){
-      this.counter--; 
-    }      
+      this.counter--;
+    }
     this.getProjects()
   }
 

@@ -59,7 +59,9 @@ import { ProjectComponent } from './project/project.component';
 import { ProjectAddComponent } from './project/project-add/project-add.component';
 import { ProjectInfoComponent } from './project/project-info/project-info.component';
 import { ProjectEditComponent } from './project/project-edit/project-edit.component';
-import { StartPageComponent } from './start-page/start-page.component';
+import { AdminComponent } from './admin/admin.component';
+import { SkillService } from './common/services/skill.service';
+import { StartPageComponent} from './start-page/start-page.component'
 
 @NgModule({
   declarations: [
@@ -71,9 +73,10 @@ import { StartPageComponent } from './start-page/start-page.component';
     UserEditComponent,
     ProjectInfoComponent,
     ProjectEditComponent,
-    StartPageComponent
-  ],   
-    
+    StartPageComponent,
+    AdminComponent
+  ],
+
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -123,14 +126,14 @@ import { StartPageComponent } from './start-page/start-page.component';
     OverlayModule,
     PortalModule,
     FormsModule,
-    ScrollingModule,    
+    ScrollingModule,
     MatFormFieldModule,
     MatCardModule,
     FormsModule,
     ReactiveFormsModule,
     NgxMaskModule.forRoot()
   ],
-  providers: [ProjectService, UserHttpService],
+  providers: [ProjectService, UserHttpService, SkillService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

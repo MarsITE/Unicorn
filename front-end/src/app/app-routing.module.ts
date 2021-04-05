@@ -8,6 +8,7 @@ import { ProjectAddComponent } from './project/project-add/project-add.component
 import { ProjectInfoComponent } from './project/project-info/project-info.component';
 import { ProjectEditComponent } from './project/project-edit/project-edit.component';
 import { StartPageComponent } from "./start-page/start-page.component";
+import { AdminComponent } from './admin/admin.component';
 
 const routes: Routes = [
   {
@@ -20,7 +21,7 @@ const routes: Routes = [
     path: 'user-profile-edit/:email',
     component: UserEditComponent
   }, {
-    path: 'projects/:counter/:sort',
+    path: 'projects',
    component: ProjectComponent
   }, {
     path: 'addProjects',
@@ -31,13 +32,11 @@ const routes: Routes = [
   }, {
     path: 'editProject/:id',
     component:ProjectEditComponent
-  }
-  // , {
-  //   path: '',
-  //   component:StartPageComponent
-  // }
-  , {
-    path: ':counter',
+  }, {
+    path: 'admin',
+    component:AdminComponent
+  }, {
+    path: '',
     component:StartPageComponent
   }
 ];
@@ -46,4 +45,5 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+ }
