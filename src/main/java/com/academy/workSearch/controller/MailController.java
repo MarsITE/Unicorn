@@ -7,7 +7,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.mail.MessagingException;
 import javax.validation.ValidationException;
@@ -17,12 +22,12 @@ import javax.validation.ValidationException;
 @RequiredArgsConstructor
 @RequestMapping("/feedback")
 public class MailController {
-EmailService emailService;
+    EmailService emailService;
 
     @PostMapping("/send")
     @ResponseStatus(HttpStatus.OK)
     public void sendMessage(@RequestBody Mail mail, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             throw new ValidationException("Message is not valid");
         }
         emailService.sendingMessage(mail);
@@ -31,7 +36,7 @@ EmailService emailService;
     @PostMapping("/attachment")
     @ResponseStatus(HttpStatus.OK)
     public void sendMessageWhitAttachment(@RequestBody Mail mail, @RequestParam String path, BindingResult bindingResult) throws MessagingException {
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             throw new ValidationException("Message is not valid");
         }
         emailService.sendMessageWithAttachment(mail, path);
