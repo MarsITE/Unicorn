@@ -34,7 +34,8 @@ public class ProjectDTO {
     private String creationDate;
 
     @NotNull
-    private User owner;
+    private UserDTO owner;
 
-    private Set<Skill> skills;
+    private Set<String> skills;
+
 }
