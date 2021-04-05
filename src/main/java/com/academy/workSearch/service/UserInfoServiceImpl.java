@@ -39,7 +39,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     public void save(UserInfoDTO userInfo) {
-         userInfoDAO.saveAndGetId(USER_INFO_MAPPER.toUserInfo(userInfo));
+         userInfoDAO.save(USER_INFO_MAPPER.toUserInfo(userInfo));
     }
 
     @Override
@@ -74,7 +74,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
             Path path = Paths.get(file.getAbsolutePath());
             photoDTO.setPhoto(new ByteArrayResource(Files.readAllBytes(path)));
-            return null;
+            return photoDTO;
         } catch (IOException e) {
             logger.trace(Arrays.toString(Arrays.stream(e.getStackTrace()).toArray()));
         }

@@ -1,5 +1,6 @@
 package com.academy.workSearch.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +9,5 @@ import lombok.Setter;
 
 public class UserAuthDTO {
     private String email;
-    private String password;
-    private boolean isEmployer;
+    private String token;
 }

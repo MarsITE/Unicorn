@@ -79,7 +79,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   public delete(email: string): void {
     this.subscriptions.push(this.userService.deleteUser(email).subscribe(
       (response) => {
-        console.log('deleted');
+        alert('deleted');
+        this.router2.navigateByUrl('login');
       },
       (error) => {
         console.log('error', error);

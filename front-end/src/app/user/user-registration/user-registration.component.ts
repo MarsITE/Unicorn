@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { UserAuth } from 'src/app/common/model/user-auth';
+import { UserRegistration } from 'src/app/common/model/user-registration';
 import { UserHttpService } from '../../common/services/user-http.service';
 
 @Component({
@@ -10,10 +11,10 @@ import { UserHttpService } from '../../common/services/user-http.service';
   styleUrls: ['./user-registration.component.css']
 })
 export class UserRegistrationComponent implements OnInit, OnDestroy {
-  user: UserAuth;
+  user: UserRegistration;
   userForm: FormGroup;
   private subscriptions: Subscription[] = [];
-  constructor(private userService: UserHttpService) {
+  constructor(private userService: UserHttpService, private router: Router) {
     this.initForm();
   }
   ngOnDestroy(): void {
@@ -22,8 +23,8 @@ export class UserRegistrationComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {
-
+  ngOnInit(): void {
+    console.log('registration');
   }
 
 
@@ -43,9 +44,9 @@ export class UserRegistrationComponent implements OnInit, OnDestroy {
     });
   }
 
-  private saveUser(user: UserAuth): void {
+  private saveUser(user: UserRegistration): void {
     this.subscriptions.push(this.userService.save(user).subscribe(
-      (response: UserAuth) => {
+      (response: UserRegistration) => {
         this.user = response;
       },
       (error) => {
@@ -58,6 +59,7 @@ export class UserRegistrationComponent implements OnInit, OnDestroy {
       },
       () => {
         console.log('complete');
+        this.router.navigateByUrl('login');
       }
     ));
   }

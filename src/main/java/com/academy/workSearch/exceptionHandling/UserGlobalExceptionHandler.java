@@ -2,6 +2,8 @@ package com.academy.workSearch.exceptionHandling;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -9,16 +11,18 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class UserGlobalExceptionHandler {
 
     @ExceptionHandler
-    public ResponseEntity<UserIncorrectData> handleException (NoSuchUserException exception){
+    public ResponseEntity<UserIncorrectData> handleException(NoSuchUserException exception) {
         UserIncorrectData data = new UserIncorrectData();
         data.setInfo(exception.getMessage());
         return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<UserIncorrectData> handleException (Exception exception){
+    @ExceptionHandler({
+            NoActiveAccountException.class,
+            BadCredentialsException.class})
+    public ResponseEntity<UserIncorrectData> handleExceptionAuth(AuthenticationException exception) {
         UserIncorrectData data = new UserIncorrectData();
         data.setInfo(exception.getMessage());
-        return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(data, HttpStatus.FORBIDDEN);
     }
 }

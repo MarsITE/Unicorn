@@ -2,6 +2,7 @@ package com.academy.workSearch.dao;
 
 import com.academy.workSearch.model.AccountStatus;
 import com.academy.workSearch.model.User;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,12 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
     private SessionFactory sessionFactory;
 
     public User getByEmail(String email) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session;
+        try {
+            session = sessionFactory.getCurrentSession();
+        } catch (HibernateException e) {
+            session = sessionFactory.openSession();
+        }
         return (User) session.createQuery("select u from User u where u.email = : email")
                 .setParameter("email", email).uniqueResult();
     }

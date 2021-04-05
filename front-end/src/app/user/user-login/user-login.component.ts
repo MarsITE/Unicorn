@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { UserRegistration } from 'src/app/common/model/user-registration';
 import { UserAuth } from 'src/app/common/model/user-auth';
-import { UserLogin } from 'src/app/common/model/user-login';
 import { StorageService } from 'src/app/common/services/storage.service';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
 
@@ -13,8 +13,8 @@ import { UserHttpService } from 'src/app/common/services/user-http.service';
   styleUrls: ['./user-login.component.css']
 })
 export class UserLoginComponent implements OnInit, OnDestroy {
-  userLogin: UserLogin;
   userAuth: UserAuth;
+  user: UserRegistration;
   userForm: FormGroup;
   private subscriptions: Subscription[] = [];
   constructor(private userService: UserHttpService, private router: Router, private storageService: StorageService) { }
@@ -48,26 +48,26 @@ export class UserLoginComponent implements OnInit, OnDestroy {
       const email = this.userForm.controls.email.value;
       const password = this.userForm.controls.password.value;
 
-      this.userAuth = {email, password, isEmployer: false};
-      this.login(this.userAuth);
+      this.user = {email, password, isEmployer: false};
+      this.login(this.user);
 
-      this.router.navigateByUrl(`user-profile/${email}`);
   }
 
-  private login(user: UserAuth): void {
+  private login(user: UserRegistration): void {
     this.subscriptions.push(this.userService.login(user).subscribe(
-      (response: UserLogin) => {
-        this.userLogin = response;
-        this.storageService.saveValue('token', this.userLogin.token);
+      (response: UserAuth) => {
+        this.userAuth = response;
+        this.storageService.saveValue('token', this.userAuth.token);
+        this.router.navigateByUrl(`user-profile/${user.email}`);
       },
       (error) => {
         this.initForm(
           user.email
         );
-        console.log('error', error);
+        alert(error);
+        console.log(error);
       },
       () => {
-
         console.log('complete');
       }
     ));

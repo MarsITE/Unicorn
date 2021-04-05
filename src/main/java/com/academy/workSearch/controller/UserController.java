@@ -2,24 +2,26 @@ package com.academy.workSearch.controller;
 
 import com.academy.workSearch.dto.UserAuthDTO;
 import com.academy.workSearch.dto.UserDTO;
-import com.academy.workSearch.dto.UserLoginDTO;
+import com.academy.workSearch.dto.UserRegistrationDTO;
+import com.academy.workSearch.exceptionHandling.EntityExistsException;
 import com.academy.workSearch.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@AllArgsConstructor
 @RequestMapping({"/api/v1"})
 public class UserController {
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
-    private final UserService userService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping({"/admin/users"})
     @ApiOperation(value = "Show all users", notes = "Show information about all users in DB")
@@ -30,28 +32,24 @@ public class UserController {
 
     @PostMapping(value = {"/login"})
     @ApiOperation(value = "Find user by email", notes = "Find user in DB, if user exist")
-    public ResponseEntity<UserLoginDTO> login(@ApiParam(value = "email value for user you need to retrive", required = true)
-                                              @RequestBody UserAuthDTO userAuthDTO) {
-        try {
-            UserLoginDTO userLogin = userService.get(userAuthDTO);
-            return ResponseEntity.ok(userLogin);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<UserAuthDTO> login(@ApiParam(value = "email value for user you need to retrive", required = true)
+                                   @RequestBody UserRegistrationDTO userRegistrationDTO) {
+        UserAuthDTO userAuthDTO = userService.get(userRegistrationDTO);
+        return ResponseEntity.ok(userAuthDTO);
+
     }
 
     @PostMapping({"/registration"})
     @ApiOperation(value = "Add new user", notes = "Add new user in DB")
-    public ResponseEntity<UserLoginDTO> save(@RequestBody UserAuthDTO user) {
-        UserLoginDTO userLoginDTO = new UserLoginDTO();
+    public ResponseEntity<UserAuthDTO> save(@RequestBody UserRegistrationDTO user) {
+        UserAuthDTO userAuthDTO = new UserAuthDTO();
         try {
-            userLoginDTO = userService.save(user);
-        } catch (Exception e) {
+            userAuthDTO = userService.save(user);
+        } catch (EntityExistsException e) {
             logger.error(e.getMessage());
         }
         this.logger.info("Add user with email = " + user.getEmail());
-        return ResponseEntity.ok(userLoginDTO);
+        return ResponseEntity.ok(userAuthDTO);
     }
 
     @PutMapping({"/user-edit"})
