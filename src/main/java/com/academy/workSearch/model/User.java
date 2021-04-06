@@ -5,19 +5,24 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
+
+import static com.academy.workSearch.model.enums.AccountStatus.ACTIVE;
 
 @Data
 @Entity
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
 @ApiModel(description = "User Info")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -37,7 +42,7 @@ public class User {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "account_status")
+    @Column(name = "account_status", columnDefinition = "AccountStatus default NOT_ACTIVE")
     @ApiModelProperty(notes = "Type of account", position = 4)
     private AccountStatus accountStatus;
 
@@ -59,4 +64,34 @@ public class User {
     @ApiModelProperty(notes = "User info", position = 7)
     @JoinColumn(name = "user_info_id")
     private UserInfo userInfo;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return accountStatus == ACTIVE;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return accountStatus == ACTIVE;
+    }
 }

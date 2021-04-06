@@ -1,0 +1,31 @@
+<div class="registration">
+  <div class="title">Registration</div>
+  <div class="content">
+    <form [formGroup]="userForm" class="user-form">
+    <p>
+      <mat-form-field>
+        <input type="text" matInput placeholder="Login" formControlName="email" />
+        <mat-error *ngIf="userForm.controls.email.invalid">Login name must be less than 30. <i>Exp: example@mail.com</i>
+        </mat-error>
+      </mat-form-field>
+    </p>
+
+    <p>
+      <mat-form-field>
+        <input type="password" matInput placeholder="Password" formControlName="password" />
+        <mat-error *ngIf="userForm.controls.password.invalid">Password name must be between 6 and 15</mat-error>
+      </mat-form-field>
+    </p>
+
+    <p>
+      <mat-checkbox formControlName="isEmployer" id="isEmployer">
+        <div>Employer</div>
+      </mat-checkbox>
+    </p>
+
+    <div class="button-save">
+      <button (click)="submit()" mat-button [disabled]="!userForm.valid">Save</button>
+    </div>
+    </form>
+  </div>
+</div>

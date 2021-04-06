@@ -26,7 +26,7 @@ public interface UserMapper {
     UserDTO toUserDto(User user);
 
     @Mapping(target = "roles", qualifiedByName = "rolesStr")
-    List<UserDTO> map(List<User> users);
+    List<UserDTO> map(List<User> users);//todo
 
     @Named("rolesStr")
     default Set<String> rolesStr(Set<Role> roles) {

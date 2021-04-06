@@ -20,7 +20,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
   imageURL: string;
   imageSrc: any;
   selectedImage: any;
-  today: any;
+  today: Date;
   private subscriptions: Subscription[] = [];
   workStatuses: WorkStatus[] = [
     { value: 'PART_TIME', viewValue: 'Part time' },
@@ -32,6 +32,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
   constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router) {
     this.email = router.snapshot.params.email;
+    this.today = new Date();
   }
 
   ngOnInit(): void {
@@ -45,16 +46,15 @@ export class UserEditComponent implements OnInit, OnDestroy {
   }
 
   private initForm(
-    firstName: string = ' ',
-    lastName: string = ' ',
+    firstName: string = '',
+    lastName: string = '',
     phone: string = '',
-    linkToSocialNetwork: string = ' ',
+    linkToSocialNetwork: string = '',
     dateOfBirth: Date = this.today,
     isShowInfo: boolean = true,
-    workStatus: string = ' ',
-    imageUrl: string = ' '
+    workStatus: string = '',
+    imageUrl: string = ''
   ): void {
-    this.today = Date.now();
     this.userProfileForm = new FormGroup({
       firstName: new FormControl(
         firstName,
@@ -65,7 +65,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
       phone: new FormControl(
         phone,
         [Validators.pattern('[- +()0-9]+')]),
-      linkToSocialNetwork: new FormControl(linkToSocialNetwork),
+      linkToSocialNetwork: new FormControl(linkToSocialNetwork, Validators.maxLength(255)),
       dateOfBirth: new FormControl(dateOfBirth),
       isShowInfo: new FormControl(isShowInfo),
       workStatus: new FormControl(workStatus),
