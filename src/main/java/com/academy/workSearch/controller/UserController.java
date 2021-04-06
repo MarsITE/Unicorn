@@ -34,14 +34,14 @@ public class UserController {
     @GetMapping({"/admin/users"})
     @ApiOperation(value = "Show all users", notes = "Show information about all users in DB")
     public ResponseEntity<List<UserDTO>> getAll() {
-        this.logger.info("Show all users");
+        logger.info("Show all users");
         return ResponseEntity.ok(userService.findAll());
     }
 
     @PostMapping(value = {"/login"})
     @ApiOperation(value = "Find user by email", notes = "Find user in DB, if user exist")
     public ResponseEntity<UserAuthDTO> login(@ApiParam(value = "email value for user you need to retrive", required = true)
-                                   @RequestBody UserRegistrationDTO userRegistrationDTO) {
+                                             @RequestBody UserRegistrationDTO userRegistrationDTO) {
         UserAuthDTO userAuthDTO = userService.get(userRegistrationDTO);
         return ResponseEntity.ok(userAuthDTO);
 
@@ -50,26 +50,20 @@ public class UserController {
     @PostMapping({"/registration"})
     @ApiOperation(value = "Add new user", notes = "Add new user in DB")
     public ResponseEntity<UserAuthDTO> save(@RequestBody UserRegistrationDTO user) {
-        UserAuthDTO userAuthDTO = new UserAuthDTO();
-        try {
-            userAuthDTO = userService.save(user);
-        } catch (EntityExistsException e) {
-            logger.error(e.getMessage());
-        }
-        this.logger.info("Add user with email = " + user.getEmail());
-        return ResponseEntity.ok(userAuthDTO);
+        logger.info("Add user with email = " + user.getEmail());
+        return ResponseEntity.ok(userService.save(user));
     }
 
     @PutMapping({"/user-edit"})
     @ApiOperation(value = "Update existing user", notes = "Update existing user")
     public ResponseEntity<UserDTO> update(@RequestBody UserDTO user) {
-        return ResponseEntity.ok(this.userService.update(user));
+        return ResponseEntity.ok(userService.update(user));
     }
 
     @DeleteMapping({"/user/{email}"})
     @ApiOperation(value = "Delete existing user", notes = "Delete existing user")
     public ResponseEntity<?> delete(@PathVariable String email) {
-        this.userService.deleteByEmail(email);
+        userService.deleteByEmail(email);
         return ResponseEntity.ok().build();
     }
 

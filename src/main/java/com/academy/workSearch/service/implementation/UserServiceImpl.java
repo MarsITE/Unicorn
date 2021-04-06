@@ -89,12 +89,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO update(UserDTO user) {
-        User user1 = userDAO.getByEmail(user.getEmail());
-        User user2 = USER_MAPPER.toUser(user);
-        user2.setPassword(user1.getPassword());
-        user2.setUserId(user1.getUserId());
-        userDAO.save(user2);
-        return USER_MAPPER.toUserDto(user2);
+        User oldUser = userDAO.getByEmail(user.getEmail());
+        User newUser = USER_MAPPER.toUser(user);
+        newUser.setPassword(oldUser.getPassword());
+        newUser.setUserId(oldUser.getUserId());
+        userDAO.save(newUser);
+        return USER_MAPPER.toUserDto(newUser);
     }
 
     @Override
