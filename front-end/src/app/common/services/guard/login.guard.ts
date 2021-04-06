@@ -16,10 +16,10 @@ export class LoginGuard implements CanActivate {
 
     const token = this.storageService.getValue('token');
     if (token) {
-
-    }return true;
-    // this.router.navigateByUrl('login');
-    // return false;
+      return true;
+    }
+    this.router.navigateByUrl('login');
+    return false;
   }
 
 }

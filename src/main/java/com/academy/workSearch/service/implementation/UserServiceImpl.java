@@ -32,6 +32,8 @@ import java.util.Set;
 
 import static com.academy.workSearch.dto.mapper.UserAuthMapper.USER_AUTH_MAPPER;
 import static com.academy.workSearch.dto.mapper.UserMapper.USER_MAPPER;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.INCORRECT_USER_DATA;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.NOT_ACTIVE_ACCOUNT;
 
 @Service
 @Transactional
@@ -105,7 +107,7 @@ public class UserServiceImpl implements UserService {
         final User user = USER_MAPPER.toUser(getByEmail(userRegistrationDTO.getEmail()));
 
         if (!user.isEnabled()) {
-            throw new NoActiveAccountException("You account is not active!");
+            throw new NoActiveAccountException(NOT_ACTIVE_ACCOUNT);
         }
 
         try {
@@ -115,7 +117,7 @@ public class UserServiceImpl implements UserService {
                             userRegistrationDTO.getPassword(),
                             user.getRoles()));
         } catch (BadCredentialsException e) {
-            throw new BadCredentialsException("Incorrect username or password", e);
+            throw new BadCredentialsException(INCORRECT_USER_DATA, e);
         }
         final String jwt = jwtService.generateToken(user);
 
