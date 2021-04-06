@@ -14,8 +14,10 @@ export class UserListComponent implements OnInit, OnDestroy {
   users: User[] = [];
   displayedColumns: string[] = ['firstName', 'lastName', 'email', 'workStatus', 'phone', 'dateOfBirth', 'userRole', 'generalRating'];
   private subscriptions: Subscription[] = [];
+
   constructor(private userService: UserHttpService, private router: Router) {
   }
+
   ngOnDestroy(): void {
     this.subscriptions.forEach(s => {
       s.unsubscribe();
@@ -32,10 +34,10 @@ export class UserListComponent implements OnInit, OnDestroy {
         this.users = response;
       },
       (error) => {
-        console.log("error", error);
+        console.log('error', error);
       },
       () => {
-        console.log("complete");
+        console.log('complete');
       }
     ));
   }

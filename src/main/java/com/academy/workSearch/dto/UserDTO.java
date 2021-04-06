@@ -13,4 +13,6 @@ public class UserDTO {
     private Set<String> roles;
     private String accountStatus;
     private UserInfoDTO userInfo;
+
+
 }

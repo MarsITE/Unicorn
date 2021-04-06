@@ -8,32 +8,49 @@ import { ProjectAddComponent } from './project/project-add/project-add.component
 import { ProjectInfoComponent } from './project/project-info/project-info.component';
 import { ProjectEditComponent } from './project/project-edit/project-edit.component';
 import { AdminComponent } from './admin/admin.component';
+import { UserRegistrationComponent } from './user/user-registration/user-registration.component';
+import { UserLoginComponent } from './user/user-login/user-login.component';
+import { LoginGuard } from './common/services/guard/login.guard';
 
 const routes: Routes = [
   {
     path: 'users-list',
-    component: UserListComponent
+    component: UserListComponent,
+    canActivate: [LoginGuard]
   }, {
     path: 'user-profile/:email',
-    component: UserProfileComponent
+    component: UserProfileComponent,
+    canActivate: [LoginGuard]
   }, {
     path: 'user-profile-edit/:email',
-    component: UserEditComponent
+    component: UserEditComponent,
+    canActivate: [LoginGuard]
   }, {
     path: 'projects',
-   component: ProjectComponent
+    component: ProjectComponent,
+    canActivate: [LoginGuard]
   }, {
     path: 'addProjects',
-   component: ProjectAddComponent
+    component: ProjectAddComponent,
+    canActivate: [LoginGuard]
   }, {
     path: 'projects/:id',
-    component:ProjectInfoComponent
+    component: ProjectInfoComponent,
+    canActivate: [LoginGuard]
   }, {
     path: 'editProject/:id',
-    component:ProjectEditComponent
+    component: ProjectEditComponent,
+    canActivate: [LoginGuard]
   }, {
     path: 'admin',
-    component:AdminComponent
+    component: AdminComponent,
+    canActivate: [LoginGuard]
+  }, {
+    path: 'registration',
+    component: UserRegistrationComponent
+  }, {
+    path: 'login',
+    component: UserLoginComponent
   }
 ];
 
@@ -42,4 +59,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule {
- }
+}
