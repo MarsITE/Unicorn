@@ -31,23 +31,10 @@ public class SkillController {
         this.skillService = skillService;
     }
 
-    @GetMapping("")
+    @GetMapping()
     @ApiOperation(value = "Show all skills", notes = "Show information about all skills")
     public ResponseEntity<List<SkillDTO>> getAll() {
         logger.info("Show all skills");
         return ResponseEntity.ok(skillService.findAllEnabled(true));
-    }
-
-    @GetMapping("/{id}")
-    @ApiOperation(value = "Find skill by ID", notes = "Find skill if exists")
-    public ResponseEntity<SkillDTO> findById(@ApiParam(value = "ID value for skill you need to retrieve", required = true)
-                                             @PathVariable UUID id) {
-        logger.info("Find skill with ID = {} ", id);
-        SkillDTO skillDto = skillService.get(id);
-        if (Objects.isNull(skillDto)) {
-            logger.error("There is no skill with ID = {}", id);
-            throw new NoSuchEntityException("There is no skill with ID = {}" + id);
-        }
-        return ResponseEntity.ok(skillDto);
     }
 }

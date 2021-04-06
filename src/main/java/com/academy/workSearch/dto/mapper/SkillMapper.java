@@ -14,14 +14,14 @@ public interface SkillMapper {
 
 
     @Mappings({
-            @Mapping(target = "name", source = "name"),
-            @Mapping(target = "skillId", source = "skillId")
+            @Mapping(target = "skillId", source = "skillId"),
+            @Mapping(target = "name", source = "name")
     })
     SkillDTO toDto(Skill skill);
 
     @Mappings({
-            @Mapping(target = "name", source = "name"),
-            @Mapping(target = "skillId", source = "skillId")
+            @Mapping(target = "skillId", source = "skillId"),
+            @Mapping(target = "name", source = "name")
     })
     Skill toEntity(SkillDTO skillDto);
 
