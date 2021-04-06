@@ -15,7 +15,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        userDAO.setClazz(User.class);
         User user = userDAO.getByEmail(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
