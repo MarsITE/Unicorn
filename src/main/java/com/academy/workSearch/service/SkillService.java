@@ -10,7 +10,7 @@ public interface SkillService {
     List<SkillDTO> findAllEnabled(Boolean enabled);
     void save(SkillDTO skill);
     SkillDetailsDTO update(SkillDetailsDTO skill);
-    SkillDTO get(UUID id);
-    SkillDTO getByName(String name);
+    SkillDetailsDTO get(UUID id);
+    SkillDetailsDTO getByName(String name);
 
 }
