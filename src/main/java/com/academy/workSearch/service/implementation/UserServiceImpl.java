@@ -1,15 +1,15 @@
 package com.academy.workSearch.service.implementation;
 
+import com.academy.workSearch.controller.UserController;
+import com.academy.workSearch.controller.jwt.JwtService;
 import com.academy.workSearch.dao.RoleDAO;
 import com.academy.workSearch.dao.implementation.UserDAOImpl;
 import com.academy.workSearch.dao.implementation.UserInfoDAOImpl;
-import com.academy.workSearch.controller.UserController;
-import com.academy.workSearch.controller.jwt.JwtService;
 import com.academy.workSearch.dto.UserAuthDTO;
 import com.academy.workSearch.dto.UserDTO;
 import com.academy.workSearch.dto.UserRegistrationDTO;
-import com.academy.workSearch.exceptionHandling.EntityExistsException;
-import com.academy.workSearch.exceptionHandling.NoActiveAccountException;
+import com.academy.workSearch.exceptionHandling.exceptions.NoActiveAccountException;
+import com.academy.workSearch.exceptionHandling.exceptions.NoUniqueEntityException;
 import com.academy.workSearch.model.Role;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.UserInfo;
@@ -36,7 +36,6 @@ import static com.academy.workSearch.exceptionHandling.MessageConstants.INCORREC
 import static com.academy.workSearch.exceptionHandling.MessageConstants.NOT_ACTIVE_ACCOUNT;
 
 @Service
-@Transactional
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -60,10 +59,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserAuthDTO save(UserRegistrationDTO userRegistrationDTO) throws EntityExistsException {
+    @Transactional
+    public UserAuthDTO save(UserRegistrationDTO userRegistrationDTO) throws NoUniqueEntityException {
         User oldUser = userDAO.getByEmail(userRegistrationDTO.getEmail());
         if (oldUser != null) {
-            throw new EntityExistsException("User with email: " + userRegistrationDTO.getEmail() + "exists!");
+            throw new NoUniqueEntityException("User with email: " + userRegistrationDTO.getEmail() + " exists!");
         }
 
         User user = USER_AUTH_MAPPER.toUser(userRegistrationDTO);
@@ -88,6 +88,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDTO update(UserDTO user) {
         User oldUser = userDAO.getByEmail(user.getEmail());
         User newUser = USER_MAPPER.toUser(user);
@@ -98,6 +99,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteByEmail(String email) {
         userDAO.deleteByEmail(email);
     }

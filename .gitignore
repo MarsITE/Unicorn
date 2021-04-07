@@ -184,3 +184,7 @@ build/
 
 #for log files
 *.gz
+
+*.jpg
+*.jpeg
+*.png

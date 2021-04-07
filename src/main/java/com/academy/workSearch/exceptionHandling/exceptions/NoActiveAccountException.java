@@ -1,4 +1,4 @@
-package com.academy.workSearch.exceptionHandling;
+package com.academy.workSearch.exceptionHandling.exceptions;
 
 import org.springframework.security.core.AuthenticationException;
 

@@ -4,7 +4,7 @@ import com.academy.workSearch.dto.UserAuthDTO;
 import com.academy.workSearch.dto.UserDTO;
 import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.dto.UserRegistrationDTO;
-import com.academy.workSearch.exceptionHandling.EntityExistsException;
+import com.academy.workSearch.exceptionHandling.exceptions.NoUniqueEntityException;
 import com.academy.workSearch.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -52,6 +52,7 @@ public class UserController {
     public ResponseEntity<UserAuthDTO> save(@RequestBody UserRegistrationDTO user) {
         logger.info("Add user with email = " + user.getEmail());
         return ResponseEntity.ok(userService.save(user));
+
     }
 
     @PutMapping({"/user-edit"})

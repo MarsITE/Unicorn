@@ -52,9 +52,10 @@ export class UserRegistrationComponent implements OnInit, OnDestroy {
       (error) => {
         this.initForm(
           user.email,
-          user.password,
+          '',
           user.isEmployer
         );
+        alert(error)
         console.log('error', error);
       },
       () => {

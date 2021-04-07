@@ -26,7 +26,6 @@ import java.util.UUID;
 import static com.academy.workSearch.dto.mapper.UserInfoMapper.USER_INFO_MAPPER;
 
 @Service
-@Transactional
 @AllArgsConstructor
 public class UserInfoServiceImpl implements UserInfoService {
     private final Logger logger = LoggerFactory.getLogger(UserInfoController.class);
@@ -39,11 +38,14 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfoDAO.setClazz(UserInfo.class);
     }
 
+    @Override
+    @Transactional
     public void save(UserInfoDTO userInfo) {
-         userInfoDAO.save(USER_INFO_MAPPER.toUserInfo(userInfo));
+        userInfoDAO.save(USER_INFO_MAPPER.toUserInfo(userInfo));
     }
 
     @Override
+    @Transactional
     public boolean updateImage(MultipartFile photo, String id) {
         boolean isImageSave = false;
         try {
