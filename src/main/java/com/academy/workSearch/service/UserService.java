@@ -15,9 +15,9 @@ public interface UserService {
 
     UserDTO update(UserDTO user);
 
-    void deleteByEmail(String email);
+    UserDTO deleteByEmail(String email);
 
-    UserAuthDTO get(UserRegistrationDTO userAuth);
+   Optional<UserAuthDTO> get(UserRegistrationDTO userAuth);
 
-    UserDTO getByEmail(String email);
+    Optional<UserDTO> getByEmail(String email);
 }

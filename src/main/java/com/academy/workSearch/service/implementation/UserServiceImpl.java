@@ -8,8 +8,8 @@ import com.academy.workSearch.controller.jwt.JwtService;
 import com.academy.workSearch.dto.UserAuthDTO;
 import com.academy.workSearch.dto.UserDTO;
 import com.academy.workSearch.dto.UserRegistrationDTO;
-import com.academy.workSearch.exceptionHandling.EntityExistsException;
-import com.academy.workSearch.exceptionHandling.NoActiveAccountException;
+import com.academy.workSearch.exceptionHandling.exceptions.EntityExistsException;
+import com.academy.workSearch.exceptionHandling.exceptions.NoActiveAccountException;
 import com.academy.workSearch.model.Role;
 import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.model.User;
@@ -34,6 +34,8 @@ import java.util.Optional;
 
 import static com.academy.workSearch.dto.mapper.UserAuthMapper.USER_AUTH_MAPPER;
 import static com.academy.workSearch.dto.mapper.UserMapper.USER_MAPPER;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.EMAIL_EXISTS;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_SUCH_ENTITY;
 
 @Service
 @Transactional
@@ -61,9 +63,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserAuthDTO save(UserRegistrationDTO userRegistrationDTO) throws EntityExistsException {
-        User oldUser = userDAO.getByEmail(userRegistrationDTO.getEmail());
+        User oldUser = userDAO.getByEmail(userRegistrationDTO.getEmail()).get();
         if (oldUser != null) {
-            throw new EntityExistsException("User with email: " + userRegistrationDTO.getEmail() + "exists!");
+            throw new EntityExistsException( userRegistrationDTO.getEmail() + EMAIL_EXISTS);
         }
 
         User user = USER_AUTH_MAPPER.toUser(userRegistrationDTO);
@@ -89,7 +91,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO update(UserDTO user) {
-        User user1 = userDAO.getByEmail(user.getEmail());
+        User user1 = userDAO.getByEmail(user.getEmail()).orElseThrow();
         User user2 = USER_MAPPER.toUser(user);
         user2.setPassword(user1.getPassword());
         user2.setUserId(user1.getUserId());
@@ -98,16 +100,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteByEmail(String email) {
+    public UserDTO deleteByEmail(String email) {
+        User user = userDAO.getByEmail(email).get();
         userDAO.deleteByEmail(email);
+        return USER_MAPPER.toUserDto(user);
     }
 
     @Override
-    public UserAuthDTO get(UserRegistrationDTO userRegistrationDTO) throws BadCredentialsException, NoActiveAccountException {
-        final User user = USER_MAPPER.toUser(getByEmail(userRegistrationDTO.getEmail()));
+    public Optional<UserAuthDTO> get(UserRegistrationDTO userRegistrationDTO) throws BadCredentialsException, NoActiveAccountException {
+        final User user = USER_MAPPER.toUser(getByEmail(userRegistrationDTO.getEmail()).orElseThrow());
 
         if (!user.isEnabled()) {
-            throw new NoActiveAccountException("You account is not active!");
+            throw new NoActiveAccountException("Your account is not active!");
         }
 
         try {
@@ -125,14 +129,12 @@ public class UserServiceImpl implements UserService {
         userAuthDTO.setEmail(user.getEmail());
         userAuthDTO.setToken(jwt);
 
-        return userAuthDTO;
+        return Optional.of(userAuthDTO);
     }
 
-    public UserDTO getByEmail(String email) {
-        return USER_MAPPER.toUserDto(userDAO.getByEmail(email));
     public Optional<UserDTO> getByEmail(String email) {
         User user = userDAO.getByEmail(email)
-                .orElseThrow(() -> new NoSuchEntityException("There is no user with email = {}" + email));
+                .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + email));
         UserDTO userDTO1 = USER_MAPPER.toUserDto(user);
         return Optional.of(userDTO1);
 

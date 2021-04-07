@@ -46,12 +46,12 @@ public class CrudDAOImpl<E> implements CrudDAO<E> {
     }
 
     @Override
-    public Optional<E> delete(UUID id) {
+    public E delete(UUID id) {
         Session session = sessionFactory.getCurrentSession();
         E entity = session.get(clazz, id);
         if (entity != null) {
             session.delete(entity);
         }
-        return Optional.ofNullable(entity);
+        return entity;
     }
 }

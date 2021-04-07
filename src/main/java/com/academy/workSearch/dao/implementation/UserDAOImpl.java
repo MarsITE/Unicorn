@@ -3,7 +3,6 @@ package com.academy.workSearch.dao.implementation;
 import com.academy.workSearch.dao.UserDAO;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.enums.AccountStatus;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -22,19 +21,17 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
 
     public Optional<User> getByEmail(String email) {
         Session session = sessionFactory.getCurrentSession();
-        Query<User> query = session.createQuery("from User where email = :email", User.class);
-        query.setParameter("email", email);
-        if (query.list().size() == 0) {
-            return Optional.of(query.list().get(0));
-        } else {
-            return Optional.ofNullable(query.list().get(0));
-        }
+      User user = session.createQuery("from User where email = :email", User.class)
+               .setParameter("email", email)
+               .uniqueResult();
+      return Optional.ofNullable(user);
+
     }
 
-        @Override
-        public Optional<User> deleteByEmail(String email){// not Optional
-            Optional<User> user = getByEmail(email);
-            user.stream().map(user1 -> AccountStatus.DELETED);
-            return user;
-        }
+    @Override
+    public User deleteByEmail(String email) {// not Optional
+        User user = getByEmail(email).orElseThrow();
+        user.setAccountStatus(AccountStatus.DELETED);
+        return user;
     }
+}

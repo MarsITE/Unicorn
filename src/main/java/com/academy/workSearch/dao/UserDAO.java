@@ -7,6 +7,6 @@ import java.util.Optional;
 public interface UserDAO extends CrudDAO<User> {
    Optional<User> getByEmail(String email);
 
-   Optional<User> deleteByEmail(String email);
+   User deleteByEmail(String email);
 
 }

@@ -6,6 +6,7 @@ import com.academy.workSearch.dto.ProjectDTO;
 import com.academy.workSearch.dto.SkillDTO;
 import com.academy.workSearch.dto.mapper.ProjectMapper;
 import com.academy.workSearch.dto.mapper.SkillMapper;
+import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.model.Project;
 import com.academy.workSearch.model.Skill;
 import com.academy.workSearch.model.User;
@@ -15,11 +16,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import javax.management.InstanceAlreadyExistsException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+
+import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_PROJECT;
 
 @Service
 @Transactional
@@ -57,24 +61,27 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void addSkillsToProject(ProjectDTO projectDto, SkillDTO skillDTO) {
+    public ProjectDTO addSkillsToProject(ProjectDTO projectDto, SkillDTO skillDTO) {
         Project project = ProjectMapper.INSTANCE.toEntity(projectDto);
         Skill skill = SkillMapper.SKILL_MAPPER.toEntity(skillDTO);
         Set<Skill> skills = new HashSet<>();
         skills.add(skill);
         project.setSkills(skills);
         projectDAO.save(project);
+        return projectDto;
     }
 
     @Override
     public Optional<ProjectDTO> get(UUID id) {
        Optional<Project> project = projectDAO.get(id);
-       Optional<ProjectDTO> projectDTO = Optional.ofNullable(ProjectMapper.INSTANCE.toDto(project.get()));
-        return projectDTO;
+       return Optional.ofNullable(ProjectMapper.INSTANCE.toDto(project
+               .orElseThrow(()->new NoSuchEntityException(NO_PROJECT + id))));
     }
 
     @Override
-    public void delete(UUID id) {
+    public ProjectDTO delete(UUID id) {
+        Project project = projectDAO.get(id).orElseThrow();
         projectDAO.delete(id);
+        return ProjectMapper.INSTANCE.toDto(project);
     }
 }

@@ -19,6 +19,7 @@ import java.util.UUID;
 
 import static com.academy.workSearch.dto.mapper.SkillDetailsMapper.SKILL_DETAILS_MAPPER;
 import static com.academy.workSearch.dto.mapper.SkillMapper.SKILL_MAPPER;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_SUCH_SKILL;
 
 @Service
 @Transactional
@@ -51,7 +52,7 @@ public class SkillServiceImpl  implements SkillService  {
 
     public Optional<SkillDTO> get(UUID id) {
       Skill skill = skillDAO.get(id)
-               .orElseThrow(()-> new NoSuchEntityException("There is no skill with id = {}" + id));
+               .orElseThrow(()-> new NoSuchEntityException(NO_SUCH_SKILL + id));
        SkillDTO skillDTO1 = SKILL_MAPPER.toDto(skill);
         return Optional.of(skillDTO1);
     }

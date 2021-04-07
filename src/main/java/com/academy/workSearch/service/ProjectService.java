@@ -17,7 +17,7 @@ public interface ProjectService {
 
     Optional<ProjectDTO> get(UUID id);
 
-    void delete(UUID id);
+    ProjectDTO delete(UUID id);
 
-    void addSkillsToProject(ProjectDTO projectDto, SkillDTO skillDTO);
+    ProjectDTO addSkillsToProject(ProjectDTO projectDto, SkillDTO skillDTO);
 }

@@ -12,7 +12,7 @@ public interface CrudDAO<E> {
 
     Optional<E> get(UUID id);
 
-    Optional<E> delete(UUID id);
+    E delete(UUID id);
 
     void setClazz(Class<E> clazz);
 }

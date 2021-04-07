@@ -52,10 +52,9 @@ public class AdminSkillController {
     public ResponseEntity<SkillDTO> findById(@ApiParam(value = "ID value for skill you need to retrieve", required = true)
                                              @PathVariable UUID id) {
         logger.info("Find skill with ID = {}", id);
-        SkillDTO skillDto = skillService.get(id);
+        SkillDTO skillDto = skillService.get(id).get();
         if (Objects.isNull(skillDto)) {
             logger.error("There is no skill with ID = {}", id);
-            throw new NoSuchEntityException("There is no skill with ID = " + id);
         }
         return ResponseEntity.ok(skillDto);
     }
@@ -74,6 +73,6 @@ public class AdminSkillController {
     @ApiOperation(value = "Update existing skill", notes = "Update existing skill")
     public ResponseEntity<SkillDetailsDTO> update(@RequestBody @Valid SkillDetailsDTO skill) {
         logger.info("Update skill with ID = {}", skill.getSkillId());
-        return ResponseEntity.ok(this.skillService.update(skill));
+        return ResponseEntity.ok(skillService.update(skill));
     }
 }
