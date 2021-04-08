@@ -17,14 +17,10 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
         super(sessionFactory);
     }
 
+    @Override
     public User getByEmail(String email) {
-        Session session;
-        try {
-            session = sessionFactory.getCurrentSession();
-        } catch (HibernateException e) {
-            session = sessionFactory.openSession();
-        }
-        return (User) session.createQuery("select u from User u where u.email = : email")
+        Session session = sessionFactory.getCurrentSession();
+        return (User) session.createQuery("select u from User u where u.email =: email")
                 .setParameter("email", email).uniqueResult();
     }
 

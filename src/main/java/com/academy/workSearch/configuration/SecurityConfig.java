@@ -1,6 +1,6 @@
 package com.academy.workSearch.configuration;
 
-import com.academy.workSearch.controller.jwt.JwtRequestFilter;
+import com.academy.workSearch.controller.filter.JwtRequestFilter;
 import com.academy.workSearch.service.implementation.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -43,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/api/v1/registration", "/api/v1/login").permitAll()
-//                .antMatchers("/api/v1/admin/*").hasAuthority("ADMIN")
+                .antMatchers("/api/v1/admin/*").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and().addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .headers().frameOptions().disable()

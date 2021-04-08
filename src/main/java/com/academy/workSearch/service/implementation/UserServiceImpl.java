@@ -1,7 +1,6 @@
 package com.academy.workSearch.service.implementation;
 
 import com.academy.workSearch.controller.UserController;
-import com.academy.workSearch.controller.jwt.JwtService;
 import com.academy.workSearch.dao.RoleDAO;
 import com.academy.workSearch.dao.implementation.UserDAOImpl;
 import com.academy.workSearch.dao.implementation.UserInfoDAOImpl;
@@ -26,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -54,6 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDTO> findAll() {
         return USER_MAPPER.map(userDAO.findAll());
     }
@@ -105,6 +106,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserAuthDTO get(UserRegistrationDTO userRegistrationDTO) throws BadCredentialsException, NoActiveAccountException {
         final User user = USER_MAPPER.toUser(getByEmail(userRegistrationDTO.getEmail()));
 
@@ -112,12 +114,15 @@ public class UserServiceImpl implements UserService {
             throw new NoActiveAccountException(NOT_ACTIVE_ACCOUNT);
         }
 
+        List<Role> grantedAuthorities = new ArrayList<>(user.getRoles());
+        grantedAuthorities.forEach(role -> role.setName("ROLE_" + role.getName()));
+
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             userRegistrationDTO.getEmail(),
                             userRegistrationDTO.getPassword(),
-                            user.getRoles()));
+                            grantedAuthorities));
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException(INCORRECT_USER_DATA, e);
         }
@@ -130,6 +135,8 @@ public class UserServiceImpl implements UserService {
         return userAuthDTO;
     }
 
+    @Override
+    @Transactional(readOnly = true)
     public UserDTO getByEmail(String email) {
         return USER_MAPPER.toUserDto(userDAO.getByEmail(email));
     }

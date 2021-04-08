@@ -1,4 +1,4 @@
-package com.academy.workSearch.controller.jwt;
+package com.academy.workSearch.service.implementation;
 
 import com.academy.workSearch.dao.RoleDAO;
 import com.academy.workSearch.model.Role;
@@ -23,6 +23,7 @@ public class JwtService {
 
     public JwtService(RoleDAO roleDAO) {
         this.roleDAO = roleDAO;
+        this.roleDAO.setClazz(Role.class);
     }
 
     public String extraUsername(String token) {
@@ -49,8 +50,12 @@ public class JwtService {
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", user.getUserId());
-        claims.put("firstname", user.getUserInfo().getFirstName());
-        claims.put("lastname", user.getUserInfo().getLastName());
+        if (user.getUserInfo().getFirstName() != null) {
+            claims.put("firstname", user.getUserInfo().getFirstName());
+        }
+        if (user.getUserInfo().getLastName() != null) {
+            claims.put("lastname", user.getUserInfo().getLastName());
+        }
         setRoles(claims, user.getRoles());
         return createToken(claims, user.getEmail());
     }
@@ -65,13 +70,15 @@ public class JwtService {
         roles.forEach(role -> {
             switch (role.getName()) {
                 case "ADMIN":
-                    claims.put("isAdmin", roleDAO.getByName("ADMIN").getName());
+                  //  claims.put("isAdmin", roleDAO.getByName("ADMIN").getName());
+                    claims.put("isAdmin", "ADMIN");
                     break;
                 case "EMPLOYER":
                     claims.put("isEmployer", roleDAO.getByName("EMPLOYER").getName());
                     break;
                 default:
-                    claims.put("isWorker", roleDAO.getByName("WORKER").getName());
+                   // claims.put("isWorker", roleDAO.getByName("WORKER").getName());
+                    claims.put("isWorker", "WORKER");
                     break;
             }
         });
