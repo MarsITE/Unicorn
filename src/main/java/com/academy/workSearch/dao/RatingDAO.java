@@ -1,4 +1,7 @@
 package com.academy.workSearch.dao;
 
-public interface RatingDAO {
+import com.academy.workSearch.model.Rating;
+
+public interface RatingDAO extends CrudDAO<Rating>{
+
 }

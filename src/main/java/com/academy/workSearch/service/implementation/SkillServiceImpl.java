@@ -39,7 +39,8 @@ public class SkillServiceImpl implements SkillService {
     }
 
     public SkillDetailsDTO update(SkillDetailsDTO skill) {
-        Skill skill1 = skillDAO.getByName(skill.getName()).orElseThrow(() -> new NoSuchEntityException(NO_SUCH_SKILL + skill.getName()));
+        Skill skill1 = skillDAO.getByName(skill.getName())
+                .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_SKILL + skill.getName()));
         Skill skill2 = SKILL_DETAILS_MAPPER.toEntity(skill);
         skill2.setSkillId(skill1.getSkillId());
         skill2.setName(skill.getName());

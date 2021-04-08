@@ -36,7 +36,8 @@ public class RatingServiceImpl implements RatingService {
     }
 
     public Rating delete(UUID id) {
-        Rating rating = ratingDAO.get(id).orElseThrow(() -> new NoSuchEntityException(NO_SUCH_SKILL + id));
+        Rating rating = ratingDAO.get(id)
+                .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_SKILL + id));
         ratingDAO.delete(id);
         return rating;
     }

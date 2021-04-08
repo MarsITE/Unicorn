@@ -31,7 +31,7 @@ public class SkillController {
         this.skillService = skillService;
     }
 
-    @GetMapping("")
+    @GetMapping()
     @ApiOperation(value = "Show all skills", notes = "Show information about all skills")
     public ResponseEntity<List<SkillDTO>> getAll() {
         logger.info("Show all skills");

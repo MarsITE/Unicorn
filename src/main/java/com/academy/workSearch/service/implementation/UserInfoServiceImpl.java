@@ -5,7 +5,6 @@ import com.academy.workSearch.dao.UserInfoDAO;
 import com.academy.workSearch.dto.PhotoDTO;
 import com.academy.workSearch.dto.UserInfoDTO;
 import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
-import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.UserInfo;
 import com.academy.workSearch.service.UserInfoService;
 import lombok.AllArgsConstructor;
@@ -43,10 +42,8 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     public UserInfoDTO save(UserInfoDTO userInfo) {
-        UserInfo userInfo1 = USER_INFO_MAPPER.toUserInfo(userInfo);
-        userInfoDAO.save(userInfo1);
-        return userInfo;
-
+        return USER_INFO_MAPPER
+                .toUserInfoDto(userInfoDAO.save(USER_INFO_MAPPER.toUserInfo(userInfo)));
     }
 
     @Override
@@ -61,7 +58,8 @@ public class UserInfoServiceImpl implements UserInfoService {
             logger.info(path.toString());
 
             UUID uuid = UUID.fromString(id);
-            UserInfo userInfo = userInfoDAO.get(uuid).orElseThrow(()->new NoSuchEntityException(NO_SUCH_ENTITY + id));
+            UserInfo userInfo = userInfoDAO.get(uuid)
+                    .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + id));
             userInfo.setImageUrl(newNameImage);
             userInfoDAO.save(userInfo);
 
