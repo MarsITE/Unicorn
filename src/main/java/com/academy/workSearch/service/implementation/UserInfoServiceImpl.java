@@ -4,6 +4,7 @@ import com.academy.workSearch.controller.UserInfoController;
 import com.academy.workSearch.dao.UserInfoDAO;
 import com.academy.workSearch.dto.PhotoDTO;
 import com.academy.workSearch.dto.UserInfoDTO;
+import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.model.UserInfo;
 import com.academy.workSearch.service.UserInfoService;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ import java.util.Arrays;
 import java.util.UUID;
 
 import static com.academy.workSearch.dto.mapper.UserInfoMapper.USER_INFO_MAPPER;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_SUCH_ENTITY;
 
 @Service
 @Transactional
@@ -39,8 +41,9 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfoDAO.setClazz(UserInfo.class);
     }
 
-    public void save(UserInfoDTO userInfo) {
-         userInfoDAO.save(USER_INFO_MAPPER.toUserInfo(userInfo));
+    public UserInfoDTO save(UserInfoDTO userInfo) {
+        return USER_INFO_MAPPER
+                .toUserInfoDto(userInfoDAO.save(USER_INFO_MAPPER.toUserInfo(userInfo)));
     }
 
     @Override
@@ -55,7 +58,8 @@ public class UserInfoServiceImpl implements UserInfoService {
             logger.info(path.toString());
 
             UUID uuid = UUID.fromString(id);
-            UserInfo userInfo = userInfoDAO.get(uuid);
+            UserInfo userInfo = userInfoDAO.get(uuid)
+                    .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + id));
             userInfo.setImageUrl(newNameImage);
             userInfoDAO.save(userInfo);
 

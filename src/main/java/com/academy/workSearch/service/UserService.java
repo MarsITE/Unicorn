@@ -1,8 +1,8 @@
 package com.academy.workSearch.service;
 
-import com.academy.workSearch.dto.UserRegistrationDTO;
-import com.academy.workSearch.dto.UserDTO;
 import com.academy.workSearch.dto.UserAuthDTO;
+import com.academy.workSearch.dto.UserDTO;
+import com.academy.workSearch.dto.UserRegistrationDTO;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public interface UserService {
 
     UserDTO update(UserDTO user);
 
-    void deleteByEmail(String email);
+    UserDTO deleteByEmail(String email);
 
     UserAuthDTO get(UserRegistrationDTO userAuth);
 

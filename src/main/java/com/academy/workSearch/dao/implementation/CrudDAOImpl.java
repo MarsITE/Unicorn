@@ -1,7 +1,6 @@
 package com.academy.workSearch.dao.implementation;
 
 import com.academy.workSearch.dao.CrudDAO;
-import com.academy.workSearch.model.Project;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -9,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public class CrudDAOImpl<E> implements CrudDAO<E> {
-    private Class<E> clazz;
-
     protected SessionFactory sessionFactory;
+    private Class<E> clazz;
 
     @Autowired
     public CrudDAOImpl(SessionFactory sessionFactory) {
@@ -34,23 +33,25 @@ public class CrudDAOImpl<E> implements CrudDAO<E> {
     }
 
     @Override
-    public void save(E entity) {
+    public E save(E entity) {
         Session session = sessionFactory.getCurrentSession();
         session.saveOrUpdate(entity);
+        return entity;
     }
 
     @Override
-    public E get(UUID id) {
+    public Optional<E> get(UUID id) {
         Session session = sessionFactory.getCurrentSession();
-        return session.get(clazz, id);
+        return Optional.ofNullable(session.get(clazz, id));
     }
 
     @Override
-    public void delete(UUID id) {
+    public E delete(UUID id) {
         Session session = sessionFactory.getCurrentSession();
-        Query<Project> query = session.createQuery("delete from " + clazz.getName()
-                + " where id=:entityId");
-        query.setParameter("entityId", id);
-        query.executeUpdate();
+        E entity = session.get(clazz, id);
+        if (entity != null) {
+            session.delete(entity);
+        }
+        return entity;
     }
 }

@@ -1,15 +1,15 @@
 package com.academy.workSearch.service.implementation;
 
+import com.academy.workSearch.controller.jwt.JwtService;
 import com.academy.workSearch.dao.RoleDAO;
 import com.academy.workSearch.dao.implementation.UserDAOImpl;
 import com.academy.workSearch.dao.implementation.UserInfoDAOImpl;
-import com.academy.workSearch.controller.UserController;
-import com.academy.workSearch.controller.jwt.JwtService;
 import com.academy.workSearch.dto.UserAuthDTO;
 import com.academy.workSearch.dto.UserDTO;
 import com.academy.workSearch.dto.UserRegistrationDTO;
-import com.academy.workSearch.exceptionHandling.EntityExistsException;
-import com.academy.workSearch.exceptionHandling.NoActiveAccountException;
+import com.academy.workSearch.exceptionHandling.exceptions.NoActiveAccountException;
+import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
+import com.academy.workSearch.exceptionHandling.exceptions.NoUniqueEntityException;
 import com.academy.workSearch.model.Role;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.UserInfo;
@@ -32,12 +32,15 @@ import java.util.Set;
 
 import static com.academy.workSearch.dto.mapper.UserAuthMapper.USER_AUTH_MAPPER;
 import static com.academy.workSearch.dto.mapper.UserMapper.USER_MAPPER;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.EMAIL_EXISTS;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_ROLE;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_SUCH_ENTITY;
 
 @Service
 @Transactional
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserDAOImpl userDAO;
     private final UserInfoDAOImpl userInfoDAO;
     private final RoleDAO roleDAO;
@@ -58,36 +61,42 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserAuthDTO save(UserRegistrationDTO userRegistrationDTO) throws EntityExistsException {
-        User oldUser = userDAO.getByEmail(userRegistrationDTO.getEmail());
-        if (oldUser != null) {
-            throw new EntityExistsException("User with email: " + userRegistrationDTO.getEmail() + "exists!");
+    public UserAuthDTO save(UserRegistrationDTO userRegistrationDTO) {
+        try {
+            UserDTO userDTO = getByEmail(userRegistrationDTO.getEmail());
+            if (userDTO != null) {
+                throw new NoUniqueEntityException(EMAIL_EXISTS + userRegistrationDTO.getEmail());
+            }
+        } catch (NoSuchEntityException e) {
+
+            User user = USER_AUTH_MAPPER.toUser(userRegistrationDTO);
+            UserInfo userInfo = new UserInfo();
+            userInfo.setUserInfoId(userInfoDAO.saveAndGetId(userInfo));
+            user.setUserInfo(userInfo);
+            user.setAccountStatus(AccountStatus.ACTIVE);
+            Set<Role> roles = new HashSet<>();
+            Role role1 = roleDAO.getByName("WORKER")
+                    .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "WORKER"));
+            roles.add(role1);
+            if (userRegistrationDTO.isEmployer()) {
+                roles.add(roleDAO.getByName("EMPLOYER")
+                        .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "EMPLOYER")));
+            }
+            user.setRoles(roles);
+            user.setPassword(passwordEncoder.encode(userRegistrationDTO.getPassword()));
+            userDAO.save(user);
+
+            UserAuthDTO userAuthDTO = new UserAuthDTO();
+            userAuthDTO.setEmail(user.getEmail());
+            return userAuthDTO;
         }
-
-        User user = USER_AUTH_MAPPER.toUser(userRegistrationDTO);
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUserInfoId(userInfoDAO.saveAndGetId(userInfo));
-        user.setUserInfo(userInfo);
-        user.setAccountStatus(AccountStatus.ACTIVE);
-        Set<Role> roles = new HashSet<>();
-        Role role1 = roleDAO.getByName("WORKER");
-        roles.add(role1);
-        if (userRegistrationDTO.isEmployer()) {
-            roles.add(roleDAO.getByName("EMPLOYER"));
-        }
-        user.setRoles(roles);
-
-        user.setPassword(passwordEncoder.encode(userRegistrationDTO.getPassword()));
-        userDAO.save(user);
-
-        UserAuthDTO userAuthDTO = new UserAuthDTO();
-        userAuthDTO.setEmail(user.getEmail());
-        return userAuthDTO;
+        throw new NoUniqueEntityException(NO_SUCH_ENTITY + userRegistrationDTO.getEmail());
     }
 
     @Override
     public UserDTO update(UserDTO user) {
-        User user1 = userDAO.getByEmail(user.getEmail());
+        User user1 = userDAO.getByEmail(user.getEmail())
+                .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + user.getEmail()));
         User user2 = USER_MAPPER.toUser(user);
         user2.setPassword(user1.getPassword());
         user2.setUserId(user1.getUserId());
@@ -96,16 +105,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteByEmail(String email) {
+    public UserDTO deleteByEmail(String email) {
+        User user = userDAO.getByEmail(email)
+                .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + email));
         userDAO.deleteByEmail(email);
+        return USER_MAPPER.toUserDto(user);
     }
 
     @Override
-    public UserAuthDTO get(UserRegistrationDTO userRegistrationDTO) throws BadCredentialsException, NoActiveAccountException {
+    public UserAuthDTO get(UserRegistrationDTO userRegistrationDTO) {
         final User user = USER_MAPPER.toUser(getByEmail(userRegistrationDTO.getEmail()));
 
         if (!user.isEnabled()) {
-            throw new NoActiveAccountException("You account is not active!");
+            throw new NoActiveAccountException("Your account is not active!");
         }
 
         try {
@@ -127,7 +139,10 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserDTO getByEmail(String email) {
-        return USER_MAPPER.toUserDto(userDAO.getByEmail(email));
+        User user = userDAO.getByEmail(email)
+                .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + email));
+        return USER_MAPPER.toUserDto(user);
+
     }
 
 }

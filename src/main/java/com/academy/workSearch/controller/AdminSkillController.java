@@ -51,21 +51,23 @@ public class AdminSkillController {
                                              @PathVariable UUID id) {
         logger.info("Find skill with ID = {}", id);
         SkillDetailsDTO skillDto = skillService.get(id);
+        if (Objects.isNull(skillDto)) {
+            logger.error("There is no skill with ID = {}", id);
+        }
         return ResponseEntity.ok(skillDto);
     }
 
     @PostMapping()
     @ApiOperation(value = "Add new skill", notes = "Add new skill")
-    public ResponseEntity<SkillDTO> add(@RequestBody @Valid SkillDTO skillDto) {
+    public ResponseEntity<SkillDetailsDTO> add(@RequestBody @Valid SkillDetailsDTO skillDto) {
         logger.info("Add skill with name " + skillDto.getName());
-        skillService.save(skillDto);
-        return ResponseEntity.ok(skillDto);
+        return ResponseEntity.ok( skillService.save(skillDto));
     }
 
     @PutMapping()
     @ApiOperation(value = "Update existing skill", notes = "Update existing skill")
     public ResponseEntity<SkillDetailsDTO> update(@RequestBody @Valid SkillDetailsDTO skill) {
         logger.info("Update skill with ID = {}", skill.getSkillId());
-        return ResponseEntity.ok(this.skillService.update(skill));
+        return ResponseEntity.ok(skillService.update(skill));
     }
 }

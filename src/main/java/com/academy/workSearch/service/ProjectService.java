@@ -12,11 +12,11 @@ public interface ProjectService {
 
     List<ProjectDTO> findLast(int page, int maxResult, int maxNavigationPage, String sort);
 
-    void save(ProjectDTO projectDto);
+    ProjectDTO save(ProjectDTO projectDto);
 
     ProjectDTO get(UUID id);
 
-    void delete(UUID id);
+    ProjectDTO delete(UUID id);
 
-    void addSkillsToProject(ProjectDTO projectDto, SkillDTO skillDTO);
+    ProjectDTO addSkillsToProject(ProjectDTO projectDto, SkillDTO skillDTO);
 }
