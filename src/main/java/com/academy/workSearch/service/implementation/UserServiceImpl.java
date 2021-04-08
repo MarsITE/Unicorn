@@ -7,9 +7,9 @@ import com.academy.workSearch.dao.implementation.UserInfoDAOImpl;
 import com.academy.workSearch.dto.UserAuthDTO;
 import com.academy.workSearch.dto.UserDTO;
 import com.academy.workSearch.dto.UserRegistrationDTO;
-import com.academy.workSearch.exceptionHandling.exceptions.EntityExistsException;
 import com.academy.workSearch.exceptionHandling.exceptions.NoActiveAccountException;
 import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
+import com.academy.workSearch.exceptionHandling.exceptions.NoUniqueEntityException;
 import com.academy.workSearch.model.Role;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.UserInfo;
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
         try {
             UserDTO userDTO = getByEmail(userRegistrationDTO.getEmail());
             if (userDTO != null) {
-                throw new EntityExistsException(EMAIL_EXISTS + userRegistrationDTO.getEmail());
+                throw new NoUniqueEntityException(EMAIL_EXISTS + userRegistrationDTO.getEmail());
             }
         } catch (NoSuchEntityException e) {
 
@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
             userAuthDTO.setEmail(user.getEmail());
             return userAuthDTO;
         }
-         throw new EntityExistsException(NO_SUCH_ENTITY + userRegistrationDTO.getEmail());
+        throw new NoUniqueEntityException(NO_SUCH_ENTITY + userRegistrationDTO.getEmail());
     }
 
     @Override

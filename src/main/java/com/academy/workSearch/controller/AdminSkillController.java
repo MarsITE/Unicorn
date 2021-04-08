@@ -29,8 +29,6 @@ import java.util.function.BiFunction;
 @RestController
 @RequestMapping("/api/v1/admin/skills")
 public class AdminSkillController {
-    private final static String MESSAGE_ADD_SKILL_WITH_NAME = "Add skill with name ";
-    private final static String MESSAGE_FAILED = " failed!";
     private final Logger logger = LoggerFactory.getLogger(AdminSkillController.class);
     private SkillService skillService;
 
@@ -39,7 +37,7 @@ public class AdminSkillController {
         this.skillService = skillService;
     }
 
-    @GetMapping("")
+    @GetMapping()
     @ApiOperation(value = "Show all skills", notes = "Show information about all skills")
     public ResponseEntity<List<SkillDetailsDTO>> getAll() {
         logger.info("Show all skills");
@@ -49,27 +47,24 @@ public class AdminSkillController {
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Find skill by ID", notes = "Find skill if exists")
-    public ResponseEntity<SkillDTO> findById(@ApiParam(value = "ID value for skill you need to retrieve", required = true)
+    public ResponseEntity<SkillDetailsDTO> findById(@ApiParam(value = "ID value for skill you need to retrieve", required = true)
                                              @PathVariable UUID id) {
         logger.info("Find skill with ID = {}", id);
-        SkillDTO skillDto = skillService.get(id);
+        SkillDetailsDTO skillDto = skillService.get(id);
         if (Objects.isNull(skillDto)) {
             logger.error("There is no skill with ID = {}", id);
         }
         return ResponseEntity.ok(skillDto);
     }
 
-    @PostMapping("")
+    @PostMapping()
     @ApiOperation(value = "Add new skill", notes = "Add new skill")
-    public ResponseEntity<SkillDTO> add(@RequestBody @Valid SkillDTO skillDto) {
-        BiFunction<String, Boolean, String> addSkillStatus = (name, successful) ->
-                MESSAGE_ADD_SKILL_WITH_NAME + name + (successful ? "" : MESSAGE_FAILED);
-        logger.info(addSkillStatus.apply(skillDto.getName(), true));
-        skillService.save(skillDto);
-        return ResponseEntity.ok(skillDto);
+    public ResponseEntity<SkillDetailsDTO> add(@RequestBody @Valid SkillDetailsDTO skillDto) {
+        logger.info("Add skill with name " + skillDto.getName());
+        return ResponseEntity.ok( skillService.save(skillDto));
     }
 
-    @PutMapping("")
+    @PutMapping()
     @ApiOperation(value = "Update existing skill", notes = "Update existing skill")
     public ResponseEntity<SkillDetailsDTO> update(@RequestBody @Valid SkillDetailsDTO skill) {
         logger.info("Update skill with ID = {}", skill.getSkillId());

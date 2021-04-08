@@ -3,7 +3,6 @@ package com.academy.workSearch.controller;
 import com.academy.workSearch.dto.UserAuthDTO;
 import com.academy.workSearch.dto.UserDTO;
 import com.academy.workSearch.dto.UserRegistrationDTO;
-import com.academy.workSearch.exceptionHandling.exceptions.EntityExistsException;
 import com.academy.workSearch.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -40,7 +39,7 @@ public class UserController {
     @PostMapping(value = {"/login"})
     @ApiOperation(value = "Find user by email", notes = "Find user if exists")
     public ResponseEntity<UserAuthDTO> login(@ApiParam(value = "email value for user you need to retrieve", required = true)
-                                   @RequestBody UserRegistrationDTO userRegistrationDTO) {
+                                             @RequestBody UserRegistrationDTO userRegistrationDTO) {
         UserAuthDTO userAuthDTO = userService.get(userRegistrationDTO);
         return ResponseEntity.ok(userAuthDTO);
 
@@ -49,13 +48,9 @@ public class UserController {
     @PostMapping({"/registration"})
     @ApiOperation(value = "Add new user", notes = "Add new user")
     public ResponseEntity<UserAuthDTO> save(@RequestBody UserRegistrationDTO user) {
-        UserAuthDTO userAuthDTO = new UserAuthDTO();
-        try {
-            userAuthDTO = userService.save(user);
-        } catch (EntityExistsException e) {
-            logger.error(e.getMessage());
-        }
-        this.logger.info("Add user with email = {}", user.getEmail());
+        logger.info("Attempt to save user = {}", user.getEmail());
+        UserAuthDTO userAuthDTO = userService.save(user);
+        logger.info("Add user with email = {}", user.getEmail());
         return ResponseEntity.ok(userAuthDTO);
     }
 
