@@ -52,7 +52,7 @@ public class AdminSkillController {
     public ResponseEntity<SkillDTO> findById(@ApiParam(value = "ID value for skill you need to retrieve", required = true)
                                              @PathVariable UUID id) {
         logger.info("Find skill with ID = {}", id);
-        SkillDTO skillDto = skillService.get(id).get();
+        SkillDTO skillDto = skillService.get(id);
         if (Objects.isNull(skillDto)) {
             logger.error("There is no skill with ID = {}", id);
         }

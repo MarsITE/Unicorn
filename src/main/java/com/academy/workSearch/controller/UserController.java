@@ -41,7 +41,7 @@ public class UserController {
     @ApiOperation(value = "Find user by email", notes = "Find user if exists")
     public ResponseEntity<UserAuthDTO> login(@ApiParam(value = "email value for user you need to retrieve", required = true)
                                    @RequestBody UserRegistrationDTO userRegistrationDTO) {
-        UserAuthDTO userAuthDTO = userService.get(userRegistrationDTO).get();
+        UserAuthDTO userAuthDTO = userService.get(userRegistrationDTO);
         return ResponseEntity.ok(userAuthDTO);
 
     }
@@ -75,7 +75,7 @@ public class UserController {
     @GetMapping({"/user/{email}"})
     @ApiOperation(value = "Get user", notes = "Get user")
     public ResponseEntity<UserDTO> get(@PathVariable String email) {
-        UserDTO user = userService.getByEmail(email).get();
+        UserDTO user = userService.getByEmail(email);
         logger.info("Find user with email = {}", email);
         if (user == null) {
             logger.error("There is no user with email = {} ", email);

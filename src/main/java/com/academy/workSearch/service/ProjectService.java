@@ -4,7 +4,6 @@ import com.academy.workSearch.dto.ProjectDTO;
 import com.academy.workSearch.dto.SkillDTO;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface ProjectService {
@@ -15,7 +14,7 @@ public interface ProjectService {
 
     ProjectDTO save(ProjectDTO projectDto);
 
-    Optional<ProjectDTO> get(UUID id);
+    ProjectDTO get(UUID id);
 
     ProjectDTO delete(UUID id);
 

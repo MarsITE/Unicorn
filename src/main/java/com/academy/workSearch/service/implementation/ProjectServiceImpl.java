@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_PROJECT;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_SUCH_SKILL;
 
 @Service
 @Transactional
@@ -72,15 +73,17 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Optional<ProjectDTO> get(UUID id) {
-       Optional<Project> project = projectDAO.get(id);
-       return Optional.ofNullable(ProjectMapper.INSTANCE.toDto(project
-               .orElseThrow(()->new NoSuchEntityException(NO_PROJECT + id))));
+    public ProjectDTO get(UUID id) {
+       Project project = projectDAO.get(id)
+               .orElseThrow(()->new NoSuchEntityException(NO_PROJECT + id));
+       return ProjectMapper.INSTANCE.toDto(project);
+
     }
 
     @Override
     public ProjectDTO delete(UUID id) {
-        Project project = projectDAO.get(id).orElseThrow();
+        Project project = projectDAO.get(id)
+                .orElseThrow(()->new NoSuchEntityException(NO_PROJECT + id));
         projectDAO.delete(id);
         return ProjectMapper.INSTANCE.toDto(project);
     }

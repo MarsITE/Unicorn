@@ -49,9 +49,9 @@ public class ProjectController {
     @GetMapping("/{id}")
     @ApiOperation(value = "Find project by ID", notes = "Find project if exists")
     public ResponseEntity<ProjectDTO> getProject(@PathVariable UUID id) {
-        Optional<ProjectDTO> projectDto = projectService.get(id);
+        ProjectDTO projectDto = projectService.get(id);
         logger.info("Find project with ID = {}", id);
-        return new ResponseEntity<>(projectDto.get(), HttpStatus.OK);
+        return new ResponseEntity<>(projectDto, HttpStatus.OK);
     }
 
     @PostMapping()

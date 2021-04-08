@@ -1,21 +1,25 @@
 package com.academy.workSearch.service.implementation;
 
 import com.academy.workSearch.dao.CrudDAO;
+import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.model.Rating;
+import com.academy.workSearch.service.RatingService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+
+import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_RATING;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_SUCH_SKILL;
 
 @Service
 @Transactional
 @AllArgsConstructor
-public class RatingServiceImpl {
+public class RatingServiceImpl implements RatingService {
 
-    //    @Autowired
+
     private final CrudDAO<Rating> ratingDAO;
 
     public List<Rating> findAll() {
@@ -26,12 +30,13 @@ public class RatingServiceImpl {
         return ratingDAO.save(rating);
     }
 
-    public Optional<Rating> get(UUID id) {
-        return ratingDAO.get(id);
+    public Rating get(UUID id) {
+        return ratingDAO.get(id).orElseThrow(() -> new NoSuchEntityException(NO_RATING + id));
+
     }
 
     public Rating delete(UUID id) {
-        Rating rating = ratingDAO.get(id).orElseThrow();
+        Rating rating = ratingDAO.get(id).orElseThrow(() -> new NoSuchEntityException(NO_SUCH_SKILL + id));
         ratingDAO.delete(id);
         return rating;
     }

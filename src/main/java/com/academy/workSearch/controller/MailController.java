@@ -27,9 +27,8 @@ public class MailController {
     @PostMapping("/send")
     @ResponseStatus(HttpStatus.OK)
     public void sendMessage(@RequestBody Mail mail, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {// can we use here bindingResult??
-            bindingResult.rejectValue("message", "400", "Message is not valid");
-//            throw new ValidationException("Message is not valid");
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException("Message is not valid");
         }
         emailService.sendingMessage(mail);
     }
@@ -37,9 +36,8 @@ public class MailController {
     @PostMapping("/attachment")
     @ResponseStatus(HttpStatus.OK)
     public void sendMessageWhitAttachment(@RequestBody Mail mail, @RequestParam String path, BindingResult bindingResult) throws MessagingException {
-        if (bindingResult.hasErrors()) {// can we use here this
-            bindingResult.rejectValue("message", "400", "Message is not valid");
-//            throw new ValidationException("Message is not valid");
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException("Message is not valid");
         }
         emailService.sendMessageWithAttachment(mail, path);
     }

@@ -16,8 +16,8 @@ public interface SkillService {
 
     SkillDetailsDTO update(SkillDetailsDTO skill);
 
-    Optional<SkillDTO> get(UUID id);
+    SkillDTO get(UUID id);
 
-    Optional<SkillDTO> getByName(String name);
+   SkillDTO getByName(String name);
 
 }
