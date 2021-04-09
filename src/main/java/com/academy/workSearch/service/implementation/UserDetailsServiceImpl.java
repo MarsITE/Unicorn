@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
-@Service(value = "UserDetailsServiceImpl")
+@Service
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserDAO userDAO;
 
