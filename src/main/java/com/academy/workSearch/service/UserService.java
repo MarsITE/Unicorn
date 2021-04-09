@@ -19,4 +19,6 @@ public interface UserService {
     UserAuthDTO get(UserRegistrationDTO userAuth);
 
     UserDTO getByEmail(String email);
+
+    boolean userExistsByEmail(String email);
 }
