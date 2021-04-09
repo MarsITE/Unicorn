@@ -62,35 +62,31 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserAuthDTO save(UserRegistrationDTO userRegistrationDTO) {
-        try {
-            UserDTO userDTO = getByEmail(userRegistrationDTO.getEmail());
-            if (userDTO != null) {
-                throw new NoUniqueEntityException(EMAIL_EXISTS + userRegistrationDTO.getEmail());
-            }
-        } catch (NoSuchEntityException e) {
 
-            User user = USER_AUTH_MAPPER.toUser(userRegistrationDTO);
-            UserInfo userInfo = new UserInfo();
-            userInfo.setUserInfoId(userInfoDAO.saveAndGetId(userInfo));
-            user.setUserInfo(userInfo);
-            user.setAccountStatus(AccountStatus.ACTIVE);
-            Set<Role> roles = new HashSet<>();
-            Role role1 = roleDAO.getByName("WORKER")
-                    .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "WORKER"));
-            roles.add(role1);
-            if (userRegistrationDTO.isEmployer()) {
-                roles.add(roleDAO.getByName("EMPLOYER")
-                        .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "EMPLOYER")));
-            }
-            user.setRoles(roles);
-            user.setPassword(passwordEncoder.encode(userRegistrationDTO.getPassword()));
-            userDAO.save(user);
-
-            UserAuthDTO userAuthDTO = new UserAuthDTO();
-            userAuthDTO.setEmail(user.getEmail());
-            return userAuthDTO;
+        if (userExistsByEmail(userRegistrationDTO.getEmail())) {
+            throw new NoUniqueEntityException(EMAIL_EXISTS + userRegistrationDTO.getEmail());
         }
-        throw new NoUniqueEntityException(NO_SUCH_ENTITY + userRegistrationDTO.getEmail());
+
+        User user = USER_AUTH_MAPPER.toUser(userRegistrationDTO);
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserInfoId(userInfoDAO.saveAndGetId(userInfo));
+        user.setUserInfo(userInfo);
+        user.setAccountStatus(AccountStatus.ACTIVE);
+        Set<Role> roles = new HashSet<>();
+        Role role1 = roleDAO.getByName("WORKER")
+                .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "WORKER"));
+        roles.add(role1);
+        if (userRegistrationDTO.isEmployer()) {
+            roles.add(roleDAO.getByName("EMPLOYER")
+                    .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "EMPLOYER")));
+        }
+        user.setRoles(roles);
+        user.setPassword(passwordEncoder.encode(userRegistrationDTO.getPassword()));
+        userDAO.save(user);
+
+        UserAuthDTO userAuthDTO = new UserAuthDTO();
+        userAuthDTO.setEmail(user.getEmail());
+        return userAuthDTO;
     }
 
     @Override
@@ -145,4 +141,8 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public boolean userExistsByEmail(String email) {
+        return userDAO.getByEmail(email).isPresent();
+    }
 }
