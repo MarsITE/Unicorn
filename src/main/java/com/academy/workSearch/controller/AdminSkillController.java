@@ -60,7 +60,7 @@ public class AdminSkillController {
     @PostMapping()
     @ApiOperation(value = "Add new skill", notes = "Add new skill")
     public ResponseEntity<SkillDetailsDTO> add(@RequestBody @Valid SkillDetailsDTO skillDto) {
-        logger.info("Add skill with name " + skillDto.getName());
+        logger.info("Add skill with name {}", skillDto.getName());
         return ResponseEntity.ok( skillService.save(skillDto));
     }
 

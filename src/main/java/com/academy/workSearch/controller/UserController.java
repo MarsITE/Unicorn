@@ -32,7 +32,7 @@ public class UserController {
     @GetMapping({"/admin/users"})
     @ApiOperation(value = "Show all users", notes = "Show information about all users ")
     public ResponseEntity<List<UserDTO>> getAll() {
-        this.logger.info("Show all users");
+        logger.info("Show all users");
         return ResponseEntity.ok(userService.findAll());
     }
 
