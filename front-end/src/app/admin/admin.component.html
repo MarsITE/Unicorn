@@ -1,9 +1,22 @@
 <div class="container">
-    <p><strong>Skills</strong></p>
-    <ul class="skills">
-        <li *ngFor="let skill of skills">
-            {{skill.name}}        
-        </li>
-      </ul>
+    <mat-toolbar color="primary">
+      <span>Work<span class="material-icons">saved_search</span></span>
+      <span class="admin-spacer"></span>
+      <button mat-icon-button class="admin-icon account-circle" aria-label="icon-button with account circle">
+        <mat-icon><span class="material-icons">account_circle</span></mat-icon>
+      </button>
+      <button mat-icon-button class="admin-icon logout" aria-label="icon-button with account circle">
+        <mat-icon><span class="material-icons">logout</span></mat-icon>
+      </button>      
+    </mat-toolbar>
 </div>
 
+<div class="container">
+    <p><strong>Skills list</strong></p>
+    <ul class="skills">
+        <li *ngFor="let skill of skills">         
+            <mat-checkbox [(ngModel)]="skill.enabled"></mat-checkbox>            
+            <span> {{skill.name}}</span>
+        </li>
+    </ul>
+</div>
