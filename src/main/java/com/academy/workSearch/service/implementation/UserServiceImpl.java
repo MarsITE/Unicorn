@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserAuthDTO save(UserRegistrationDTO userRegistrationDTO) {
 
-        if (userExistsByEmail(userRegistrationDTO.getEmail())) {
+        if (isUserPresentByEmail(userRegistrationDTO.getEmail())) {
             throw new NoUniqueEntityException(EMAIL_EXISTS + userRegistrationDTO.getEmail());
         }
 
@@ -142,7 +142,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean userExistsByEmail(String email) {
+    public boolean isUserPresentByEmail(String email) {
         return userDAO.getByEmail(email).isPresent();
     }
 }
