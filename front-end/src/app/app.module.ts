@@ -65,6 +65,9 @@ import { UserRegistrationComponent } from './user/user-registration/user-registr
 import { UserLoginComponent } from './user/user-login/user-login.component';
 import { StorageService } from './common/services/storage.service';
 import { HttpErrorInterceptor } from './common/services/http-error.interceptor';
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { SidenavListComponent } from './components/sidenav-list/sidenav-list.component';
 
 @NgModule({
   declarations: [
@@ -79,7 +82,10 @@ import { HttpErrorInterceptor } from './common/services/http-error.interceptor';
     UserEditComponent,
     ProjectInfoComponent,
     ProjectEditComponent,
-    AdminComponent
+    AdminComponent,
+    ToolbarComponent,
+    FooterComponent,
+    SidenavListComponent
   ],
 
   imports: [

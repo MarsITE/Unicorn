@@ -30,7 +30,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   private getSkills(): void {
     this.subscriptions.push(this.skillService.getSkillsDetails().subscribe(
       (response: Skill[]) => {
-        this.skills = response.sort((a, b) => (a.enabled ? 1 : -1));        
+        this.skills = response.sort((a: Skill) => (a.enabled ? 1 : -1));        
       },
       (error) => {
         console.log("error", error);
