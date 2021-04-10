@@ -19,7 +19,14 @@ export class SkillService {
     };
   }
 
-  public getSkills(): Observable<Skill[]> {
-    return this.http.get<Skill[]>(`${environment.url}/skills`, this.authHeader());
+  // for Users
+  public getSkills(): Observable<Skill[]> {    
+    
+    return this.http.get<Skill[]>(`${environment.url}/skills`);
+  }
+
+  // for Admin
+  public getSkillsDetails(): Observable<Skill[]> {    
+    return this.http.get<Skill[]>(`${environment.url}/admin/skills`);
   }
 }

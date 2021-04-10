@@ -1,0 +1,12 @@
+.worksearch-toolbar{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    color:blue;
+    background-color: aquamarine;
+}
+
+.worksearch-toolbar-spacer {
+    flex: 1 1 auto;
+}
