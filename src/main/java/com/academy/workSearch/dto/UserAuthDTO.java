@@ -9,4 +9,5 @@ import lombok.Setter;
 public class UserAuthDTO {
     private String email;
     private String token;
+    private String refreshToken;
 }
