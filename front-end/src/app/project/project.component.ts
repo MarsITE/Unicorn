@@ -17,21 +17,21 @@ import { StorageService } from '../common/services/storage.service';
 export class ProjectComponent implements OnInit {
   id: String;
   owner: User;
-  sortFlag: boolean = false;
-  sort: string = "desc";
-  counter: number = 1;
-  maxResult: number = 5;
+  sortFlag = false;
+  sort = 'desc';
+  counter = 1;
+  maxResult = 5;
 
   projects: Project[] = [];
 
   displayedColumns: string[] = ['name', 'projectStatus', 'creationDate', 'owner', 'skills'];
 
   constructor(private projectService: ProjectService, private router: Router, private http: HttpClient, route: ActivatedRoute,
-    private storageService: StorageService) {
+              private storageService: StorageService) {
     route.queryParams.subscribe(params => {
-    this.counter = params['page'] || this.counter;
-    this.sort = params['sort'] || this.sort;
-    this.maxResult = params['maxResult'] || this.maxResult;
+    this.counter = params.page || this.counter;
+    this.sort = params.sort || this.sort;
+    this.maxResult = params.maxResult || this.maxResult;
 });
   }
 
@@ -47,18 +47,18 @@ export class ProjectComponent implements OnInit {
   .set('maxResult', this.maxResult.toString())
   .set('Authorization', `Bearer ${this.storageService.getValue('token')}`) ;
 
-    this.projectService.getProjects(params).subscribe(
+  this.projectService.getProjects(this.counter.toString(), this.sort, this.maxResult.toString()).subscribe(
       (response: Project[]) => {
         this.projects = response;
       },
       (error) => {
-        console.log("error", error);
+        console.log('error', error);
       },
       () => {
-        console.log("complete");
+        console.log('complete');
         this.router.navigateByUrl(`projects?page=` + this.counter + `&maxResult=` + this.maxResult + `&sort=` + this.sort);
       }
-    )
+    );
   }
 
   showProjectDescription(row: any) {
@@ -70,40 +70,40 @@ export class ProjectComponent implements OnInit {
   }
 
   projectsSort() {
-    this.sortFlag = !this.sortFlag
-    if(this.sortFlag){
-      this.sort= "asc"
+    this.sortFlag = !this.sortFlag;
+    if (this.sortFlag){
+      this.sort = 'asc'
     } else {
-      this.sort = "desc"
+      this.sort = 'desc'
     }
-    this.getProjects()
+    this.getProjects();
   }
 
   projectsNext() {
     this.counter++;
-    this.getProjects()
+    this.getProjects();
   }
 
   projectsPrev() {
-    if(this.counter > 1){
+    if (this.counter > 1){
       this.counter--;
     }
-    this.getProjects()
+    this.getProjects();
   }
 
   projectsMaxResult5() {
     this.maxResult = 5;
-    this.getProjects()
+    this.getProjects();
   }
 
   projectsMaxResult10() {
     this.maxResult = 10;
-    this.getProjects()
+    this.getProjects();
   }
 
   projectsMaxResult25() {
     this.maxResult = 25;
-    this.getProjects()
+    this.getProjects();
   }
 
 }
