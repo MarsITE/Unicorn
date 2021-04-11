@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { UserRegistration } from '../model/user-registration';
 import { UserAuth } from '../model/user-auth';
 import { StorageService } from './storage.service';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -45,8 +46,14 @@ export class UserHttpService {
     return this.http.delete<User>(`${environment.url}/user/${email}`, this.authHeader());
   }
 
-  public login(user: UserRegistration): Observable<UserAuth> {
-    return this.http.post<UserAuth>(`${environment.url}/login`, user);
+  public login(user: UserRegistration): Observable<boolean> {
+    return this.http.post<UserAuth>(`${environment.url}/login`, user)
+    .pipe(
+      map(result => {
+        localStorage.setItem('access_token', result.token);
+        return true;
+      })
+    );
   }
 
   public updateUserInfo(userInfo: UserInfo): Observable<UserInfo> {
@@ -59,5 +66,13 @@ export class UserHttpService {
 
   public saveImage(photo: any, id: string): Observable<Blob> {
     return this.http.put<any>(`${environment.url}/user-profile/save-photo/${id}`, photo, this.authHeader());
+  }
+
+  public logout(): void {
+    localStorage.removeItem('access_token');
+  }
+
+  public get loggedIn(): boolean {
+    return (localStorage.getItem('access_token') !== null);
   }
 }

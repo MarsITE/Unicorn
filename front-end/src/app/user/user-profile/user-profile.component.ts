@@ -27,7 +27,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   ];
 
   constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router, private domSanitizer: DomSanitizer,
-    private storageService: StorageService) {
+              private storageService: StorageService) {
     this.email = router.snapshot.params.email;
     this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl('../../../assets/default-profile-photo.jpg');
   }
@@ -42,35 +42,24 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
 
   private getUser(email: string): void {
-    this.subscriptions.push(this.userService.getByEmail(email).subscribe(
-      (response: User) => {
+    this.subscriptions.push(this.userService.getByEmail(email)
+    .subscribe(
+      response => {
         this.user = response;
         if (this.user.userInfo.imageUrl != null && this.user.userInfo.imageUrl !== '') {
           this.getImage(this.user.userInfo.imageUrl);
         }
         this.setViewForWorkStatus();
       },
-      (error) => {
-        console.log('error', error);
-      },
-      () => {
-        console.log('complete');
-      }
+      error => console.log('error', error),
     ));
   }
 
   private getImage(imageUrl: string): void {
-    this.subscriptions.push(this.userService.loadImage(imageUrl).subscribe(
-      (response) => {
-        this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(response));
-      },
-      (error) => {
-        console.log(imageUrl);
-        console.log('error', error);
-      },
-      () => {
-        console.log('complete');
-      }
+    this.subscriptions.push(this.userService.loadImage(imageUrl)
+    .subscribe(
+      response => this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(response)),
+      error => console.log('error', error),
     ));
   }
 
@@ -80,16 +69,11 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
   public delete(email: string): void {
     this.subscriptions.push(this.userService.deleteUser(email).subscribe(
-      (response) => {
+      response => {
         alert('deleted');
         this.router2.navigateByUrl('login');
       },
-      (error) => {
-        console.log('error', error);
-      },
-      () => {
-        console.log('complete');
-      }
+      error => console.log('error', error),
     ));
   }
 
@@ -106,8 +90,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
 
   public logout(): void {
-    this.storageService.remove('token');
-    this.router2.navigateByUrl('login');
+    this.userService.logout();
   }
 
 }

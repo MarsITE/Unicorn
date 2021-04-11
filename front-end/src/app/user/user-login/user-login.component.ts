@@ -6,6 +6,7 @@ import { UserRegistration } from 'src/app/common/model/user-registration';
 import { UserAuth } from 'src/app/common/model/user-auth';
 import { StorageService } from 'src/app/common/services/storage.service';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-login',
@@ -45,30 +46,22 @@ export class UserLoginComponent implements OnInit, OnDestroy {
   }
 
   public submit(): void {
-      const email = this.userForm.controls.email.value;
-      const password = this.userForm.controls.password.value;
-
-      this.user = {email, password, isEmployer: false};
+      this.user = {
+        email: this.userForm.controls.email.value,
+        password: this.userForm.controls.password.value,
+        isEmployer: false};
       this.login(this.user);
 
   }
 
   private login(user: UserRegistration): void {
-    this.subscriptions.push(this.userService.login(user).subscribe(
-      (response: UserAuth) => {
-        this.userAuth = response;
-        this.storageService.saveValue('token', this.userAuth.token);
-        this.router.navigateByUrl(`user-profile/${user.email}`);
-      },
-      (error) => {
-        this.initForm(
-          user.email
-        );
+    this.subscriptions.push(this.userService.login(user)
+    .pipe(first())
+    .subscribe(
+      result => this.router.navigateByUrl(`user-profile/${user.email}`),
+      error => {
+        this.initForm(user.email);
         alert(error);
-      },
-      () => {
-        console.log('complete');
-      }
-    ));
+      }));
   }
 }
