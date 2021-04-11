@@ -63,7 +63,6 @@ import { AdminComponent } from './admin/admin.component';
 import { SkillService } from './common/services/skill.service';
 import { UserRegistrationComponent } from './user/user-registration/user-registration.component';
 import { UserLoginComponent } from './user/user-login/user-login.component';
-import { StorageService } from './common/services/storage.service';
 import { HttpErrorInterceptor } from './common/services/http-error.interceptor';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -147,7 +146,6 @@ import { SidenavListComponent } from './components/sidenav-list/sidenav-list.com
   providers: [
     ProjectService,
     UserHttpService,
-    StorageService,
     SkillService,
     {
       provide: HTTP_INTERCEPTORS,

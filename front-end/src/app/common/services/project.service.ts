@@ -3,18 +3,17 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
 import { Observable } from 'rxjs';
 import { Project } from '../model/project';
 import { environment } from 'src/environments/environment';
-import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectService {
 
-  constructor(private http: HttpClient, private storageService: StorageService) { }
+  constructor(private http: HttpClient) { }
 
   // tslint:disable-next-line: typedef
   private authHeader() {
-    return new  HttpHeaders().set('Authorization', `Bearer ${this.storageService.getValue('token')}`);
+    return new  HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('token')}`);
   }
 
   private authHeaderWithParams(counter, sort, maxResult): any {
