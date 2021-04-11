@@ -1,18 +1,22 @@
 package com.academy.workSearch.service.implementation;
 
 import com.academy.workSearch.dao.RoleDAO;
+import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.model.Role;
 import com.academy.workSearch.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
+
+import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_ROLE;
 
 @Service
 public class JwtService {
@@ -70,44 +74,48 @@ public class JwtService {
         roles.forEach(role -> {
             switch (role.getName()) {
                 case "ADMIN":
-                  //  claims.put("isAdmin", roleDAO.getByName("ADMIN").getName());
-                    claims.put("isAdmin", "ADMIN");
+                    claims.put("isAdmin", roleDAO.getByName("ADMIN")
+                            .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "ADMIN")));
                     break;
                 case "EMPLOYER":
-                    claims.put("isEmployer", roleDAO.getByName("EMPLOYER").getName());
+                    claims.put("isEmployer", roleDAO.getByName("EMPLOYER")
+                            .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "EMPLOYER")));
                     break;
                 default:
-                   // claims.put("isWorker", roleDAO.getByName("WORKER").getName());
-                    claims.put("isWorker", "WORKER");
+                    claims.put("isWorker", roleDAO.getByName("WORKER")
+                            .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "WORKER")));
                     break;
             }
         });
 
     }
 
-    private void getRoles(String token) {
-        Claims claims = extraAllClaims(token);
-
-        List<SimpleGrantedAuthority> roles = null;
-
-        Boolean isAdmin = claims.get("isAdmin", Boolean.class);
-        Boolean isEmployer = claims.get("isEmployer", Boolean.class);
-        Boolean isWorker = claims.get("isWorker", Boolean.class);
-
-
-        if (isAdmin != null && isAdmin) {
-            roles.add(new SimpleGrantedAuthority(roleDAO.getByName("ADMIN").getName()));
-        }
-
-        if (isEmployer != null) {
-            roles.add(new SimpleGrantedAuthority(roleDAO.getByName("EMPLOYER").getName()));
-        }
-
-        if (isWorker != null) {
-            roles.add(new SimpleGrantedAuthority(roleDAO.getByName("WORKER").getName()));
-        }
-
-    }
+//    private void getRoles(String token) {
+//        Claims claims = extraAllClaims(token);
+//
+//        List<SimpleGrantedAuthority> roles = null;
+//
+//        Boolean isAdmin = claims.get("isAdmin", Boolean.class);
+//        Boolean isEmployer = claims.get("isEmployer", Boolean.class);
+//        Boolean isWorker = claims.get("isWorker", Boolean.class);
+//
+//
+//        if (isAdmin != null && isAdmin) {
+//            roles.add(new SimpleGrantedAuthority(roleDAO.getByName("ADMIN")
+//                    .orElseThrow(()-> new NoSuchEntityException(NO_ROLE +  ))));
+//        }
+//
+//        if (isEmployer != null) {
+//            roles.add(new SimpleGrantedAuthority(roleDAO.getByName("EMPLOYER")
+//                    .getName()));
+//        }
+//
+//        if (isWorker != null) {
+//            roles.add(new SimpleGrantedAuthority(roleDAO.getByName("WORKER")
+//                    .getName()));
+//        }
+//
+//    }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String userName = extraUsername(token);

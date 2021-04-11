@@ -4,4 +4,5 @@ public class NoUniqueEntityException extends RuntimeException {
     public NoUniqueEntityException(String message) {
         super(message);
     }
+
 }

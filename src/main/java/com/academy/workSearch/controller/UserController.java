@@ -2,7 +2,6 @@ package com.academy.workSearch.controller;
 
 import com.academy.workSearch.dto.UserAuthDTO;
 import com.academy.workSearch.dto.UserDTO;
-import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.dto.UserRegistrationDTO;
 import com.academy.workSearch.exceptionHandling.exceptions.NoUniqueEntityException;
 import com.academy.workSearch.service.UserService;
@@ -33,15 +32,15 @@ public class UserController {
     private UserService userService;
 
     @GetMapping({"/admin/users"})
-    @ApiOperation(value = "Show all users", notes = "Show information about all users in DB")
+    @ApiOperation(value = "Show all users", notes = "Show information about all users ")
     public ResponseEntity<List<UserDTO>> getAll() {
         logger.info("Show all users");
         return ResponseEntity.ok(userService.findAll());
     }
 
     @PostMapping(value = {"/login"})
-    @ApiOperation(value = "Find user by email", notes = "Find user in DB, if user exist")
-    public ResponseEntity<UserAuthDTO> login(@ApiParam(value = "email value for user you need to retrive", required = true)
+    @ApiOperation(value = "Find user by email", notes = "Find user if exists")
+    public ResponseEntity<UserAuthDTO> login(@ApiParam(value = "email value for user you need to retrieve", required = true)
                                              @RequestBody UserRegistrationDTO userRegistrationDTO) {
         UserAuthDTO userAuthDTO = userService.get(userRegistrationDTO);
         return ResponseEntity.ok(userAuthDTO);
@@ -49,11 +48,12 @@ public class UserController {
     }
 
     @PostMapping({"/registration"})
-    @ApiOperation(value = "Add new user", notes = "Add new user in DB")
+    @ApiOperation(value = "Add new user", notes = "Add new user")
     public ResponseEntity<UserAuthDTO> save(@RequestBody UserRegistrationDTO user) {
-        logger.info("Add user with email = " + user.getEmail());
-        return ResponseEntity.ok(userService.save(user));
-
+        logger.info("Attempt to save user = {}", user.getEmail());
+        UserAuthDTO userAuthDTO = userService.save(user);
+        logger.info("Add user with email = {}", user.getEmail());
+        return ResponseEntity.ok(userAuthDTO);
     }
 
     @PutMapping({"/user"})
@@ -65,8 +65,8 @@ public class UserController {
     @DeleteMapping({"/user/{email}"})
     @ApiOperation(value = "Delete existing user", notes = "Delete existing user")
     public ResponseEntity<?> delete(@PathVariable String email) {
-        userService.deleteByEmail(email);
-        return ResponseEntity.ok().build();
+        logger.info("Delete existing user {}", email);
+        return ResponseEntity.ok(userService.deleteByEmail(email));
     }
 
     @GetMapping({"/user/{email}"})
@@ -76,10 +76,7 @@ public class UserController {
         logger.info("Find user with email = {}", email);
         if (user == null) {
             logger.error("There is no user with email = {} ", email);
-            throw new NoSuchEntityException("There is no user with email = " + email);
-        } else {
-            return ResponseEntity.ok(user);
         }
-
+        return ResponseEntity.ok(user);
     }
 }

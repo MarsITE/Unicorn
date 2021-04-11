@@ -7,8 +7,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 
 @Repository
@@ -19,11 +20,12 @@ public class SkillDAOImpl extends CrudDAOImpl<Skill> implements SkillDAO {
         super(sessionFactory);
     }
 
-    public Skill getByName(String name) {
+    public Optional<Skill> getByName(String name) {
         Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("from Skill where name = :name");
-        query.setParameter("name", name);
-        return (Skill) query.list().get(0);
+        Skill skill = session.createQuery("from Skill where name = :name", Skill.class)
+                .setParameter("name", name)
+                .uniqueResult();
+        return Optional.ofNullable(skill);
     }
 
     public List<Skill> getAllEnabled(Boolean enabled) {

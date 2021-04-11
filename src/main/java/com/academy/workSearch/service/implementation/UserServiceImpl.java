@@ -1,6 +1,5 @@
 package com.academy.workSearch.service.implementation;
 
-import com.academy.workSearch.controller.UserController;
 import com.academy.workSearch.dao.RoleDAO;
 import com.academy.workSearch.dao.implementation.UserDAOImpl;
 import com.academy.workSearch.dao.implementation.UserInfoDAOImpl;
@@ -8,6 +7,7 @@ import com.academy.workSearch.dto.UserAuthDTO;
 import com.academy.workSearch.dto.UserDTO;
 import com.academy.workSearch.dto.UserRegistrationDTO;
 import com.academy.workSearch.exceptionHandling.exceptions.NoActiveAccountException;
+import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.exceptionHandling.exceptions.NoUniqueEntityException;
 import com.academy.workSearch.model.Role;
 import com.academy.workSearch.model.User;
@@ -32,13 +32,12 @@ import java.util.Set;
 
 import static com.academy.workSearch.dto.mapper.UserAuthMapper.USER_AUTH_MAPPER;
 import static com.academy.workSearch.dto.mapper.UserMapper.USER_MAPPER;
-import static com.academy.workSearch.exceptionHandling.MessageConstants.INCORRECT_USER_DATA;
-import static com.academy.workSearch.exceptionHandling.MessageConstants.NOT_ACTIVE_ACCOUNT;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.*;
 
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserDAOImpl userDAO;
     private final UserInfoDAOImpl userInfoDAO;
     private final RoleDAO roleDAO;
@@ -60,11 +59,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
-    public UserAuthDTO save(UserRegistrationDTO userRegistrationDTO) throws NoUniqueEntityException {
-        User oldUser = userDAO.getByEmail(userRegistrationDTO.getEmail());
-        if (oldUser != null) {
-            throw new NoUniqueEntityException("User with email: " + userRegistrationDTO.getEmail() + " exists!");
+    public UserAuthDTO save(UserRegistrationDTO userRegistrationDTO) {
+
+        if (isUserExistsByEmail(userRegistrationDTO.getEmail())) {
+            throw new NoUniqueEntityException(EMAIL_EXISTS + userRegistrationDTO.getEmail());
         }
 
         User user = USER_AUTH_MAPPER.toUser(userRegistrationDTO);
@@ -73,13 +71,14 @@ public class UserServiceImpl implements UserService {
         user.setUserInfo(userInfo);
         user.setAccountStatus(AccountStatus.ACTIVE);
         Set<Role> roles = new HashSet<>();
-        Role role1 = roleDAO.getByName("WORKER");
+        Role role1 = roleDAO.getByName("WORKER")
+                .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "WORKER"));
         roles.add(role1);
         if (userRegistrationDTO.isEmployer()) {
-            roles.add(roleDAO.getByName("EMPLOYER"));
+            roles.add(roleDAO.getByName("EMPLOYER")
+                    .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "EMPLOYER")));
         }
         user.setRoles(roles);
-
         user.setPassword(passwordEncoder.encode(userRegistrationDTO.getPassword()));
         userDAO.save(user);
 
@@ -91,7 +90,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDTO update(UserDTO user) {
-        User oldUser = userDAO.getByEmail(user.getEmail());
+        User oldUser = userDAO.getByEmail(user.getEmail())
+                .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + user.getEmail()));
         User newUser = USER_MAPPER.toUser(user);
         newUser.setPassword(oldUser.getPassword());
         newUser.setUserId(oldUser.getUserId());
@@ -101,8 +101,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void deleteByEmail(String email) {
+    public UserDTO deleteByEmail(String email) {
+        User user = userDAO.getByEmail(email)
+                .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + email));
         userDAO.deleteByEmail(email);
+        return USER_MAPPER.toUserDto(user);
     }
 
     @Override
@@ -138,7 +141,14 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserDTO getByEmail(String email) {
-        return USER_MAPPER.toUserDto(userDAO.getByEmail(email));
+        User user = userDAO.getByEmail(email)
+                .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + email));
+        return USER_MAPPER.toUserDto(user);
+
     }
 
+    @Override
+    public boolean isUserExistsByEmail(String email) {
+        return userDAO.getByEmail(email).isPresent();
+    }
 }
