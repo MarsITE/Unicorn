@@ -23,7 +23,7 @@ public class JwtService {
     private final RoleDAO roleDAO;
 
     private final String SECRET_KEY = "secret";
-    private final long EXPIRATION_TIME = 3600000; // 1 hour
+    private final long EXPIRATION_TIME = 3600000*24; // 1 day
 
     public JwtService(RoleDAO roleDAO) {
         this.roleDAO = roleDAO;
