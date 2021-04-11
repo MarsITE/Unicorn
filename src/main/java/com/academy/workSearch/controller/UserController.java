@@ -74,9 +74,6 @@ public class UserController {
     public ResponseEntity<UserDTO> get(@PathVariable String email) {
         UserDTO user = userService.getByEmail(email);
         logger.info("Find user with email = {}", email);
-        if (user == null) {
-            logger.error("There is no user with email = {} ", email);
-        }
         return ResponseEntity.ok(user);
     }
 }
