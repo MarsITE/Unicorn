@@ -20,5 +20,5 @@ public interface UserService {
 
     UserDTO getByEmail(String email);
 
-    boolean isUserExistsByEmail(String email);
+    boolean isPresentUserByEmail(String email);
 }
