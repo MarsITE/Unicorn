@@ -89,7 +89,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
 
   public logout(): void {
-    this.userService.logout();
+    this.userService.loggedIn();
+    this.router2.navigateByUrl('login');
   }
 
 }

@@ -47,12 +47,12 @@ export class UserHttpService {
 
   public login(user: UserRegistration): Observable<boolean> {
     return this.http.post<UserAuth>(`${environment.url}/login`, user)
-    .pipe(
-      map(result => {
-        localStorage.setItem('access_token', result.token);
-        return true;
-      })
-    );
+      .pipe(
+        map(result => {
+          localStorage.setItem('access_token', result.token);
+          return true;
+        })
+      );
   }
 
   public updateUserInfo(userInfo: UserInfo): Observable<UserInfo> {
@@ -67,11 +67,9 @@ export class UserHttpService {
     return this.http.put<any>(`${environment.url}/user-profile/save-photo/${id}`, photo, this.authHeader());
   }
 
-  public logout(): void {
-    localStorage.removeItem('access_token');
-  }
-
-  public get loggedIn(): boolean {
-    return (localStorage.getItem('access_token') !== null);
+  public loggedIn(): void {
+    if (localStorage.getItem('access_token')) {
+      localStorage.removeItem('access_token');
+    }
   }
 }

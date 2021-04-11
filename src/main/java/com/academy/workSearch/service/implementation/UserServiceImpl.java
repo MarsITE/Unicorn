@@ -110,7 +110,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserAuthDTO get(UserRegistrationDTO userRegistrationDTO) throws BadCredentialsException, NoActiveAccountException {
+    public UserAuthDTO get(UserRegistrationDTO userRegistrationDTO) {
         final User user = USER_MAPPER.toUser(getByEmail(userRegistrationDTO.getEmail()));
 
         if (!user.isEnabled()) {

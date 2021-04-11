@@ -47,7 +47,10 @@ export class UserRegistrationComponent implements OnInit, OnDestroy {
   private saveUser(user: UserRegistration): void {
     this.subscriptions.push(this.userService.save(user)
     .subscribe(
-      response => this.user = response,
+      response => {
+        this.user = response;
+        this.router.navigateByUrl('login');
+      },
       error => {
         this.initForm(
           user.email,

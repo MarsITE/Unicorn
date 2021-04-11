@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Project } from '../model/project';
 import { environment } from 'src/environments/environment';
@@ -16,14 +16,14 @@ export class ProjectService {
     return new  HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('token')}`);
   }
 
-  private authHeaderWithParams(counter, sort, maxResult): any {
+  private authHeaderWithParams(counter: { toString: () => string; }, sort: string, maxResult: { toString: () => string; }): any {
     return new HttpParams()
     .set('page', counter.toString())
     .set('sort', sort)
     .set('maxResult', maxResult.toString());
   }
 
-  public getProjects(counter, sort, maxResult): Observable<Project[]> {
+  public getProjects(counter: string, sort: string, maxResult: string): Observable<Project[]> {
     return this.http.get<Project[]>(`${environment.url}/projects`,
     {
       params: this.authHeaderWithParams(counter, sort, maxResult),
