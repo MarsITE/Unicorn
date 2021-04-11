@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserRegistration } from 'src/app/common/model/user-registration';
 import { UserAuth } from 'src/app/common/model/user-auth';
-import { StorageService } from 'src/app/common/services/storage.service';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
 import { first } from 'rxjs/operators';
 
@@ -18,7 +17,7 @@ export class UserLoginComponent implements OnInit, OnDestroy {
   user: UserRegistration;
   userForm: FormGroup;
   private subscriptions: Subscription[] = [];
-  constructor(private userService: UserHttpService, private router: Router, private storageService: StorageService) { }
+  constructor(private userService: UserHttpService, private router: Router) { }
   ngOnDestroy(): void {
     this.subscriptions.forEach(s => {
       s.unsubscribe();

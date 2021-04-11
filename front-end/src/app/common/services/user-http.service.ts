@@ -6,7 +6,6 @@ import { UserInfo } from '../model/user-info';
 import { environment } from 'src/environments/environment';
 import { UserRegistration } from '../model/user-registration';
 import { UserAuth } from '../model/user-auth';
-import { StorageService } from './storage.service';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -14,19 +13,19 @@ import { map } from 'rxjs/operators';
 })
 export class UserHttpService {
 
-  constructor(private http: HttpClient, private storageService: StorageService) { }
+  constructor(private http: HttpClient) { }
 
   // tslint:disable-next-line: typedef
   private authHeader() {
     return {
-      headers: new HttpHeaders().set('Authorization', `Bearer ${this.storageService.getValue('token')}`)
+      headers: new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('access_token')}`)
     };
   }
 
   private authHeaderBlob(): any {
     return {
       responseType: 'blob',
-      headers: new HttpHeaders().set('Authorization', `Bearer ${this.storageService.getValue('token')}`)
+      headers: new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('access_token')}`)
     };
   }
 

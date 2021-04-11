@@ -5,7 +5,6 @@ import { UserHttpService } from '../../common/services/user-http.service';
 import { DomSanitizer, SafeUrl, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
 import { WorkStatus } from '../../common/model/work-status';
 import { Subscription } from 'rxjs';
-import { StorageService } from 'src/app/common/services/storage.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -26,8 +25,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     { value: 'BUSY', viewValue: 'Busy' }
   ];
 
-  constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router, private domSanitizer: DomSanitizer,
-              private storageService: StorageService) {
+  constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router, private domSanitizer: DomSanitizer) {
     this.email = router.snapshot.params.email;
     this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl('../../../assets/default-profile-photo.jpg');
   }
@@ -68,7 +66,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
 
   public delete(email: string): void {
-    this.subscriptions.push(this.userService.deleteUser(email).subscribe(
+    this.subscriptions.push(this.userService.deleteUser(email)
+    .subscribe(
       response => {
         alert('deleted');
         this.router2.navigateByUrl('login');
