@@ -1,6 +1,5 @@
 package com.academy.workSearch.service.implementation;
 
-import com.academy.workSearch.controller.jwt.JwtService;
 import com.academy.workSearch.dao.RoleDAO;
 import com.academy.workSearch.dao.implementation.UserDAOImpl;
 import com.academy.workSearch.dao.implementation.UserInfoDAOImpl;
@@ -26,18 +25,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import static com.academy.workSearch.dto.mapper.UserAuthMapper.USER_AUTH_MAPPER;
 import static com.academy.workSearch.dto.mapper.UserMapper.USER_MAPPER;
-import static com.academy.workSearch.exceptionHandling.MessageConstants.EMAIL_EXISTS;
-import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_ROLE;
-import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_SUCH_ENTITY;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.*;
 
 @Service
-@Transactional
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
@@ -56,6 +53,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDTO> findAll() {
         return USER_MAPPER.map(userDAO.findAll());
     }
@@ -90,17 +88,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDTO update(UserDTO user) {
-        User user1 = userDAO.getByEmail(user.getEmail())
+        User oldUser = userDAO.getByEmail(user.getEmail())
                 .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + user.getEmail()));
-        User user2 = USER_MAPPER.toUser(user);
-        user2.setPassword(user1.getPassword());
-        user2.setUserId(user1.getUserId());
-        userDAO.save(user2);
-        return USER_MAPPER.toUserDto(user2);
+        User newUser = USER_MAPPER.toUser(user);
+        newUser.setPassword(oldUser.getPassword());
+        newUser.setUserId(oldUser.getUserId());
+        userDAO.save(newUser);
+        return USER_MAPPER.toUserDto(newUser);
     }
 
     @Override
+    @Transactional
     public UserDTO deleteByEmail(String email) {
         User user = userDAO.getByEmail(email)
                 .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + email));
@@ -109,21 +109,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserAuthDTO get(UserRegistrationDTO userRegistrationDTO) {
+    @Transactional(readOnly = true)
+    public UserAuthDTO get(UserRegistrationDTO userRegistrationDTO) throws BadCredentialsException, NoActiveAccountException {
         final User user = USER_MAPPER.toUser(getByEmail(userRegistrationDTO.getEmail()));
 
         if (!user.isEnabled()) {
-            throw new NoActiveAccountException("Your account is not active!");
+            throw new NoActiveAccountException(NOT_ACTIVE_ACCOUNT);
         }
+
+        List<Role> grantedAuthorities = new ArrayList<>(user.getRoles());
+        grantedAuthorities.forEach(role -> role.setName("ROLE_" + role.getName()));
 
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             userRegistrationDTO.getEmail(),
                             userRegistrationDTO.getPassword(),
-                            user.getRoles()));
+                            grantedAuthorities));
         } catch (BadCredentialsException e) {
-            throw new BadCredentialsException("Incorrect username or password", e);
+            throw new BadCredentialsException(INCORRECT_USER_DATA, e);
         }
         final String jwt = jwtService.generateToken(user);
 
@@ -134,6 +138,8 @@ public class UserServiceImpl implements UserService {
         return userAuthDTO;
     }
 
+    @Override
+    @Transactional(readOnly = true)
     public UserDTO getByEmail(String email) {
         User user = userDAO.getByEmail(email)
                 .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + email));

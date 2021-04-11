@@ -28,7 +28,6 @@ import static com.academy.workSearch.dto.mapper.UserInfoMapper.USER_INFO_MAPPER;
 import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_SUCH_ENTITY;
 
 @Service
-@Transactional
 @AllArgsConstructor
 public class UserInfoServiceImpl implements UserInfoService {
     private final Logger logger = LoggerFactory.getLogger(UserInfoController.class);
@@ -41,12 +40,15 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfoDAO.setClazz(UserInfo.class);
     }
 
+    @Transactional
+    @Override
     public UserInfoDTO save(UserInfoDTO userInfo) {
         return USER_INFO_MAPPER
                 .toUserInfoDto(userInfoDAO.save(USER_INFO_MAPPER.toUserInfo(userInfo)));
     }
 
     @Override
+    @Transactional
     public boolean updateImage(MultipartFile photo, String id) {
         boolean isImageSave = false;
         try {

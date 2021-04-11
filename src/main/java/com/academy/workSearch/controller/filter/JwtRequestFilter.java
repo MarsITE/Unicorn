@@ -1,5 +1,6 @@
-package com.academy.workSearch.controller.jwt;
+package com.academy.workSearch.controller.filter;
 
+import com.academy.workSearch.service.implementation.JwtService;
 import com.academy.workSearch.service.implementation.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

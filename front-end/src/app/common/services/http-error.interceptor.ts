@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
 
-  constructor(private storageService: StorageService, private router: Router) {}
+  constructor(private storageService: StorageService, private router: Router) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request)
@@ -20,10 +20,9 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           }
           else {
             errorMsg = `Error Code: ${error.status},  Message: ${error.message}`;
-            if (error.status === 401) {
-             this.router.navigateByUrl('login');
-            } else if (error.status === 403) {
-              errorMsg = error.error.info;
+            switch (error.status) {
+              case 401: this.router.navigateByUrl('login'); break;
+              case 403: errorMsg = error.error.message; break;
             }
           }
           return throwError(errorMsg);

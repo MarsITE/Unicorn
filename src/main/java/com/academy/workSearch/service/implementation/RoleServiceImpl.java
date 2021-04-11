@@ -5,12 +5,10 @@ import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException
 import com.academy.workSearch.model.Role;
 import com.academy.workSearch.service.RoleService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_ROLE;

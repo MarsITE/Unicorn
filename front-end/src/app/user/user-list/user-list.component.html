@@ -45,8 +45,8 @@
     <ng-container matColumnDef="dateOfBirth">
       <th mat-header-cell *matHeaderCellDef> Date of birth </th>
       <td mat-cell *matCellDef="let element">
-        <div *ngIf="element.userInfo.dateOfBirth && element.userInfo.dateOfBirth != ''; else none">
-          {{ element.userInfo.dateOfBirth }}
+        <div *ngIf="element.userInfo.birthDate && element.userInfo.birthDate != ''; else none">
+          {{ element.userInfo.birthDate }}
         </div>
       </td>
     </ng-container>

@@ -4,7 +4,7 @@ export interface UserInfo {
   lastName: string;
   phone: string;
   linkToSocialNetwork: string;
-  dateOfBirth: string;
+  birthDate: string;
   showInfo: boolean;
   workStatus: string;
   imageUrl: string;

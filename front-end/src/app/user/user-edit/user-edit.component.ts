@@ -50,7 +50,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
     lastName: string = '',
     phone: string = '',
     linkToSocialNetwork: string = '',
-    dateOfBirth: Date = this.today,
+    birthDate: Date = this.today,
     isShowInfo: boolean = true,
     workStatus: string = '',
     imageUrl: string = ''
@@ -66,7 +66,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
         phone,
         [Validators.pattern('[- +()0-9]+')]),
       linkToSocialNetwork: new FormControl(linkToSocialNetwork, Validators.maxLength(255)),
-      dateOfBirth: new FormControl(dateOfBirth),
+      dateOfBirth: new FormControl(birthDate),
       isShowInfo: new FormControl(isShowInfo),
       workStatus: new FormControl(workStatus),
       imageUrl: new FormControl(imageUrl)
@@ -83,7 +83,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
           this.user.userInfo.lastName,
           this.user.userInfo.phone,
           this.user.userInfo.linkToSocialNetwork,
-          new Date(this.user.userInfo.dateOfBirth),
+          new Date(this.user.userInfo.birthDate),
           this.user.userInfo.showInfo,
           this.user.userInfo.workStatus,
           this.user.userInfo.imageUrl);
@@ -152,9 +152,9 @@ export class UserEditComponent implements OnInit, OnDestroy {
     if (userInfo.linkToSocialNetwork == null) {
       userInfo.linkToSocialNetwork = '';
     }
-    userInfo.dateOfBirth = this.getDateFromDatePicker();
-    if (userInfo.dateOfBirth == null) {
-      userInfo.dateOfBirth = '';
+    userInfo.birthDate = this.getDateFromDatePicker();
+    if (userInfo.birthDate == null) {
+      userInfo.birthDate = '';
     }
     userInfo.showInfo = this.userProfileForm.controls.isShowInfo.value;
 

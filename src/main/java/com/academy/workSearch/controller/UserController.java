@@ -3,6 +3,7 @@ package com.academy.workSearch.controller;
 import com.academy.workSearch.dto.UserAuthDTO;
 import com.academy.workSearch.dto.UserDTO;
 import com.academy.workSearch.dto.UserRegistrationDTO;
+import com.academy.workSearch.exceptionHandling.exceptions.NoUniqueEntityException;
 import com.academy.workSearch.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -54,7 +56,7 @@ public class UserController {
         return ResponseEntity.ok(userAuthDTO);
     }
 
-    @PutMapping({"/user-edit"})
+    @PutMapping({"/user"})
     @ApiOperation(value = "Update existing user", notes = "Update existing user")
     public ResponseEntity<UserDTO> update(@RequestBody UserDTO user) {
         return ResponseEntity.ok(userService.update(user));
@@ -62,7 +64,7 @@ public class UserController {
 
     @DeleteMapping({"/user/{email}"})
     @ApiOperation(value = "Delete existing user", notes = "Delete existing user")
-    public ResponseEntity<UserDTO> delete(@PathVariable String email) {
+    public ResponseEntity<?> delete(@PathVariable String email) {
         logger.info("Delete existing user {}", email);
         return ResponseEntity.ok(userService.deleteByEmail(email));
     }
@@ -72,11 +74,6 @@ public class UserController {
     public ResponseEntity<UserDTO> get(@PathVariable String email) {
         UserDTO user = userService.getByEmail(email);
         logger.info("Find user with email = {}", email);
-        if (user == null) {
-            logger.error("There is no user with email = {} ", email);
-        } else {
-            return ResponseEntity.ok(user);
-        }
         return ResponseEntity.ok(user);
     }
 }

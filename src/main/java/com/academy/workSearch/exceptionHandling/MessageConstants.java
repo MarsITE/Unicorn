@@ -9,5 +9,7 @@ public class MessageConstants {
     public static final String NO_PROJECT = "There is no project with id : ";
     public static final String NO_ROLE ="There is no role with name : ";
     public static final String NO_RATING ="There is no rating : ";
+    public static final String INCORRECT_USER_DATA = "Incorrect username or password";
+    public static final String NOT_ACTIVE_ACCOUNT = "You account is not active!";
 
 }
