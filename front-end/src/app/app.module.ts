@@ -68,6 +68,7 @@ import { HttpErrorInterceptor } from './common/services/http-error.interceptor';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { SidenavListComponent } from './components/sidenav-list/sidenav-list.component';
+import { ConfirmComponent } from './modals/confirm/confirm.component';
 
 @NgModule({
   declarations: [
@@ -85,7 +86,8 @@ import { SidenavListComponent } from './components/sidenav-list/sidenav-list.com
     AdminComponent,
     ToolbarComponent,
     FooterComponent,
-    SidenavListComponent
+    SidenavListComponent,
+    ConfirmComponent
   ],
 
   imports: [
@@ -155,6 +157,7 @@ import { SidenavListComponent } from './components/sidenav-list/sidenav-list.com
       multi: true
     }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [ConfirmComponent]
 })
 export class AppModule { }
