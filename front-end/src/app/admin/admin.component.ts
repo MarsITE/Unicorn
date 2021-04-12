@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Skill } from '../common/model/skill';
 import { SkillService } from '../common/services/skill.service';
+import { ConfirmComponent } from '../modals/confirm/confirm.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-admin',
@@ -15,7 +17,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   skills: Skill[] = [];
   private subscriptions: Subscription[] = [];
   
-  constructor(private skillService: SkillService, private router: Router) { }
+  constructor(private skillService: SkillService, private router: Router, private dialog: MatDialog) { }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(s => {
@@ -40,6 +42,20 @@ export class AdminComponent implements OnInit, OnDestroy {
         console.log(this.skills);
       }
     ));
+  }
+
+  createSkill(){
+    const confirmDialog = this.dialog.open(ConfirmComponent, {
+      data: {
+        title: 'Confirm you want to add new skill',
+        message: 'Are you sure, you want to add new skill'
+      }
+    });
+    confirmDialog.afterClosed().subscribe(result => {
+      if (result === true) {
+      //  this.employeeList = this.employeeList.filter(item => item.employeeId !== employeeObj.employeeId);
+      }
+    });
   }
 
 }
