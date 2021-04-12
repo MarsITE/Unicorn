@@ -1,57 +1,6 @@
-.info-box{
-    max-height: 40%;
-    height: 40%;
-    max-width: 100%;
-    margin: 0;
-    background-color: rgb(63, 216, 145);
-    }
-    .search-area{
-        max-width: 90%;
-        margin: 0 auto;
-        top: 50%;
-        position: relative;
-    }
-    nav{
-        height: 60px;
-        background-color: rgb(63, 216, 145) !important;
-    
-    }
-    .navbar-brand{
-        text-align: center;
-        height: 100%;
-        width: 100px;
-        color:rgb(255,255,255);
-        font-size: xx-large;
-    }
-    .form-inline .form-control {
-        border: 1px solid black;
-        display: inline-block;
-        height: 50px;
-        width: 80%;
-        vertical-align: middle;
-    }
-    .search-area button{
-        height: 50px;
-        width: 15%;
-        background-color: rgb(63, 216, 145);
-        border: 2px solid rgb(255,255,255);
-        transition: 0.5s;
-        font-size: x-large;
-        }
-    
-    .search-area button:hover{
-        height: 50px;
-        width: 15%;
-        background-color: rgb(255,255,255);
-        border: 2px solid rgb(255,255,255);
-        color: rgb(63, 216, 145);
-        font-size: x-large;
-        }
-    h1{
-        text-align: center;
-    }
+
     .project-card {
-        text-align: center;
+        text-align: left;
         max-width: 700px;
         max-height: 300px;
         margin: 20px;
@@ -64,6 +13,19 @@
         margin: 40px auto;
         background-color: rgb(230, 255, 238);
       }
+    .mat-card-content p{
+      margin: 0 16px;
+    }
+
+    .mat-card-footer{
+        margin:0 16px;
+        display: flex;
+        justify-content: space-between;
+    }
+
     .creating-date{
         text-align: right;
       }
+    .skills{
+        text-align: left;
+    }

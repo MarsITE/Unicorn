@@ -3,8 +3,6 @@ import { Project } from '../common/model/project';
 import { ProjectService } from '../common/services/project.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { MatPaginator } from '@angular/material/paginator';
-
 
 @Component({
   selector: 'app-start-page',
@@ -13,49 +11,57 @@ import { MatPaginator } from '@angular/material/paginator';
 })
 export class StartPageComponent implements OnInit {
   id: String;
-  counter: number = 1;  
-  projects: Project[] = []; 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  counter: number = 1;
+  maxResult: number = 5;
+  projects: Project[] = [];
 
   constructor(private projectService: ProjectService, private router: Router, private http: HttpClient, route: ActivatedRoute) {
     route.queryParams.subscribe(params => {
-    this.counter = params['page'] || this.counter;
-});
+      this.counter = params['page'] || this.counter;
+      this.maxResult = params['maxResult'] || this.maxResult;
+    });
   }
 
   ngOnInit(): void {
-    this.getProjects();
+    this.getProjects(this.maxResult);
   }
 
-  private getProjects() { 
+  private getProjects(maxResult: number) {
     const params = new HttpParams()
-  .set('page', this.counter.toString())
-  
-      this.projectService.getProjects(params).subscribe(
-        (response: Project[]) => {   
-          console.log("response",response);     
-          this.projects = response;       
-        },
-        (error) => {
-          console.log("error", error);
-        }
-        ,
-        () => {
-          console.log("complete");
-          this.router.navigateByUrl(`/` + this.counter);
-        }
-      )
-    }
+      .set('page', this.counter.toString())
+      .set('maxResult', maxResult.toString())
 
-    projectsNext() {     
-      this.counter++;       
-      this.getProjects()
+    this.projectService.getProjects(params).subscribe(
+      (response: Project[]) => {
+        console.log("response", response);
+        this.projects = response;
+      },
+      (error) => {
+        console.log("error", error);
+      }
+
+    )
+  }
+
+  projectsNext() {
+    this.counter++;
+    this.getProjects(this.maxResult)
+  }
+
+  projectsPrev() {
+    if (this.counter > 1) {
+      this.counter--;
     }
-  
-    projectsPrev() {   
-      if(this.counter > 1){
-        this.counter--; 
-      }      
-      this.getProjects()
-    }
+    this.getProjects(this.maxResult)
+  }
+
+  deviceObjects = [5, 10, 25];
+
+  selectedDeviceObj = this.deviceObjects[0];
+  onChangeObj(newObj) {
+    console.log(newObj);
+    this.selectedDeviceObj = newObj;
+    this.maxResult = this.selectedDeviceObj;
+    this.getProjects(this.maxResult);
+  }
 }

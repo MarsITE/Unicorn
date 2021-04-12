@@ -61,8 +61,7 @@ import { ProjectInfoComponent } from './project/project-info/project-info.compon
 import { ProjectEditComponent } from './project/project-edit/project-edit.component';
 import { AdminComponent } from './admin/admin.component';
 import { SkillService } from './common/services/skill.service';
-import { StartPageComponent} from './start-page/start-page.component'
-
+import { StartPageComponent} from './start-page/start-page.component';
 @NgModule({
   declarations: [
     AppComponent,
