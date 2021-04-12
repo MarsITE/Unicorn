@@ -1,6 +1,7 @@
 package com.academy.workSearch.model;
 
 import com.academy.workSearch.model.enums.ProjectStatus;
+import com.academy.workSearch.service.ProjectStatusConverter;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
@@ -26,6 +27,7 @@ public class Project {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "project_status")
+    @Convert(converter = ProjectStatusConverter.class)
     private ProjectStatus projectStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
