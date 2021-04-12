@@ -129,7 +129,8 @@ public class UserServiceImpl implements UserService {
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException(INCORRECT_USER_DATA, e);
         }
-        final String jwt = jwtService.generateToken(user);
+        final String jwt = jwtService.generateToken(userDAO.getByEmail(user.getEmail())
+            .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + user.getEmail())));
 
         UserAuthDTO userAuthDTO = new UserAuthDTO();
         userAuthDTO.setEmail(user.getEmail());
@@ -151,4 +152,11 @@ public class UserServiceImpl implements UserService {
     public boolean isPresentUserByEmail(String email) {
         return userDAO.getByEmail(email).isPresent();
     }
+
+    @Override
+    public UserAuthDTO refreshToken(String refreshToken) {
+        return null;
+    }
+
+
 }

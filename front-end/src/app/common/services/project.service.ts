@@ -13,7 +13,7 @@ export class ProjectService {
 
   // tslint:disable-next-line: typedef
   private authHeader() {
-    return new  HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('token')}`);
+    return new  HttpHeaders().set('Authorization', `Bearer ${sessionStorage.getItem('access_token')}`);
   }
 
   private authHeaderWithParams(counter: { toString: () => string; }, sort: string, maxResult: { toString: () => string; }): any {
@@ -24,8 +24,7 @@ export class ProjectService {
   }
 
   public getProjects(counter: string, sort: string, maxResult: string): Observable<Project[]> {
-    return this.http.get<Project[]>(`${environment.url}/projects`,
-    {
+    return this.http.get<Project[]>(`${environment.url}/projects`, {
       params: this.authHeaderWithParams(counter, sort, maxResult),
       headers: this.authHeader()
     }

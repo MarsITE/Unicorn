@@ -21,4 +21,6 @@ public interface UserService {
     UserDTO getByEmail(String email);
 
     boolean isPresentUserByEmail(String email);
+
+    UserAuthDTO refreshToken(String refreshToken);
 }

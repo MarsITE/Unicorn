@@ -14,7 +14,7 @@ export class SkillService {
   // tslint:disable-next-line: typedef
   private authHeader() {
     return {
-      headers: new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('token')}`)
+      headers: new HttpHeaders().set('Authorization', `Bearer ${sessionStorage.getItem('access_token')}`)
     };
   }
 

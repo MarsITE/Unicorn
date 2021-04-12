@@ -67,6 +67,7 @@ import { HttpErrorInterceptor } from './common/services/http-error.interceptor';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { SidenavListComponent } from './components/sidenav-list/sidenav-list.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -84,7 +85,8 @@ import { SidenavListComponent } from './components/sidenav-list/sidenav-list.com
     AdminComponent,
     ToolbarComponent,
     FooterComponent,
-    SidenavListComponent
+    SidenavListComponent,
+    NotFoundComponent
   ],
 
   imports: [

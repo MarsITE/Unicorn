@@ -19,8 +19,19 @@
 <!--    <include file="changelog/insert-default-data.changelog-0.0.5.sql"
              relativeToChangelogFile="true"/>-->
 
-    <changeSet id="5" author="Diana">
-        <comment>fix bug bug with roles</comment>
+<!--    <include file="changelog/v7/update-tables.changelog.sql"-->
+<!--             relativeToChangelogFile="true"/>-->
+<!--    <include file="changelog/v7/insert-skills.sql"-->
+<!--             relativeToChangelogFile="true"/>-->
+<!--    <include file="changelog/v7/insert-users-roles.sql"-->
+<!--             relativeToChangelogFile="true"/>-->
+
+    <changeSet id="7" author="Diana">
+        <comment>
+            increase size email to 50;
+            increase size project name to 50;
+            add filed token to user;
+            updated on password on bcrypt</comment>
     </changeSet>
 
 </databaseChangeLog>

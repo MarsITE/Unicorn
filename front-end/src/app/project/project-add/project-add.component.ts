@@ -3,6 +3,8 @@ import {Router} from '@angular/router';
 import { ProjectStatus } from '../../common/model/project-status';
 import { Project } from '../../common/model/project';
 import { ProjectService } from '../../common/services/project.service';
+import { TokenService } from 'src/app/common/services/token.service';
+import { User } from 'src/app/common/model/user';
 
 @Component({
   selector: 'app-project-add',
@@ -27,16 +29,12 @@ export class ProjectAddComponent{
 
   create(): void {
     this.projectService.save(this.project)
-      .subscribe(data => {
-        alert("Project has been created successfully");
-      },
+      .subscribe(
+        data => alert('Project has been created successfully'),
       er => {
         console.log(er);
-      },
-      () => {
-        this.router.navigateByUrl(`projects`);
       });
-  };
+  }
 
   public getProjectStatus(value: string): void {
     this.projectStatuses.forEach(ps => {

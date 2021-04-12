@@ -90,36 +90,10 @@ public class JwtService {
 
     }
 
-//    private void getRoles(String token) {
-//        Claims claims = extraAllClaims(token);
-//
-//        List<SimpleGrantedAuthority> roles = null;
-//
-//        Boolean isAdmin = claims.get("isAdmin", Boolean.class);
-//        Boolean isEmployer = claims.get("isEmployer", Boolean.class);
-//        Boolean isWorker = claims.get("isWorker", Boolean.class);
-//
-//
-//        if (isAdmin != null && isAdmin) {
-//            roles.add(new SimpleGrantedAuthority(roleDAO.getByName("ADMIN")
-//                    .orElseThrow(()-> new NoSuchEntityException(NO_ROLE +  ))));
-//        }
-//
-//        if (isEmployer != null) {
-//            roles.add(new SimpleGrantedAuthority(roleDAO.getByName("EMPLOYER")
-//                    .getName()));
-//        }
-//
-//        if (isWorker != null) {
-//            roles.add(new SimpleGrantedAuthority(roleDAO.getByName("WORKER")
-//                    .getName()));
-//        }
-//
-//    }
-
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String userName = extraUsername(token);
         return (userName.equals(userDetails.getUsername()) && !isTokenExpires(token));
     }
 
+    //public boolean validateRefresh
 }

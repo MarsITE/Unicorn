@@ -50,7 +50,7 @@ public class UserInfo {
 
     @Min(1)
     @Max(5)
-    @Column(name = "general_rating", columnDefinition = "Float default 0")
+    @Column(name = "general_rating")
     private Float generalRating;
 
     @Column(name = "image_url")

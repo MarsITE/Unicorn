@@ -18,14 +18,14 @@ export class UserHttpService {
   // tslint:disable-next-line: typedef
   private authHeader() {
     return {
-      headers: new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('access_token')}`)
+      headers: new HttpHeaders().set('Authorization', `Bearer ${sessionStorage.getItem('access_token')}`)
     };
   }
 
   private authHeaderBlob(): any {
     return {
       responseType: 'blob',
-      headers: new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('access_token')}`)
+      headers: new HttpHeaders().set('Authorization', `Bearer ${sessionStorage.getItem('access_token')}`)
     };
   }
 
@@ -49,7 +49,7 @@ export class UserHttpService {
     return this.http.post<UserAuth>(`${environment.url}/login`, user)
       .pipe(
         map(result => {
-          localStorage.setItem('access_token', result.token);
+          sessionStorage.setItem('access_token', result.token);
           return true;
         })
       );
@@ -60,7 +60,7 @@ export class UserHttpService {
   }
 
   public loadImage(imageURL: string): Observable<any> {
-    return this.http.get(`${environment.url}/user-profile/load-photo/${imageURL}`, this.authHeaderBlob());
+    return this.http.get(`${environment.url}/user-profile/load-photo/${imageURL}`,  this.authHeader());
   }
 
   public saveImage(photo: any, id: string): Observable<Blob> {
@@ -68,8 +68,12 @@ export class UserHttpService {
   }
 
   public loggedIn(): void {
-    if (localStorage.getItem('access_token')) {
-      localStorage.removeItem('access_token');
+    if (sessionStorage.getItem('access_token')) {
+      sessionStorage.removeItem('access_token');
     }
+  }
+
+  public refreshToken(refreshToken: string): Observable<UserAuth> {
+    return this.http.post<UserAuth>(`${environment.url}/refresh-token`, refreshToken, this.authHeader());
   }
 }

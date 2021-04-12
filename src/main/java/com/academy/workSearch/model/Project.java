@@ -18,7 +18,7 @@ public class Project {
     @Column(name = "project_id")
     private UUID projectId;
 
-    @Column(name = "name", length = 20)
+    @Column(name = "name", length = 50)
     private String name;
 
     @Column(name = "description", length = 2000)

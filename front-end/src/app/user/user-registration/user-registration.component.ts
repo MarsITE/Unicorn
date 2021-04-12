@@ -36,7 +36,7 @@ export class UserRegistrationComponent implements OnInit, OnDestroy {
     this.userForm = new FormGroup({
       email: new FormControl(
         email,
-        [Validators.required, Validators.email, Validators.maxLength(30)]),
+        [Validators.required, Validators.email, Validators.maxLength(50)]),
       password: new FormControl(
         password,
         [Validators.required, Validators.maxLength(15), Validators.minLength(6)]),

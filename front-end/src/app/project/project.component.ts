@@ -42,7 +42,7 @@ export class ProjectComponent implements OnInit {
   .set('page', this.counter.toString())
   .set('sort', this.sort)
   .set('maxResult', this.maxResult.toString())
-  .set('Authorization', `Bearer ${localStorage.getItem('access_token')}`) ;
+  .set('Authorization', `Bearer ${sessionStorage.getItem('access_token')}`) ;
 
   this.projectService.getProjects(this.counter.toString(), this.sort, this.maxResult.toString()).subscribe(
       (response: Project[]) => {

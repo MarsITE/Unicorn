@@ -11,14 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,11 +65,14 @@ public class UserController {
     @GetMapping({"/user/{email}"})
     @ApiOperation(value = "Get user", notes = "Get user")
     public ResponseEntity<UserDTO> get(@PathVariable String email) {
-        UserDTO user = userService.getByEmail(email);
         logger.info("Find user with email = {}", email);
-        if (user == null) {
-            logger.error("There is no user with email = {} ", email);
-        }
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(userService.getByEmail(email));
+    }
+
+    @PostMapping({"/refresh-token"})
+    public ResponseEntity<UserAuthDTO> refreshToken(@RequestParam String refreshToken) {
+        UserAuthDTO userAuthDTO = new UserAuthDTO();
+        //todo
+        return ResponseEntity.ok(userAuthDTO);
     }
 }
