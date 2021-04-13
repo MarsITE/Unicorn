@@ -6,6 +6,7 @@ import { DomSanitizer, SafeUrl, SafeHtml, SafeResourceUrl } from '@angular/platf
 import { WorkStatus } from '../../common/model/work-status';
 import { Subscription } from 'rxjs';
 import { StorageService } from 'src/app/common/services/storage.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-user-profile',
@@ -27,7 +28,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   ];
 
   constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router, private domSanitizer: DomSanitizer,
-    private storageService: StorageService) {
+    private storageService: StorageService, private toastr: ToastrService) {
     this.email = router.snapshot.params.email;
     this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl('../../../assets/default-profile-photo.jpg');
   }
@@ -81,7 +82,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   public delete(email: string): void {
     this.subscriptions.push(this.userService.deleteUser(email).subscribe(
       (response) => {
-        alert('deleted');
+        this.toastr.success('Deleted', 'Success!');
         this.router2.navigateByUrl('login');
       },
       (error) => {

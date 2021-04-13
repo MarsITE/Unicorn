@@ -6,6 +6,7 @@ import { UserRegistration } from 'src/app/common/model/user-registration';
 import { UserAuth } from 'src/app/common/model/user-auth';
 import { StorageService } from 'src/app/common/services/storage.service';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-user-login',
@@ -17,7 +18,8 @@ export class UserLoginComponent implements OnInit, OnDestroy {
   user: UserRegistration;
   userForm: FormGroup;
   private subscriptions: Subscription[] = [];
-  constructor(private userService: UserHttpService, private router: Router, private storageService: StorageService) { }
+  constructor(private userService: UserHttpService, private router: Router, private storageService: StorageService,
+              private toastr: ToastrService) { }
   ngOnDestroy(): void {
     this.subscriptions.forEach(s => {
       s.unsubscribe();
@@ -64,7 +66,7 @@ export class UserLoginComponent implements OnInit, OnDestroy {
         this.initForm(
           user.email
         );
-        alert(error);
+        this.toastr.error(error, 'Error');
       },
       () => {
         console.log('complete');
