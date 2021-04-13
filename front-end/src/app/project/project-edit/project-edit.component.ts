@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { Project } from '../../common/model/project';
 import { ProjectStatus } from '../../common/model/project-status';
 import { ProjectService } from '../../common/services/project.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-project-edit',
@@ -26,7 +27,7 @@ export class ProjectEditComponent implements OnInit, OnDestroy {
     { value: 'CLOSED', viewValue: 'Closed' }
   ]; 
 
-  constructor(private projectService: ProjectService, router: ActivatedRoute, private router2: Router) {   
+  constructor(private projectService: ProjectService, router: ActivatedRoute, private router2: Router, private toastr: ToastrService) {   
     this.id = router.snapshot.params.id;     
    }
 
@@ -61,7 +62,7 @@ export class ProjectEditComponent implements OnInit, OnDestroy {
   update(): void {
     this.projectService.save(this.project)
       .subscribe(data => {
-        alert("Project has been updated successfully");
+        this.toastr.success('Project has been updated successfully', 'Success!');        
       },
       er => {
         console.log(er);
