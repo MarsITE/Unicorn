@@ -6,9 +6,11 @@ import com.academy.workSearch.dto.ProjectDTO;
 import com.academy.workSearch.dto.SkillDTO;
 import com.academy.workSearch.dto.mapper.ProjectMapper;
 import com.academy.workSearch.dto.mapper.SkillMapper;
+import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.model.Project;
 import com.academy.workSearch.model.Skill;
 import com.academy.workSearch.model.User;
+import com.academy.workSearch.model.enums.ProjectStatus;
 import com.academy.workSearch.service.ProjectService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+
+import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_PROJECT;
 
 @Service
 @Transactional
@@ -45,33 +49,43 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void save(ProjectDTO projectDto) {
+    public ProjectDTO save(ProjectDTO projectDto) {
         User user = new User();
-        user.setUserId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f0"));
-
-        Project project = ProjectMapper.INSTANCE.toEntity(projectDto);
+        user.setUserId(UUID.fromString("8e90fb9a-736f-44e7-ac1a-e64ac914a0a2"));
+        Project project = new Project();
+        project.setName(projectDto.getName());
+        project.setDescription(projectDto.getDescription());
         project.setEmployer(user);
-
+        project.setProjectStatus(ProjectStatus.valueOf(projectDto.getProjectStatus()));
         projectDAO.save(project);
+        return projectDto;
+
     }
 
     @Override
-    public void addSkillsToProject(ProjectDTO projectDto, SkillDTO skillDTO) {
+    public ProjectDTO addSkillsToProject(ProjectDTO projectDto, SkillDTO skillDTO) {
         Project project = ProjectMapper.INSTANCE.toEntity(projectDto);
         Skill skill = SkillMapper.SKILL_MAPPER.toEntity(skillDTO);
         Set<Skill> skills = new HashSet<>();
         skills.add(skill);
         project.setSkills(skills);
         projectDAO.save(project);
+        return projectDto;
     }
 
     @Override
     public ProjectDTO get(UUID id) {
-        return ProjectMapper.INSTANCE.toDto(projectDAO.get(id));
+        Project project = projectDAO.get(id)
+                .orElseThrow(() -> new NoSuchEntityException(NO_PROJECT + id));
+        return ProjectMapper.INSTANCE.toDto(project);
+
     }
 
     @Override
-    public void delete(UUID id) {
+    public ProjectDTO delete(UUID id) {
+        Project project = projectDAO.get(id)
+                .orElseThrow(() -> new NoSuchEntityException(NO_PROJECT + id));
         projectDAO.delete(id);
+        return ProjectMapper.INSTANCE.toDto(project);
     }
 }

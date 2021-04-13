@@ -20,7 +20,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
   imageURL: string;
   imageSrc: any;
   selectedImage: any;
-  today: any;
+  today: Date;
   private subscriptions: Subscription[] = [];
   workStatuses: WorkStatus[] = [
     { value: 'PART_TIME', viewValue: 'Part time' },
@@ -32,6 +32,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
   constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router) {
     this.email = router.snapshot.params.email;
+    this.today = new Date();
   }
 
   ngOnInit(): void {
@@ -45,16 +46,15 @@ export class UserEditComponent implements OnInit, OnDestroy {
   }
 
   private initForm(
-    firstName: string = ' ',
-    lastName: string = ' ',
+    firstName: string = '',
+    lastName: string = '',
     phone: string = '',
-    linkToSocialNetwork: string = ' ',
-    dateOfBirth: Date = this.today,
+    linkToSocialNetwork: string = '',
+    birthDate: Date = this.today,
     isShowInfo: boolean = true,
-    workStatus: string = ' ',
-    imageUrl: string = ' '
+    workStatus: string = '',
+    imageUrl: string = ''
   ): void {
-    this.today = Date.now();
     this.userProfileForm = new FormGroup({
       firstName: new FormControl(
         firstName,
@@ -65,8 +65,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
       phone: new FormControl(
         phone,
         [Validators.pattern('[- +()0-9]+')]),
-      linkToSocialNetwork: new FormControl(linkToSocialNetwork),
-      dateOfBirth: new FormControl(dateOfBirth),
+      linkToSocialNetwork: new FormControl(linkToSocialNetwork, Validators.maxLength(255)),
+      dateOfBirth: new FormControl(birthDate),
       isShowInfo: new FormControl(isShowInfo),
       workStatus: new FormControl(workStatus),
       imageUrl: new FormControl(imageUrl)
@@ -83,7 +83,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
           this.user.userInfo.lastName,
           this.user.userInfo.phone,
           this.user.userInfo.linkToSocialNetwork,
-          new Date(this.user.userInfo.dateOfBirth),
+          new Date(this.user.userInfo.birthDate),
           this.user.userInfo.showInfo,
           this.user.userInfo.workStatus,
           this.user.userInfo.imageUrl);
@@ -152,9 +152,9 @@ export class UserEditComponent implements OnInit, OnDestroy {
     if (userInfo.linkToSocialNetwork == null) {
       userInfo.linkToSocialNetwork = '';
     }
-    userInfo.dateOfBirth = this.getDateFromDatePicker();
-    if (userInfo.dateOfBirth == null) {
-      userInfo.dateOfBirth = '';
+    userInfo.birthDate = this.getDateFromDatePicker();
+    if (userInfo.birthDate == null) {
+      userInfo.birthDate = '';
     }
     userInfo.showInfo = this.userProfileForm.controls.isShowInfo.value;
 

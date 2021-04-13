@@ -4,6 +4,7 @@ import com.academy.workSearch.controller.UserInfoController;
 import com.academy.workSearch.dao.UserInfoDAO;
 import com.academy.workSearch.dto.PhotoDTO;
 import com.academy.workSearch.dto.UserInfoDTO;
+import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.model.UserInfo;
 import com.academy.workSearch.service.UserInfoService;
 import lombok.AllArgsConstructor;
@@ -24,9 +25,9 @@ import java.util.Arrays;
 import java.util.UUID;
 
 import static com.academy.workSearch.dto.mapper.UserInfoMapper.USER_INFO_MAPPER;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_SUCH_ENTITY;
 
 @Service
-@Transactional
 @AllArgsConstructor
 public class UserInfoServiceImpl implements UserInfoService {
     private final Logger logger = LoggerFactory.getLogger(UserInfoController.class);
@@ -39,11 +40,15 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfoDAO.setClazz(UserInfo.class);
     }
 
-    public void save(UserInfoDTO userInfo) {
-        userInfoDAO.save(USER_INFO_MAPPER.toUserInfo(userInfo));
+    @Transactional
+    @Override
+    public UserInfoDTO save(UserInfoDTO userInfo) {
+        return USER_INFO_MAPPER
+                .toUserInfoDto(userInfoDAO.save(USER_INFO_MAPPER.toUserInfo(userInfo)));
     }
 
     @Override
+    @Transactional
     public boolean updateImage(MultipartFile photo, String id) {
         boolean isImageSave = false;
         try {
@@ -55,7 +60,8 @@ public class UserInfoServiceImpl implements UserInfoService {
             logger.info(path.toString());
 
             UUID uuid = UUID.fromString(id);
-            UserInfo userInfo = userInfoDAO.get(uuid);
+            UserInfo userInfo = userInfoDAO.get(uuid)
+                    .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + id));
             userInfo.setImageUrl(newNameImage);
             userInfoDAO.save(userInfo);
 
@@ -75,7 +81,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
             Path path = Paths.get(file.getAbsolutePath());
             photoDTO.setPhoto(new ByteArrayResource(Files.readAllBytes(path)));
-            return null;
+            return photoDTO;
         } catch (IOException e) {
             logger.trace(Arrays.toString(Arrays.stream(e.getStackTrace()).toArray()));
         }

@@ -31,7 +31,7 @@ public class ProjectDAOImpl extends CrudDAOImpl<Project> implements ProjectDAO {
         }
 
 
-        PaginationResult<Project> paginationResult = new PaginationResult(query, page, maxResult, maxNavigationPage);
+        PaginationResult<Project> paginationResult = new PaginationResult<>(query, page, maxResult, maxNavigationPage);
 
         return paginationResult.getList();
     }

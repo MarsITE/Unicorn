@@ -12,19 +12,20 @@ public interface SkillDetailsMapper {
     SkillDetailsMapper SKILL_DETAILS_MAPPER = Mappers.getMapper(SkillDetailsMapper.class);
 
     @Mappings({
+            @Mapping(target = "skillId", source = "skillId"),
             @Mapping(target = "name", source = "name"),
-            @Mapping(target = "skillId", source = "skillId")
+            @Mapping(target = "enabled", source = "enabled")
     })
     SkillDetailsDTO toDto(Skill skill);
 
     @Mappings({
+            @Mapping(target = "skillId", source = "skillId"),
             @Mapping(target = "name", source = "name"),
-            @Mapping(target = "skillId", source = "skillId")
+            @Mapping(target = "enabled", source = "enabled")
     })
     Skill toEntity(SkillDetailsDTO skillDto);
 
     List<SkillDetailsDTO> toSkillsDto(List<Skill> skills);
 
     List<Skill> toSkills(List<SkillDetailsDTO> toSkillsDto);
-
 }

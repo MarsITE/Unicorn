@@ -1,25 +1,24 @@
 package com.academy.workSearch.service;
 
+import com.academy.workSearch.dto.UserAuthDTO;
 import com.academy.workSearch.dto.UserDTO;
+import com.academy.workSearch.dto.UserRegistrationDTO;
 
-import javax.validation.ValidationException;
 import java.util.List;
-import java.util.UUID;
 
 public interface UserService {
 
     List<UserDTO> findAll();
 
-    void save(UserDTO UserDTO);
+    UserAuthDTO save(UserRegistrationDTO userRegistrationDTO);
 
     UserDTO update(UserDTO user);
 
-    UserDTO get(UUID id);
+    UserDTO deleteByEmail(String email);
 
-    void delete(UUID id);
-
-    void deleteByEmail(String email);
+    UserAuthDTO get(UserRegistrationDTO userAuth);
 
     UserDTO getByEmail(String email);
 
+    boolean isPresentUserByEmail(String email);
 }

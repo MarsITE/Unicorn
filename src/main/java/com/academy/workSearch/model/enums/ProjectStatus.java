@@ -5,10 +5,14 @@ public enum ProjectStatus {
     DEVELOPING ("Developing"),
     TESTING ("Testing"),
     CLOSED ("Closed");
-
     private String name;
 
     ProjectStatus(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return  name;
     }
 }

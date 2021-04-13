@@ -1,7 +1,7 @@
 package com.academy.workSearch.controller;
 
 import com.academy.workSearch.dto.SkillDTO;
-import com.academy.workSearch.exceptionHandling.NoSuchSkillException;
+import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.service.SkillService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -31,23 +31,10 @@ public class SkillController {
         this.skillService = skillService;
     }
 
-    @GetMapping("")
-    @ApiOperation(value = "Show all skills", notes = "Show information about all skills in DB")
+    @GetMapping()
+    @ApiOperation(value = "Show all skills", notes = "Show information about all skills")
     public ResponseEntity<List<SkillDTO>> getAll() {
         logger.info("Show all skills");
         return ResponseEntity.ok(skillService.findAllEnabled(true));
-    }
-
-    @GetMapping("/{id}")
-    @ApiOperation(value = "Find skill by ID", notes = "Find skill in DB, if skill exist")
-    public ResponseEntity<SkillDTO> findById(@ApiParam(value = "ID value for skill you need to retrive", required = true)
-                                             @PathVariable UUID id) {
-        logger.info("Find skill with ID = " + id);
-        SkillDTO skillDto = skillService.get(id);
-        if (Objects.isNull(skillDto)) {
-            logger.error("There is no skill with ID = " + id + " in Database");
-            throw new NoSuchSkillException("There is no skill with ID = " + id + " in Database");
-        }
-        return ResponseEntity.ok(skillDto);
     }
 }

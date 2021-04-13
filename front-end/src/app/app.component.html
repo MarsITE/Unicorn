@@ -1,2 +1,21 @@
-<router-outlet></router-outlet>
+<header>
+  <app-toolbar></app-toolbar>
+</header>
+
+<main>
+  <mat-sidenav-container class="worksearch-sidenav-container">      
+    <mat-sidenav mode="side" #sidenav mode="side" opened class="worksearch-sidenav">
+      <app-sidenav-list></app-sidenav-list>
+    </mat-sidenav>  
+    <mat-sidenav-content>    
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</main>
+
+<footer>
+  <app-footer></app-footer>
+</footer>
+
+
 

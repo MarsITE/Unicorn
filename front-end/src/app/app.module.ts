@@ -7,7 +7,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { CdkTableModule } from '@angular/cdk/table';
 import { CdkTreeModule } from '@angular/cdk/tree';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -51,7 +51,7 @@ import { UserHttpService } from './common/services/user-http.service';
 import { UserListComponent } from './user/user-list/user-list.component';
 import { UserProfileComponent } from './user/user-profile/user-profile.component';
 import { UserEditComponent } from './user/user-edit/user-edit.component';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { ProjectService } from './common/services/project.service';
@@ -62,6 +62,15 @@ import { ProjectEditComponent } from './project/project-edit/project-edit.compon
 import { AdminComponent } from './admin/admin.component';
 import { SkillService } from './common/services/skill.service';
 import { StartPageComponent} from './start-page/start-page.component';
+import { UserRegistrationComponent } from './user/user-registration/user-registration.component';
+import { UserLoginComponent } from './user/user-login/user-login.component';
+import { StorageService } from './common/services/storage.service';
+import { HttpErrorInterceptor } from './common/services/http-error.interceptor';
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { SidenavListComponent } from './components/sidenav-list/sidenav-list.component';
+import { ConfirmComponent } from './modals/confirm/confirm.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -70,10 +79,17 @@ import { StartPageComponent} from './start-page/start-page.component';
     UserListComponent,
     UserProfileComponent,
     UserEditComponent,
+    UserRegistrationComponent,
+    UserLoginComponent,
+    UserEditComponent,
     ProjectInfoComponent,
     ProjectEditComponent,
     StartPageComponent,
-    AdminComponent
+    AdminComponent,
+    ToolbarComponent,
+    FooterComponent,
+    SidenavListComponent,
+    ConfirmComponent
   ],
 
   imports: [
@@ -132,7 +148,18 @@ import { StartPageComponent} from './start-page/start-page.component';
     ReactiveFormsModule,
     NgxMaskModule.forRoot()
   ],
-  providers: [ProjectService, UserHttpService, SkillService],
-  bootstrap: [AppComponent]
+  providers: [
+    ProjectService,
+    UserHttpService,
+    StorageService,
+    SkillService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpErrorInterceptor,
+      multi: true
+    }
+  ],
+  bootstrap: [AppComponent],
+  entryComponents: [ConfirmComponent]
 })
 export class AppModule { }

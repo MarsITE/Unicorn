@@ -1,5 +1,6 @@
 <div *ngIf="user" class="profile">
   <mat-card class="user-profile">
+    <button class="logout" (click)="logout()" mat-button> <span class="material-icons"> logout </span> </button>
     <picture class="photo">
       <img class="img-photo" mat-card-image [src]="imageBlobUrl" alt="User photo">
     </picture>
@@ -15,7 +16,7 @@
     <label class="raiting">General raiting: {{user.userInfo.generalRating}}</label>
 
     <div class="userRoles">
-      <span class *ngFor="let role of user.roles">{{converToPlain(role)}}</span>
+      <span class *ngFor="let role of user.roles"> {{converToPlain(role)}} </span>
     </div>
 
     <div class="aditional-data" *ngIf="user.userInfo.showInfo">
@@ -26,8 +27,8 @@
       <div *ngIf="user.userInfo.linkToSocialNetwork && user.userInfo.linkToSocialNetwork != ''">
         <label>Url: {{user.userInfo.linkToSocialNetwork}}</label>
       </div>
-      <div *ngIf="user.userInfo.dateOfBirth && user.userInfo.dateOfBirth != ''">
-        <label>DateOf birth: {{user.userInfo.dateOfBirth}}</label>
+      <div *ngIf="user.userInfo.birthDate && user.userInfo.birthDate != ''">
+        <label>Date of birth: {{user.userInfo.birthDate}}</label>
       </div>
       <div *ngIf="user.userInfo.showInfo && user.userInfo.showInfo != ''">
         <label>Public profile: {{user.userInfo.showInfo}}</label>

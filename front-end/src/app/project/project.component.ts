@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Project } from '../common/model/project';
 import { User } from '../common/model/user';
 import { ProjectService } from '../common/services/project.service';
+import { Skill } from '../common/model/skill';
+import { StorageService } from '../common/services/storage.service';
 
 
 @Component({
@@ -15,18 +17,21 @@ import { ProjectService } from '../common/services/project.service';
 export class ProjectComponent implements OnInit {
   id: String;
   owner: User;
-  sortFlag: boolean = false;
-  sort: string = "desc";
-  counter: number = 1;
+  sortFlag = false;
+  sort = 'desc';
+  counter = 1;
+  maxResult = 5;
 
   projects: Project[] = [];
 
-  displayedColumns: string[] = ['name', 'projectStatus', 'creationDate', 'owner'];
+  displayedColumns: string[] = ['name', 'projectStatus', 'creationDate', 'owner', 'skills'];
 
-  constructor(private projectService: ProjectService, private router: Router, private http: HttpClient, route: ActivatedRoute) {
+  constructor(private projectService: ProjectService, private router: Router, private http: HttpClient, route: ActivatedRoute,
+              private storageService: StorageService) {
     route.queryParams.subscribe(params => {
-    this.counter = params['page'] || this.counter;
-    this.sort = params['sort'] || this.sort;
+    this.counter = params.page || this.counter;
+    this.sort = params.sort || this.sort;
+    this.maxResult = params.maxResult || this.maxResult;
 });
   }
 
@@ -39,19 +44,21 @@ export class ProjectComponent implements OnInit {
   const params = new HttpParams()
   .set('page', this.counter.toString())
   .set('sort', this.sort)
+  .set('maxResult', this.maxResult.toString())
+  .set('Authorization', `Bearer ${this.storageService.getValue('token')}`) ;
 
-    this.projectService.getProjects(params).subscribe(
+  this.projectService.getProjects(this.counter.toString(), this.sort, this.maxResult.toString()).subscribe(
       (response: Project[]) => {
         this.projects = response;
       },
       (error) => {
-        console.log("error", error);
+        console.log('error', error);
       },
       () => {
-        console.log("complete");
-        this.router.navigateByUrl(`projects?page=` + this.counter + `&sort=` + this.sort);
+        console.log('complete');
+        this.router.navigateByUrl(`projects?page=` + this.counter + `&maxResult=` + this.maxResult + `&sort=` + this.sort);
       }
-    )
+    );
   }
 
   showProjectDescription(row: any) {
@@ -63,25 +70,35 @@ export class ProjectComponent implements OnInit {
   }
 
   projectsSort() {
-    this.sortFlag = !this.sortFlag
-    if(this.sortFlag){
-      this.sort= "asc"
-    } else {
-      this.sort = "desc"
-    }
-    this.getProjects()
+    this.sortFlag = !this.sortFlag;
+    this.sort = this.sortFlag ? 'asc' : 'desc';
   }
 
   projectsNext() {
     this.counter++;
-    this.getProjects()
+    this.getProjects();
   }
 
   projectsPrev() {
-    if(this.counter > 1){
+    if (this.counter > 1){
       this.counter--;
     }
-    this.getProjects()
+    this.getProjects();
+  }
+
+  projectsMaxResult5() {
+    this.maxResult = 5;
+    this.getProjects();
+  }
+
+  projectsMaxResult10() {
+    this.maxResult = 10;
+    this.getProjects();
+  }
+
+  projectsMaxResult25() {
+    this.maxResult = 25;
+    this.getProjects();
   }
 
 }

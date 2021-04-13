@@ -27,7 +27,7 @@ public class Project {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "project_status")
-    @Convert(converter = ProjectStatusConverter.class)
+//    @Convert(converter = ProjectStatusConverter.class)
     private ProjectStatus projectStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
