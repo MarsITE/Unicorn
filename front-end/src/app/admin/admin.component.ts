@@ -39,6 +39,7 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
       (error) => {
         console.log("error", error);
+        this.toastr.error('Skills was not received!', 'Oops!');
       },
       () => {
         console.log("complete");
