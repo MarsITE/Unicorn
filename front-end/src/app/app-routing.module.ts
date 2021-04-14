@@ -11,6 +11,7 @@ import { AdminComponent } from './admin/admin.component';
 import { UserRegistrationComponent } from './user/user-registration/user-registration.component';
 import { UserLoginComponent } from './user/user-login/user-login.component';
 import { LoginGuard } from './common/services/guard/login.guard';
+import { StartPageComponent } from './start-page/start-page.component';
 
 const routes: Routes = [
   {
@@ -51,6 +52,9 @@ const routes: Routes = [
   }, {
     path: 'login',
     component: UserLoginComponent
+  }, {
+    path: '',
+    component: StartPageComponent
   }
 ];
 

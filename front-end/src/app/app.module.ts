@@ -71,6 +71,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { SidenavListComponent } from './components/sidenav-list/sidenav-list.component';
 import { ConfirmComponent } from './modals/confirm/confirm.component';
 import { ToastrModule } from 'ngx-toastr';
+import { StartPageComponent } from './start-page/start-page.component';
 
 @NgModule({
   declarations: [
@@ -89,7 +90,8 @@ import { ToastrModule } from 'ngx-toastr';
     ToolbarComponent,
     FooterComponent,
     SidenavListComponent,
-    ConfirmComponent
+    ConfirmComponent,
+    StartPageComponent
   ],
 
   imports: [
