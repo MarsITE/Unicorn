@@ -13,6 +13,9 @@
         margin: 40px auto;
         background-color: rgb(230, 255, 238);
       }
+      .mat-card-title{
+          margin: auto;
+      }
     .mat-card-content p{
       margin: 0 16px;
     }
