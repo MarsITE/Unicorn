@@ -19,13 +19,13 @@ import java.util.function.Function;
 import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_ROLE;
 
 @Service
-public class JwtService {
+public class JwtServiceImpl {
     private final RoleDAO roleDAO;
 
     private final String SECRET_KEY = "secret";
     private final long EXPIRATION_TIME = 3600000*24; // 1 day
 
-    public JwtService(RoleDAO roleDAO) {
+    public JwtServiceImpl(RoleDAO roleDAO) {
         this.roleDAO = roleDAO;
         this.roleDAO.setClazz(Role.class);
     }
@@ -47,11 +47,11 @@ public class JwtService {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
 
-    private Boolean isTokenExpires(String token) {
+    private Boolean isAccessTokenExpired(String token) {
         return extraExpiration(token).before(new Date());
     }
 
-    public String generateToken(User user) {
+    public String generateAccessToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", user.getUserId());
         if (user.getUserInfo().getFirstName() != null) {
@@ -61,12 +61,21 @@ public class JwtService {
             claims.put("lastname", user.getUserInfo().getLastName());
         }
         setRoles(claims, user.getRoles());
-        return createToken(claims, user.getEmail());
+        return createAccessToken(claims, user.getEmail());
     }
 
-    private String createToken(Map<String, Object> claims, String username) {
+    public String generateRefreshToken(String email) {
+        return createRefreshToken(new HashMap<>(), email);
+    }
+
+    private String createAccessToken(Map<String, Object> claims, String username) {
         return Jwts.builder().setClaims(claims).setSubject(username).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
+    }
+
+    private String createRefreshToken(Map<String, Object> claims, String username) {
+        return Jwts.builder().setClaims(claims).setSubject(username)
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 
@@ -90,10 +99,14 @@ public class JwtService {
 
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public boolean validateAccessToken(String token, UserDetails userDetails) {
         final String userName = extraUsername(token);
-        return (userName.equals(userDetails.getUsername()) && !isTokenExpires(token));
+        return (userName.equals(userDetails.getUsername()) && !isAccessTokenExpired(token));
     }
 
-    //public boolean validateRefresh
+    public boolean validateRefreshToken(String token, String email) {
+        final String userName = extraUsername(token);
+        //todo load from local storage
+        return (userName.equals(email));
+    }
 }

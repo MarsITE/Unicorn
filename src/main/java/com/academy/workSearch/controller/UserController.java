@@ -70,9 +70,8 @@ public class UserController {
     }
 
     @PostMapping({"/refresh-token"})
-    public ResponseEntity<UserAuthDTO> refreshToken(@RequestParam String refreshToken) {
-        UserAuthDTO userAuthDTO = new UserAuthDTO();
-        //todo
-        return ResponseEntity.ok(userAuthDTO);
+    public ResponseEntity<UserAuthDTO> refreshToken(@RequestBody UserAuthDTO userAuthDTO) {
+        logger.info("Update expired refresh token, from user with email = {}", userAuthDTO.getEmail());
+        return ResponseEntity.ok(userService.refreshToken(userAuthDTO));
     }
 }

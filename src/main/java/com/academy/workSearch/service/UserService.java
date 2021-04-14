@@ -22,5 +22,5 @@ public interface UserService {
 
     boolean isPresentUserByEmail(String email);
 
-    UserAuthDTO refreshToken(String refreshToken);
+    UserAuthDTO refreshToken(UserAuthDTO userAuthDTO);
 }

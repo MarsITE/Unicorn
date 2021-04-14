@@ -49,7 +49,8 @@ export class UserHttpService {
     return this.http.post<UserAuth>(`${environment.url}/login`, user)
       .pipe(
         map(result => {
-          sessionStorage.setItem('access_token', result.token);
+          sessionStorage.setItem('access_token', result.accessToken);
+          sessionStorage.setItem('refresh-token', result.refreshToken);
           return true;
         })
       );
@@ -60,7 +61,7 @@ export class UserHttpService {
   }
 
   public loadImage(imageURL: string): Observable<any> {
-    return this.http.get(`${environment.url}/user-profile/load-photo/${imageURL}`,  this.authHeader());
+    return this.http.get(`${environment.url}/user-profile/load-photo/${imageURL}`,  this.authHeaderBlob());
   }
 
   public saveImage(photo: any, id: string): Observable<Blob> {
@@ -71,9 +72,12 @@ export class UserHttpService {
     if (sessionStorage.getItem('access_token')) {
       sessionStorage.removeItem('access_token');
     }
+    if (sessionStorage.getItem('refresh-token')) {
+      sessionStorage.removeItem('refresh-token');
+    }
   }
 
-  public refreshToken(refreshToken: string): Observable<UserAuth> {
-    return this.http.post<UserAuth>(`${environment.url}/refresh-token`, refreshToken, this.authHeader());
+  public refreshToken(userAuth: UserAuth): Observable<UserAuth> {
+    return this.http.post<UserAuth>(`${environment.url}/refresh-token`, userAuth, this.authHeader());
   }
 }

@@ -34,4 +34,8 @@ export class TokenService {
 
     }
   }
+
+  public getRoles(): any {
+    return this.getTokenData().role;
+  }
 }

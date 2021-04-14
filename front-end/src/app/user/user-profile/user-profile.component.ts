@@ -56,13 +56,16 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   private getImage(imageUrl: string): void {
     this.subscriptions.push(this.userService.loadImage(imageUrl)
     .subscribe(
-      response => this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(response)),
+      response => {
+        this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(response));
+        sessionStorage.setItem('avatar', response);
+      },
       error => console.log('error', error),
     ));
   }
 
   public edit(email: string): void {
-    this.router2.navigateByUrl(`user-profile-edit/${email}`);
+    this.router2.navigateByUrl(`my-profile-edit/${email}`);
   }
 
   public delete(email: string): void {
@@ -82,15 +85,6 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         this.user.userInfo.workStatus = ws.viewValue;
       }
     });
-  }
-  public converToPlain(str: string): string {
-    return str.toLowerCase();
-  }
-
-
-  public logout(): void {
-    this.userService.loggedIn();
-    this.router2.navigateByUrl('login');
   }
 
 }

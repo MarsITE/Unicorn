@@ -25,6 +25,9 @@ export class UserLoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    /*this.sideNavService.sideNavToggleSubject.subscribe(() => {
+      this.sidenav.toggle();
+    });*/
     this.initForm();
   }
 
