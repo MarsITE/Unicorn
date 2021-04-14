@@ -1,0 +1,28 @@
+<div class="container" id="main-container">
+    <div *ngFor="let project of projects">
+      <mat-card class="project-card">
+        <mat-card-header>
+          <mat-card-title>{{project?.name}}</mat-card-title>
+          <mat-card-subtitle>{{project?.projectStatus}}</mat-card-subtitle>
+        </mat-card-header>
+  
+        <mat-card-content>
+          <p>{{project?.description}}</p>
+        </mat-card-content>
+        
+        <mat-card-footer>
+          <mat-card-subtitle class="skills">{{project?.skills}}</mat-card-subtitle>
+          <mat-card-subtitle class="creating-date"> {{project?.creationDate|date}}</mat-card-subtitle>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+    <div mat-card-title>
+      <button mat-stroked-button (click)=projectsPrev()>prev</button>
+      <button mat-stroked-button>{{counter}}</button>
+      <button mat-stroked-button (click)=projectsNext()>next</button>
+      <select [ngModel]="selectedDeviceObj" (ngModelChange)="onChangeObj($event)" name="sel3">
+        <option [ngValue]="i" *ngFor="let i of deviceObjects">{{i}}</option>
+      </select>
+    </div>
+  </div>
+  
