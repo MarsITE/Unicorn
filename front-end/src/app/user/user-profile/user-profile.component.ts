@@ -58,7 +58,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     .subscribe(
       response => {
         this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(response));
-        sessionStorage.setItem('avatar', response);
+        sessionStorage.setItem('avatar', window.URL.createObjectURL(response));
       },
       error => console.log('error', error),
     ));

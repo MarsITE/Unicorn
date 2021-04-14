@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly = true)
-    User getUser(String email) {
+    private User getUser(String email) {
         return userDAO.getByEmail(email)
                 .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + email));
     }
