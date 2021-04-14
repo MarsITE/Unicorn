@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserRegistration } from 'src/app/common/model/user-registration';
-import { UserHttpService } from '../../common/services/user-http.service';
+import { UserHttpService } from '../../../common/services/user-http.service';
 
 @Component({
   selector: 'app-user-registration',

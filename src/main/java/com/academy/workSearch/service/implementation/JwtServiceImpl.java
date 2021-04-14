@@ -4,6 +4,7 @@ import com.academy.workSearch.dao.RoleDAO;
 import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.model.Role;
 import com.academy.workSearch.model.User;
+import com.academy.workSearch.service.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -19,11 +20,11 @@ import java.util.function.Function;
 import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_ROLE;
 
 @Service
-public class JwtServiceImpl {
+public class JwtServiceImpl implements JwtService {
     private final RoleDAO roleDAO;
 
     private final String SECRET_KEY = "secret";
-    private final long EXPIRATION_TIME = 3600000*24; // 1 day
+    private final long EXPIRATION_TIME = 3600000; // 1 hour
 
     public JwtServiceImpl(RoleDAO roleDAO) {
         this.roleDAO = roleDAO;
@@ -51,6 +52,7 @@ public class JwtServiceImpl {
         return extraExpiration(token).before(new Date());
     }
 
+    @Override
     public String generateAccessToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", user.getUserId());
@@ -64,6 +66,7 @@ public class JwtServiceImpl {
         return createAccessToken(claims, user.getEmail());
     }
 
+    @Override
     public String generateRefreshToken(String email) {
         return createRefreshToken(new HashMap<>(), email);
     }
@@ -100,14 +103,15 @@ public class JwtServiceImpl {
 
     }
 
+    @Override
     public boolean validateAccessToken(String token, UserDetails userDetails) {
         final String userName = extraUsername(token);
         return (userName.equals(userDetails.getUsername()) && !isAccessTokenExpired(token));
     }
 
+    @Override
     public boolean validateRefreshToken(String token, String email) {
         final String userName = extraUsername(token);
-        //todo load from local storage
         return (userName.equals(email));
     }
 }

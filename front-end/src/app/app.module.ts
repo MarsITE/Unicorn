@@ -48,9 +48,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { UserHttpService } from './common/services/user-http.service';
-import { UserListComponent } from './user/user-list/user-list.component';
-import { UserProfileComponent } from './user/user-profile/user-profile.component';
-import { UserEditComponent } from './user/user-edit/user-edit.component';
+import { UserListComponent } from './components/user/user-list/user-list.component';
+import { UserProfileComponent } from './components/user/user-profile/user-profile.component';
+import { UserEditComponent } from './components/user/user-edit/user-edit.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
@@ -61,13 +61,13 @@ import { ProjectInfoComponent } from './project/project-info/project-info.compon
 import { ProjectEditComponent } from './project/project-edit/project-edit.component';
 import { AdminComponent } from './admin/admin.component';
 import { SkillService } from './common/services/skill.service';
-import { UserRegistrationComponent } from './user/user-registration/user-registration.component';
-import { UserLoginComponent } from './user/user-login/user-login.component';
+import { UserRegistrationComponent } from './components/user/user-registration/user-registration.component';
+import { UserLoginComponent } from './components/user/user-login/user-login.component';
 import { HttpErrorInterceptor } from './common/services/interceptor/http-error.interceptor';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { SidenavListComponent } from './components/sidenav-list/sidenav-list.component';
-import { NotFoundComponent } from './not-found/not-found.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 @NgModule({
   declarations: [
