@@ -3,6 +3,7 @@ import {Router} from '@angular/router';
 import { ProjectStatus } from '../../common/model/project-status';
 import { Project } from '../../common/model/project';
 import { ProjectService } from '../../common/services/project.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-project-add',
@@ -21,14 +22,15 @@ export class ProjectAddComponent{
 
   project: Project = new Project();
 
-  constructor(private router: Router, private projectService: ProjectService) {
+  constructor(private router: Router, private projectService: ProjectService, private toastr: ToastrService) {
     this.project.projectStatus = this.selectedProjectStatus.value;
    }
 
   create(): void {
     this.projectService.save(this.project)
-      .subscribe(
-        data => alert('Project has been created successfully'),
+      .subscribe(data => {
+        this.toastr.success('Project has been created successfully', 'Success!');
+      },
       er => {
         console.log(er);
       });

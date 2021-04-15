@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserRegistration } from 'src/app/common/model/user-registration';
+import { ToastrService } from 'ngx-toastr';
 import { UserHttpService } from '../../../common/services/user-http.service';
 
 @Component({
@@ -14,7 +15,7 @@ export class UserRegistrationComponent implements OnInit, OnDestroy {
   user: UserRegistration;
   userForm: FormGroup;
   private subscriptions: Subscription[] = [];
-  constructor(private userService: UserHttpService, private router: Router) {
+  constructor(private userService: UserHttpService, private router: Router, private toastr: ToastrService) {
     this.initForm();
   }
   ngOnDestroy(): void {
@@ -57,7 +58,7 @@ export class UserRegistrationComponent implements OnInit, OnDestroy {
           '',
           user.isEmployer
         );
-        alert(error);
+        this.toastr.error(error, 'Error');
       },
     ));
   }

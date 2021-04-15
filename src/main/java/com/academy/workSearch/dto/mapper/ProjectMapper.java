@@ -3,6 +3,7 @@ package com.academy.workSearch.dto.mapper;
 import com.academy.workSearch.dto.ProjectDTO;
 import com.academy.workSearch.model.Project;
 import com.academy.workSearch.model.Skill;
+import com.academy.workSearch.model.enums.ProjectStatus;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -24,7 +25,7 @@ public interface ProjectMapper {
     @Mappings({ @Mapping(target = "id", source = "projectId"),
             @Mapping(target = "name", source = "name"),
             @Mapping(target = "description", source = "description"),
-            @Mapping(target = "projectStatus", source = "projectStatus"),
+            @Mapping(target = "projectStatus", qualifiedByName = "projectStatusStr"),
             @Mapping(target = "creationDate", source = "creationDate"),
             @Mapping(target = "owner", source = "employer"),
             @Mapping(target = "skills", qualifiedByName = "skillsStr")
@@ -34,7 +35,7 @@ public interface ProjectMapper {
     @Mappings({ @Mapping(target = "projectId", source = "id"),
             @Mapping(target = "name", source = "name"),
             @Mapping(target = "description", source = "description"),
-            @Mapping(target = "projectStatus", source = "projectStatus"),
+            @Mapping(target = "projectStatus", qualifiedByName = "projectStatus"),
             @Mapping(target = "creationDate", source = "creationDate"),
             @Mapping(target = "employer", source = "owner"),
             @Mapping(target = "skills", qualifiedByName = "skills")})
@@ -60,6 +61,13 @@ public interface ProjectMapper {
         });
         return skills;
     }
+    @Named("projectStatusStr")
+    default String projectStatusStr(ProjectStatus projectStatus){
+        return projectStatus.toString();
+    }
 
-
+    @Named("projectStatus")
+    default ProjectStatus projectStatus(String projectStatus){
+        return ProjectStatus.valueOf(projectStatus);
+    }
 }

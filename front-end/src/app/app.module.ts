@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { A11yModule } from '@angular/cdk/a11y';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -48,9 +49,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { UserHttpService } from './common/services/user-http.service';
-import { UserListComponent } from './components/user/user-list/user-list.component';
-import { UserProfileComponent } from './components/user/user-profile/user-profile.component';
-import { UserEditComponent } from './components/user/user-edit/user-edit.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
@@ -61,13 +59,18 @@ import { ProjectInfoComponent } from './project/project-info/project-info.compon
 import { ProjectEditComponent } from './project/project-edit/project-edit.component';
 import { AdminComponent } from './admin/admin.component';
 import { SkillService } from './common/services/skill.service';
-import { UserRegistrationComponent } from './components/user/user-registration/user-registration.component';
-import { UserLoginComponent } from './components/user/user-login/user-login.component';
-import { HttpErrorInterceptor } from './common/services/interceptor/http-error.interceptor';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { SidenavListComponent } from './components/sidenav-list/sidenav-list.component';
-import { NotFoundComponent } from './components/not-found/not-found.component';
+import { ConfirmComponent } from './modals/confirm/confirm.component';
+import { ToastrModule } from 'ngx-toastr';
+import { StartPageComponent } from './start-page/start-page.component';
+import { HttpErrorInterceptor } from './common/services/interceptor/http-error.interceptor';
+import { UserEditComponent } from './components/user/user-edit/user-edit.component';
+import { UserProfileComponent } from './components/user/user-profile/user-profile.component';
+import { UserListComponent } from './components/user/user-list/user-list.component';
+import { UserRegistrationComponent } from './components/user/user-registration/user-registration.component';
+import { UserLoginComponent } from './components/user/user-login/user-login.component';
 
 @NgModule({
   declarations: [
@@ -86,10 +89,12 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
     ToolbarComponent,
     FooterComponent,
     SidenavListComponent,
-    NotFoundComponent
+    ConfirmComponent,
+    StartPageComponent
   ],
 
   imports: [
+    CommonModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
@@ -143,7 +148,13 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
     MatCardModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxMaskModule.forRoot()
+    NgxMaskModule.forRoot(),
+    ToastrModule.forRoot({
+      timeOut: 10000,
+      positionClass: 'toast-top-center',
+      preventDuplicates: true,
+      closeButton: true
+    })
   ],
   providers: [
     ProjectService,
@@ -155,6 +166,7 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
       multi: true
     }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [ConfirmComponent]
 })
 export class AppModule { }

@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit, SecurityContext } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeUrl, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { User } from 'src/app/common/model/user';
 import { WorkStatus } from 'src/app/common/model/work-status';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
@@ -25,7 +26,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     { value: 'BUSY', viewValue: 'Busy' }
   ];
 
-  constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router, private domSanitizer: DomSanitizer) {
+  constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router, private domSanitizer: DomSanitizer,
+    private toastr: ToastrService) {
     this.email = router.snapshot.params.email;
     this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl('../../../assets/default-profile-photo.jpg');
   }
@@ -69,10 +71,9 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
 
   public delete(email: string): void {
-    this.subscriptions.push(this.userService.deleteUser(email)
-    .subscribe(
-      response => {
-        alert('deleted');
+    this.subscriptions.push(this.userService.deleteUser(email).subscribe(
+      (response) => {
+        this.toastr.success('Deleted', 'Success!');
         this.router2.navigateByUrl('login');
       },
       error => console.log('error', error),
@@ -86,5 +87,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       }
     });
   }
-
+  public converToPlain(str: string): string {
+    return str.toLowerCase();
+  }
 }

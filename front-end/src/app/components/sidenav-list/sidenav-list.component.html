@@ -1,25 +1,24 @@
 <mat-nav-list class="worksearch-sidenav-list">
-    <mat-list-item>
+   <mat-list-item>
       <button mat-button class="worksearch-sidenav-element" routerLink="/projects">
         <mat-icon>work_outline</mat-icon>
         <span>Projects</span>
       </button>
     </mat-list-item>
     <div *ngIf="isAdmin">
-    <mat-list-item>
-      <button mat-button class="worksearch-sidenav-element" routerLink="/users-list">
-        <mat-icon>people_outline</mat-icon>
-        <span>Users</span>
-      </button>
-    </mat-list-item>
-    <mat-list-item>
-      <button mat-button class="worksearch-sidenav-element" routerLink="/admin">
-        <mat-icon>pool</mat-icon>
-        <!-- playlist_add_check           -->
-        <!-- settings_accessibility -->
-        <span>Skills</span>
-      </button>
-    </mat-list-item>
-  </div>
-  </mat-nav-list>
-
+      <mat-list-item>
+        <button mat-button class="worksearch-sidenav-element" routerLink="/users-list">
+          <mat-icon>people_outline</mat-icon>
+          <span>Users</span>
+        </button>
+      </mat-list-item>
+      <mat-list-item>
+        <button mat-button class="worksearch-sidenav-element" routerLink="/admin">
+          <mat-icon>pool</mat-icon>
+          <!-- playlist_add_check           -->
+          <!-- settings_accessibility -->
+          <span>Skills</span>
+        </button>
+      </mat-list-item>
+    </div>
+</mat-nav-list>

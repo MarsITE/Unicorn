@@ -66,8 +66,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserAuthDTO save(UserRegistrationDTO userRegistrationDTO) {
-
         if (isPresentUserByEmail(userRegistrationDTO.getEmail())) {
             throw new NoUniqueEntityException(EMAIL_EXISTS + userRegistrationDTO.getEmail());
         }

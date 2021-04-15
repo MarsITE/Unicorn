@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request)
@@ -19,10 +19,13 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           }
           else {
             errorMsg = `Error Code: ${error.status},  Message: ${error.message}`;
-            if (error.status === 401) {
-             this.router.navigateByUrl('login');
-            } else if (error.status === 403) {
-              this.router.navigateByUrl('not-found');
+            switch (error.status) {
+              case 401:
+                this.router.navigateByUrl('login');
+                break;
+              case 403:
+                this.router.navigateByUrl('not-found');
+                break;
             }
           }
           return throwError(errorMsg);

@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { UserRegistration } from 'src/app/common/model/user-registration';
 import { UserAuth } from 'src/app/common/model/user-auth';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
+import { ToastrService } from 'ngx-toastr';
 import { first } from 'rxjs/operators';
 
 @Component({
@@ -17,7 +18,8 @@ export class UserLoginComponent implements OnInit, OnDestroy {
   user: UserRegistration;
   userForm: FormGroup;
   private subscriptions: Subscription[] = [];
-  constructor(private userService: UserHttpService, private router: Router) { }
+  constructor(private userService: UserHttpService, private router: Router,
+              private toastr: ToastrService) { }
   ngOnDestroy(): void {
     this.subscriptions.forEach(s => {
       s.unsubscribe();
@@ -25,9 +27,6 @@ export class UserLoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    /*this.sideNavService.sideNavToggleSubject.subscribe(() => {
-      this.sidenav.toggle();
-    });*/
     this.initForm();
   }
 
@@ -62,7 +61,7 @@ export class UserLoginComponent implements OnInit, OnDestroy {
       result => this.router.navigateByUrl(`my-profile/${user.email}`),
       error => {
         this.initForm(user.email);
-        alert(error);
+        this.toastr.error(error, 'Error');
       }));
   }
 }
