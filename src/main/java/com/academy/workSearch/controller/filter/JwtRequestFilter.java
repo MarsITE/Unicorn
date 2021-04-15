@@ -1,6 +1,6 @@
 package com.academy.workSearch.controller.filter;
 
-import com.academy.workSearch.service.implementation.JwtServiceImpl;
+import com.academy.workSearch.service.JwtService;
 import com.academy.workSearch.service.implementation.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,7 +22,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    private JwtServiceImpl jwtService;
+    private JwtService jwtService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

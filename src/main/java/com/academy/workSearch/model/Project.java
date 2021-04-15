@@ -11,7 +11,10 @@ import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "projects")
+@Table(name = "projects", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"name"}),
+        @UniqueConstraint(columnNames = {"owner_id"})
+    })
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

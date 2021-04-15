@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly = true)
-    private User getUser(String email) {
+    User getUser(String email) {
         return userDAO.getByEmail(email)
                 .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + email));
     }
@@ -133,7 +133,7 @@ public class UserServiceImpl implements UserService {
                             userRegistrationDTO.getPassword(),
                             grantedAuthorities));
         } catch (BadCredentialsException e) {
-            throw new BadCredentialsException(INCORRECT_USER_DATA, e);
+            throw new BadCredentialsException(INCORRECT_USER_DATA);
         }
         final String accessToken = jwtService.generateAccessToken(getUser(user.getEmail()));
         final String refreshToken = jwtService.generateRefreshToken(user.getEmail());

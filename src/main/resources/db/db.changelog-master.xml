@@ -31,7 +31,8 @@
             increase size email to 50;
             increase size project name to 50;
             add filed token to user;
-            updated on password on bcrypt</comment>
+            updated on password on bcrypt
+            in table projects make project id and name unique</comment>
     </changeSet>
 
 </databaseChangeLog>

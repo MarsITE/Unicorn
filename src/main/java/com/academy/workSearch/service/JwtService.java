@@ -12,4 +12,6 @@ public interface JwtService {
     String generateRefreshToken(String email);
 
     String generateAccessToken(User user);
+
+    String extraUsername(String token);
 }
