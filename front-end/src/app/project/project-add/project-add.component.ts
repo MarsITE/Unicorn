@@ -3,8 +3,6 @@ import {Router} from '@angular/router';
 import { ProjectStatus } from '../../common/model/project-status';
 import { Project } from '../../common/model/project';
 import { ProjectService } from '../../common/services/project.service';
-import { TokenService } from 'src/app/common/services/token.service';
-import { User } from 'src/app/common/model/user';
 
 @Component({
   selector: 'app-project-add',

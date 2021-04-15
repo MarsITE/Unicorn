@@ -7,22 +7,21 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UserHttpService } from '../user-http.service';
-import { TokenService } from '../token.service';
-import { error } from 'selenium-webdriver';
 import { UserAuth } from '../../model/user-auth';
+import { TokenHelper } from '../../helper/token.helper';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
 
-  constructor(private userService: UserHttpService, private tokenService: TokenService) {}
+  constructor(private userService: UserHttpService, private tokenHelper: TokenHelper) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    if (!this.tokenService.isValidToken()) {
+    if (!this.tokenHelper.isValidToken()) {
       const userAuth: UserAuth = {
-        email: this.tokenService.getEmailFromToken(),
+        email: this.tokenHelper.getEmailFromToken(),
         accessToken: '',
         refreshToken: sessionStorage.getItem('refresh_token')};
-      const subscription = this.userService.refreshToken(userAuth)
+      this.userService.refreshToken(userAuth)
       .subscribe(
         result => {
           sessionStorage.setItem('access_token', result.accessToken);

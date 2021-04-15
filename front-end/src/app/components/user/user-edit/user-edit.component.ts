@@ -2,10 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { User } from '../../common/model/user';
-import { UserInfo } from '../../common/model/user-info';
-import { WorkStatus } from '../../common/model/work-status';
-import { UserHttpService } from '../../common/services/user-http.service';
+import { User } from 'src/app/common/model/user';
+import { UserInfo } from 'src/app/common/model/user-info';
+import { WorkStatus } from 'src/app/common/model/work-status';
+import { UserHttpService } from 'src/app/common/services/user-http.service';
 
 @Component({
   selector: 'app-user-edit',

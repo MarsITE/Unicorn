@@ -34,7 +34,17 @@ export class TokenHelper {
     }
   }
 
-  public getRoles(): any {
-    return this.getTokenData().role;
+  public getRoles(): string[] {
+    const roles: string[] = [];
+    if (this.getTokenData().isAdmin) {
+      roles.push(this.getTokenData().name);
+    }
+    if (this.getTokenData().isWorker) {
+      roles.push(this.getTokenData().name);
+    }
+    if (this.getTokenData().isEmployer) {
+      roles.push(this.getTokenData().name);
+    }
+    return roles;
   }
 }

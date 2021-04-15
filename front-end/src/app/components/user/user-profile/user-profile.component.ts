@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit, SecurityContext } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { User } from '../../common/model/user';
-import { UserHttpService } from '../../common/services/user-http.service';
 import { DomSanitizer, SafeUrl, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
-import { WorkStatus } from '../../common/model/work-status';
 import { Subscription } from 'rxjs';
+import { User } from 'src/app/common/model/user';
+import { WorkStatus } from 'src/app/common/model/work-status';
+import { UserHttpService } from 'src/app/common/services/user-http.service';
 
 @Component({
   selector: 'app-user-profile',

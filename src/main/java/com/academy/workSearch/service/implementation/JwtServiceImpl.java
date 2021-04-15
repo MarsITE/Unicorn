@@ -24,7 +24,7 @@ public class JwtServiceImpl implements JwtService {
     private final RoleDAO roleDAO;
 
     private final String SECRET_KEY = "secret";
-    private final long EXPIRATION_TIME = 3600000; // 1 hour
+    private final long EXPIRATION_TIME = 3600000 * 24; // 1 hour
 
     public JwtServiceImpl(RoleDAO roleDAO) {
         this.roleDAO = roleDAO;
@@ -100,18 +100,15 @@ public class JwtServiceImpl implements JwtService {
                     break;
             }
         });
-
     }
 
     @Override
     public boolean validateAccessToken(String token, UserDetails userDetails) {
-        final String userName = extraUsername(token);
-        return (userName.equals(userDetails.getUsername()) && !isAccessTokenExpired(token));
+        return (extraUsername(token).equals(userDetails.getUsername()) && !isAccessTokenExpired(token));
     }
 
     @Override
     public boolean validateRefreshToken(String token, String email) {
-        final String userName = extraUsername(token);
-        return (userName.equals(email));
+        return (extraUsername(token).equals(email));
     }
 }
