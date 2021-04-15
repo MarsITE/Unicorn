@@ -32,7 +32,7 @@ public class User implements UserDetails {
 
     @Email
     @NotNull
-    @Column(name = "email", length = 20)
+    @Column(name = "email", length = 50)
     @ApiModelProperty(notes = "Email of the user", position = 2)
     private String email;
 
@@ -64,6 +64,9 @@ public class User implements UserDetails {
     @ApiModelProperty(notes = "User info", position = 7)
     @JoinColumn(name = "user_info_id")
     private UserInfo userInfo;
+
+    @Column(name = "token")
+    private String token;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

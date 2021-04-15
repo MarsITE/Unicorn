@@ -29,15 +29,12 @@ export class ProjectAddComponent{
   create(): void {
     this.projectService.save(this.project)
       .subscribe(data => {
-        this.toastr.success('Project has been created successfully', 'Success!'); 
+        this.toastr.success('Project has been created successfully', 'Success!');
       },
       er => {
         console.log(er);
-      },
-      () => {
-        this.router.navigateByUrl(`projects`);
       });
-  };
+  }
 
   public getProjectStatus(value: string): void {
     this.projectStatuses.forEach(ps => {

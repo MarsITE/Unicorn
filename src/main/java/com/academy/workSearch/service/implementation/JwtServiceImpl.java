@@ -4,6 +4,7 @@ import com.academy.workSearch.dao.RoleDAO;
 import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.model.Role;
 import com.academy.workSearch.model.User;
+import com.academy.workSearch.service.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -19,13 +20,13 @@ import java.util.function.Function;
 import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_ROLE;
 
 @Service
-public class JwtService {
+public class JwtServiceImpl implements JwtService {
     private final RoleDAO roleDAO;
 
     private final String SECRET_KEY = "secret";
-    private final long EXPIRATION_TIME = 3600000*24; // 1 day
+    private final long EXPIRATION_TIME = 3600000 * 24; // 1 hour
 
-    public JwtService(RoleDAO roleDAO) {
+    public JwtServiceImpl(RoleDAO roleDAO) {
         this.roleDAO = roleDAO;
         this.roleDAO.setClazz(Role.class);
     }
@@ -47,11 +48,12 @@ public class JwtService {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
 
-    private Boolean isTokenExpires(String token) {
+    private Boolean isAccessTokenExpired(String token) {
         return extraExpiration(token).before(new Date());
     }
 
-    public String generateToken(User user) {
+    @Override
+    public String generateAccessToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", user.getUserId());
         if (user.getUserInfo().getFirstName() != null) {
@@ -61,12 +63,23 @@ public class JwtService {
             claims.put("lastname", user.getUserInfo().getLastName());
         }
         setRoles(claims, user.getRoles());
-        return createToken(claims, user.getEmail());
+        return createAccessToken(claims, user.getEmail());
     }
 
-    private String createToken(Map<String, Object> claims, String username) {
-        return Jwts.builder().setClaims(claims).setSubject(username).setIssuedAt(new Date(System.currentTimeMillis()))
+    @Override
+    public String generateRefreshToken(String email) {
+        return createRefreshToken(new HashMap<>(), email);
+    }
+
+    private String createAccessToken(Map<String, Object> claims, String username) {
+        return Jwts.builder().setClaims(claims).setSubject(username)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
+    }
+
+    private String createRefreshToken(Map<String, Object> claims, String username) {
+        return Jwts.builder().setClaims(claims).setSubject(username)
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 
@@ -87,39 +100,15 @@ public class JwtService {
                     break;
             }
         });
-
     }
 
-//    private void getRoles(String token) {
-//        Claims claims = extraAllClaims(token);
-//
-//        List<SimpleGrantedAuthority> roles = null;
-//
-//        Boolean isAdmin = claims.get("isAdmin", Boolean.class);
-//        Boolean isEmployer = claims.get("isEmployer", Boolean.class);
-//        Boolean isWorker = claims.get("isWorker", Boolean.class);
-//
-//
-//        if (isAdmin != null && isAdmin) {
-//            roles.add(new SimpleGrantedAuthority(roleDAO.getByName("ADMIN")
-//                    .orElseThrow(()-> new NoSuchEntityException(NO_ROLE +  ))));
-//        }
-//
-//        if (isEmployer != null) {
-//            roles.add(new SimpleGrantedAuthority(roleDAO.getByName("EMPLOYER")
-//                    .getName()));
-//        }
-//
-//        if (isWorker != null) {
-//            roles.add(new SimpleGrantedAuthority(roleDAO.getByName("WORKER")
-//                    .getName()));
-//        }
-//
-//    }
-
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        final String userName = extraUsername(token);
-        return (userName.equals(userDetails.getUsername()) && !isTokenExpires(token));
+    @Override
+    public boolean validateAccessToken(String token, UserDetails userDetails) {
+        return (extraUsername(token).equals(userDetails.getUsername()) && !isAccessTokenExpired(token));
     }
 
+    @Override
+    public boolean validateRefreshToken(String token, String email) {
+        return (extraUsername(token).equals(email));
+    }
 }

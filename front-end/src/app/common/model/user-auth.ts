@@ -1,4 +1,5 @@
 export interface UserAuth {
   email: string;
-  token: string;
+  accessToken: string;
+  refreshToken: string;
 }

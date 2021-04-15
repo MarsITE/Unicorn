@@ -1,4 +1,4 @@
-import { User } from "./user";
+import { User } from './user';
 import { Skill } from './skill';
 
 export class Project {

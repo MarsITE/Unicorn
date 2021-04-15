@@ -13,6 +13,7 @@ import com.academy.workSearch.model.Role;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.UserInfo;
 import com.academy.workSearch.model.enums.AccountStatus;
+import com.academy.workSearch.service.JwtService;
 import com.academy.workSearch.service.UserService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -50,6 +51,12 @@ public class UserServiceImpl implements UserService {
         userDAO.setClazz(User.class);
         userInfoDAO.setClazz(UserInfo.class);
         roleDAO.setClazz(Role.class);
+    }
+
+    @Transactional(readOnly = true)
+    User getUser(String email) {
+        return userDAO.getByEmail(email)
+                .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + email));
     }
 
     @Override
@@ -102,15 +109,14 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDTO deleteByEmail(String email) {
-        User user = userDAO.getByEmail(email)
-                .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + email));
+        User user = getUser(email);
         userDAO.deleteByEmail(email);
         return USER_MAPPER.toUserDto(user);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public UserAuthDTO get(UserRegistrationDTO userRegistrationDTO) throws BadCredentialsException, NoActiveAccountException {
+    public UserAuthDTO get(UserRegistrationDTO userRegistrationDTO) {
         final User user = USER_MAPPER.toUser(getByEmail(userRegistrationDTO.getEmail()));
 
         if (!user.isEnabled()) {
@@ -127,28 +133,44 @@ public class UserServiceImpl implements UserService {
                             userRegistrationDTO.getPassword(),
                             grantedAuthorities));
         } catch (BadCredentialsException e) {
-            throw new BadCredentialsException(INCORRECT_USER_DATA, e);
+            throw new BadCredentialsException(INCORRECT_USER_DATA);
         }
-        final String jwt = jwtService.generateToken(user);
+        final String accessToken = jwtService.generateAccessToken(getUser(user.getEmail()));
+        final String refreshToken = jwtService.generateRefreshToken(user.getEmail());
 
         UserAuthDTO userAuthDTO = new UserAuthDTO();
         userAuthDTO.setEmail(user.getEmail());
-        userAuthDTO.setToken(jwt);
+        userAuthDTO.setAccessToken(accessToken);
+        userAuthDTO.setRefreshToken(refreshToken);
 
         return userAuthDTO;
     }
 
-    @Override
     @Transactional(readOnly = true)
+    @Override
     public UserDTO getByEmail(String email) {
-        User user = userDAO.getByEmail(email)
-                .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + email));
-        return USER_MAPPER.toUserDto(user);
-
+        return USER_MAPPER.toUserDto(getUser(email));
     }
 
     @Override
     public boolean isPresentUserByEmail(String email) {
         return userDAO.getByEmail(email).isPresent();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserAuthDTO refreshToken(UserAuthDTO userAuthDTO) {
+        if (jwtService.validateRefreshToken(userAuthDTO.getRefreshToken(), userAuthDTO.getEmail())) {
+            logger.info("Generating new refresh token");
+            userAuthDTO.setRefreshToken(jwtService.generateRefreshToken(userAuthDTO.getEmail()));
+            logger.info("Token successfully created");
+            logger.info("Generating new access token");
+            User user = getUser(userAuthDTO.getEmail());
+            userAuthDTO.setAccessToken(jwtService.generateAccessToken(user));
+            logger.info("Token successfully created");
+        }
+        return userAuthDTO;
+    }
+
+
 }

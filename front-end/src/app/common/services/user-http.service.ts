@@ -6,26 +6,26 @@ import { UserInfo } from '../model/user-info';
 import { environment } from 'src/environments/environment';
 import { UserRegistration } from '../model/user-registration';
 import { UserAuth } from '../model/user-auth';
-import { StorageService } from './storage.service';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserHttpService {
 
-  constructor(private http: HttpClient, private storageService: StorageService) { }
+  constructor(private http: HttpClient) { }
 
   // tslint:disable-next-line: typedef
   private authHeader() {
     return {
-      headers: new HttpHeaders().set('Authorization', `Bearer ${this.storageService.getValue('token')}`)
+      headers: new HttpHeaders().set('Authorization', `Bearer ${sessionStorage.getItem('access_token')}`)
     };
   }
 
   private authHeaderBlob(): any {
     return {
       responseType: 'blob',
-      headers: new HttpHeaders().set('Authorization', `Bearer ${this.storageService.getValue('token')}`)
+      headers: new HttpHeaders().set('Authorization', `Bearer ${sessionStorage.getItem('access_token')}`)
     };
   }
 
@@ -45,8 +45,15 @@ export class UserHttpService {
     return this.http.delete<User>(`${environment.url}/user/${email}`, this.authHeader());
   }
 
-  public login(user: UserRegistration): Observable<UserAuth> {
-    return this.http.post<UserAuth>(`${environment.url}/login`, user);
+  public login(user: UserRegistration): Observable<boolean> {
+    return this.http.post<UserAuth>(`${environment.url}/login`, user)
+      .pipe(
+        map(result => {
+          sessionStorage.setItem('access_token', result.accessToken);
+          sessionStorage.setItem('refresh-token', result.refreshToken);
+          return true;
+        })
+      );
   }
 
   public updateUserInfo(userInfo: UserInfo): Observable<UserInfo> {
@@ -54,10 +61,23 @@ export class UserHttpService {
   }
 
   public loadImage(imageURL: string): Observable<any> {
-    return this.http.get(`${environment.url}/user-profile/load-photo/${imageURL}`, this.authHeaderBlob());
+    return this.http.get(`${environment.url}/user-profile/load-photo/${imageURL}`,  this.authHeaderBlob());
   }
 
   public saveImage(photo: any, id: string): Observable<Blob> {
     return this.http.put<any>(`${environment.url}/user-profile/save-photo/${id}`, photo, this.authHeader());
+  }
+
+  public loggedIn(): void {
+    if (sessionStorage.getItem('access_token')) {
+      sessionStorage.removeItem('access_token');
+    }
+    if (sessionStorage.getItem('refresh-token')) {
+      sessionStorage.removeItem('refresh-token');
+    }
+  }
+
+  public refreshToken(userAuth: UserAuth): Observable<UserAuth> {
+    return this.http.post<UserAuth>(`${environment.url}/refresh-token`, userAuth, this.authHeader());
   }
 }

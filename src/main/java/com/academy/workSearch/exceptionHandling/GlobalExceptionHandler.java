@@ -38,10 +38,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({BadCredentialsException.class, NoActiveAccountException.class})
     public ResponseEntity<ErrorMessage> handleAuthorizationException(AuthorizationException ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(
-                HttpStatus.UNAUTHORIZED,
+                HttpStatus.NOT_FOUND,
                 ex.getMessage(),
                 request.getDescription(false));
-        return new ResponseEntity<>(message, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ForbiddenException.class)

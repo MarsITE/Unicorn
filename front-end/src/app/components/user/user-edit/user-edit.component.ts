@@ -2,10 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { User } from '../../common/model/user';
-import { UserInfo } from '../../common/model/user-info';
-import { WorkStatus } from '../../common/model/work-status';
-import { UserHttpService } from '../../common/services/user-http.service';
+import { User } from 'src/app/common/model/user';
+import { UserInfo } from 'src/app/common/model/user-info';
+import { WorkStatus } from 'src/app/common/model/work-status';
+import { UserHttpService } from 'src/app/common/services/user-http.service';
 
 @Component({
   selector: 'app-user-edit',
@@ -22,7 +22,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
   selectedImage: any;
   today: Date;
   private subscriptions: Subscription[] = [];
-  workStatuses: WorkStatus[] = [
+  workStatuses: WorkStatus[] = [//todo
     { value: 'PART_TIME', viewValue: 'Part time' },
     { value: 'FULL_TIME', viewValue: 'Full time' },
     { value: 'OVERTIME', viewValue: 'Overtime' },
@@ -74,8 +74,9 @@ export class UserEditComponent implements OnInit, OnDestroy {
   }
 
   private getUser(email: string): void {
-    this.subscriptions.push(this.userService.getByEmail(email).subscribe(
-      (response: User) => {
+    this.subscriptions.push(this.userService.getByEmail(email)
+    .subscribe(
+      response => {
         this.user = response;
         this.setViewForWorkStatus(this.user.userInfo.workStatus);
         this.initForm(
@@ -88,51 +89,36 @@ export class UserEditComponent implements OnInit, OnDestroy {
           this.user.userInfo.workStatus,
           this.user.userInfo.imageUrl);
       },
-      (error) => {
+      error => {
         this.initForm();
         console.log('error', error);
-      },
-      () => {
-        console.log('complete');
       }
     ));
   }
 
   public submit(): void {
     this.sendImage();
-    const userInfo = this.getUserInfo();
-    console.log(userInfo);
-    this.updateUserInfo(userInfo);
+    this.updateUserInfo(this.getUserInfo());
   }
 
   private sendImage(): void {
     if (this.selectedImage != null) {
       const formData = new FormData();
       formData.append('image', this.selectedImage);
-      this.subscriptions.push(this.userService.saveImage(formData, this.user.userInfo.userInfoId).subscribe(
-        response => {
-          console.log(response);
-        },
-        error => {
-          console.log(error);
-        },
-        () => {
-          console.log('image saved');
-        }
+      this.subscriptions.push(this.userService.saveImage(formData, this.user.userInfo.userInfoId)
+      .subscribe(
+        response => console.log(response),
+        error => console.log(error)
       ));
     }
   }
 
   private updateUserInfo(userInfo: UserInfo): void {
-    this.subscriptions.push(this.userService.updateUserInfo(userInfo).subscribe(response => {
-      console.log(response);
-    },
-      error => {
-        console.log(error);
-      },
-      () => {
-        this.router2.navigateByUrl(`user-profile/${this.user.email}`);
-      }));
+    this.subscriptions.push(this.userService.updateUserInfo(userInfo)
+    .subscribe(
+      response => console.log(response),
+      error => console.log(error)
+    ));
   }
 
   private getUserInfo(): UserInfo {

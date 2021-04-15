@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
-import { User } from '../../common/model/user';
-import { UserHttpService } from '../../common/services/user-http.service';
+import { User } from 'src/app/common/model/user';
+import { UserHttpService } from 'src/app/common/services/user-http.service';
 
 @Component({
   selector: 'app-user-list',
@@ -45,7 +45,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   private showUserProfile(row: any): void {
     console.log(row);
 
-    this.router.navigateByUrl(`user-profile/${row.email}`);
+    this.router.navigateByUrl(`my-profile/${row.email}`);
   }
 
 }

@@ -1,10 +1,11 @@
-<mat-toolbar class="worksearch-toolbar" >    
-    <span>Work<span class="material-icons">saved_search</span></span>    
+<mat-toolbar class="worksearch-toolbar" >
+    <span>Work<span class="material-icons">saved_search</span></span>
     <span class="worksearch-toolbar-spacer"></span>
+    <img [src]="imageBlobUrl" />
     <button mat-icon-button class="admin-icon account-circle" aria-label="icon-button with account circle">
       <mat-icon><span class="material-icons">account_circle</span></mat-icon>
     </button>
-    <button mat-icon-button class="admin-icon logout" aria-label="icon-button with account circle">
+    <button mat-icon-button class="admin-icon logout" aria-label="icon-button with account circle" (click)="logout()">
       <mat-icon><span class="material-icons">logout</span></mat-icon>
-    </button>      
+    </button>
 </mat-toolbar>

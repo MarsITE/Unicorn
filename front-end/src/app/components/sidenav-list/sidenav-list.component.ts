@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TokenHelper } from 'src/app/common/helper/token.helper';
 
 @Component({
   selector: 'app-sidenav-list',
@@ -7,9 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SidenavListComponent implements OnInit {
 
-  constructor() { }
+  constructor(private tokenHelper: TokenHelper) { }
 
   ngOnInit(): void {
   }
-
 }

@@ -4,8 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Project } from '../common/model/project';
 import { User } from '../common/model/user';
 import { ProjectService } from '../common/services/project.service';
-import { Skill } from '../common/model/skill';
-import { StorageService } from '../common/services/storage.service';
 
 
 @Component({
@@ -26,8 +24,7 @@ export class ProjectComponent implements OnInit {
 
   displayedColumns: string[] = ['name', 'projectStatus', 'creationDate', 'owner', 'skills'];
 
-  constructor(private projectService: ProjectService, private router: Router, private http: HttpClient, route: ActivatedRoute,
-              private storageService: StorageService) {
+  constructor(private projectService: ProjectService, private router: Router, private http: HttpClient, route: ActivatedRoute) {
     route.queryParams.subscribe(params => {
     this.counter = params.page || this.counter;
     this.sort = params.sort || this.sort;
@@ -45,7 +42,7 @@ export class ProjectComponent implements OnInit {
   .set('page', this.counter.toString())
   .set('sort', this.sort)
   .set('maxResult', this.maxResult.toString())
-  .set('Authorization', `Bearer ${this.storageService.getValue('token')}`) ;
+  .set('Authorization', `Bearer ${sessionStorage.getItem('access_token')}`) ;
 
   this.projectService.getProjects(this.counter.toString(), this.sort, this.maxResult.toString()).subscribe(
       (response: Project[]) => {

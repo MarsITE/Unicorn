@@ -3,8 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserRegistration } from 'src/app/common/model/user-registration';
-import { UserHttpService } from '../../common/services/user-http.service';
 import { ToastrService } from 'ngx-toastr';
+import { UserHttpService } from '../../../common/services/user-http.service';
 
 @Component({
   selector: 'app-user-registration',
@@ -37,7 +37,7 @@ export class UserRegistrationComponent implements OnInit, OnDestroy {
     this.userForm = new FormGroup({
       email: new FormControl(
         email,
-        [Validators.required, Validators.email, Validators.maxLength(30)]),
+        [Validators.required, Validators.email, Validators.maxLength(50)]),
       password: new FormControl(
         password,
         [Validators.required, Validators.maxLength(15), Validators.minLength(6)]),
@@ -46,23 +46,20 @@ export class UserRegistrationComponent implements OnInit, OnDestroy {
   }
 
   private saveUser(user: UserRegistration): void {
-    this.subscriptions.push(this.userService.save(user).subscribe(
-      (response: UserRegistration) => {
+    this.subscriptions.push(this.userService.save(user)
+    .subscribe(
+      response => {
         this.user = response;
+        this.router.navigateByUrl('login');
       },
-      (error) => {
+      error => {
         this.initForm(
           user.email,
           '',
           user.isEmployer
         );
         this.toastr.error(error, 'Error');
-        console.log('error', error);
       },
-      () => {
-        console.log('complete');
-        this.router.navigateByUrl('login');
-      }
     ));
   }
 

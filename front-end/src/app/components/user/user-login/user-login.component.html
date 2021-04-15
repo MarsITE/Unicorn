@@ -19,8 +19,15 @@
       </p>
 
       <div class="button-save">
-        <button (click)="submit()" mat-button [disabled]="!userForm.valid">Login</button>
+        <button (click)="submit()" mat-button>Login</button>
       </div>
     </form>
-  </div>
+
+    <p>
+      <mat-label class="registration-link">
+        Haven't account yet? <a href="/registration"> Registration</a>
+      </mat-label>
+    </p>
+
+</div>
 </div>
