@@ -58,7 +58,7 @@ export class UserLoginComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.userService.login(user)
     .pipe(first())
     .subscribe(
-      result => this.router.navigateByUrl(`my-profile/${user.email}`),
+      result => this.router.navigateByUrl(``),
       error => {
         this.initForm(user.email);
         this.toastr.error(error, 'Error');
