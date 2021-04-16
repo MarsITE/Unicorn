@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ProjectDAO extends CrudDAO<Project> {
     List<Project> findLast(int page, int maxResult, int maxNavigationPage, String sort);
+
+    boolean isPresentProjectByNameByUserId(String name, String id);
 }
