@@ -7,7 +7,7 @@ import com.academy.workSearch.dto.SkillDTO;
 import com.academy.workSearch.dto.mapper.ProjectMapper;
 import com.academy.workSearch.dto.mapper.SkillMapper;
 import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
-import com.academy.workSearch.exceptionHandling.exceptions.NoUniqueEntityException;
+import com.academy.workSearch.exceptionHandling.exceptions.NotUniqueEntityException;
 import com.academy.workSearch.model.Project;
 import com.academy.workSearch.model.Skill;
 import com.academy.workSearch.model.User;
@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import static com.academy.workSearch.exceptionHandling.MessageConstants.NOT_UNIQUE_PROJECT;
 import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_PROJECT;
 
 @Service
@@ -51,8 +52,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectDTO save(ProjectDTO projectDto) {
-        if(projectDAO.isPresentProjectByNameByUserId(projectDto.getName(), projectDto.getOwnerId())){
-            throw new NoUniqueEntityException("Project is not unique" + projectDto.getId());
+        if (projectDAO.isPresentProjectByNameByUserId(projectDto.getName(), projectDto.getOwnerId())) {
+            throw new NotUniqueEntityException(NOT_UNIQUE_PROJECT + projectDto.getId());
         }
         User user = new User();
         user.setUserId(UUID.fromString(projectDto.getOwnerId()));
