@@ -1,0 +1,9 @@
+<p><strong>Skills list</strong></p>
+<ul class="skills">
+  <li *ngFor="let skill of skills">         
+      <mat-checkbox [(ngModel)]="skill.enabled"></mat-checkbox>            
+      <span> {{skill.name}}</span>
+  </li>
+</ul>
+<button mat-stroked-button (click) = createSkill()>Show conforrm modal</button> 
+<button mat-stroked-button (click) = showToasts()>Show toasts</button> 

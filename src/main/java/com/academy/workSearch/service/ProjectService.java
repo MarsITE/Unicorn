@@ -10,7 +10,7 @@ public interface ProjectService {
 
     List<ProjectDTO> findAll();
 
-    List<ProjectDTO> findLast(int page, int maxResult, int maxNavigationPage, String sort);
+    List<ProjectDTO> findAllByPageWithSortOrder(int page, int maxResult, int maxNavigationPage, String sort);
 
     ProjectDTO save(ProjectDTO projectDto);
 

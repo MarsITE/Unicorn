@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Project } from '../common/model/project';
-import { ProjectService } from '../common/services/project.service';
+import { Project } from '../../common/model/project';
+import { ProjectService } from '../../common/services/project.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
