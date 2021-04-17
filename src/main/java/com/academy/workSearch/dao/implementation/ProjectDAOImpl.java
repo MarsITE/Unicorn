@@ -24,12 +24,8 @@ public class ProjectDAOImpl extends CrudDAOImpl<Project> implements ProjectDAO {
         Session session = sessionFactory.getCurrentSession();
         Query<Project> query;
 
-        if (sort.equals("asc")) {
-            query = session.createQuery("from Project order by creation_date asc", Project.class);
-        } else {
-            query = session.createQuery("from Project order by creation_date desc", Project.class);
-        }
-
+        String sortOrder = sort.equals("asc") ? "asc" : "desc";
+        query = session.createQuery("from Project order by creation_date " + sortOrder, Project.class);
 
         PaginationResult<Project> paginationResult = new PaginationResult<>(query, page, maxResult, maxNavigationPage);
 

@@ -70,6 +70,7 @@ export class ProjectComponent implements OnInit {
   projectsSort() {
     this.sortFlag = !this.sortFlag;
     this.sort = this.sortFlag ? 'asc' : 'desc';
+    this.getProjects();
   }
 
   projectsNext() {
