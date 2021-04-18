@@ -2,8 +2,8 @@ import { OnDestroy } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Skill } from '../common/model/skill';
-import { SkillService } from '../common/services/skill.service';
+import { Skill } from '../../common/model/skill';
+import { SkillService } from '../../common/services/skill.service';
 import { ConfirmComponent } from '../modals/confirm/confirm.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
@@ -17,9 +17,9 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   skills: Skill[] = [];
   private subscriptions: Subscription[] = [];
-  
+
   constructor(private skillService: SkillService, private router: Router, private dialog: MatDialog,
-              private toastr: ToastrService) { 
+              private toastr: ToastrService) {
   }
 
   ngOnDestroy(): void {
@@ -35,7 +35,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   private getSkills(): void {
     this.subscriptions.push(this.skillService.getSkillsDetails().subscribe(
       (response: Skill[]) => {
-        this.skills = response.sort((a: Skill) => (a.enabled ? 1 : -1));        
+        this.skills = response.sort((a: Skill) => (a.enabled ? 1 : -1));
       },
       (error) => {
         console.log("error", error);
@@ -64,11 +64,11 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   showToasts(){
     this.toastr.success('You are awesome!', 'Success!');
-    
+
     this.toastr.error('This is not good!', 'Oops!');
-        
+
     this.toastr.warning('You are being warned.', 'Alert!');
 
-    this.toastr.info('Just some information for you.');    
+    this.toastr.info('Just some information for you.');
   }
 }

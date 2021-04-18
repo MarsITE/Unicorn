@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Project } from '../../common/model/project';
-import { ProjectStatus } from '../../common/model/project-status';
-import { ProjectService } from '../../common/services/project.service';
+import { Project } from '../../../common/model/project';
+import { ProjectStatus } from '../../../common/model/project-status';
+import { ProjectService } from '../../../common/services/project.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -25,10 +25,10 @@ export class ProjectEditComponent implements OnInit, OnDestroy {
     { value: 'DEVELOPING', viewValue: 'Developing' },
     { value: 'TESTING', viewValue: 'Testing' },
     { value: 'CLOSED', viewValue: 'Closed' }
-  ]; 
+  ];
 
-  constructor(private projectService: ProjectService, router: ActivatedRoute, private router2: Router, private toastr: ToastrService) {   
-    this.id = router.snapshot.params.id;     
+  constructor(private projectService: ProjectService, router: ActivatedRoute, private router2: Router, private toastr: ToastrService) {
+    this.id = router.snapshot.params.id;
    }
 
   ngOnInit(): void {
@@ -40,12 +40,12 @@ export class ProjectEditComponent implements OnInit, OnDestroy {
       s.unsubscribe();
     });
   }
-  
+
 
   private getProject(id: string): void {
     this.subscriptions.push(this.projectService.getById(id).subscribe(
       (response: Project) => {
-        this.project = response; 
+        this.project = response;
         this.project.name,
         this.project.description,
         this.project.projectStatus
@@ -62,7 +62,7 @@ export class ProjectEditComponent implements OnInit, OnDestroy {
   update(): void {
     this.projectService.save(this.project)
       .subscribe(data => {
-        this.toastr.success('Project has been updated successfully', 'Success!');        
+        this.toastr.success('Project has been updated successfully', 'Success!');
       },
       er => {
         console.log(er);
@@ -80,5 +80,5 @@ export class ProjectEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  
+
 }

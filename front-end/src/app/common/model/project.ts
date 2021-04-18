@@ -7,6 +7,6 @@ export class Project {
     description: string;
     projectStatus: string;
     creationDate: string;
-    owner: User;
+    ownerId: string;
     skills: Skill[];
   }

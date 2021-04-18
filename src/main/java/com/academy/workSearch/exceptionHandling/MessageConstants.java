@@ -7,9 +7,10 @@ public class MessageConstants {
     public static final String EMAIL_EXISTS = "This email address is already in use";
     public static final String NO_SUCH_SKILL = "There is no skill with id : ";
     public static final String NO_PROJECT = "There is no project with id : ";
-    public static final String NO_ROLE ="There is no role with name : ";
-    public static final String NO_RATING ="There is no rating : ";
+    public static final String NO_ROLE = "There is no role with name : ";
+    public static final String NO_RATING = "There is no rating : ";
     public static final String INCORRECT_USER_DATA = "Incorrect username or password";
-    public static final String NOT_ACTIVE_ACCOUNT = "You account is not active!";
+    public static final String NOT_ACTIVE_ACCOUNT = "Your account is not active!";
+    public static final String NOT_UNIQUE_PROJECT = "Project is not unique ! ";
 
 }

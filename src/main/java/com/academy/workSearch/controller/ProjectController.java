@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -41,7 +40,7 @@ public class ProjectController {
                                                          @RequestParam(value = "sort", defaultValue = "desc") String sort,
                                                          @RequestParam(value = "maxResult", defaultValue = "5") int maxResult,
                                                          @RequestParam(value = "maxNavigationPage", defaultValue = "100") int maxNavigationPage) {
-        List<ProjectDTO> projectsDto = projectService.findLast(page, maxResult, maxNavigationPage, sort);
+        List<ProjectDTO> projectsDto = projectService.findAllByPageWithSortOrder(page, maxResult, maxNavigationPage, sort);
         logger.info("Show projects");
         return new ResponseEntity<>(projectsDto, HttpStatus.OK);
     }
