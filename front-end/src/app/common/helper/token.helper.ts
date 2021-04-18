@@ -43,4 +43,9 @@ export class TokenHelper {
     }
     return roles;
   }
+
+  public isCurrentUserAdmin(): boolean {
+    const tokenData: {isAdmin?: {name?: string}} = this.getTokenData();
+    return tokenData.isAdmin?.name.toUpperCase() === 'ADMIN';
+  }
 }
