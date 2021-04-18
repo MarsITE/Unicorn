@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
-import { ProjectStatus } from '../../common/model/project-status';
-import { Project } from '../../common/model/project';
-import { ProjectService } from '../../common/services/project.service';
+import { ProjectStatus } from '../../../common/model/project-status';
+import { Project } from '../../../common/model/project';
+import { ProjectService } from '../../../common/services/project.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TokenHelper } from 'src/app/common/helper/token.helper';

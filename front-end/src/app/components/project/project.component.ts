@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Project } from '../common/model/project';
-import { User } from '../common/model/user';
-import { ProjectService } from '../common/services/project.service';
+import { Project } from '../../common/model/project';
+import { User } from '../../common/model/user';
+import { ProjectService } from '../../common/services/project.service';
 
 
 @Component({
