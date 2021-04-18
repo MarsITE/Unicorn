@@ -18,5 +18,7 @@ public interface ProjectService {
 
     ProjectDTO delete(UUID id);
 
+    List<ProjectDTO> searchBySkill(List<String> skills);
+
     ProjectDTO addSkillsToProject(ProjectDTO projectDto, SkillDTO skillDTO);
 }

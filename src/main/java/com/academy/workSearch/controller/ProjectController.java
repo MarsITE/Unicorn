@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -46,6 +45,14 @@ public class ProjectController {
         return new ResponseEntity<>(projectsDto, HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    @ApiOperation(value = "Search project", notes = "Search project by skills")
+    public ResponseEntity<List<ProjectDTO>> searchProjectBySkill(@RequestParam List<String> skills){
+        List<ProjectDTO> projectsDto = projectService.searchBySkill(skills);
+        logger.info("Show projects with skills");
+        logger.info(String.valueOf(skills));
+        return new ResponseEntity<>(projectsDto, HttpStatus.OK);
+    }
     @GetMapping("/{id}")
     @ApiOperation(value = "Find project by ID", notes = "Find project if exists")
     public ResponseEntity<ProjectDTO> getProject(@PathVariable UUID id) {

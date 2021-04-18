@@ -84,4 +84,12 @@ public class ProjectServiceImpl implements ProjectService {
         projectDAO.delete(id);
         return ProjectMapper.INSTANCE.toDto(project);
     }
+
+    @Override
+    public List<ProjectDTO> searchBySkill(List<String> skills) {
+        List<ProjectDTO> sds = ProjectMapper.INSTANCE.toProjectsDto(projectDAO.searchBySkill(skills));
+        return sds;
+    }
+
+
 }
