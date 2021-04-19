@@ -63,3 +63,13 @@
   margin-bottom: 8px;
 }
 
+.skills-card {
+  display: flex;
+}
+
+.aditional-data {
+  margin-top: 20px;
+}
+.skill {
+  margin-left: 5px;
+}

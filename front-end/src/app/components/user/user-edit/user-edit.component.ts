@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { TokenHelper } from 'src/app/common/helper/token.helper';
 import { User } from 'src/app/common/model/user';
 import { UserInfo } from 'src/app/common/model/user-info';
 import { WorkStatus } from 'src/app/common/model/work-status';
@@ -30,8 +31,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
   ];
   selectedWorkStatus: WorkStatus = this.workStatuses[0];
 
-  constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router) {
-    this.email = router.snapshot.params.email;
+  constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router, private tokenHelper: TokenHelper) {
+    this.email = this.tokenHelper.getEmailFromToken();
     this.today = new Date();
   }
 
@@ -105,11 +106,13 @@ export class UserEditComponent implements OnInit, OnDestroy {
     if (this.selectedImage != null) {
       const formData = new FormData();
       formData.append('image', this.selectedImage);
+      //if(this.selectedImage.) {
       this.subscriptions.push(this.userService.saveImage(formData, this.user.userInfo.userInfoId)
       .subscribe(
         response => console.log(response),
         error => console.log(error)
       ));
+      //}//
     }
   }
 

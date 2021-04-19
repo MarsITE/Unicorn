@@ -45,7 +45,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   private showUserProfile(row: any): void {
     console.log(row);
 
-    this.router.navigateByUrl(`my-profile/${row.email}`);
+    this.router.navigateByUrl(`my-profile`);
   }
 
 }

@@ -24,6 +24,7 @@ export class ProjectAddComponent{
 
   constructor(private router: Router, private projectService: ProjectService, private toastr: ToastrService) {
     this.project.projectStatus = this.selectedProjectStatus.value;
+    this.project.ownerId = 'f6cea10a-2f9d-4feb-82ba-b600bb4cb5f0';
    }
 
   create(): void {

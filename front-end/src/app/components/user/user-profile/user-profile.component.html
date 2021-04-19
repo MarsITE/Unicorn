@@ -18,6 +18,12 @@
       <span class *ngFor="let role of user.roles"> {{converToPlain(role)}} </span>
     </div>
 
+    <div class="skills">
+      <mat-card class="skills-card">
+      <span class="skill" *ngFor="let skill of user.userInfo.skills"> {{converToPlainSkills(skill)}} </span>
+    </mat-card>
+    </div>
+
     <div class="aditional-data" *ngIf="user.userInfo.showInfo">
       <label>Email: {{user.email}}</label>
       <div *ngIf="user.userInfo.phone && user.userInfo.phone != ''">
