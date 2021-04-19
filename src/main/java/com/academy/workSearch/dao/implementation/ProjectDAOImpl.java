@@ -20,19 +20,23 @@ public class ProjectDAOImpl extends CrudDAOImpl<Project> implements ProjectDAO {
     }
 
     @Override
-    public List<Project> findLast(int page, int maxResult, int maxNavigationPage, String sort) {
+    public List<Project> findAllByPageWithSortOrder(int page, int maxResult, int maxNavigationPage, String sort) {
         Session session = sessionFactory.getCurrentSession();
         Query<Project> query;
 
-        if (sort.equals("asc")){
-            query = session.createQuery("from Project order by creation_date asc", Project.class);
-        } else {
-            query = session.createQuery("from Project order by creation_date desc", Project.class);
-        }
-
+        String sortOrder = sort.equals("asc") ? "asc" : "desc";
+        query = session.createQuery("from Project order by creation_date " + sortOrder, Project.class);
 
         PaginationResult<Project> paginationResult = new PaginationResult<>(query, page, maxResult, maxNavigationPage);
 
         return paginationResult.getList();
+    }
+
+    @Override
+    public boolean isPresentProjectByNameByUserId(String name, String id) {
+        Session session = sessionFactory.getCurrentSession();
+        String sqlQuery = String.format("SELECT COUNT (name) FROM projects WHERE name = '%s' AND owner_id = '%s'", name, id);
+        Query query = session.createNativeQuery(sqlQuery);
+        return ((Number) query.getSingleResult()).intValue() != 0;
     }
 }

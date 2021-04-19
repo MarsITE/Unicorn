@@ -3,15 +3,15 @@ import { Routes, RouterModule } from '@angular/router';
 import { UserListComponent } from './components/user/user-list/user-list.component';
 import { UserProfileComponent } from './components/user/user-profile/user-profile.component';
 import { UserEditComponent } from './components/user/user-edit/user-edit.component';
-import { ProjectComponent } from './project/project.component';
-import { ProjectAddComponent } from './project/project-add/project-add.component';
-import { ProjectInfoComponent } from './project/project-info/project-info.component';
-import { ProjectEditComponent } from './project/project-edit/project-edit.component';
-import { AdminComponent } from './admin/admin.component';
+import { ProjectComponent } from './components/project/project.component';
+import { ProjectAddComponent } from './components/project/project-add/project-add.component';
+import { ProjectInfoComponent } from './components/project/project-info/project-info.component';
+import { ProjectEditComponent } from './components/project/project-edit/project-edit.component';
+import { AdminComponent } from './components/admin/admin.component';
 import { UserRegistrationComponent } from './components/user/user-registration/user-registration.component';
 import { UserLoginComponent } from './components/user/user-login/user-login.component';
 import { LoginGuard } from './common/services/guard/login.guard';
-import { StartPageComponent } from './start-page/start-page.component';
+import { StartPageComponent } from './components/start-page/start-page.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 
 const routes: Routes = [

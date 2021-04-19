@@ -5,7 +5,7 @@ import com.academy.workSearch.exceptionHandling.exceptions.BadRequestException;
 import com.academy.workSearch.exceptionHandling.exceptions.ForbiddenException;
 import com.academy.workSearch.exceptionHandling.exceptions.NoActiveAccountException;
 import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
-import com.academy.workSearch.exceptionHandling.exceptions.NoUniqueEntityException;
+import com.academy.workSearch.exceptionHandling.exceptions.NotUniqueEntityException;
 import com.academy.workSearch.exceptionHandling.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,8 +62,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(message, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
-    @ExceptionHandler(NoUniqueEntityException.class)
-    public ResponseEntity<ErrorMessage> handleNoUniqueEntityException(NoUniqueEntityException ex, WebRequest request) {
+    @ExceptionHandler(NotUniqueEntityException.class)
+    public ResponseEntity<ErrorMessage> handleNoUniqueEntityException(NotUniqueEntityException ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(
                 HttpStatus.CONFLICT,
                 ex.getMessage(),

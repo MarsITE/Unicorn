@@ -7,9 +7,11 @@ import com.academy.workSearch.dto.SkillDTO;
 import com.academy.workSearch.dto.mapper.ProjectMapper;
 import com.academy.workSearch.dto.mapper.SkillMapper;
 import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
+import com.academy.workSearch.exceptionHandling.exceptions.NotUniqueEntityException;
 import com.academy.workSearch.model.Project;
 import com.academy.workSearch.model.Skill;
 import com.academy.workSearch.model.User;
+import com.academy.workSearch.model.enums.ProjectStatus;
 import com.academy.workSearch.service.ProjectService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import static com.academy.workSearch.exceptionHandling.MessageConstants.NOT_UNIQUE_PROJECT;
 import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_PROJECT;
 
 @Service
@@ -43,17 +46,22 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectDTO> findLast(int page, int maxResult, int maxNavigationPage, String sort) {
-        return ProjectMapper.INSTANCE.toProjectsDto(projectDAO.findLast(page, maxResult, maxNavigationPage, sort));
+    public List<ProjectDTO> findAllByPageWithSortOrder(int page, int maxResult, int maxNavigationPage, String sort) {
+        return ProjectMapper.INSTANCE.toProjectsDto(projectDAO.findAllByPageWithSortOrder(page, maxResult, maxNavigationPage, sort));
     }
 
     @Override
     public ProjectDTO save(ProjectDTO projectDto) {
+        if (projectDAO.isPresentProjectByNameByUserId(projectDto.getName(), projectDto.getOwnerId())) {
+            throw new NotUniqueEntityException(NOT_UNIQUE_PROJECT + projectDto.getId());
+        }
         User user = new User();
-        user.setUserId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f0"));
-
-        Project project = ProjectMapper.INSTANCE.toEntity(projectDto);
+        user.setUserId(UUID.fromString(projectDto.getOwnerId()));
+        Project project = new Project();
+        project.setName(projectDto.getName());
+        project.setDescription(projectDto.getDescription());
         project.setEmployer(user);
+        project.setProjectStatus(ProjectStatus.valueOf(projectDto.getProjectStatus()));
         projectDAO.save(project);
         return projectDto;
     }

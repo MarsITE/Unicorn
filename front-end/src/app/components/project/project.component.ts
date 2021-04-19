@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Project } from '../common/model/project';
-import { User } from '../common/model/user';
-import { ProjectService } from '../common/services/project.service';
+import { Project } from '../../common/model/project';
+import { User } from '../../common/model/user';
+import { ProjectService } from '../../common/services/project.service';
 
 
 @Component({
@@ -13,7 +13,7 @@ import { ProjectService } from '../common/services/project.service';
 })
 
 export class ProjectComponent implements OnInit {
-  id: String;
+  id: string;
   owner: User;
   sortFlag = false;
   sort = 'desc';
@@ -22,7 +22,7 @@ export class ProjectComponent implements OnInit {
 
   projects: Project[] = [];
 
-  displayedColumns: string[] = ['name', 'projectStatus', 'creationDate', 'owner', 'skills'];
+  displayedColumns: string[] = ['name', 'projectStatus', 'creationDate', 'skills'];
 
   constructor(private projectService: ProjectService, private router: Router, private http: HttpClient, route: ActivatedRoute) {
     route.queryParams.subscribe(params => {
@@ -34,6 +34,7 @@ export class ProjectComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProjects();
+    console.log('This get project.', this.projects.length);
   }
 
  private getProjects() {
@@ -69,6 +70,7 @@ export class ProjectComponent implements OnInit {
   projectsSort() {
     this.sortFlag = !this.sortFlag;
     this.sort = this.sortFlag ? 'asc' : 'desc';
+    this.getProjects();
   }
 
   projectsNext() {

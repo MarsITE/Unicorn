@@ -36,15 +36,16 @@ export class TokenHelper {
 
   public getRoles(): string[] {
     const roles: string[] = [];
-    if (this.getTokenData().isAdmin) {
-      roles.push(this.getTokenData().name);
-    }
-    if (this.getTokenData().isWorker) {
-      roles.push(this.getTokenData().name);
-    }
-    if (this.getTokenData().isEmployer) {
-      roles.push(this.getTokenData().name);
+    for (const prop in ['isAdmin', 'isWorker', 'isEmployer']) {
+      if (prop in this.getTokenData()) {
+        roles.push(this.getTokenData()[prop].name);
+      }
     }
     return roles;
+  }
+
+  public isCurrentUserAdmin(): boolean {
+    const tokenData: {isAdmin?: {name?: string}} = this.getTokenData();
+    return tokenData.isAdmin?.name.toUpperCase() === 'ADMIN';
   }
 }
