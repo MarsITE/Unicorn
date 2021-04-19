@@ -1,5 +1,6 @@
 package com.academy.workSearch.dto.mapper;
 
+import com.academy.workSearch.dto.ProjectShowInfoDTO;
 import com.academy.workSearch.dto.UserInfoDTO;
 import com.academy.workSearch.model.Skill;
 import com.academy.workSearch.model.UserInfo;
@@ -14,17 +15,17 @@ import java.util.UUID;
 
 import static org.mapstruct.ReportingPolicy.IGNORE;
 
-@Mapper(unmappedTargetPolicy = IGNORE, uses = SkillMapper.class)
+@Mapper(unmappedTargetPolicy = IGNORE, uses = {ProjectShowInfoDTO.class})
 public interface UserInfoMapper {
 
     UserInfoMapper USER_INFO_MAPPER = Mappers.getMapper(UserInfoMapper.class);
 
     @Mapping(target = "userInfoId", qualifiedByName = "uuid")
-    @Mapping(target = "skills", qualifiedByName = "skills")
+    @Mapping(target = "skills", source = "skills", qualifiedByName = "skillsSet")
     UserInfo toUserInfo(UserInfoDTO userInfoDto);
 
     @Mapping(target = "userInfoId", qualifiedByName = "uuidStr")
-    @Mapping(target = "skills", qualifiedByName = "skillsStr")
+    @Mapping(target = "skills", source = "skills", qualifiedByName = "skillsStr")
     UserInfoDTO toUserInfoDto(UserInfo userInfo);
 
     @Named("uuidStr")
@@ -44,7 +45,7 @@ public interface UserInfoMapper {
         return skillsStr;
     }
 
-    @Named("skills")
+    @Named("skillsSet")
     default Set<Skill> skills(Set<String> skillsStr) {
         Set<Skill> skills = new HashSet<>();
         skillsStr.forEach(skill -> {

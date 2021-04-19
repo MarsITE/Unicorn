@@ -24,7 +24,6 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
                 .setParameter("email", email)
                 .uniqueResult();
         return Optional.ofNullable(user);
-
     }
 
     @Override

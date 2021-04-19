@@ -59,8 +59,6 @@ import { ProjectInfoComponent } from './components/project/project-info/project-
 import { ProjectEditComponent } from './components/project/project-edit/project-edit.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { SkillService } from './common/services/skill.service';
-import { ToolbarComponent } from './components/toolbar/toolbar.component';
-import { FooterComponent } from './components/footer/footer.component';
 import { SidenavListComponent } from './components/sidenav-list/sidenav-list.component';
 import { ConfirmComponent } from './components/modals/confirm/confirm.component';
 import { ToastrModule } from 'ngx-toastr';
@@ -86,8 +84,6 @@ import { UserLoginComponent } from './components/user/user-login/user-login.comp
     ProjectInfoComponent,
     ProjectEditComponent,
     AdminComponent,
-    ToolbarComponent,
-    FooterComponent,
     SidenavListComponent,
     ConfirmComponent,
     StartPageComponent

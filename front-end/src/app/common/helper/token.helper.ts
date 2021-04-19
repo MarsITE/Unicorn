@@ -28,12 +28,6 @@ export class TokenHelper {
     return this.helper.decodeToken(this.token);
   }
 
-  private refreshToken(): any {
-    if (!this.helper.isTokenExpired(this.token)) {
-
-    }
-  }
-
   public getRoles(): string[] {
     const roles: string[] = [];
     for (const prop in ['isAdmin', 'isWorker', 'isEmployer']) {

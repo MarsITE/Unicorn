@@ -57,10 +57,15 @@ public class UserInfo {
     @ApiModelProperty(notes = "User photo")
     private String imageUrl;
 
-    @OneToMany(mappedBy = "userInfo", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany
+    @JoinTable(
+            name = "users_info_projects",
+            joinColumns = {@JoinColumn(name = "user_info_id")},
+            inverseJoinColumns = {@JoinColumn(name = "project_id")}
+    )
     private Set<Project> projects;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "users_info_skills",
             joinColumns = {@JoinColumn(name = "user_info_id")},

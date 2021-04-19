@@ -1,10 +1,6 @@
 .profile {
-  padding-left: 300px;
-  padding-right: 300px;
-  padding-top: 56px;
   display: flex;
   justify-content: center;
-  margin-top: 24px;
   min-width: 600px;
 }
 
@@ -72,6 +68,6 @@
   margin-left: 5px;
 }
 
-.aditional-data {
+.aditional-data, .projects {
   margin-top: 20px;
 }
