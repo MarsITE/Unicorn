@@ -51,6 +51,7 @@ export class UserRegistrationComponent implements OnInit, OnDestroy {
       response => {
         this.user = response;
         this.router.navigateByUrl('login');
+        this.toastr.success(`User ${user.email} sussesfully saved!`, 'Success');
       },
       error => {
         this.initForm(
@@ -58,7 +59,7 @@ export class UserRegistrationComponent implements OnInit, OnDestroy {
           '',
           user.isEmployer
         );
-        this.toastr.error(error, 'Error');
+        this.toastr.error(error, 'Something wrong');
       },
     ));
   }
@@ -67,7 +68,7 @@ export class UserRegistrationComponent implements OnInit, OnDestroy {
     this.user = {
       email: this.userForm.controls.email.value,
       password: this.userForm.controls.password.value,
-      isEmployer: Boolean(this.userForm.controls.isEmployer.value) };
+      isEmployer: this.userForm.controls.isEmployer.value };
 
     this.saveUser(this.user);
   }
