@@ -1,12 +1,12 @@
 .profile {
   display: flex;
   justify-content: center;
-  min-width: 600px;
 }
 
 .user-profile {
-  width: 60%;
   height: 100%;
+  min-width: 600px;
+  max-width: 1000px;
   display: flex;
   flex-direction: column;
   justify-content: center;

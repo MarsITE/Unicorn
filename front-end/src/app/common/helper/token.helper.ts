@@ -6,14 +6,13 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 })
 export class TokenHelper {
   helper: JwtHelperService;
-  token = sessionStorage.getItem('access_token');
 
   constructor() {
     this.helper = new JwtHelperService();
   }
 
   public isValidToken(): boolean {
-    return this.token !== null && this.helper.isTokenExpired(this.token);
+    return sessionStorage.getItem('access_token') !== null && this.helper.isTokenExpired(sessionStorage.getItem('access_token'));
   }
 
   public getIdFromToken(): string {
@@ -25,7 +24,7 @@ export class TokenHelper {
   }
 
   private getTokenData(): any {
-    return this.helper.decodeToken(this.token);
+    return this.helper.decodeToken(sessionStorage.getItem('access_token'));
   }
 
   public getRoles(): string[] {
