@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
+export const ACCESS_TOKEN = 'access_token';
+export const REFRESH_TOKEN = 'refresh_token';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -12,7 +15,7 @@ export class TokenHelper {
   }
 
   public isValidToken(): boolean {
-    return sessionStorage.getItem('access_token') !== null && this.helper.isTokenExpired(sessionStorage.getItem('access_token'));
+    return sessionStorage.getItem(ACCESS_TOKEN) !== null && this.helper.isTokenExpired(sessionStorage.getItem(ACCESS_TOKEN));
   }
 
   public getIdFromToken(): string {
@@ -24,7 +27,7 @@ export class TokenHelper {
   }
 
   private getTokenData(): any {
-    return this.helper.decodeToken(sessionStorage.getItem('access_token'));
+    return this.helper.decodeToken(sessionStorage.getItem(ACCESS_TOKEN));
   }
 
   public getRoles(): string[] {

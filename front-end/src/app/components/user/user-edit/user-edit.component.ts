@@ -67,7 +67,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
         phone,
         [Validators.pattern('[- +()0-9]+')]),
       linkToSocialNetwork: new FormControl(linkToSocialNetwork, Validators.maxLength(255)),
-      dateOfBirth: new FormControl(birthDate),
+      birthDate: new FormControl(birthDate),
       isShowInfo: new FormControl(isShowInfo),
       workStatus: new FormControl(workStatus),
       imageUrl: new FormControl(imageUrl)
@@ -100,19 +100,18 @@ export class UserEditComponent implements OnInit, OnDestroy {
   public submit(): void {
     this.sendImage();
     this.updateUserInfo(this.getUserInfo());
+    this.router2.navigateByUrl('my-profile');
   }
 
   private sendImage(): void {
     if (this.selectedImage != null) {
       const formData = new FormData();
       formData.append('image', this.selectedImage);
-      //if(this.selectedImage.) {
       this.subscriptions.push(this.userService.saveImage(formData, this.user.userInfo.userInfoId)
       .subscribe(
         response => console.log(response),
         error => console.log(error)
       ));
-      //}//
     }
   }
 
@@ -193,7 +192,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
   }
 
   private getDateFromDatePicker(): string {
-    const dateStr = this.userProfileForm.controls.dateOfBirth.value;
+    const dateStr = this.userProfileForm.controls.birthDate.value;
     if (dateStr != null) {
       const date = new Date(dateStr);
       console.log(date.toISOString().substring(0, 10));

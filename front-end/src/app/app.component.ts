@@ -37,6 +37,10 @@ export class AppComponent implements OnInit {
     this.router.navigateByUrl('login');
   }
 
+  public showMyProfile(): void {
+    this.router.navigateByUrl('my-profile');
+  }
+
   public toggleSidebar(hide?: boolean): void {
     if (hide) {
       this.isOpen = false;
