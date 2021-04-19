@@ -19,9 +19,10 @@
     </div>
 
     <div class="skills">
-      <mat-card class="skills-card">
-      <span class="skill" *ngFor="let skill of user.userInfo.skills"> {{converToPlainSkills(skill)}} </span>
-    </mat-card>
+      <mat-chip-list>
+        <mat-chip class="skills-chip" *ngFor="let skill of user.userInfo.skills"> {{converToPlainSkills(skill)}}
+        </mat-chip>
+      </mat-chip-list>
     </div>
 
     <div class="aditional-data" *ngIf="user.userInfo.showInfo">
@@ -41,6 +42,10 @@
       <div *ngIf="user.userInfo.workStatus && user.userInfo.workStatus != ''">
         <label>Work status: {{user.userInfo.workStatus}}</label>
       </div>
+    </div>
+
+    <div class="projects">
+
     </div>
 
     <div class="buttons">
