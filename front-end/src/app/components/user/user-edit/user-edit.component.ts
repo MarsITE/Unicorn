@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { TokenHelper } from 'src/app/common/helper/token.helper';
 import { User } from 'src/app/common/model/user';
 import { UserInfo } from 'src/app/common/model/user-info';
 import { WorkStatus } from 'src/app/common/model/work-status';
@@ -30,8 +31,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
   ];
   selectedWorkStatus: WorkStatus = this.workStatuses[0];
 
-  constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router) {
-    this.email = router.snapshot.params.email;
+  constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router, private tokenHelper: TokenHelper) {
+    this.email = this.tokenHelper.getEmailFromToken();
     this.today = new Date();
   }
 
@@ -66,7 +67,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
         phone,
         [Validators.pattern('[- +()0-9]+')]),
       linkToSocialNetwork: new FormControl(linkToSocialNetwork, Validators.maxLength(255)),
-      dateOfBirth: new FormControl(birthDate),
+      birthDate: new FormControl(birthDate),
       isShowInfo: new FormControl(isShowInfo),
       workStatus: new FormControl(workStatus),
       imageUrl: new FormControl(imageUrl)
@@ -99,6 +100,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
   public submit(): void {
     this.sendImage();
     this.updateUserInfo(this.getUserInfo());
+    this.router2.navigateByUrl('my-profile');
   }
 
   private sendImage(): void {
@@ -190,7 +192,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
   }
 
   private getDateFromDatePicker(): string {
-    const dateStr = this.userProfileForm.controls.dateOfBirth.value;
+    const dateStr = this.userProfileForm.controls.birthDate.value;
     if (dateStr != null) {
       const date = new Date(dateStr);
       console.log(date.toISOString().substring(0, 10));

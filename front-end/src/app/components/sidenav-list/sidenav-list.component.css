@@ -1,12 +1,3 @@
-.worksearch-sidenav {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: auto;
-    color:black;
-    background-color: aquamarine;
-}
-
-mat-nav-list .worksearch-sidenav-element{
-    color: blue;       
+mat-nav-list {
+  width: 250px;
 }

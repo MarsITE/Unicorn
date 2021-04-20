@@ -8,7 +8,7 @@ import {
 import { Observable } from 'rxjs';
 import { UserHttpService } from '../user-http.service';
 import { UserAuth } from '../../model/user-auth';
-import { TokenHelper } from '../../helper/token.helper';
+import { ACCESS_TOKEN, REFRESH_TOKEN, TokenHelper } from '../../helper/token.helper';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
@@ -20,12 +20,12 @@ export class JwtInterceptor implements HttpInterceptor {
       const userAuth: UserAuth = {
         email: this.tokenHelper.getEmailFromToken(),
         accessToken: '',
-        refreshToken: sessionStorage.getItem('refresh_token')};
+        refreshToken: sessionStorage.getItem(REFRESH_TOKEN)};
       this.userService.refreshToken(userAuth)
       .subscribe(
         result => {
-          sessionStorage.setItem('access_token', result.accessToken);
-          sessionStorage.setItem('refresh-token', result.refreshToken);
+          sessionStorage.setItem(ACCESS_TOKEN, result.accessToken);
+          sessionStorage.setItem(REFRESH_TOKEN, result.refreshToken);
         },
         error => console.log(error),
       );

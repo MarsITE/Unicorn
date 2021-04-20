@@ -23,13 +23,11 @@
       </mat-checkbox>
     </p>
 
-    <div class="button-save">
-      <button (click)="submit()" mat-button [disabled]="!userForm.valid">Save</button>
-    </div>
+    <button class="button-save" (click)="submit()"  mat-raised-button color="primary" [disabled]="!userForm.valid">Save</button>
     </form>
 
-    <p>
-      <mat-label class="login-link">
+    <p class="login-link">
+      <mat-label>
         Have account? <a href="/login"> Login</a>
       </mat-label>
     </p>

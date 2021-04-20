@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { User } from 'src/app/common/model/user';
 import { WorkStatus } from 'src/app/common/model/work-status';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
+import { TokenHelper } from 'src/app/common/helper/token.helper';
 
 @Component({
   selector: 'app-user-profile',
@@ -27,8 +28,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   ];
 
   constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router, private domSanitizer: DomSanitizer,
-    private toastr: ToastrService) {
-    this.email = router.snapshot.params.email;
+              private toastr: ToastrService, private tokenHelper: TokenHelper) {
+    this.email = this.tokenHelper.getEmailFromToken();
     this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl('../../../assets/default-profile-photo.jpg');
   }
   ngOnDestroy(): void {
@@ -67,12 +68,13 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
 
   public edit(email: string): void {
-    this.router2.navigateByUrl(`my-profile-edit/${email}`);
+    this.router2.navigateByUrl(`my-profile-edit`);
   }
 
   public delete(email: string): void {
-    this.subscriptions.push(this.userService.deleteUser(email).subscribe(
-      (response) => {
+    this.subscriptions.push(this.userService.deleteUser(email)
+    .subscribe(
+      response => {
         this.toastr.success('Deleted', 'Success!');
         this.router2.navigateByUrl('login');
       },
@@ -89,5 +91,9 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
   public converToPlain(str: string): string {
     return str.toLowerCase();
+  }
+
+  public converToPlainSkills(str: string): string {
+    return `#${str.toLowerCase()}`;
   }
 }

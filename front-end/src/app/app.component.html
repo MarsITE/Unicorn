@@ -1,21 +1,33 @@
-<header>
-  <app-toolbar></app-toolbar>
-</header>
+<div fxLayout="column" fxFlexFill>
 
-<main>
-  <mat-sidenav-container class="worksearch-sidenav-container">      
-    <mat-sidenav mode="side" #sidenav mode="side" opened class="worksearch-sidenav">
+  <mat-toolbar *ngIf="isNotLoginOrRegistration()" class="header" color="primary">
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon"
+      (click)="toggleSidebar()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>Work Search</span>
+    <span class="custom-spacer"></span>
+    <button mat-icon-button class="admin-icon account-circle" aria-label="icon-button with account circle" (click)="showMyProfile()">
+      <!-- <img [src]="imageBlobUrl" /> -->
+      <mat-icon><span class="material-icons">account_circle</span></mat-icon>
+    </button>
+    <button mat-icon-button class="admin-icon logout" aria-label="icon-button with account circle" (click)="logout()">
+      <mat-icon><span class="material-icons">logout</span></mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="sidebar-contaiver" fullscreen >
+    <mat-sidenav mode="side" [opened]="isOpen" [fixedInViewport]="true" [fixedTopGap]="gap" [fixedBottomGap]="gap">
       <app-sidenav-list></app-sidenav-list>
-    </mat-sidenav>  
-    <mat-sidenav-content>    
+    </mat-sidenav>
+    <mat-sidenav-content>
       <router-outlet></router-outlet>
     </mat-sidenav-content>
   </mat-sidenav-container>
-</main>
 
-<footer>
-  <app-footer></app-footer>
-</footer>
-
-
-
+  <mat-toolbar class="footer" *ngIf="isNotLoginOrRegistration()">
+    <span>2021</span>
+    <span class="custom-spacer"></span>
+    <span>SoftServe</span>
+  </mat-toolbar>
+</div>

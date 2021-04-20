@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Project } from '../model/project';
 import { environment } from 'src/environments/environment';
+import { ACCESS_TOKEN } from '../helper/token.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class ProjectService {
 
   // tslint:disable-next-line: typedef
   private authHeader() {
-    return new  HttpHeaders().set('Authorization', `Bearer ${sessionStorage.getItem('access_token')}`);
+    return new  HttpHeaders().set('Authorization', `Bearer ${sessionStorage.getItem(ACCESS_TOKEN)}`);
   }
 
   private authHeaderWithParams(counter: { toString: () => string; }, sort: string, maxResult: { toString: () => string; }): any {

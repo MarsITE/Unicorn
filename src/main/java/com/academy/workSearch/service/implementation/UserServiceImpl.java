@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserAuthDTO save(UserRegistrationDTO userRegistrationDTO) {
         if (isPresentUserByEmail(userRegistrationDTO.getEmail())) {
-            throw new NotUniqueEntityException(EMAIL_EXISTS + userRegistrationDTO.getEmail());
+            throw new NotUniqueEntityException(EMAIL_EXISTS);
         }
 
         User user = USER_AUTH_MAPPER.toUser(userRegistrationDTO);
@@ -138,6 +138,8 @@ public class UserServiceImpl implements UserService {
                             grantedAuthorities));
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException(INCORRECT_USER_DATA);
+        } catch (Exception e) {
+            System.out.println();
         }
         final String accessToken = jwtService.generateAccessToken(getUser(user.getEmail()));
         final String refreshToken = jwtService.generateRefreshToken(user.getEmail());

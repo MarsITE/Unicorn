@@ -61,7 +61,7 @@ export class UserLoginComponent implements OnInit, OnDestroy {
       result => this.router.navigateByUrl(``),
       error => {
         this.initForm(user.email);
-        this.toastr.error(error, 'Error');
+        this.toastr.error(error, 'Something wrong');
         console.log(error);
       }));
   }
