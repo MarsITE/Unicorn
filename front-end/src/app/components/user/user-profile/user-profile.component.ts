@@ -49,7 +49,6 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       this.getUser(this.email);
       this.isOnlyWatch = false;
     }
-    console.log(this.isOnlyWatch);
   }
 
   private getUser(email: string): void {
@@ -62,7 +61,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         }
         this.setViewForWorkStatus();
       },
-      error => console.log('error', error),
+      error => this.toastr.error('Can not load user info!', 'Something wrong'),
     ));
   }
 
@@ -73,23 +72,12 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(response));
         sessionStorage.setItem('avatar', window.URL.createObjectURL(response));
       },
-      error => console.log('error', error),
+      error => this.toastr.error('Can not load user photo!', 'Something wrong'),
     ));
   }
 
-  public edit(email: string): void {
+  public edit(): void {
     this.router2.navigateByUrl(`my-profile-edit`);
-  }
-
-  public delete(email: string): void {
-    this.subscriptions.push(this.userService.deleteUser(email)
-    .subscribe(
-      response => {
-        this.toastr.success('Deleted', 'Success!');
-        this.router2.navigateByUrl('login');
-      },
-      error => console.log('error', error),
-    ));
   }
 
   public setViewForWorkStatus(): void {

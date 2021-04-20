@@ -52,4 +52,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     }
   }
 
+  public converToPlain(str: string): string {
+    return str.replace('_', ' ').toLowerCase();
+  }
 }
