@@ -3,7 +3,6 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 
 export const ACCESS_TOKEN = 'access_token';
 export const REFRESH_TOKEN = 'refresh_token';
-
 @Injectable({
   providedIn: 'root'
 })
