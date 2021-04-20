@@ -24,6 +24,10 @@ const routes: Routes = [
     component: UserProfileComponent,
     canActivate: [LoginGuard]
   }, {
+    path: 'my-profile/:email',
+    component: UserProfileComponent,
+    canActivate: [LoginGuard]
+  }, {
     path: 'my-profile-edit',
     component: UserEditComponent,
     canActivate: [LoginGuard]

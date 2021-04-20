@@ -15,6 +15,7 @@ import { TokenHelper } from 'src/app/common/helper/token.helper';
 })
 export class UserProfileComponent implements OnInit, OnDestroy {
   email: string;
+  emailInUrl: string;
   user: User;
   imageUrl: string;
   image: any;
@@ -26,10 +27,12 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     { value: 'OVERTIME', viewValue: 'Overtime' },
     { value: 'BUSY', viewValue: 'Busy' }
   ];
+  isOnlyWatch: boolean;
 
   constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router, private domSanitizer: DomSanitizer,
               private toastr: ToastrService, private tokenHelper: TokenHelper) {
     this.email = this.tokenHelper.getEmailFromToken();
+    this.emailInUrl = router.snapshot.params.email;
     this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl('../../../assets/default-profile-photo.jpg');
   }
   ngOnDestroy(): void {
@@ -39,7 +42,14 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getUser(this.email);
+    if (this.emailInUrl) {
+      this.getUser(this.emailInUrl);
+      this.isOnlyWatch = true;
+    } else {
+      this.getUser(this.email);
+      this.isOnlyWatch = false;
+    }
+    console.log(this.isOnlyWatch);
   }
 
   private getUser(email: string): void {

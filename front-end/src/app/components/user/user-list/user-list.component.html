@@ -56,7 +56,7 @@
       <td mat-cell *matCellDef="let element">
         <div *ngIf="element.roles || element.roles != ''; else none">
           <span class *ngFor="let role of element.roles">{{role}}</span>
-          </div>
+        </div>
       </td>
     </ng-container>
 

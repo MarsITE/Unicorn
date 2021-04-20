@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { TokenHelper } from 'src/app/common/helper/token.helper';
 import { User } from 'src/app/common/model/user';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
 
@@ -15,7 +16,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['firstName', 'lastName', 'email', 'workStatus', 'phone', 'dateOfBirth', 'userRole', 'generalRating'];
   private subscriptions: Subscription[] = [];
 
-  constructor(private userService: UserHttpService, private router: Router) {
+  constructor(private userService: UserHttpService, private router: Router, private tokenHelper: TokenHelper) {
   }
 
   ngOnDestroy(): void {
@@ -29,21 +30,26 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   private getUsers(): void {
-    this.subscriptions.push(this.userService.getUsers().subscribe(
-      (response: User[]) => {
-        this.users = response;
-      },
-      (error) => {
-        console.log('error', error);
-      },
-      () => {
-        console.log('complete');
-      }
-    ));
+    this.subscriptions.push(this.userService.getUsers()
+      .subscribe(
+        (response: User[]) => {
+          this.users = response;
+        },
+        (error) => {
+          console.log('error', error);
+        },
+        () => {
+          console.log('complete');
+        }
+      ));
   }
 
-  private showUserProfile(row: any): void {
-    this.router.navigateByUrl(`my-profile`);
+  public showUserProfile(row: any): void {
+    if (this.tokenHelper.getEmailFromToken() === row.email) {
+      this.router.navigateByUrl('my-profile');
+    } else {
+      this.router.navigateByUrl(`my-profile/${row.email}`);
+    }
   }
 
 }
