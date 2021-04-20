@@ -9,9 +9,15 @@ public interface JwtService {
 
     boolean validateRefreshToken(String token, String email);
 
+    boolean validateRegistrationToken(String token, String email);
+
     String generateRefreshToken(String email);
 
     String generateAccessToken(User user);
 
+    String generateRegistrationToken(String email);
+
     String extraUsername(String token);
+
+
 }

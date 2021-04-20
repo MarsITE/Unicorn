@@ -24,7 +24,8 @@ public class JwtServiceImpl implements JwtService {
     private final RoleDAO roleDAO;
 
     private final String SECRET_KEY = "secret";
-    private final long EXPIRATION_TIME = 3600000 * 24; // 1 hour
+    private static final long EXPIRATION_TIME_ACCESS_TOKEN = 3600000 * 24; // 1 hour
+    private static final long EXPIRATION_TIME_REGISTRATION_TOKEN = 3600000 * 24; // 1 day
 
     public JwtServiceImpl(RoleDAO roleDAO) {
         this.roleDAO = roleDAO;
@@ -56,14 +57,13 @@ public class JwtServiceImpl implements JwtService {
     public String generateAccessToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", user.getUserId());
-        if (user.getUserInfo().getFirstName() != null) {
-            claims.put("firstname", user.getUserInfo().getFirstName());
-        }
-        if (user.getUserInfo().getLastName() != null) {
-            claims.put("lastname", user.getUserInfo().getLastName());
-        }
         setRoles(claims, user.getRoles());
         return createAccessToken(claims, user.getEmail());
+    }
+
+    @Override
+    public String generateRegistrationToken(String email) {
+        return createRegistrationToken(email);
     }
 
     @Override
@@ -74,12 +74,19 @@ public class JwtServiceImpl implements JwtService {
     private String createAccessToken(Map<String, Object> claims, String username) {
         return Jwts.builder().setClaims(claims).setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_ACCESS_TOKEN))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 
     private String createRefreshToken(Map<String, Object> claims, String username) {
         return Jwts.builder().setClaims(claims).setSubject(username)
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
+    }
+
+    private String createRegistrationToken(String username) {
+        return Jwts.builder().setSubject(username)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_REGISTRATION_TOKEN))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 
@@ -110,5 +117,10 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public boolean validateRefreshToken(String token, String email) {
         return (extraUsername(token).equals(email));
+    }
+
+    @Override
+    public boolean validateRegistrationToken(String token, String email) {
+        return false;
     }
 }
