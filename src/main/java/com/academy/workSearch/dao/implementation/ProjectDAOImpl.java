@@ -22,10 +22,9 @@ public class ProjectDAOImpl extends CrudDAOImpl<Project> implements ProjectDAO {
     @Override
     public List<Project> findAllByPageWithSortOrder(int page, int maxResult, int maxNavigationPage, String sort) {
         Session session = sessionFactory.getCurrentSession();
-        Query<Project> query;
 
         String sortOrder = sort.equals("asc") ? "asc" : "desc";
-        query = session.createQuery("from Project order by creation_date " + sortOrder, Project.class);
+        Query<Project> query = session.createQuery("from Project order by creation_date " + sortOrder, Project.class);
 
         PaginationResult<Project> paginationResult = new PaginationResult<>(query, page, maxResult, maxNavigationPage);
 
