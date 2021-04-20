@@ -1,15 +1,10 @@
 package com.academy.workSearch.exceptionHandling;
 
-import com.academy.workSearch.exceptionHandling.exceptions.AuthorizationException;
-import com.academy.workSearch.exceptionHandling.exceptions.BadRequestException;
-import com.academy.workSearch.exceptionHandling.exceptions.ForbiddenException;
-import com.academy.workSearch.exceptionHandling.exceptions.NoActiveAccountException;
-import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
-import com.academy.workSearch.exceptionHandling.exceptions.NotUniqueEntityException;
-import com.academy.workSearch.exceptionHandling.exceptions.ResourceNotFoundException;
+import com.academy.workSearch.exceptionHandling.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -36,7 +31,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({BadCredentialsException.class, NoActiveAccountException.class})
-    public ResponseEntity<ErrorMessage> handleAuthorizationException(AuthorizationException ex, WebRequest request) {
+    public ResponseEntity<ErrorMessage> handleAuthorizationException(AuthenticationException ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(
                 HttpStatus.NOT_FOUND,
                 ex.getMessage(),

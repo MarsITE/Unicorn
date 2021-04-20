@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../model/user';
 import { UserInfo } from '../model/user-info';
@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { UserRegistration } from '../model/user-registration';
 import { UserAuth } from '../model/user-auth';
 import { map } from 'rxjs/operators';
+import { ACCESS_TOKEN, REFRESH_TOKEN } from '../helper/token.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -18,14 +19,14 @@ export class UserHttpService {
   // tslint:disable-next-line: typedef
   private authHeader() {
     return {
-      headers: new HttpHeaders().set('Authorization', `Bearer ${sessionStorage.getItem('access_token')}`)
+      headers: new HttpHeaders().set('Authorization', `Bearer ${sessionStorage.getItem(ACCESS_TOKEN)}`)
     };
   }
 
   private authHeaderBlob(): any {
     return {
       responseType: 'blob',
-      headers: new HttpHeaders().set('Authorization', `Bearer ${sessionStorage.getItem('access_token')}`)
+      headers: new HttpHeaders().set('Authorization', `Bearer ${sessionStorage.getItem(ACCESS_TOKEN)}`)
     };
   }
 
@@ -49,8 +50,8 @@ export class UserHttpService {
     return this.http.post<UserAuth>(`${environment.url}/login`, user)
       .pipe(
         map(result => {
-          sessionStorage.setItem('access_token', result.accessToken);
-          sessionStorage.setItem('refresh-token', result.refreshToken);
+          sessionStorage.setItem(ACCESS_TOKEN, result.accessToken);
+          sessionStorage.setItem(REFRESH_TOKEN, result.refreshToken);
           return true;
         })
       );
@@ -69,11 +70,11 @@ export class UserHttpService {
   }
 
   public loggedIn(): void {
-    if (sessionStorage.getItem('access_token')) {
-      sessionStorage.removeItem('access_token');
+    if (sessionStorage.getItem(ACCESS_TOKEN)) {
+      sessionStorage.removeItem(ACCESS_TOKEN);
     }
-    if (sessionStorage.getItem('refresh-token')) {
-      sessionStorage.removeItem('refresh-token');
+    if (sessionStorage.getItem(REFRESH_TOKEN)) {
+      sessionStorage.removeItem(REFRESH_TOKEN);
     }
   }
 

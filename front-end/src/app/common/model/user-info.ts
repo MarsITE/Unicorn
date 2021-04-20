@@ -1,3 +1,5 @@
+import { Project } from './project';
+
 export interface UserInfo {
   userInfoId: string;
   firstName: string;
@@ -9,4 +11,6 @@ export interface UserInfo {
   workStatus: string;
   imageUrl: string;
   generalRating: string;
+  skills: string[];
+  projects: Project[];
 }
