@@ -48,6 +48,12 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public List<ProjectDTO> searchBySkill(List<String> skills, int page, int maxResult, int maxNavigationPage, String sort) {
+        List<ProjectDTO> sds = ProjectMapper.INSTANCE.toProjectsDto(projectDAO.searchBySkill(skills, page, maxResult, maxNavigationPage, sort));
+        return sds;
+    }
+
+    @Override
     public ProjectDTO save(ProjectDTO projectDto) {
         User user = new User();
         user.setUserId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f0"));
@@ -84,12 +90,4 @@ public class ProjectServiceImpl implements ProjectService {
         projectDAO.delete(id);
         return ProjectMapper.INSTANCE.toDto(project);
     }
-
-    @Override
-    public List<ProjectDTO> searchBySkill(List<String> skills) {
-        List<ProjectDTO> sds = ProjectMapper.INSTANCE.toProjectsDto(projectDAO.searchBySkill(skills));
-        return sds;
-    }
-
-
 }

@@ -1,10 +1,9 @@
 package com.academy.workSearch.dao;
 
 import com.academy.workSearch.model.Project;
-
 import java.util.List;
 
 public interface ProjectDAO extends CrudDAO<Project> {
     List<Project> findLast(int page, int maxResult, int maxNavigationPage, String sort);
-    List<Project> searchBySkill(List<String> skills);
+    List<Project> searchBySkill(List<String> skills, int page, int maxResult, int maxNavigationPage, String sort);
 }

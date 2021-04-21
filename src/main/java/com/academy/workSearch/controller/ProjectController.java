@@ -47,8 +47,12 @@ public class ProjectController {
 
     @GetMapping("/search")
     @ApiOperation(value = "Search project", notes = "Search project by skills")
-    public ResponseEntity<List<ProjectDTO>> searchProjectBySkill(@RequestParam List<String> skills){
-        List<ProjectDTO> projectsDto = projectService.searchBySkill(skills);
+    public ResponseEntity<List<ProjectDTO>> searchProjectBySkill(@RequestParam(value = "page", defaultValue = "1") int page,
+                                                                 @RequestParam(value = "sort", defaultValue = "desc") String sort,
+                                                                 @RequestParam(value = "maxResult", defaultValue = "5") int maxResult,
+                                                                 @RequestParam(value = "maxNavigationPage", defaultValue = "100") int maxNavigationPage,
+                                                                 @RequestParam(value = "skillList") List<String> skills){
+        List<ProjectDTO> projectsDto = projectService.searchBySkill(skills, page, maxResult, maxNavigationPage, sort);
         logger.info("Show projects with skills");
         logger.info(String.valueOf(skills));
         return new ResponseEntity<>(projectsDto, HttpStatus.OK);

@@ -2,7 +2,6 @@ package com.academy.workSearch.service;
 
 import com.academy.workSearch.dto.ProjectDTO;
 import com.academy.workSearch.dto.SkillDTO;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -18,7 +17,7 @@ public interface ProjectService {
 
     ProjectDTO delete(UUID id);
 
-    List<ProjectDTO> searchBySkill(List<String> skills);
+    List<ProjectDTO> searchBySkill(List<String> skills, int page, int maxResult, int maxNavigationPage, String sort);
 
     ProjectDTO addSkillsToProject(ProjectDTO projectDto, SkillDTO skillDTO);
 }
