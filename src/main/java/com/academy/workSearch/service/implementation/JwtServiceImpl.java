@@ -49,8 +49,8 @@ public class JwtServiceImpl implements JwtService {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
 
-    private Boolean isAccessTokenExpired(String token) {
-        return extraExpiration(token).before(new Date());
+    private Boolean isTokenExpired(String token, Date date) {
+        return extraExpiration(token).before(date);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public boolean validateAccessToken(String token, UserDetails userDetails) {
-        return (extraUsername(token).equals(userDetails.getUsername()) && !isAccessTokenExpired(token));
+        return (extraUsername(token).equals(userDetails.getUsername()) && !isTokenExpired(token, new Date()));
     }
 
     @Override
@@ -120,7 +120,8 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public boolean validateRegistrationToken(String token, String email) {
-        return false;
+    public boolean isRegistrationTokenNotExpired(String token) {
+        return !isTokenExpired(token, new Date(EXPIRATION_TIME_REGISTRATION_TOKEN));
     }
+
 }

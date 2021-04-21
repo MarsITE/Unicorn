@@ -32,4 +32,17 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
         user.setAccountStatus(AccountStatus.DELETED);
         return user;
     }
+
+    @Override
+    public boolean isValidRegistrationToken(String token) {
+        Session session = sessionFactory.getCurrentSession();
+        User user = session.createQuery("from User where token = :token", User.class)
+                .setParameter("token", token)
+                .uniqueResult();
+        boolean isValidToken = user != null;
+        if (isValidToken) {
+            user.setAccountStatus(AccountStatus.ACTIVE);
+        }
+        return isValidToken;
+    }
 }

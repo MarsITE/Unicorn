@@ -20,19 +20,14 @@ import com.academy.workSearch.service.UserService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.lang.module.Configuration;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -108,7 +103,8 @@ public class UserServiceImpl implements UserService {
 //        } catch (IOException | TemplateException e) {
 //            e.printStackTrace();
 //        }
-        mail.setMessage("content");
+        String message = "http://localhost:4200/confirmation-registration?token=" + user.getToken();
+        mail.setMessage(message);
 
         emailService.sendingMessage(mail);
 
@@ -157,8 +153,6 @@ public class UserServiceImpl implements UserService {
                             grantedAuthorities));
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException(INCORRECT_USER_DATA);
-        } catch (Exception e) {
-            System.out.println();
         }
         final String accessToken = jwtService.generateAccessToken(getUser(user.getEmail()));
         final String refreshToken = jwtService.generateRefreshToken(user.getEmail());
@@ -195,6 +189,12 @@ public class UserServiceImpl implements UserService {
             logger.info("Token successfully created");
         }
         return userAuthDTO;
+    }
+
+    @Transactional
+    @Override
+    public boolean isValidRegistrationToken(String token) {
+        return userDAO.isValidRegistrationToken(token) && jwtService.isRegistrationTokenNotExpired(token);
     }
 
 

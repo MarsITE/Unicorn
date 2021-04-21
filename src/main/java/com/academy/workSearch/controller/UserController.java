@@ -10,14 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -78,5 +71,12 @@ public class UserController {
     public ResponseEntity<UserAuthDTO> refreshToken(@RequestBody UserAuthDTO userAuthDTO) {
         logger.info("Update expired refresh token, from user with email = {}", userAuthDTO.getEmail());
         return ResponseEntity.ok(userService.refreshToken(userAuthDTO));
+    }
+
+    @GetMapping({"/confirmation-registration/{token}"})
+    public ResponseEntity<Boolean> confirmationRegistration(@PathVariable String token) {
+        boolean isValid = userService.isValidRegistrationToken(token);
+        logger.info("Confirmation registration, check is valid token. Token is valid: {}", isValid);
+        return ResponseEntity.ok(isValid);
     }
 }
