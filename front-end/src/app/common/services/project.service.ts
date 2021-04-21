@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Project } from '../model/project';
+import { Skill } from '../model/skill';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -21,6 +22,14 @@ export class ProjectService {
     .set('page', counter.toString())
     .set('sort', sort)
     .set('maxResult', maxResult.toString());
+  } 
+
+  private paginationParams(counter: { toString: () => string; }, sort: string, maxResult: { toString: () => string; }, _skillList: String[]): any {
+    return new HttpParams()
+    .set('page', counter.toString())
+    .set('sort', sort)
+    .set('maxResult', maxResult.toString())
+    .set('skillList', _skillList.toString());
   }
 
   public getProjects(counter: string, sort: string, maxResult: string): Observable<Project[]> {
@@ -29,6 +38,13 @@ export class ProjectService {
       headers: this.authHeader()
     }
     );
+  }
+  
+  public getSearchProjects(counter: string, sort: string, maxResult: string, _skillList: String[]):Observable<Project[]> {
+    return this.http.get<Project[]>(`${environment.url}/projects/search`, {
+      params: this.paginationParams(counter, sort, maxResult, _skillList),
+      headers: this.authHeader()
+    });
   }
 
   public save(project: Project): Observable<Project> {
