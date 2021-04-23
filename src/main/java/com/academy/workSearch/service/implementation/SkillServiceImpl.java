@@ -4,6 +4,7 @@ import com.academy.workSearch.dao.implementation.SkillDAOImpl;
 import com.academy.workSearch.dto.SkillDTO;
 import com.academy.workSearch.dto.SkillDetailsDTO;
 import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
+import com.academy.workSearch.exceptionHandling.exceptions.NotUniqueEntityException;
 import com.academy.workSearch.model.Skill;
 import com.academy.workSearch.service.SkillService;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.UUID;
 
