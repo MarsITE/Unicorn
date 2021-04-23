@@ -73,10 +73,16 @@ public class UserController {
         return ResponseEntity.ok(userService.refreshToken(userAuthDTO));
     }
 
-    @GetMapping({"/confirmation-registration/{token}"})
-    public ResponseEntity<Boolean> confirmationRegistration(@PathVariable String token) {
-        boolean isValid = userService.isValidRegistrationToken(token);
-        logger.info("Confirmation registration, check is valid token. Token is valid: {}", isValid);
+    @GetMapping({"/verify-email/{token}"})
+    public ResponseEntity<Boolean> verifyAccount(@PathVariable String token) {
+        boolean isValid = userService.isVerifyAccount(token);
+        String logMessage = "Confirmation registration, check is valid token. Token is valid: {}. ";
+        if (isValid) {
+            logMessage += "Account activated!";
+        } else {
+            logMessage += "Account not activated!";
+        }
+        logger.info(logMessage, isValid);
         return ResponseEntity.ok(isValid);
     }
 }

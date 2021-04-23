@@ -12,7 +12,6 @@
         <i>{{user.email}}</i>
       </ng-template>
     </div>
-    <label class="raiting">General raiting: {{user.userInfo.generalRating}}</label>
 
     <div class="userRoles">
       <span class *ngFor="let role of user.roles"> {{converToPlain(role)}} </span>
@@ -44,21 +43,7 @@
       </div>
     </div>
 
-    <div class="projects">
-      <mat-accordion>
-        <mat-expansion-panel hideToggle *ngFor="let project of user.userInfo.projects">
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              {{project.name}}
-            </mat-panel-title>
-            <mat-panel-description>
-              {{ project.creationDate }}
-            </mat-panel-description>
-          </mat-expansion-panel-header>
-          <p> {{project.description}}</p>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </div>
+    <!-- //todo all projects -->
 
     <div *ngIf="!isOnlyWatch">
       <div class="buttons">

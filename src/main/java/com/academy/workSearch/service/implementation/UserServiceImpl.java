@@ -17,6 +17,8 @@ import com.academy.workSearch.model.enums.AccountStatus;
 import com.academy.workSearch.service.EmailService;
 import com.academy.workSearch.service.JwtService;
 import com.academy.workSearch.service.UserService;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,12 +28,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
 
 import static com.academy.workSearch.dto.mapper.UserAuthMapper.USER_AUTH_MAPPER;
 import static com.academy.workSearch.dto.mapper.UserMapper.USER_MAPPER;
@@ -48,6 +50,7 @@ public class UserServiceImpl implements UserService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final EmailService emailService;
+    private final FreeMarkerConfigurer freemarkerConfigurer;
 
     @PostConstruct
     private void setTypeClass() {
@@ -84,7 +87,7 @@ public class UserServiceImpl implements UserService {
         Role worker = roleDAO.getByName("WORKER")
                 .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "WORKER"));
         roles.add(worker);
-        if (userRegistrationDTO.isEmployer()) {
+        if (userRegistrationDTO.getIsEmployer()) {
             roles.add(roleDAO.getByName("EMPLOYER")
                     .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "EMPLOYER")));
         }
@@ -96,17 +99,20 @@ public class UserServiceImpl implements UserService {
         Mail mail = new Mail();
         mail.setSubject("Registration confirm");
         mail.setEmail(user.getEmail());
-//        String content = "";
-//        try {
-//            content = FreeMarkerTemplateUtils
-//                    .processTemplateIntoString(fmConfiguration.getObject().getTemplate("confirmation-registration-message.txt"), user.getEmail());
-//        } catch (IOException | TemplateException e) {
-//            e.printStackTrace();
-//        }
-        String message = "http://localhost:4200/confirmation-registration?token=" + user.getToken();
-        mail.setMessage(message);
+        String content = "";
+        try {
+            Map<String, Object> model = new HashMap<>();
+            model.put("email", user.getEmail());
+            model.put("token", user.getToken());
+            Template template = freemarkerConfigurer.getConfiguration().getTemplate("verify-email-message.txt");
+            content = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+        } catch (IOException | TemplateException e) {
+            logger.info(e.getMessage());//todo
+            e.printStackTrace();
+        }
+        mail.setMessage(content);
 
-        emailService.sendingMessage(mail);
+        emailService.sendHtmlMessage(mail);
 
         UserAuthDTO userAuthDTO = new UserAuthDTO();
         userAuthDTO.setEmail(user.getEmail());
@@ -136,7 +142,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserAuthDTO get(UserRegistrationDTO userRegistrationDTO) {
-        final User user = USER_MAPPER.toUser(getByEmail(userRegistrationDTO.getEmail()));
+        final User user = getUser(userRegistrationDTO.getEmail());
 
         if (!user.isEnabled()) {
             throw new NoActiveAccountException(NOT_ACTIVE_ACCOUNT);
@@ -154,14 +160,11 @@ public class UserServiceImpl implements UserService {
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException(INCORRECT_USER_DATA);
         }
-        final String accessToken = jwtService.generateAccessToken(getUser(user.getEmail()));
-        final String refreshToken = jwtService.generateRefreshToken(user.getEmail());
 
         UserAuthDTO userAuthDTO = new UserAuthDTO();
         userAuthDTO.setEmail(user.getEmail());
-        userAuthDTO.setAccessToken(accessToken);
-        userAuthDTO.setRefreshToken(refreshToken);
-
+        userAuthDTO.setAccessToken(jwtService.generateAccessToken(user));
+        userAuthDTO.setRefreshToken(jwtService.generateRefreshToken(user.getEmail()));
         return userAuthDTO;
     }
 
@@ -193,9 +196,15 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public boolean isValidRegistrationToken(String token) {
-        return userDAO.isValidRegistrationToken(token) && jwtService.isRegistrationTokenNotExpired(token);
+    public boolean isVerifyAccount(String token) {
+        User user = userDAO.getByToken(token).orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY));
+        boolean isValidToken = user != null;
+        if (isValidToken) {
+            user.setToken("");
+            user.setAccountStatus(AccountStatus.ACTIVE);
+            userDAO.save(user);
+        }
+        return isValidToken && jwtService.isRegistrationTokenNotExpired(token);
     }
-
 
 }

@@ -1,7 +1,6 @@
 package com.academy.workSearch.dao;
 
 import com.academy.workSearch.model.User;
-import io.jsonwebtoken.ExpiredJwtException;
 
 import java.util.Optional;
 
@@ -10,6 +9,6 @@ public interface UserDAO extends CrudDAO<User> {
 
     User deleteByEmail(String email);
 
-    boolean isValidRegistrationToken(String token);
+    Optional<User> getByToken(String token);
 
 }

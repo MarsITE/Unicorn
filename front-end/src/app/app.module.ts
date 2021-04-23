@@ -69,7 +69,7 @@ import { UserProfileComponent } from './components/user/user-profile/user-profil
 import { UserListComponent } from './components/user/user-list/user-list.component';
 import { UserRegistrationComponent } from './components/user/user-registration/user-registration.component';
 import { UserLoginComponent } from './components/user/user-login/user-login.component';
-import { ConfirmationRegistrationComponent } from './components/confirmation-registration/confirmation-registration.component';
+import { VerifyEmailComponent } from './components/verify-email/verify-email';
 
 @NgModule({
   declarations: [
@@ -88,7 +88,7 @@ import { ConfirmationRegistrationComponent } from './components/confirmation-reg
     SidenavListComponent,
     ConfirmComponent,
     StartPageComponent,
-    ConfirmationRegistrationComponent
+    VerifyEmailComponent
   ],
 
   imports: [

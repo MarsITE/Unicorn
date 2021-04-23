@@ -10,7 +10,6 @@ export interface UserInfo {
   showInfo: boolean;
   workStatus: string;
   imageUrl: string;
-  generalRating: string;
   skills: string[];
   projects: Project[];
 }

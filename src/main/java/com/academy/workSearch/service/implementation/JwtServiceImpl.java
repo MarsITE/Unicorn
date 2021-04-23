@@ -6,6 +6,7 @@ import com.academy.workSearch.model.Role;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.service.JwtService;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -101,10 +102,11 @@ public class JwtServiceImpl implements JwtService {
                     claims.put("isEmployer", roleDAO.getByName("EMPLOYER")
                             .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "EMPLOYER")));
                     break;
-                default:
+                case "WORKER":
                     claims.put("isWorker", roleDAO.getByName("WORKER")
                             .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "WORKER")));
                     break;
+                default: break;
             }
         });
     }
@@ -121,7 +123,11 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public boolean isRegistrationTokenNotExpired(String token) {
-        return !isTokenExpired(token, new Date(EXPIRATION_TIME_REGISTRATION_TOKEN));
+        try {
+            return !isTokenExpired(token, new Date(EXPIRATION_TIME_REGISTRATION_TOKEN));
+        } catch (ExpiredJwtException e) {
+            throw new ExpiredJwtException(null, null, "This token is expired!");
+        }
     }
 
 }

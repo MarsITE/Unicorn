@@ -83,6 +83,6 @@ export class UserHttpService {
   }
 
   public checkRegistrationToken(token: string): Observable<boolean> {
-    return this.http.get<boolean>(`${environment.url}/confirmation-registration/${token}`);
+    return this.http.get<boolean>(`${environment.url}/verify-email/${token}`);
   }
 }

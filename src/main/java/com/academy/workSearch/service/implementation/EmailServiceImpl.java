@@ -51,4 +51,19 @@ public class EmailServiceImpl implements EmailService {
 
         emailSender.send(message);
     }
+
+    @Override
+    public void sendHtmlMessage(Mail mail) {
+        MimeMessage message = emailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setTo(mail.getEmail());
+            helper.setSubject(mail.getSubject());
+            helper.setText(mail.getMessage(), true);
+            emailSender.send(message);
+        } catch (MessagingException e) {
+//            throw new MessagingException("Incorect user data");
+        }
+
+    }
 }

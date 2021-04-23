@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { TokenHelper } from 'src/app/common/helper/token.helper';
@@ -24,7 +24,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
   selectedImage: any;
   today: Date;
   private subscriptions: Subscription[] = [];
-  workStatuses: WorkStatus[] = [//todo
+
+  workStatuses: WorkStatus[] = [ // todo
     { value: 'PART_TIME', viewValue: 'Part time' },
     { value: 'FULL_TIME', viewValue: 'Full time' },
     { value: 'OVERTIME', viewValue: 'Overtime' },
@@ -32,8 +33,12 @@ export class UserEditComponent implements OnInit, OnDestroy {
   ];
   selectedWorkStatus: WorkStatus = this.workStatuses[0];
 
-  constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router, private tokenHelper: TokenHelper,
-              private toastr: ToastrService) {
+  constructor(
+    private userService: UserHttpService,
+    private router2: Router,
+    private tokenHelper: TokenHelper,
+    private toastr: ToastrService) {
+    this.initForm();
     this.email = this.tokenHelper.getEmailFromToken();
     this.today = new Date();
   }
@@ -102,7 +107,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
   public submit(): void {
     this.sendImage();
     this.updateUserInfo(this.getUserInfo());
-    this.router2.navigateByUrl('my-profile');
   }
 
   private sendImage(): void {
@@ -120,7 +124,10 @@ export class UserEditComponent implements OnInit, OnDestroy {
   private updateUserInfo(userInfo: UserInfo): void {
     this.subscriptions.push(this.userService.updateUserInfo(userInfo)
       .subscribe(
-        response => this.toastr.success('User data successfully saved!', 'Success!'),
+        response => {
+          this.toastr.success('User data successfully saved!', 'Success!');
+          this.router2.navigateByUrl('my-profile');
+        },
         error => this.toastr.error(error, 'Something wrong'),
       ));
   }
@@ -147,10 +154,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
       userInfo.birthDate = '';
     }
     userInfo.showInfo = this.userProfileForm.controls.isShowInfo.value;
-
-    if (userInfo.generalRating == null) {
-      userInfo.generalRating = '5';
-    }
 
     if (userInfo.imageUrl == null) {
       userInfo.imageUrl = '';

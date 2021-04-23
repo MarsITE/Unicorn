@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
 
 @Component({
   selector: 'app-confirmation-registration',
-  templateUrl: './confirmation-registration.component.html',
-  styleUrls: ['./confirmation-registration.component.css']
+  templateUrl: './verify-email.html',
+  styleUrls: ['./verify-email.css']
 })
-export class ConfirmationRegistrationComponent implements OnInit {
+export class VerifyEmailComponent implements OnInit {
   isValidToken: boolean;
   token: string;
 
-  constructor(private route: ActivatedRoute, private userService: UserHttpService) { }
+  constructor(private route: ActivatedRoute, private userService: UserHttpService, private router: Router) { }
 
   ngOnInit(): void {
     const token = this.route.queryParams
@@ -28,6 +28,10 @@ export class ConfirmationRegistrationComponent implements OnInit {
         result => this.isValidToken = result,
         error => console.log(error),
       );
+  }
+
+  public submit(): void {
+    this.router.navigateByUrl('login');
   }
 
 }
