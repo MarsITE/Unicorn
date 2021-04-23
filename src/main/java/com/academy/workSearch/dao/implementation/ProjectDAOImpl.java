@@ -38,9 +38,9 @@ public class ProjectDAOImpl extends CrudDAOImpl<Project> implements ProjectDAO {
     @Override
     public List<Project> searchBySkill(List<String> skills, int page, int maxResult, int maxNavigationPage, String sort) {
         Session session = sessionFactory.getCurrentSession();
-        Query query;
+        Query<Project> query;
         query = session.createQuery("select p from Project p  join p.skills sk where sk.name in :skills", Project.class).setParameter("skills", skills);
         PaginationResult<Project> paginationResult = new PaginationResult<>(query, page, maxResult, maxNavigationPage);
-        return query.getResultList();
+        return paginationResult.getList();
     }
 }

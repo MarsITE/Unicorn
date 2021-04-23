@@ -1,39 +1,42 @@
 <div class="container" id="main-container">
-  <div>
-    <mat-form-field>
-      <input type="text" matInput [matAutocomplete]="auto" />
-      <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor = "let skill of skillsName" [value] = "skill" >
-          {{skill}}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-    <button mat-stroked-button (click) = search()>Search</button>
-  </div>
-    <div *ngFor="let project of projects">
-      <mat-card class="project-card">
-        <mat-card-header>
-          <mat-card-title>{{project?.name}}</mat-card-title>
-          <mat-card-subtitle>{{project?.projectStatus}}</mat-card-subtitle>
-        </mat-card-header>
-  
-        <mat-card-content>
-          <p>{{project?.description}}</p>
-        </mat-card-content>
-        
-        <mat-card-footer>
-          <mat-card-subtitle class="skills">{{project?.skills}}</mat-card-subtitle>
-          <mat-card-subtitle class="creating-date"> {{project?.creationDate|date}}</mat-card-subtitle>
-        </mat-card-footer>
-      </mat-card>
+
+  <div class="search-area">
+    <form [formGroup]="myForm" class="search-form">
+      <ng-multiselect-dropdown name="skillName" [placeholder]="'Select skill'" [data]="skillsName"
+        formControlName="skillName" [disabled]="disabled" [settings]="dropdownSettings" class="search-area">
+      </ng-multiselect-dropdown>
+    </form>
+    <div class="search-button">
+      <button mat-stroked-button (click)=search()>Search</button>
     </div>
-    <div mat-card-title>
-      <button mat-stroked-button (click)=projectsPrev()>prev</button>
-      <button mat-stroked-button>{{counter}}</button>
-      <button mat-stroked-button (click)=projectsNext()>next</button>
-      <select [ngModel]="selectedDeviceObj" (ngModelChange)="onChangeObj($event)" name="sel3">
-        <option [ngValue]="i" *ngFor="let i of deviceObjects">{{i}}</option>
-      </select>
+    <div class="reset-button">
+      <button mat-stroked-button (click)=reset()>Reset</button>
     </div>
   </div>
-  
+
+  <div *ngFor="let project of projects">
+    <mat-card class="project-card">
+      <mat-card-header>
+        <mat-card-title>{{project?.name}}</mat-card-title>
+        <mat-card-subtitle>{{project?.projectStatus}}</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <p>{{project?.description}}</p>
+      </mat-card-content>
+
+      <mat-card-footer>
+        <mat-card-subtitle class="skills">{{project?.skills}}</mat-card-subtitle>
+        <mat-card-subtitle class="creating-date"> {{project?.creationDate|date}}</mat-card-subtitle>
+      </mat-card-footer>
+    </mat-card>
+  </div>
+  <div mat-card-title>
+    <button mat-stroked-button (click)=projectsPrev()>prev</button>
+    <button mat-stroked-button>{{counter}}</button>
+    <button mat-stroked-button (click)=projectsNext()>next</button>
+    <select [ngModel]="selectedDeviceObj" (ngModelChange)="onChangeObj($event)" name="sel3">
+      <option [ngValue]="i" *ngFor="let i of deviceObjects">{{i}}</option>
+    </select>
+  </div>
+</div>

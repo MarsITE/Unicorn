@@ -32,3 +32,20 @@
     .skills{
         text-align: left;
     }
+    .search-area{
+      max-width: 100%;
+      width: 100%;
+      display: table;
+    }    
+    /* .search-form{
+      display: table-cell;
+    width: 150%;
+    }
+    .search-button{
+      display: table-cell;
+    width: 50%;
+    }
+    .reset-button{
+      display: table-cell;
+    width: 50%;
+    } */
