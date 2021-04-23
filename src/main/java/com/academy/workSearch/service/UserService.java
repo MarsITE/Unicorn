@@ -24,5 +24,5 @@ public interface UserService {
 
     UserAuthDTO refreshToken(UserAuthDTO userAuthDTO);
 
-    boolean isValidRegistrationToken(String token);
+    boolean isVerifyAccount(String token);
 }
