@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.UUID;
 
 import static com.academy.workSearch.dto.mapper.SkillDetailsMapper.SKILL_DETAILS_MAPPER;
 import static com.academy.workSearch.dto.mapper.SkillMapper.SKILL_MAPPER;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.SKILL_EXISTS;
 import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_SUCH_SKILL;
 
 @Service
@@ -40,7 +40,15 @@ public class SkillServiceImpl implements SkillService {
         return SKILL_MAPPER.toSkillsDto(skillDAO.getAllEnabled(enabled));
     }
 
+    @Override
+    public boolean isPresentSkillByName(String skillName) {
+        return skillDAO.getByName(skillName).isPresent();
+    }
+
     public SkillDetailsDTO save(SkillDetailsDTO skill) {
+        if (isPresentSkillByName(skill.getName())) {
+            throw new NotUniqueEntityException(SKILL_EXISTS);
+        }
         return SKILL_DETAILS_MAPPER.toDto(skillDAO.save(SKILL_DETAILS_MAPPER.toEntity(skill)));
     }
 
