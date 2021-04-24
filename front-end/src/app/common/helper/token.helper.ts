@@ -34,7 +34,7 @@ export class TokenHelper {
   }
 
   public isUserRole(userRole: string): boolean {
-    const tokenData: { isAdmin?, isEmployer?, isWorker?} = this.getTokenData();    
+    const tokenData: { isAdmin?, isEmployer?, isWorker?} = this.getTokenData() || {};    
     const roleNames = [tokenData.isAdmin?.name, tokenData.isEmployer?.name, tokenData.isWorker?.name];    
     return roleNames.some(role => role && role.toUpperCase() === userRole.toUpperCase());
   }
