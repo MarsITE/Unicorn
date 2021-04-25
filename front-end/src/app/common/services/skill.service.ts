@@ -9,7 +9,6 @@ import { ACCESS_TOKEN } from '../helper/token.helper';
   providedIn: 'root'
 })
 export class SkillService {
-
   constructor(private http: HttpClient) { }
 
   // tslint:disable-next-line: typedef
@@ -28,9 +27,9 @@ export class SkillService {
   public getSkillsDetails(): Observable<Skill[]> {
     return this.http.get<Skill[]>(`${environment.url}/admin/skills`, this.authHeader());
   }
-  
+
   public save(skill: Skill): Observable<Skill> {
-    return this.http.post<Skill>(`${environment.url}/admin/skills`, skill, this.authHeader()); 
+    return this.http.post<Skill>(`${environment.url}/admin/skills`, skill, this.authHeader());
   }
 
   public update(skill: Skill): Observable<Skill> {

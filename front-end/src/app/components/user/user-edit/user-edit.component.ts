@@ -161,6 +161,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
     }
     userInfo.showInfo = this.userProfileForm.controls.isShowInfo.value;
 
+    userInfo.skills = this.mapSkills();
+
     if (userInfo.imageUrl == null) {
       userInfo.imageUrl = '';
     }
@@ -236,5 +238,16 @@ export class UserEditComponent implements OnInit, OnDestroy {
       }
     }
     console.log(this.selectedSkills);
+  }
+
+  private mapSkills(): Skill[] {
+    const newSkills: Skill[] = [];
+    this.selectedSkills.forEach(selectedSkill => {
+      const skill = this.skills.find(s => s.name === selectedSkill);
+      if (skill) {
+        newSkills.push(skill);
+      }
+    });
+    return newSkills;
   }
 }

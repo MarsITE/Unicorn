@@ -8,9 +8,9 @@
     <span (click)="navigateByLink('')">Work Search</span>
     <span class="custom-spacer"></span>
     <button *ngIf="isUserLogedIn()" mat-icon-button class="admin-icon account-circle"
-      aria-label="icon-button with account circle" (click)="navigateByLink('my-profile')">
+      aria-label="icon-button with account circle" (click)="navigateByLink('my-profile')"> </button>
       <!-- <img [src]="imageBlobUrl" /> -->
-    <button mat-icon-button class="admin-icon account-circle" aria-label="icon-button with account circle" (click)="showMyProfile()">
+    <button mat-icon-button class="admin-icon account-circle" aria-label="icon-button with account circle" (click)="navigateByLink('my-profile')">
       <mat-icon><span class="material-icons">account_circle</span></mat-icon>
     </button>
     <button *ngIf="isUserLogedIn()" mat-icon-button class="admin-icon logout"
