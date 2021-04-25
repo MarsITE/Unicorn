@@ -14,7 +14,7 @@ export class TokenHelper {
   }
 
   public isValidToken(): boolean {
-    return sessionStorage.getItem(ACCESS_TOKEN) !== null && this.helper.isTokenExpired(sessionStorage.getItem(ACCESS_TOKEN));
+    return sessionStorage.getItem(ACCESS_TOKEN) !== null && !this.helper.isTokenExpired(sessionStorage.getItem(ACCESS_TOKEN));
   }
 
   public getIdFromToken(): string {

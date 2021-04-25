@@ -14,7 +14,7 @@ import org.springframework.web.context.request.WebRequest;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<ErrorMessage> handleBadRequestException(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<ErrorMessage> handleExpiredJwtException(RuntimeException ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(
                 HttpStatus.UNAUTHORIZED,
                 ex.getMessage(),
