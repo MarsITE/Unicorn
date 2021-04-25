@@ -25,7 +25,6 @@ export class UserRegistrationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log('registration');
   }
 
 

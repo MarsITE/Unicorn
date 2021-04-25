@@ -65,7 +65,7 @@ public class UserInfo {
     )
     private Set<Project> projects;
 
-    @ManyToMany
+    @ManyToMany(cascade=CascadeType.ALL)
     @JoinTable(
             name = "users_info_skills",
             joinColumns = {@JoinColumn(name = "user_info_id")},

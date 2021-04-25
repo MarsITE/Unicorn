@@ -18,7 +18,7 @@ export class TokenHelper {
   }
 
   public isValidToken(): boolean {
-    return sessionStorage.getItem(ACCESS_TOKEN) !== null && this.helper.isTokenExpired(sessionStorage.getItem(ACCESS_TOKEN));
+    return sessionStorage.getItem(ACCESS_TOKEN) !== null && !this.helper.isTokenExpired(sessionStorage.getItem(ACCESS_TOKEN));
   }
 
   public getIdFromToken(): string {
@@ -34,8 +34,8 @@ export class TokenHelper {
   }
 
   public isUserRole(userRole: string): boolean {
-    const tokenData: { isAdmin?, isEmployer?, isWorker?} = this.getTokenData() || {};    
-    const roleNames = [tokenData.isAdmin?.name, tokenData.isEmployer?.name, tokenData.isWorker?.name];    
+    const tokenData: { isAdmin?, isEmployer?, isWorker?} = this.getTokenData() || {};
+    const roleNames = [tokenData.isAdmin?.name, tokenData.isEmployer?.name, tokenData.isWorker?.name];
     return roleNames.some(role => role && role.toUpperCase() === userRole.toUpperCase());
   }
 }

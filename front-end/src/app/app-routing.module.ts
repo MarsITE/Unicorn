@@ -13,6 +13,7 @@ import { LoginGuard } from './common/services/guard/login.guard';
 import { StartPageComponent } from './components/start-page/start-page.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { SkillsComponent } from './components/skills/skills.component';
+import { VerifyEmailComponent } from './components/verify-email/verify-email';
 
 const routes: Routes = [
   {
@@ -63,6 +64,9 @@ const routes: Routes = [
   }, {
     path: 'not-found',
     component: NotFoundComponent
+  }, {
+    path: 'verify-email',
+    component: VerifyEmailComponent
   }
 ];
 

@@ -1,12 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { TokenHelper } from 'src/app/common/helper/token.helper';
+import { Skill } from 'src/app/common/model/skill';
 import { User } from 'src/app/common/model/user';
 import { UserInfo } from 'src/app/common/model/user-info';
 import { WorkStatus } from 'src/app/common/model/work-status';
+import { SkillService } from 'src/app/common/services/skill.service';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
 
 @Component({
@@ -23,8 +25,11 @@ export class UserEditComponent implements OnInit, OnDestroy {
   imageSrc: any;
   selectedImage: any;
   today: Date;
+  skills: Skill[] = [];
+  selectedSkills: string[] = [];
   private subscriptions: Subscription[] = [];
-  workStatuses: WorkStatus[] = [//todo
+
+  workStatuses: WorkStatus[] = [ // todo
     { value: 'PART_TIME', viewValue: 'Part time' },
     { value: 'FULL_TIME', viewValue: 'Full time' },
     { value: 'OVERTIME', viewValue: 'Overtime' },
@@ -32,8 +37,13 @@ export class UserEditComponent implements OnInit, OnDestroy {
   ];
   selectedWorkStatus: WorkStatus = this.workStatuses[0];
 
-  constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router, private tokenHelper: TokenHelper,
-              private toastr: ToastrService) {
+  constructor(
+    private userService: UserHttpService,
+    private router2: Router,
+    private tokenHelper: TokenHelper,
+    private toastr: ToastrService,
+    private skillService: SkillService) {
+    this.initForm();
     this.email = this.tokenHelper.getEmailFromToken();
     this.today = new Date();
   }
@@ -91,6 +101,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
             this.user.userInfo.showInfo,
             this.user.userInfo.workStatus,
             this.user.userInfo.imageUrl);
+          this.loadAllSkills();
         },
         error => {
           this.initForm();
@@ -102,7 +113,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
   public submit(): void {
     this.sendImage();
     this.updateUserInfo(this.getUserInfo());
-    this.router2.navigateByUrl('my-profile');
   }
 
   private sendImage(): void {
@@ -120,7 +130,10 @@ export class UserEditComponent implements OnInit, OnDestroy {
   private updateUserInfo(userInfo: UserInfo): void {
     this.subscriptions.push(this.userService.updateUserInfo(userInfo)
       .subscribe(
-        response => this.toastr.success('User data successfully saved!', 'Success!'),
+        response => {
+          this.toastr.success('User data successfully saved!', 'Success!');
+          this.router2.navigateByUrl('my-profile');
+        },
         error => this.toastr.error(error, 'Something wrong'),
       ));
   }
@@ -148,14 +161,11 @@ export class UserEditComponent implements OnInit, OnDestroy {
     }
     userInfo.showInfo = this.userProfileForm.controls.isShowInfo.value;
 
-    if (userInfo.generalRating == null) {
-      userInfo.generalRating = '5';
-    }
+    userInfo.skills = this.mapSkills();
 
     if (userInfo.imageUrl == null) {
       userInfo.imageUrl = '';
     }
-    console.log(userInfo);
     return userInfo;
   }
 
@@ -197,11 +207,47 @@ export class UserEditComponent implements OnInit, OnDestroy {
     const dateStr = this.userProfileForm.controls.birthDate.value;
     if (dateStr != null) {
       const date = new Date(dateStr);
-      console.log(date.toISOString().substring(0, 10));
       return date.toISOString().substring(0, 10);
     } else {
       const date = new Date(this.today);
       return date.toISOString().substring(0, 10);
     }
+  }
+
+
+  private loadAllSkills(): void {
+    this.skillService.getSkills()
+      .subscribe(
+        response => {
+          this.skills = response;
+          this.selectedSkills = this.user.userInfo.skills.map(s => s.name);
+        },
+        error => this.toastr.error(error, 'error')
+      );
+
+  }
+
+
+  public setSelectedSkills(data: any): void {
+    if (data.selected) {
+      this.selectedSkills.push(data.viewValue);
+    } else {
+      if (this.selectedSkills.find(x => x === data.viewValue)) {
+        this.selectedSkills.splice(
+          this.selectedSkills.findIndex(x => x === data.viewValue), 1);
+      }
+    }
+    console.log(this.selectedSkills);
+  }
+
+  private mapSkills(): Skill[] {
+    const newSkills: Skill[] = [];
+    this.selectedSkills.forEach(selectedSkill => {
+      const skill = this.skills.find(s => s.name === selectedSkill);
+      if (skill) {
+        newSkills.push(skill);
+      }
+    });
+    return newSkills;
   }
 }

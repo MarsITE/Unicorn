@@ -6,6 +6,7 @@ import com.academy.workSearch.model.Role;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.service.JwtService;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,62 +25,89 @@ public class JwtServiceImpl implements JwtService {
     private final RoleDAO roleDAO;
 
     private final String SECRET_KEY = "secret";
-    private final long EXPIRATION_TIME = 3600000 * 24; // 1 hour
+    private static final long EXPIRATION_TIME_ACCESS_TOKEN = 3600000; // 1 hour
+    private static final long EXPIRATION_TIME_REGISTRATION_TOKEN = 3600000 * 24; // 1 day
 
     public JwtServiceImpl(RoleDAO roleDAO) {
         this.roleDAO = roleDAO;
         this.roleDAO.setClazz(Role.class);
     }
 
-    public String extraUsername(String token) {
-        return extraClaim(token, Claims::getSubject);
-    }
-
-    public Date extraExpiration(String token) {
-        return extraClaim(token, Claims::getExpiration);
-    }
-
-    public <T> T extraClaim(String token, Function<Claims, T> claimResolver) {
-        final Claims claims = extraAllClaims(token);
-        return claimResolver.apply(claims);
-    }
-
-    private Claims extraAllClaims(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
-    }
-
-    private Boolean isAccessTokenExpired(String token) {
-        return extraExpiration(token).before(new Date());
-    }
-
     @Override
     public String generateAccessToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", user.getUserId());
-        if (user.getUserInfo().getFirstName() != null) {
-            claims.put("firstname", user.getUserInfo().getFirstName());
-        }
-        if (user.getUserInfo().getLastName() != null) {
-            claims.put("lastname", user.getUserInfo().getLastName());
-        }
         setRoles(claims, user.getRoles());
         return createAccessToken(claims, user.getEmail());
     }
 
     @Override
+    public String generateRegistrationToken(String email) {
+        return createRegistrationToken(email);
+    }
+
+    @Override
     public String generateRefreshToken(String email) {
-        return createRefreshToken(new HashMap<>(), email);
+        return createRefreshToken(email);
+    }
+
+    @Override
+    public boolean validateAccessToken(String token, UserDetails userDetails) {
+        return getUsername(token).equals(userDetails.getUsername()) && !isTokenExpired(token, new Date());
+    }
+
+    @Override
+    public boolean validateRefreshToken(String token, String email) {
+        return getUsername(token).equals(email);
+    }
+
+    @Override
+    public boolean isRegistrationTokenNotExpired(String token) {
+        return !isTokenExpired(token, new Date(EXPIRATION_TIME_REGISTRATION_TOKEN));
+    }
+
+    private <T> T getClaim(String token, Function<Claims, T> claimResolver) {
+        Claims claims;
+        try {
+            claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        } catch (ExpiredJwtException e) {
+            throw new ExpiredJwtException(null, null, "This token is expired!");
+        }
+        return claimResolver.apply(claims);
+    }
+
+    private Boolean isTokenExpired(String token, Date date) {
+        try {
+            return getExpiration(token).before(date);
+        } catch (ExpiredJwtException e) {
+            throw new ExpiredJwtException(null, null, "This token is expired!");
+        }
+    }
+
+    public String getUsername(String token) {
+        return getClaim(token, Claims::getSubject);
+    }
+
+    private Date getExpiration(String token) {
+        return getClaim(token, Claims::getExpiration);
     }
 
     private String createAccessToken(Map<String, Object> claims, String username) {
         return Jwts.builder().setClaims(claims).setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_ACCESS_TOKEN))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 
-    private String createRefreshToken(Map<String, Object> claims, String username) {
-        return Jwts.builder().setClaims(claims).setSubject(username)
+    private String createRefreshToken(String username) {
+        return Jwts.builder().setSubject(username)
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
+    }
+
+    private String createRegistrationToken(String username) {
+        return Jwts.builder().setSubject(username)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_REGISTRATION_TOKEN))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 
@@ -95,20 +123,10 @@ public class JwtServiceImpl implements JwtService {
                             .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "EMPLOYER")));
                     break;
                 default:
-                    claims.put("isWorker", roleDAO.getByName("WORKER")
-                            .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "WORKER")));
                     break;
             }
         });
     }
 
-    @Override
-    public boolean validateAccessToken(String token, UserDetails userDetails) {
-        return (extraUsername(token).equals(userDetails.getUsername()) && !isAccessTokenExpired(token));
-    }
 
-    @Override
-    public boolean validateRefreshToken(String token, String email) {
-        return (extraUsername(token).equals(email));
-    }
 }

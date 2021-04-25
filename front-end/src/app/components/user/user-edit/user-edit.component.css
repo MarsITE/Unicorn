@@ -18,6 +18,8 @@
 
 .container {
   padding: 20px;
+  width: 100%;
+  min-width: 300px;
 }
 
 .user-form {

@@ -69,6 +69,7 @@ import { UserListComponent } from './components/user/user-list/user-list.compone
 import { UserRegistrationComponent } from './components/user/user-registration/user-registration.component';
 import { UserLoginComponent } from './components/user/user-login/user-login.component';
 import { SkillsComponent } from './components/skills/skills.component';
+import { VerifyEmailComponent } from './components/verify-email/verify-email';
 
 @NgModule({
   declarations: [
@@ -82,11 +83,13 @@ import { SkillsComponent } from './components/skills/skills.component';
     UserLoginComponent,
     UserEditComponent,
     ProjectInfoComponent,
-    ProjectEditComponent,    
+    ProjectEditComponent,
     SidenavListComponent,
     ConfirmComponent,
     StartPageComponent,
-    SkillsComponent
+    SkillsComponent,
+    StartPageComponent,
+    VerifyEmailComponent
   ],
 
   imports: [

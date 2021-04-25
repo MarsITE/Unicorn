@@ -1,6 +1,7 @@
 package com.academy.workSearch.exceptionHandling;
 
 import com.academy.workSearch.exceptionHandling.exceptions.*;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -11,6 +12,15 @@ import org.springframework.web.context.request.WebRequest;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ErrorMessage> handleExpiredJwtException(RuntimeException ex, WebRequest request) {
+        ErrorMessage message = new ErrorMessage(
+                HttpStatus.UNAUTHORIZED,
+                ex.getMessage(),
+                request.getDescription(false));
+        return new ResponseEntity<>(message, HttpStatus.UNAUTHORIZED);
+    }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorMessage> handleBadRequestException(BadRequestException ex, WebRequest request) {
