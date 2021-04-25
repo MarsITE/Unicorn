@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public class ProjectDAOImpl extends CrudDAOImpl<Project> implements ProjectDAO {
@@ -22,10 +23,31 @@ public class ProjectDAOImpl extends CrudDAOImpl<Project> implements ProjectDAO {
     @Override
     public List<Project> findAllByPageWithSortOrder(int page, int maxResult, int maxNavigationPage, String sort) {
         Session session = sessionFactory.getCurrentSession();
-
         String sortOrder = sort.equals("asc") ? "asc" : "desc";
         Query<Project> query = session.createQuery("from Project order by creation_date " + sortOrder, Project.class);
 
+        PaginationResult<Project> paginationResult = new PaginationResult<>(query, page, maxResult, maxNavigationPage);
+
+        return paginationResult.getList();
+    }
+
+    @Override
+    public List<Project> findAllByOwnerId(int page, int maxResult, int maxNavigationPage, String sort, String ownerId) {
+        Session session = sessionFactory.getCurrentSession();
+        String sortOrder = sort.equals("asc") ? "asc" : "desc";
+        Query<Project> query = session.createQuery("from Project where :owner_id = owner_id order by creation_date " + sortOrder, Project.class);
+        query.setParameter("owner_id", UUID.fromString(ownerId));
+        PaginationResult<Project> paginationResult = new PaginationResult<>(query, page, maxResult, maxNavigationPage);
+
+        return paginationResult.getList();
+    }
+
+    @Override
+    public List<Project> findAllByWorkerId(int page, int maxResult, int maxNavigationPage, String sort, String workerId) {
+        Session session = sessionFactory.getCurrentSession();
+        String sortOrder = sort.equals("asc") ? "asc" : "desc";
+        Query<Project> query = session.createQuery("from Project where :worker_id = worker_id order by creation_date " + sortOrder, Project.class);
+        query.setParameter("worker_id", UUID.fromString(workerId));
         PaginationResult<Project> paginationResult = new PaginationResult<>(query, page, maxResult, maxNavigationPage);
 
         return paginationResult.getList();

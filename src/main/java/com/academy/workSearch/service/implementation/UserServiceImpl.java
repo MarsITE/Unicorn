@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
         Role role1 = roleDAO.getByName("WORKER")
                 .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "WORKER"));
         roles.add(role1);
-        if (userRegistrationDTO.isEmployer()) {
+        if (userRegistrationDTO.getIsEmployer()) {
             roles.add(roleDAO.getByName("EMPLOYER")
                     .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "EMPLOYER")));
         }

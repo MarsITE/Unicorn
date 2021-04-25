@@ -17,16 +17,26 @@ export class ProjectService {
     return new  HttpHeaders().set('Authorization', `Bearer ${sessionStorage.getItem(ACCESS_TOKEN)}`);
   }
 
-  private authHeaderWithParams(counter: { toString: () => string; }, sort: string, maxResult: { toString: () => string; }): any {
+  private authHeaderWithParams(counter: { toString: () => string; }, sort: string,
+                               maxResult: { toString: () => string; }, showAll: boolean): any {
     return new HttpParams()
     .set('page', counter.toString())
     .set('sort', sort)
+    .set('showAll', showAll.toString())
     .set('maxResult', maxResult.toString());
   }
 
-  public getProjects(counter: string, sort: string, maxResult: string): Observable<Project[]> {
+  public getProjects(counter: string, sort: string, maxResult: string, showAll: boolean = true): Observable<Project[]> {
     return this.http.get<Project[]>(`${environment.url}/projects`, {
-      params: this.authHeaderWithParams(counter, sort, maxResult),
+      params: this.authHeaderWithParams(counter, sort, maxResult, showAll),
+      headers: this.authHeader()
+    }
+    );
+  }
+
+  public getProjectsById(counter: string, sort: string, maxResult: string): Observable<Project[]> {
+    return this.http.get<Project[]>(`${environment.url}/projects`, {
+      params: this.authHeaderWithParams(counter, sort, maxResult, true),
       headers: this.authHeader()
     }
     );

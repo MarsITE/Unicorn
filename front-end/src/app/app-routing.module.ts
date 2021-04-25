@@ -31,6 +31,10 @@ const routes: Routes = [
     path: 'projects',
     component: ProjectComponent,
     canActivate: [LoginGuard]
+  // }, {
+  //   path: 'my-projects',
+  //   component: ProjectComponent,
+  //   canActivate: [LoginGuard]
   }, {
     path: 'addProjects',
     component: ProjectAddComponent,
