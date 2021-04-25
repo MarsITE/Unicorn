@@ -3,6 +3,7 @@
     <mat-icon>work_outline</mat-icon>
     <span>Projects</span>
   </mat-list-item>
+  <mat-list-item *ngIf="isAdmin" [routerLink]="'/users-list'">
   <mat-list-item [routerLink]="'/all-projects'">
     <mat-icon>work_outline</mat-icon>
     <span>All projects</span>
@@ -11,7 +12,7 @@
     <mat-icon>people_outline</mat-icon>
     <span>Users</span>
   </mat-list-item>
-  <mat-list-item [routerLink]="'/admin'">
+  <mat-list-item *ngIf="isAdmin" [routerLink]="'/skills'">
     <mat-icon>playlist_add_check</mat-icon>
     <span>Skills</span>
   </mat-list-item>

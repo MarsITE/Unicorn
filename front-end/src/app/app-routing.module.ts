@@ -7,12 +7,12 @@ import { ProjectComponent } from './components/project/project.component';
 import { ProjectAddComponent } from './components/project/project-add/project-add.component';
 import { ProjectInfoComponent } from './components/project/project-info/project-info.component';
 import { ProjectEditComponent } from './components/project/project-edit/project-edit.component';
-import { AdminComponent } from './components/admin/admin.component';
 import { UserRegistrationComponent } from './components/user/user-registration/user-registration.component';
 import { UserLoginComponent } from './components/user/user-login/user-login.component';
 import { LoginGuard } from './common/services/guard/login.guard';
 import { StartPageComponent } from './components/start-page/start-page.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { SkillsComponent } from './components/skills/skills.component';
 import { AllProjectsComponent } from './components/project/all-projects/all-projects.component';
 
 const routes: Routes = [
@@ -22,6 +22,10 @@ const routes: Routes = [
     canActivate: [LoginGuard]
   }, {
     path: 'my-profile',
+    component: UserProfileComponent,
+    canActivate: [LoginGuard]
+  }, {
+    path: 'my-profile/:email',
     component: UserProfileComponent,
     canActivate: [LoginGuard]
   }, {
@@ -49,8 +53,8 @@ const routes: Routes = [
     component: ProjectEditComponent,
     canActivate: [LoginGuard]
   }, {
-    path: 'admin',
-    component: AdminComponent,
+    path: 'skills',
+    component: SkillsComponent,
     canActivate: [LoginGuard]
   }, {
     path: 'registration',

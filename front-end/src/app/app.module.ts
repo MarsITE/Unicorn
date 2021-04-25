@@ -57,7 +57,6 @@ import { ProjectComponent } from './components/project/project.component';
 import { ProjectAddComponent } from './components/project/project-add/project-add.component';
 import { ProjectInfoComponent } from './components/project/project-info/project-info.component';
 import { ProjectEditComponent } from './components/project/project-edit/project-edit.component';
-import { AdminComponent } from './components/admin/admin.component';
 import { SkillService } from './common/services/skill.service';
 import { SidenavListComponent } from './components/sidenav-list/sidenav-list.component';
 import { ConfirmComponent } from './components/modals/confirm/confirm.component';
@@ -70,6 +69,7 @@ import { UserListComponent } from './components/user/user-list/user-list.compone
 import { UserRegistrationComponent } from './components/user/user-registration/user-registration.component';
 import { UserLoginComponent } from './components/user/user-login/user-login.component';
 import {AllProjectsComponent} from './components/project/all-projects/all-projects.component';
+import { SkillsComponent } from './components/skills/skills.component';
 
 @NgModule({
   declarations: [
@@ -84,11 +84,12 @@ import {AllProjectsComponent} from './components/project/all-projects/all-projec
     UserEditComponent,
     ProjectInfoComponent,
     ProjectEditComponent,
-    AdminComponent,
     SidenavListComponent,
     ConfirmComponent,
     StartPageComponent,
-    AllProjectsComponent
+    AllProjectsComponent,
+    StartPageComponent,
+    SkillsComponent
   ],
 
   imports: [
