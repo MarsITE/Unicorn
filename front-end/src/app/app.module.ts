@@ -69,6 +69,7 @@ import { UserProfileComponent } from './components/user/user-profile/user-profil
 import { UserListComponent } from './components/user/user-list/user-list.component';
 import { UserRegistrationComponent } from './components/user/user-registration/user-registration.component';
 import { UserLoginComponent } from './components/user/user-login/user-login.component';
+import {AllProjectsComponent} from './components/project/all-projects/all-projects.component';
 
 @NgModule({
   declarations: [
@@ -86,7 +87,8 @@ import { UserLoginComponent } from './components/user/user-login/user-login.comp
     AdminComponent,
     SidenavListComponent,
     ConfirmComponent,
-    StartPageComponent
+    StartPageComponent,
+    AllProjectsComponent
   ],
 
   imports: [

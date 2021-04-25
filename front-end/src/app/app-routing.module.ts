@@ -13,6 +13,7 @@ import { UserLoginComponent } from './components/user/user-login/user-login.comp
 import { LoginGuard } from './common/services/guard/login.guard';
 import { StartPageComponent } from './components/start-page/start-page.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { AllProjectsComponent } from './components/project/all-projects/all-projects.component';
 
 const routes: Routes = [
   {
@@ -31,10 +32,10 @@ const routes: Routes = [
     path: 'projects',
     component: ProjectComponent,
     canActivate: [LoginGuard]
-  // }, {
-  //   path: 'my-projects',
-  //   component: ProjectComponent,
-  //   canActivate: [LoginGuard]
+  }, {
+    path: 'all-projects',
+    component: AllProjectsComponent,
+    canActivate: [LoginGuard]
   }, {
     path: 'addProjects',
     component: ProjectAddComponent,

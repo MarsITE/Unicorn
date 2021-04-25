@@ -34,6 +34,14 @@ export class ProjectService {
     );
   }
 
+  public getAllProjects(counter: string, sort: string, maxResult: string, showAll: boolean = true): Observable<Project[]> {
+    return this.http.get<Project[]>(`${environment.url}/all-projects`, {
+      params: this.authHeaderWithParams(counter, sort, maxResult, showAll),
+      headers: this.authHeader()
+    }
+    );
+  }
+
   public getProjectsById(counter: string, sort: string, maxResult: string): Observable<Project[]> {
     return this.http.get<Project[]>(`${environment.url}/projects`, {
       params: this.authHeaderWithParams(counter, sort, maxResult, true),
