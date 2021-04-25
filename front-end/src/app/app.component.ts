@@ -13,7 +13,6 @@ export class AppComponent implements OnInit {
   isOpen: boolean;
   gap: number;
 
-
   constructor(private router: Router, private userService: UserHttpService, private domSanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
@@ -28,8 +27,6 @@ export class AppComponent implements OnInit {
     this.gap = isShow ? 50 : 0;
     return isShow;
   }
-
-
 
   public logout(): void {
     this.toggleSidebar(true);
@@ -47,5 +44,9 @@ export class AppComponent implements OnInit {
       return;
     }
     this.isOpen = !this.isOpen;
+  }
+
+  public navigateToMainPage(): void {
+    this.router.navigateByUrl('');
   }
 }

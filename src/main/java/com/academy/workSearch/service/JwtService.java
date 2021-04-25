@@ -17,7 +17,7 @@ public interface JwtService {
 
     String generateRegistrationToken(String email);
 
-    String extraUsername(String token);
+    String getUsername(String token);
 
 
 }
