@@ -1,7 +1,7 @@
 <div fxLayout="column" fxFlexFill>
 
   <mat-toolbar class="header" color="primary">
-    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon"
+    <button *ngIf="isUserLogedIn()" mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon"
       (click)="toggleSidebar()">
       <mat-icon>menu</mat-icon>
     </button>
@@ -16,9 +16,9 @@
       aria-label="icon-button with account circle" (click)="logout()">
       <mat-icon><span class="material-icons">logout</span></mat-icon>
     </button>
-    <button *ngIf="!isUserLogedIn()"  mat-button (click)="navigateByLink('login')">Sign Up</button>
+    <button *ngIf="!isUserLogedIn()"  mat-button (click)="navigateByLink('registration')">Sign Up</button>
     <label *ngIf="!isUserLogedIn()">/</label>
-    <button *ngIf="!isUserLogedIn()"  mat-button (click)="navigateByLink('registration')"> Sign In</button>
+    <button *ngIf="!isUserLogedIn()"  mat-button (click)="navigateByLink('login')"> Sign In</button>
 
   </mat-toolbar>
 

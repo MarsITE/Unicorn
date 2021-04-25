@@ -1,4 +1,5 @@
 import { Project } from './project';
+import { Skill } from './skill';
 
 export interface UserInfo {
   userInfoId: string;
@@ -10,6 +11,6 @@ export interface UserInfo {
   showInfo: boolean;
   workStatus: string;
   imageUrl: string;
-  skills: string[];
+  skills: Skill[];
   projects: Project[];
 }

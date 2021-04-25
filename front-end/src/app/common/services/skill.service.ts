@@ -21,7 +21,6 @@ export class SkillService {
 
   // for Users
   public getSkills(): Observable<Skill[]> {
-
     return this.http.get<Skill[]>(`${environment.url}/skills`, this.authHeader());
   }
 

@@ -2,6 +2,7 @@ package com.academy.workSearch.dao;
 
 import com.academy.workSearch.model.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserDAO extends CrudDAO<User> {
@@ -10,5 +11,7 @@ public interface UserDAO extends CrudDAO<User> {
     User deleteByEmail(String email);
 
     Optional<User> getByToken(String token);
+
+    List<User> findNotActive();
 
 }

@@ -25,4 +25,6 @@ public interface UserService {
     UserAuthDTO refreshToken(UserAuthDTO userAuthDTO);
 
     boolean isVerifyAccount(String token);
+
+    void removeAllNotActiveUsersWithExpiredJWTToken();
 }

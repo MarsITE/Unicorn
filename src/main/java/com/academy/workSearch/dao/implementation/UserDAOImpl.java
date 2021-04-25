@@ -5,9 +5,11 @@ import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.enums.AccountStatus;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -40,6 +42,13 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
                 .setParameter("token", token)
                 .uniqueResult();
         return Optional.ofNullable(user);
+    }
+
+    @Override
+    public List<User> findNotActive() {
+        Session session = sessionFactory.getCurrentSession();
+        Query<User> query = session.createQuery("from User where account_status='NOT_ACTIVE'", User.class);
+        return query.getResultList();
     }
 
 }

@@ -33,6 +33,7 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.academy.workSearch.dto.mapper.UserAuthMapper.USER_AUTH_MAPPER;
@@ -206,5 +207,17 @@ public class UserServiceImpl implements UserService {
         }
         return isValidToken && jwtService.isRegistrationTokenNotExpired(token);
     }
+
+    @Transactional
+    @Override
+    public void removeAllNotActiveUsersWithExpiredJWTToken() {
+        List<User> users = userDAO.findNotActive();
+        users.forEach(u -> {
+            if (u.getCreationDate().plusDays(1).isBefore(LocalDateTime.now())) {
+                userDAO.delete(u.getUserId());
+            }
+        });
+    }
+
 
 }

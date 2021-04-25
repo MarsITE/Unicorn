@@ -76,11 +76,11 @@ public class UserController {
     @GetMapping({"/verify-email/{token}"})
     public ResponseEntity<Boolean> verifyAccount(@PathVariable String token) {
         boolean isValid = userService.isVerifyAccount(token);
-        String logMessage = "Confirmation registration, check is valid token. Token is valid: {}. ";
+        String logMessage = "Confirmation registration, check is valid token. ";
         if (isValid) {
-            logMessage += "Account activated!";
+            logMessage += "Token is valid! Account activated!";
         } else {
-            logMessage += "Account not activated!";
+            logMessage += "Token is not valid! Account not activated!";
         }
         logger.info(logMessage, isValid);
         return ResponseEntity.ok(isValid);
