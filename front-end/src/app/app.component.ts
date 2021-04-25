@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { TokenHelper } from './common/helper/token.helper';
 import { UserHttpService } from './common/services/user-http.service';
 
 @Component({
@@ -13,7 +14,12 @@ export class AppComponent implements OnInit {
   isOpen: boolean;
   gap: number;
 
-  constructor(private router: Router, private userService: UserHttpService, private domSanitizer: DomSanitizer) { }
+  constructor(
+    private router: Router,
+    private userService: UserHttpService,
+    private domSanitizer: DomSanitizer,
+    private tokenHelper: TokenHelper
+  ) { }
 
   ngOnInit(): void {
     // this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(sessionStorage.getItem('avatar')));
@@ -34,8 +40,8 @@ export class AppComponent implements OnInit {
     this.router.navigateByUrl('login');
   }
 
-  public showMyProfile(): void {
-    this.router.navigateByUrl('my-profile');
+  public navigateByLink(link: string): void {
+    this.router.navigateByUrl(link);
   }
 
   public toggleSidebar(hide?: boolean): void {
@@ -46,7 +52,7 @@ export class AppComponent implements OnInit {
     this.isOpen = !this.isOpen;
   }
 
-  public navigateToMainPage(): void {
-    this.router.navigateByUrl('');
+  public isUserLogedIn(): boolean {
+    return this.tokenHelper.isValidToken();
   }
 }
