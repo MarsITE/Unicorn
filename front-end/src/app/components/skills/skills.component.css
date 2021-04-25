@@ -1,0 +1,36 @@
+.skills-container {
+    margin: 1%;
+}
+
+.skills-chip-list {
+    width: 100%;
+  }
+
+.skill-management-button-row {
+   display: table-cell;
+   width:max-content;
+}
+
+.skill-management-flex-container {
+    display: flex;
+    justify-content:left;
+    flex-wrap:wrap;
+  }
+
+.skill-management-button {
+    margin: 3px;
+}
+
+mat-accordion > mat-expansion-panel {
+    margin: 1%;
+}
+
+mat-panel-title > h3 {
+    margin:3%;
+}
+
+mat-list-item > div {
+    justify-content: left;
+    margin: 0;
+    display:grid;
+}

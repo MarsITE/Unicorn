@@ -3,6 +3,10 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 
 export const ACCESS_TOKEN = 'access_token';
 export const REFRESH_TOKEN = 'refresh_token';
+export const USER_ROLE_ADMIN = 'ADMIN';
+export const USER_ROLE_WORKER = 'WORKER';
+export const USER_ROLE_EMPLOYER = 'EMPLOYER';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -29,18 +33,9 @@ export class TokenHelper {
     return this.helper.decodeToken(sessionStorage.getItem(ACCESS_TOKEN));
   }
 
-  public getRoles(): string[] {
-    const roles: string[] = [];
-    for (const prop in ['isAdmin', 'isWorker', 'isEmployer']) {
-      if (prop in this.getTokenData()) {
-        roles.push(this.getTokenData()[prop].name);
-      }
-    }
-    return roles;
-  }
-
-  public isCurrentUserAdmin(): boolean {
-    const tokenData: {isAdmin?: {name?: string}} = this.getTokenData();
-    return tokenData.isAdmin?.name.toUpperCase() === 'ADMIN';
+  public isUserRole(userRole: string): boolean {
+    const tokenData: { isAdmin?, isEmployer?, isWorker?} = this.getTokenData() || {};    
+    const roleNames = [tokenData.isAdmin?.name, tokenData.isEmployer?.name, tokenData.isWorker?.name];    
+    return roleNames.some(role => role && role.toUpperCase() === userRole.toUpperCase());
   }
 }

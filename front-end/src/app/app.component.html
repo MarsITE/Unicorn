@@ -10,6 +10,7 @@
     <button *ngIf="isUserLogedIn()" mat-icon-button class="admin-icon account-circle"
       aria-label="icon-button with account circle" (click)="navigateByLink('my-profile')">
       <!-- <img [src]="imageBlobUrl" /> -->
+    <button mat-icon-button class="admin-icon account-circle" aria-label="icon-button with account circle" (click)="showMyProfile()">
       <mat-icon><span class="material-icons">account_circle</span></mat-icon>
     </button>
     <button *ngIf="isUserLogedIn()" mat-icon-button class="admin-icon logout"
@@ -24,7 +25,7 @@
 
   <mat-sidenav-container class="sidebar-contaiver" fullscreen>
     <mat-sidenav mode="side" [opened]="isOpen" [fixedInViewport]="true" [fixedTopGap]="gap" [fixedBottomGap]="gap">
-      <app-sidenav-list></app-sidenav-list>
+      <app-sidenav-list [isUserLoggedIn]="isNotLoginOrRegistration()"></app-sidenav-list>
     </mat-sidenav>
     <mat-sidenav-content>
       <router-outlet></router-outlet>

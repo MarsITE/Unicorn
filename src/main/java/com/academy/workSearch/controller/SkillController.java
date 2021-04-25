@@ -2,6 +2,7 @@ package com.academy.workSearch.controller;
 
 import com.academy.workSearch.dto.SkillDTO;
 import com.academy.workSearch.dto.SkillDetailsDTO;
+import com.academy.workSearch.exceptionHandling.exceptions.NotUniqueEntityException;
 import com.academy.workSearch.service.SkillService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -18,10 +19,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+
+import static com.academy.workSearch.dto.mapper.SkillDetailsMapper.SKILL_DETAILS_MAPPER;
 
 @Validated
 @RestController
@@ -65,8 +69,12 @@ public class SkillController {
     @PostMapping("/admin/skills")
     @ApiOperation(value = "Add new skill", notes = "Add new skill")
     public ResponseEntity<SkillDetailsDTO> add(@RequestBody @Valid SkillDetailsDTO skillDto) {
+        try {
         logger.info("Add skill with name {}", skillDto.getName());
         return ResponseEntity.ok(skillService.save(skillDto));
+        } catch (Exception e){
+            throw new NotUniqueEntityException("Such skill exists");
+        }
     }
 
     @PutMapping("/admin/skills")

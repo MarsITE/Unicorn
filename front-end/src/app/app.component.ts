@@ -1,15 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { TokenHelper } from './common/helper/token.helper';
 import { UserHttpService } from './common/services/user-http.service';
+
+export const HIDDEN_SIDEBAR = true;
+export const SHOWN_SIDEBAR = false;
+const GAP_WHEN_IS_SHOWN  = 50;
+const GAP_WHEN_ISNT_SHOWN  = 0;
+
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+
+export class AppComponent {
   imageBlobUrl: SafeResourceUrl;
   isOpen: boolean;
   gap: number;
@@ -21,21 +28,14 @@ export class AppComponent implements OnInit {
     private tokenHelper: TokenHelper
   ) { }
 
-  ngOnInit(): void {
-    // this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(sessionStorage.getItem('avatar')));
-    // if (this.imageBlobUrl === null || this.imageBlobUrl === '') {
-    //   this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl('../../../assets/default-profile-photo.jpg');
-    // }
-  }
-
   public isNotLoginOrRegistration(): boolean {
-    const isShow = !this.router.url.includes('login') && !(this.router.url.includes('registration'));
-    this.gap = isShow ? 50 : 0;
-    return isShow;
+    const isShown = !this.router.url.includes('login') && !(this.router.url.includes('registration'));
+    this.gap = isShown ? GAP_WHEN_IS_SHOWN : GAP_WHEN_ISNT_SHOWN;
+    return isShown;
   }
 
   public logout(): void {
-    this.toggleSidebar(true);
+    this.toggleSidebar(HIDDEN_SIDEBAR);
     this.userService.loggedIn();
     this.router.navigateByUrl('login');
   }
@@ -44,12 +44,8 @@ export class AppComponent implements OnInit {
     this.router.navigateByUrl(link);
   }
 
-  public toggleSidebar(hide?: boolean): void {
-    if (hide) {
-      this.isOpen = false;
-      return;
-    }
-    this.isOpen = !this.isOpen;
+  public toggleSidebar(hide = false): void {
+    this.isOpen = hide ? false : !this.isOpen;
   }
 
   public isUserLogedIn(): boolean {
