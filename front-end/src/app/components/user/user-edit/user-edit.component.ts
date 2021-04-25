@@ -158,7 +158,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
     if (userInfo.imageUrl == null) {
       userInfo.imageUrl = '';
     }
-    console.log(userInfo);
     return userInfo;
   }
 
@@ -200,7 +199,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
     const dateStr = this.userProfileForm.controls.birthDate.value;
     if (dateStr != null) {
       const date = new Date(dateStr);
-      console.log(date.toISOString().substring(0, 10));
       return date.toISOString().substring(0, 10);
     } else {
       const date = new Date(this.today);

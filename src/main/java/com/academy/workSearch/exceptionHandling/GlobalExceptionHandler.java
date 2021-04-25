@@ -2,7 +2,6 @@ package com.academy.workSearch.exceptionHandling;
 
 import com.academy.workSearch.exceptionHandling.exceptions.*;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;

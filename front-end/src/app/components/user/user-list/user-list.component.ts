@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { TokenHelper } from 'src/app/common/helper/token.helper';
 import { User } from 'src/app/common/model/user';
@@ -16,7 +17,12 @@ export class UserListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['firstName', 'lastName', 'email', 'workStatus', 'phone', 'dateOfBirth', 'userRole', 'generalRating'];
   private subscriptions: Subscription[] = [];
 
-  constructor(private userService: UserHttpService, private router: Router, private tokenHelper: TokenHelper) {
+  constructor(
+    private userService: UserHttpService,
+    private router: Router,
+    private tokenHelper: TokenHelper,
+    private toast: ToastrService
+  ) {
   }
 
   ngOnDestroy(): void {
@@ -32,15 +38,8 @@ export class UserListComponent implements OnInit, OnDestroy {
   private getUsers(): void {
     this.subscriptions.push(this.userService.getUsers()
       .subscribe(
-        (response: User[]) => {
-          this.users = response;
-        },
-        (error) => {
-          console.log('error', error);
-        },
-        () => {
-          console.log('complete');
-        }
+        response => this.users = response,
+        error => this.toast.error(error, 'error')
       ));
   }
 
