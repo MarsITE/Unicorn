@@ -9,6 +9,7 @@ import java.util.Set;
 @Setter
 
 public class UserDTO {
+//    private
     private String email;
     private Set<String> roles;
     private String accountStatus;

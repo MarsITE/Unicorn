@@ -1,4 +1,4 @@
-package com.academy.workSearch.configuration.schebuler;
+package com.academy.workSearch.configuration.scheduler;
 
 import com.academy.workSearch.service.UserService;
 import org.slf4j.Logger;
