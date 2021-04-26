@@ -14,7 +14,10 @@ import { UserHttpService } from '../../../common/services/user-http.service';
 export class UserRegistrationComponent implements OnInit, OnDestroy {
   user: UserRegistration;
   userForm: FormGroup;
+
+  private timeToImproveEmail = 1;
   private subscriptions: Subscription[] = [];
+
   constructor(private userService: UserHttpService, private router: Router, private toastr: ToastrService) {
     this.initForm();
   }
@@ -51,6 +54,7 @@ export class UserRegistrationComponent implements OnInit, OnDestroy {
         this.user = response;
         this.router.navigateByUrl('login');
         this.toastr.success(`User ${user.email} sussesfully saved!`, 'Success');
+        this.toastr.info(`You need to improve your account by ${1} day`);
       },
       error => {
         this.initForm(

@@ -1,5 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -25,8 +26,10 @@ export class UserEditComponent implements OnInit, OnDestroy {
   imageSrc: any;
   selectedImage: any;
   today: Date;
-  skills: Skill[] = [];
+  skillStrings: string[] = [];
   selectedSkills: string[] = [];
+
+  private skills: Skill[] = [];
   private subscriptions: Subscription[] = [];
 
   workStatuses: WorkStatus[] = [ // todo
@@ -36,6 +39,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
     { value: 'BUSY', viewValue: 'Busy' }
   ];
   selectedWorkStatus: WorkStatus = this.workStatuses[0];
+
+  @ViewChild('skillsSelect') skillsSelect: MatSelect;
 
   constructor(
     private userService: UserHttpService,
@@ -64,9 +69,10 @@ export class UserEditComponent implements OnInit, OnDestroy {
     phone: string = '',
     linkToSocialNetwork: string = '',
     birthDate: Date = this.today,
+    skillStrings: string[] = [],
     isShowInfo: boolean = true,
     workStatus: string = '',
-    imageUrl: string = ''
+    imageUrl: string = '',
   ): void {
     this.userProfileForm = new FormGroup({
       firstName: new FormControl(
@@ -80,6 +86,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
         [Validators.pattern('[- +()0-9]+')]),
       linkToSocialNetwork: new FormControl(linkToSocialNetwork, Validators.maxLength(255)),
       birthDate: new FormControl(birthDate),
+      skills: new FormControl(skillStrings),
       isShowInfo: new FormControl(isShowInfo),
       workStatus: new FormControl(workStatus),
       imageUrl: new FormControl(imageUrl)
@@ -98,6 +105,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
             this.user.userInfo.phone,
             this.user.userInfo.linkToSocialNetwork,
             new Date(this.user.userInfo.birthDate),
+            this.skillStrings,
             this.user.userInfo.showInfo,
             this.user.userInfo.workStatus,
             this.user.userInfo.imageUrl);
@@ -171,6 +179,16 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
   public loadImage(event): void {
     this.selectedImage = event.target.files[0];
+    if (!(this.selectedImage.type.match('jpg') || this.selectedImage.type.match('jpeg') || this.selectedImage.type.match('png'))) {
+      this.toastr.error('Invalid format of photo. Choose jpg, png or jpeg', 'error');
+      this.selectedImage = undefined;
+      return;
+    }
+    if (this.selectedImage.size > 2097152) {
+      this.toastr.error('File is too big! Alowed size less 2 MB', 'error');
+      this.selectedImage = undefined;
+      return;
+    }
     const fd = new FormData();
     fd.append('image', this.selectedImage, this.selectedImage.name);
     const reader = new FileReader();
@@ -220,7 +238,9 @@ export class UserEditComponent implements OnInit, OnDestroy {
       .subscribe(
         response => {
           this.skills = response;
+          this.skillStrings = this.skills.map(s => s.name);
           this.selectedSkills = this.user.userInfo.skills.map(s => s.name);
+          this.userProfileForm.controls.skills.setValue(this.selectedSkills);
         },
         error => this.toastr.error(error, 'error')
       );
@@ -237,7 +257,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
           this.selectedSkills.findIndex(x => x === data.viewValue), 1);
       }
     }
-    console.log(this.selectedSkills);
   }
 
   private mapSkills(): Skill[] {
@@ -250,4 +269,5 @@ export class UserEditComponent implements OnInit, OnDestroy {
     });
     return newSkills;
   }
+
 }

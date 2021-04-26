@@ -22,6 +22,7 @@ import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,6 +53,8 @@ public class UserServiceImpl implements UserService {
     private final JwtService jwtService;
     private final EmailService emailService;
     private final FreeMarkerConfigurer freemarkerConfigurer;
+    private final Environment env;
+    private final String timeToImproveAccount = " 1 day";
 
     /**
      * post construct set class type for dao
@@ -118,23 +121,7 @@ public class UserServiceImpl implements UserService {
         user.setToken(jwtService.generateRegistrationToken(user.getEmail()));
         userDAO.save(user);
 
-        Mail mail = new Mail();
-        mail.setSubject("Registration confirm");
-        mail.setEmail(user.getEmail());
-        String content = "";
-        try {
-            Map<String, Object> model = new HashMap<>();
-            model.put("email", user.getEmail());
-            model.put("token", user.getToken());
-            Template template = freemarkerConfigurer.getConfiguration().getTemplate("verify-email-message.txt");
-            content = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
-        } catch (IOException | TemplateException e) {
-            logger.info(e.getMessage());//todo
-            e.printStackTrace();
-        }
-        mail.setMessage(content);
-
-        emailService.sendHtmlMessage(mail);
+        sendMessageWithActivationLink(user);
 
         UserAuthDTO userAuthDTO = new UserAuthDTO();
         userAuthDTO.setEmail(user.getEmail());
@@ -171,31 +158,31 @@ public class UserServiceImpl implements UserService {
 
     /**
      * @param userRegistrationDTO auth data
-     * @return jwt token
+     * @return jwt token //todo
      * method:
      * 1. check if user exists
-     * 2. modify authorities for spring security
-     * 3. authenticate user
-     * 4. if user data correct, generate tokens
+     * 2. authenticate user
+     * 3. if user data correct, generate tokens
      */
     @Override
     @Transactional(readOnly = true)
     public UserAuthDTO get(UserRegistrationDTO userRegistrationDTO) {
         final User user = getUser(userRegistrationDTO.getEmail());
 
+        if (!user.isEnabled() && user.getCreationDate().plusDays(1).isBefore(LocalDateTime.now()) && !user.getToken().equals("")) {
+            sendMessageWithActivationLink(user);
+        }
         if (!user.isEnabled()) {
             throw new NoActiveAccountException(NOT_ACTIVE_ACCOUNT);
         }
 
         user.getRoles().forEach(role -> role.setName("ROLE_" + role.getName()));
 
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            userRegistrationDTO.getEmail(),
-                            userRegistrationDTO.getPassword(),
-                            user.getRoles()));
-        } catch (BadCredentialsException e) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                userRegistrationDTO.getEmail(),
+                userRegistrationDTO.getPassword(),
+                user.getRoles());
+        if (!authenticationManager.authenticate(authenticationToken).isAuthenticated()) {
             throw new BadCredentialsException(INCORRECT_USER_DATA);
         }
 
@@ -276,6 +263,33 @@ public class UserServiceImpl implements UserService {
                 userDAO.delete(u.getUserId());
             }
         });
+    }
+
+    @Transactional
+    void sendMessageWithActivationLink(User user) {
+        Mail mail = new Mail();
+        mail.setSubject("Registration confirm");
+        mail.setEmail(user.getEmail());
+        String content = "";
+        try {
+            Map<String, Object> model = new HashMap<>();
+            model.put("email", user.getEmail());
+            model.put("client_url", env.getProperty("CLIENT_URL"));
+            if (user.getCreationDate() != null && user.getCreationDate().plusDays(1).isBefore(LocalDateTime.now())) {
+                user.setToken(jwtService.generateRegistrationToken(user.getEmail()));
+                userDAO.save(user);
+            }
+            model.put("token", user.getToken());
+            model.put("time_to_improve", timeToImproveAccount);
+            Template template = freemarkerConfigurer.getConfiguration().getTemplate("verify-email-message.txt");
+            content = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+        } catch (IOException | TemplateException e) {
+            logger.info(e.getMessage());
+            e.printStackTrace();
+        }
+        mail.setMessage(content);
+
+        emailService.sendHtmlMessage(mail);
     }
 
 

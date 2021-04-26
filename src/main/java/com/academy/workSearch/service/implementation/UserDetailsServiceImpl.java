@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_SUCH_ENTITY;
+
 @AllArgsConstructor
 @Service
 @Primary
@@ -27,6 +29,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         userDAO.setClazz(User.class);
         return userDAO.getByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException(NO_SUCH_ENTITY));
     }
 }
