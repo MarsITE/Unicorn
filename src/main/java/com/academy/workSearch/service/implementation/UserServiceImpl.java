@@ -53,6 +53,9 @@ public class UserServiceImpl implements UserService {
     private final EmailService emailService;
     private final FreeMarkerConfigurer freemarkerConfigurer;
 
+    /**
+     * post construct set class type for dao
+     */
     @PostConstruct
     private void setTypeClass() {
         userDAO.setClazz(User.class);
@@ -60,18 +63,36 @@ public class UserServiceImpl implements UserService {
         roleDAO.setClazz(Role.class);
     }
 
+    /**
+     * @param email user auth
+     * @return user
+     */
     @Transactional(readOnly = true)
     User getUser(String email) {
         return userDAO.getByEmail(email)
                 .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + email));
     }
 
+    /**
+     * @return all users
+     */
     @Override
     @Transactional(readOnly = true)
     public List<UserDTO> findAll() {
         return USER_MAPPER.map(userDAO.findAll());
     }
 
+    /**
+     * @param userRegistrationDTO get base data of user
+     * @return email
+     * method:
+     * 1. check if user exists
+     * 2. create user info and add to current user
+     * 3. add roles
+     * 4. syphed password
+     * 5. generate registration token
+     * 6. send message to user with activation link
+     */
     @Override
     @Transactional
     public UserAuthDTO save(UserRegistrationDTO userRegistrationDTO) {
@@ -120,6 +141,10 @@ public class UserServiceImpl implements UserService {
         return userAuthDTO;
     }
 
+    /**
+     * @param user update data about user
+     * @return updated user
+     */
     @Override
     @Transactional
     public UserDTO update(UserDTO user) {
@@ -132,6 +157,10 @@ public class UserServiceImpl implements UserService {
         return USER_MAPPER.toUserDto(newUser);
     }
 
+    /**
+     * @param email for deleting
+     * @return deleted user
+     */
     @Override
     @Transactional
     public UserDTO deleteByEmail(String email) {
@@ -140,6 +169,15 @@ public class UserServiceImpl implements UserService {
         return USER_MAPPER.toUserDto(user);
     }
 
+    /**
+     * @param userRegistrationDTO auth data
+     * @return jwt token
+     * method:
+     * 1. check if user exists
+     * 2. modify authorities for spring security
+     * 3. authenticate user
+     * 4. if user data correct, generate tokens
+     */
     @Override
     @Transactional(readOnly = true)
     public UserAuthDTO get(UserRegistrationDTO userRegistrationDTO) {
@@ -149,18 +187,19 @@ public class UserServiceImpl implements UserService {
             throw new NoActiveAccountException(NOT_ACTIVE_ACCOUNT);
         }
 
-        List<Role> grantedAuthorities = new ArrayList<>(user.getRoles());
-        grantedAuthorities.forEach(role -> role.setName("ROLE_" + role.getName()));
+        user.getRoles().forEach(role -> role.setName("ROLE_" + role.getName()));
 
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             userRegistrationDTO.getEmail(),
                             userRegistrationDTO.getPassword(),
-                            grantedAuthorities));
+                            user.getRoles()));
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException(INCORRECT_USER_DATA);
         }
+
+        user.getRoles().forEach(role -> role.setName(role.getName().replace("ROLE_", "")));
 
         UserAuthDTO userAuthDTO = new UserAuthDTO();
         userAuthDTO.setEmail(user.getEmail());
@@ -169,17 +208,29 @@ public class UserServiceImpl implements UserService {
         return userAuthDTO;
     }
 
+    /**
+     * @param email get user
+     * @return user
+     */
     @Transactional(readOnly = true)
     @Override
     public UserDTO getByEmail(String email) {
         return USER_MAPPER.toUserDto(getUser(email));
     }
 
+    /**
+     * @param email get user
+     * @return check if this user exists
+     */
     @Override
     public boolean isPresentUserByEmail(String email) {
         return userDAO.getByEmail(email).isPresent();
     }
 
+    /**
+     * @param userAuthDTO refresh token and email
+     * @return if refresh token valic generate new acces token and refresh token
+     */
     @Override
     @Transactional(readOnly = true)
     public UserAuthDTO refreshToken(UserAuthDTO userAuthDTO) {
@@ -195,6 +246,10 @@ public class UserServiceImpl implements UserService {
         return userAuthDTO;
     }
 
+    /**
+     * @param token registration
+     * @return if registration token valid active account
+     */
     @Transactional
     @Override
     public boolean isVerifyAccount(String token) {
@@ -208,6 +263,10 @@ public class UserServiceImpl implements UserService {
         return isValidToken && jwtService.isRegistrationTokenNotExpired(token);
     }
 
+    /**
+     * method for scheduler which starts at midnight and delete all not-active accounts with
+     * expired registrationToken
+     */
     @Transactional
     @Override
     public void removeAllNotActiveUsersWithExpiredJWTToken() {

@@ -22,6 +22,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    /**
+     * @return all users #only for admin
+     */
     @GetMapping({"/admin/users"})
     @ApiOperation(value = "Show all users", notes = "Show information about all users ")
     public ResponseEntity<List<UserDTO>> getAll() {
@@ -29,6 +32,10 @@ public class UserController {
         return ResponseEntity.ok(userService.findAll());
     }
 
+    /**
+     * @param userRegistrationDTO auth data
+     * @return jwt tokrn
+     */
     @PostMapping(value = {"/login"})
     @ApiOperation(value = "Find user by email", notes = "Find user if exists")
     public ResponseEntity<UserAuthDTO> login(@ApiParam(value = "email value for user you need to retrieve", required = true)
@@ -38,6 +45,10 @@ public class UserController {
 
     }
 
+    /**
+     * @param user auth data
+     * @return new saved user
+     */
     @PostMapping({"/registration"})
     @ApiOperation(value = "Add new user", notes = "Add new user")
     public ResponseEntity<UserAuthDTO> save(@RequestBody UserRegistrationDTO user) {
@@ -47,12 +58,10 @@ public class UserController {
         return ResponseEntity.ok(userAuthDTO);
     }
 
-    @PutMapping({"/user"})
-    @ApiOperation(value = "Update existing user", notes = "Update existing user")
-    public ResponseEntity<UserDTO> update(@RequestBody UserDTO user) {
-        return ResponseEntity.ok(userService.update(user));
-    }
-
+    /**
+     * @param email user
+     * @return delete exoting user
+     */
     @DeleteMapping({"/user/{email}"})
     @ApiOperation(value = "Delete existing user", notes = "Delete existing user")
     public ResponseEntity<?> delete(@PathVariable String email) {
@@ -60,6 +69,10 @@ public class UserController {
         return ResponseEntity.ok(userService.deleteByEmail(email));
     }
 
+    /**
+     * @param email user
+     * @return get user
+     */
     @GetMapping({"/user/{email}"})
     @ApiOperation(value = "Get user", notes = "Get user")
     public ResponseEntity<UserDTO> get(@PathVariable String email) {
@@ -67,12 +80,20 @@ public class UserController {
         return ResponseEntity.ok(userService.getByEmail(email));
     }
 
+    /**
+     * @param userAuthDTO user data
+     * @return new JWT token
+     */
     @PostMapping({"/refresh-token"})
     public ResponseEntity<UserAuthDTO> refreshToken(@RequestBody UserAuthDTO userAuthDTO) {
         logger.info("Update expired refresh token, from user with email = {}", userAuthDTO.getEmail());
         return ResponseEntity.ok(userService.refreshToken(userAuthDTO));
     }
 
+    /**
+     * @param token registration
+     * @return if token valid activated account
+     */
     @GetMapping({"/verify-email/{token}"})
     public ResponseEntity<Boolean> verifyAccount(@PathVariable String token) {
         boolean isValid = userService.isVerifyAccount(token);

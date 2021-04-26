@@ -10,13 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ValidationException;
@@ -29,6 +23,10 @@ public class UserInfoController {
     private final Logger logger = LoggerFactory.getLogger(UserInfoController.class);
     private final UserInfoService userInfoService;
 
+    /**
+     * @param user for updating
+     * @return updated user
+     */
     @PutMapping("/")
     @ApiOperation(value = "Update existing user info", notes = "Update existing user info")
     public ResponseEntity<UserInfoDTO> updateUserInfo(@RequestBody UserInfoDTO user) {
@@ -43,6 +41,11 @@ public class UserInfoController {
         }
     }
 
+    /**
+     * @param image user photo
+     * @param id    user id
+     * @return status updating
+     */
     @PutMapping("/save-photo/{id}")
     @ApiOperation(value = "Save user photo", notes = "Save user photo")
     public ResponseEntity<MultipartFile> savePhoto(@RequestPart("image") MultipartFile image, @PathVariable(name = "id") String id) {
@@ -53,6 +56,10 @@ public class UserInfoController {
         }
     }
 
+    /**
+     * @param imageName name
+     * @return photo
+     */
     @GetMapping("/load-photo/{imageName}")
     @ApiOperation(value = "Load user photo", notes = "Load user photo")
     public ResponseEntity<ByteArrayResource> loadPhoto(@PathVariable(name = "imageName") String imageName) {
