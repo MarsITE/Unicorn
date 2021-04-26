@@ -1,0 +1,69 @@
+<mat-accordion>
+    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+        <mat-panel-title>
+        <h3>
+            <span matBadge="{{unapprovedSkills.length}}" matBadgeOverlap="false" matBadgeSize="small" matBadgeColor="accent">
+                <strong>Unapproved skills</strong>
+            </span>
+        </h3>
+        </mat-panel-title>
+    </mat-expansion-panel-header>
+        <div *ngIf="!!unapprovedSkills.length">
+            <div class="skill-management-flex-container">
+                <button mat-raised-button color="primary" (click)=approveAllUnapprovedSkills() class="skill-management-button">Approve all</button>
+                <button mat-raised-button color="accent"  (click)=deleteAllUnapprovedSkill() class="skill-management-button">Delete all unapproved</button>
+            </div>
+            <mat-list class="skills">
+            <mat-list-item *ngFor="let skill of unapprovedSkills">         
+                <div>                
+                {{skill.name}}            
+                <button mat-button color="primary" class="skill-management-button" (click) = approveUnapprovedSkill(skill)>
+                    <mat-icon>task_alt</mat-icon>
+                </button>
+                <button mat-button color="accent" class="skill-management-button">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-button color="warn" class="skill-management-button" (click) = deleteUnapprovedSkill(skill)>
+                    <mat-icon>delete_outline</mat-icon>
+                </button>          
+                </div>
+                </mat-list-item>
+            </mat-list>      
+        </div>
+        <div *ngIf="!unapprovedSkills.length">
+            <p>There are no skills for approving...</p>
+        </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+        <mat-panel-title>
+        <h3>
+            <span matBadge="{{approvedSkills.length}}" matBadgeOverlap="false" matBadgeSize="small" matBadgeColor="primary">
+                <strong>Approved skills</strong>
+            </span>
+        </h3>
+        </mat-panel-title>
+        <mat-panel-description>
+        <!-- short description -->
+        </mat-panel-description>
+    </mat-expansion-panel-header>
+        <mat-form-field class="skills-chip-list">
+        <mat-label>Skills</mat-label>
+        <mat-chip-list #chipList aria-label="Skills selection">
+            <mat-chip *ngFor="let skill of approvedSkills" [selectable]="selectable" 
+            [removable]="removable" (removed)="remove(skill)" color="primary">
+                {{skill.name}}
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+        <input 
+            placeholder="New skill..."
+            [matChipInputFor]="chipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="add($event)">        
+        </mat-chip-list>
+        </mat-form-field>
+    </mat-expansion-panel>
+</mat-accordion>

@@ -40,6 +40,10 @@ public class SkillServiceImpl implements SkillService {
         return SKILL_MAPPER.toSkillsDto(skillDAO.getAllEnabled(enabled));
     }
 
+    public List<SkillDTO> findAllByUserId(UUID userId) {
+        return SKILL_MAPPER.toSkillsDto(skillDAO.getAllByUserId(userId));
+    }
+
     @Override
     public boolean isPresentSkillByName(String skillName) {
         return skillDAO.getByName(skillName).isPresent();
@@ -73,5 +77,4 @@ public class SkillServiceImpl implements SkillService {
                 .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_SKILL + name));
         return SKILL_DETAILS_MAPPER.toDto(skillByName);
     }
-
 }
