@@ -77,5 +77,4 @@ public class SkillServiceImpl implements SkillService {
                 .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_SKILL + name));
         return SKILL_DETAILS_MAPPER.toDto(skillByName);
     }
-
 }

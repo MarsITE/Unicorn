@@ -20,14 +20,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-
-import static com.academy.workSearch.dto.mapper.SkillDetailsMapper.SKILL_DETAILS_MAPPER;
 
 @Validated
 @RestController

@@ -16,8 +16,7 @@
             </div>
             <mat-list class="skills">
             <mat-list-item *ngFor="let skill of unapprovedSkills">         
-                <div>
-                <!-- <mat-checkbox [(ngModel)]="skill.enabled" class="skill-management-button"></mat-checkbox>             -->
+                <div>                
                 {{skill.name}}            
                 <button mat-button color="primary" class="skill-management-button" (click) = approveUnapprovedSkill(skill)>
                     <mat-icon>task_alt</mat-icon>
@@ -41,9 +40,9 @@
     <mat-expansion-panel-header>
         <mat-panel-title>
         <h3>
-            <!-- <span matBadge="{{approvedSkills.length}}" matBadgeOverlap="false" matBadgeSize="small" matBadgeColor="primary"> -->
-            <strong>Approved skills</strong>
-            <!-- </span> -->
+            <span matBadge="{{approvedSkills.length}}" matBadgeOverlap="false" matBadgeSize="small" matBadgeColor="primary">
+                <strong>Approved skills</strong>
+            </span>
         </h3>
         </mat-panel-title>
         <mat-panel-description>

@@ -2,13 +2,10 @@
     <span matBadge="{{skills.length}}" matBadgeOverlap="false" matBadgeSize="small" matBadgeColor="primary">
         <strong>My skills</strong>
     </span>
-    <div>
-        <button mat-raised-button color="accent" (click)=addSkills() class="skill-management-button">Add new skills</button>
-    </div>
 </h3>
 <mat-chip-list #chipList aria-label="Skills selection">
     <mat-chip *ngFor="let skill of skills" [selectable]="selectable" 
-    [removable]="removable" (removed)="removeSkill(skill)" color="primary">
+    [removable]="removable" color="primary">
         {{skill.name}}
     <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
     </mat-chip>
