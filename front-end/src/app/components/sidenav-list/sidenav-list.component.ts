@@ -14,7 +14,7 @@ export class SidenavListComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.isAdmin = changes.isUserLoggedIn
-                    && changes.isUserLoggedIn.currentValue 
+                    && changes.isUserLoggedIn.currentValue
                     && this.tokenHelper.isUserRole(USER_ROLE_ADMIN);
   }
 }
