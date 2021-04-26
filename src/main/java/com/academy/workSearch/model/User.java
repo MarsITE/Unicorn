@@ -60,7 +60,8 @@ public class User implements UserDetails {
     )
     private Set<Role> roles;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    //todo
+    @OneToOne(cascade = CascadeType.REMOVE)
     @ApiModelProperty(notes = "User info", position = 7)
     @JoinColumn(name = "user_info_id")
     private UserInfo userInfo;

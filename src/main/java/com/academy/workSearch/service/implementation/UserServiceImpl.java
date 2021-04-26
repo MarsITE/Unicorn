@@ -22,6 +22,7 @@ import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,6 +53,8 @@ public class UserServiceImpl implements UserService {
     private final JwtService jwtService;
     private final EmailService emailService;
     private final FreeMarkerConfigurer freemarkerConfigurer;
+    private final Environment env;
+    private final String timeToImproveAccount = " 1 day";
 
     /**
      * post construct set class type for dao
@@ -125,7 +128,9 @@ public class UserServiceImpl implements UserService {
         try {
             Map<String, Object> model = new HashMap<>();
             model.put("email", user.getEmail());
+            model.put("client_url", env.getProperty("CLIENT_URL"));
             model.put("token", user.getToken());
+            model.put("time_to_improve", timeToImproveAccount);
             Template template = freemarkerConfigurer.getConfiguration().getTemplate("verify-email-message.txt");
             content = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
         } catch (IOException | TemplateException e) {
@@ -171,12 +176,11 @@ public class UserServiceImpl implements UserService {
 
     /**
      * @param userRegistrationDTO auth data
-     * @return jwt token
+     * @return jwt token //todo
      * method:
      * 1. check if user exists
-     * 2. modify authorities for spring security
-     * 3. authenticate user
-     * 4. if user data correct, generate tokens
+     * 2. authenticate user
+     * 3. if user data correct, generate tokens
      */
     @Override
     @Transactional(readOnly = true)
@@ -189,13 +193,11 @@ public class UserServiceImpl implements UserService {
 
         user.getRoles().forEach(role -> role.setName("ROLE_" + role.getName()));
 
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            userRegistrationDTO.getEmail(),
-                            userRegistrationDTO.getPassword(),
-                            user.getRoles()));
-        } catch (BadCredentialsException e) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                userRegistrationDTO.getEmail(),
+                userRegistrationDTO.getPassword(),
+                user.getRoles());
+        if (!authenticationManager.authenticate(authenticationToken).isAuthenticated()) {
             throw new BadCredentialsException(INCORRECT_USER_DATA);
         }
 
