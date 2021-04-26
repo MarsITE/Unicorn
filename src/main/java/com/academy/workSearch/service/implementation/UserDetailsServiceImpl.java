@@ -16,6 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserDAO userDAO;
 
+    /**
+     *
+     * @param username email authored user
+     * @return authored user
+     * @throws UsernameNotFoundException if user does not exists
+     */
     @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
