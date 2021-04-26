@@ -35,11 +35,19 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     private final UserInfoDAO userInfoDAO;
 
+    /**
+     * post construct set class type for dao
+     */
     @PostConstruct
     private void setTypeClass() {
         userInfoDAO.setClazz(UserInfo.class);
     }
 
+    /**
+     *
+     * @param userInfo dto
+     * @return saved user info
+     */
     @Transactional
     @Override
     public UserInfoDTO save(UserInfoDTO userInfo) {
@@ -47,6 +55,12 @@ public class UserInfoServiceImpl implements UserInfoService {
                 .toUserInfoDto(userInfoDAO.save(USER_INFO_MAPPER.toUserInfo(userInfo)));
     }
 
+    /**
+     *
+     * @param photo image of user
+     * @param id id for change name image
+     * @return status of saving
+     */
     @Override
     @Transactional
     public boolean updateImage(MultipartFile photo, String id) {
@@ -72,6 +86,11 @@ public class UserInfoServiceImpl implements UserInfoService {
         return isImageSave;
     }
 
+    /**
+     *
+     * @param imageName url
+     * @return photo dto
+     */
     @Override
     public PhotoDTO loadPhoto(String imageName) {
         PhotoDTO photoDTO = new PhotoDTO();

@@ -1,6 +1,7 @@
 package com.academy.workSearch.controller;
 
 import com.academy.workSearch.dto.ProjectDTO;
+import com.academy.workSearch.model.User;
 import com.academy.workSearch.service.ProjectService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,8 +41,11 @@ public class ProjectController {
     public ResponseEntity<List<ProjectDTO>> showProjects(@RequestParam(value = "page", defaultValue = "1") int page,
                                                          @RequestParam(value = "sort", defaultValue = "desc") String sort,
                                                          @RequestParam(value = "maxResult", defaultValue = "5") int maxResult,
-                                                         @RequestParam(value = "maxNavigationPage", defaultValue = "100") int maxNavigationPage) {
-        List<ProjectDTO> projectsDto = projectService.findAllByPageWithSortOrder(page, maxResult, maxNavigationPage, sort);
+                                                         @RequestParam(value = "maxNavigationPage", defaultValue = "100") int maxNavigationPage,
+                                                         @RequestParam(value = "showAll", defaultValue = "true") boolean showAll,
+                                                         @AuthenticationPrincipal User currentUser) {
+
+        List<ProjectDTO> projectsDto = projectService.findAllByPageWithSortOrder(page, maxResult, maxNavigationPage, sort, showAll, currentUser);
         logger.info("Show projects");
         return new ResponseEntity<>(projectsDto, HttpStatus.OK);
     }
@@ -82,7 +87,7 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation(value = "Delete existing user", notes = "Delete existing project")
+    @ApiOperation(value = "Delete existing project", notes = "Delete existing project")
     public void deleteProject(@PathVariable UUID id) {
         projectService.delete(id);
         logger.info("Delete project with ID = {}", id);

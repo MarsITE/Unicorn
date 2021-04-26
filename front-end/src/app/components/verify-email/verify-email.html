@@ -1,0 +1,11 @@
+
+<div class="container" *ngIf="isValidToken">
+  <h1>Your email address has been successfully verified!</h1>
+  <button class="button-save" (click)="submit(true)" mat-raised-button color="primary">Login</button>
+</div>
+
+<div class="container" *ngIf="!isValidToken">
+  <h1>Something wrong... Your email has not confirmed</h1>
+  <h3>Check your secret link or try to register again.</h3>
+  <button class="button-save" (click)="submit(false)" mat-raised-button color="primary">Registration</button>
+</div>

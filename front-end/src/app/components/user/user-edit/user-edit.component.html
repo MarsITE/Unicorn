@@ -28,14 +28,15 @@
       <p>
         <mat-form-field>
           <input type="text" matInput placeholder="link to social network" formControlName="linkToSocialNetwork" />
-          <mat-error *ngIf="userProfileForm.controls.linkToSocialNetwork.invalid">Link must be less than 255 symbols.</mat-error>
+          <mat-error *ngIf="userProfileForm.controls.linkToSocialNetwork.invalid">Link must be less than 255 symbols.
+          </mat-error>
         </mat-form-field>
       </p>
 
       <p>
         <mat-form-field appearance="fill">
           <mat-label>Date of birth</mat-label>
-           <input matInput [matDatepicker]="picker" formControlName="birthDate" [max]="today"/>
+          <input matInput [matDatepicker]="picker" formControlName="birthDate" [max]="today" />
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
@@ -53,12 +54,33 @@
         </mat-form-field>
       </p>
       <p>
+        <mat-form-field appearance="fill">
+          <mat-label>Skills</mat-label>
+          <mat-select [(formControl)]="skills" multiple>
+            <mat-select-trigger>
+              {{skills.value ? skills.value[0] : ''}}
+              <span *ngIf="skills.value?.length > 1" class="example-additional-selection">
+                (+{{skills.value.length - 1}} {{skills.value?.length === 2 ? 'other' : 'others'}})
+              </span>
+            </mat-select-trigger>
+            <mat-option #matOption *ngFor="let skill of skills" [value]="skill.skillId"
+              (click)="setSelectedSkills(matOption)">
+              {{ skill.name }}
+            </mat-option>
+          </mat-select>
+          <mat-chip-list>
+            <mat-chip *ngFor="let skill of selectedSkills">{{skill}}</mat-chip>
+          </mat-chip-list>
+        </mat-form-field>
+      </p>
+      <p>
         <mat-checkbox formControlName="isShowInfo" id="isShowInfo" class="is-show-info">
           <div>Public profile</div>
         </mat-checkbox>
       </p>
       <div style="display: flex; flex-direction: column">
-        <input class="ng-hide" id="input-file-id"  (change)="loadImage($event)" accept=".jpg,.jpeg,.png" type="file" hidden/>
+        <input class="ng-hide" id="input-file-id" (change)="loadImage($event)" accept=".jpg,.jpeg,.png" type="file"
+          hidden />
         <label for="input-file-id" class="md-button md-raised md-primary">Choose Files</label>
         <img *ngIf="imageSrc" class="selected-img" [src]="imageSrc" />
       </div>

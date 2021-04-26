@@ -15,6 +15,8 @@ public interface SkillService {
     SkillDetailsDTO update(SkillDetailsDTO skill);
 
     SkillDetailsDTO get(UUID id);
+
     SkillDetailsDTO getByName(String name);
 
+    boolean isPresentSkillByName(String skillName);
 }

@@ -48,7 +48,7 @@ export class StartPageComponent implements OnInit {
       .set('page', this.counter.toString())
       .set('maxResult', maxResult.toString())
 
-    this.projectService.getProjects(this.counter.toString(), null, this.maxResult.toString()).subscribe(
+    this.projectService.getProjects(this.counter.toString(), null, this.maxResult.toString(), true).subscribe(
       (response: Project[]) => {
         console.log("response", response);
         this.projects = response;

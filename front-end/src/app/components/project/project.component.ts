@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Project } from '../../common/model/project';
 import { User } from '../../common/model/user';
 import { ProjectService } from '../../common/services/project.service';
+import { TokenHelper } from 'src/app/common/helper/token.helper';
 
 
 @Component({
@@ -13,7 +14,7 @@ import { ProjectService } from '../../common/services/project.service';
 })
 
 export class ProjectComponent implements OnInit {
-  id: string;
+  ownerId: string;
   owner: User;
   sortFlag = false;
   sort = 'desc';
@@ -24,28 +25,30 @@ export class ProjectComponent implements OnInit {
 
   displayedColumns: string[] = ['name', 'projectStatus', 'creationDate', 'skills'];
 
-  constructor(private projectService: ProjectService, private router: Router, private http: HttpClient, route: ActivatedRoute) {
+  constructor(private projectService: ProjectService, private router: Router,
+              private http: HttpClient, route: ActivatedRoute, private tokenHelper: TokenHelper) {
     route.queryParams.subscribe(params => {
     this.counter = params.page || this.counter;
     this.sort = params.sort || this.sort;
     this.maxResult = params.maxResult || this.maxResult;
+    this.ownerId = this.tokenHelper.getIdFromToken();
 });
   }
 
   ngOnInit(): void {
     this.getProjects();
+
     console.log('This get project.', this.projects.length);
   }
 
  private getProjects() {
-
   const params = new HttpParams()
   .set('page', this.counter.toString())
   .set('sort', this.sort)
   .set('maxResult', this.maxResult.toString())
   .set('Authorization', `Bearer ${sessionStorage.getItem('access_token')}`) ;
 
-  this.projectService.getProjects(this.counter.toString(), this.sort, this.maxResult.toString()).subscribe(
+  this.projectService.getProjects(this.counter.toString(), this.sort, this.maxResult.toString(), false).subscribe(
       (response: Project[]) => {
         this.projects = response;
       },

@@ -8,3 +8,5 @@ alter table users
 add token varchar(255),
 alter column email type varchar(50);
 
+alter table users alter column token drop not null;
+

@@ -1,6 +1,7 @@
 package com.academy.workSearch.service.implementation;
 
 import com.academy.workSearch.dao.ProjectDAO;
+import com.academy.workSearch.dao.RoleDAO;
 import com.academy.workSearch.dao.implementation.UserDAOImpl;
 import com.academy.workSearch.dto.ProjectDTO;
 import com.academy.workSearch.dto.SkillDTO;
@@ -9,6 +10,7 @@ import com.academy.workSearch.dto.mapper.SkillMapper;
 import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.exceptionHandling.exceptions.NotUniqueEntityException;
 import com.academy.workSearch.model.Project;
+import com.academy.workSearch.model.Role;
 import com.academy.workSearch.model.Skill;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.enums.ProjectStatus;
@@ -33,6 +35,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectDAO projectDAO;
     private final UserDAOImpl userDAO;
+    private final RoleDAO roleDAO;
 
     @PostConstruct
     private void setTypeClass() {
@@ -46,8 +49,30 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectDTO> findAllByPageWithSortOrder(int page, int maxResult, int maxNavigationPage, String sort) {
-        return ProjectMapper.INSTANCE.toProjectsDto(projectDAO.findAllByPageWithSortOrder(page, maxResult, maxNavigationPage, sort));
+    public List<ProjectDTO> findAllByPageWithSortOrder(int page, int maxResult, int maxNavigationPage, String sort, boolean showAll, User currentUser) {
+        boolean showOnlyOwnedProjects = false;
+        if (!showAll && currentUser != null && !currentUser.getRoles().isEmpty()) {
+            Set<Role> roles = currentUser.getRoles();
+            String employerRoleName = roleDAO.getByName("EMPLOYER").orElseThrow().getName();
+            for (Role role : roles) {
+                if (role.getName().equals(employerRoleName)) {
+                    showOnlyOwnedProjects = true;
+                    break;
+                }
+            }
+        }
+        List<Project> allByPageWithSortOrder;
+        if (showOnlyOwnedProjects) {
+            allByPageWithSortOrder = projectDAO.findAllByOwnerId(page, maxResult, maxNavigationPage, sort, currentUser.getUserId().toString());
+        } else {
+            allByPageWithSortOrder = projectDAO.findAllByPageWithSortOrder(page, maxResult, maxNavigationPage, sort);
+        }
+        return ProjectMapper.INSTANCE.toProjectsDto(allByPageWithSortOrder);
+    }
+
+    @Override
+    public List<ProjectDTO> findAllByOwnerId(int page, int maxResult, int maxNavigationPage, String sort, String ownerId) {
+        return ProjectMapper.INSTANCE.toProjectsDto(projectDAO.findAllByOwnerId(page, maxResult, maxNavigationPage, sort, ownerId));
     }
 
     @Override

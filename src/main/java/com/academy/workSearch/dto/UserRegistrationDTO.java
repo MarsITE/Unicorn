@@ -9,5 +9,5 @@ import lombok.Setter;
 public class UserRegistrationDTO {
     private String email;
     private String password;
-    private boolean isEmployer;
+    private Boolean isEmployer;
 }

@@ -51,7 +51,7 @@ public class User implements UserDetails {
     @ApiModelProperty(notes = "Creation date", position = 5)
     private LocalDateTime creationDate;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @ApiModelProperty(notes = "User role", position = 6)
     @JoinTable(
             name = "users_roles",
@@ -60,7 +60,7 @@ public class User implements UserDetails {
     )
     private Set<Role> roles;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @ApiModelProperty(notes = "User info", position = 7)
     @JoinColumn(name = "user_info_id")
     private UserInfo userInfo;
