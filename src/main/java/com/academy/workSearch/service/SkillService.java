@@ -10,6 +10,8 @@ public interface SkillService {
 
     List<SkillDTO> findAllEnabled(Boolean enabled);
 
+    List<SkillDTO> findAllByUserId(UUID userId);
+
     SkillDetailsDTO save(SkillDetailsDTO skill);
 
     SkillDetailsDTO update(SkillDetailsDTO skill);

@@ -3,6 +3,7 @@ package com.academy.workSearch.controller;
 import com.academy.workSearch.dto.SkillDTO;
 import com.academy.workSearch.dto.SkillDetailsDTO;
 import com.academy.workSearch.exceptionHandling.exceptions.NotUniqueEntityException;
+import com.academy.workSearch.model.User;
 import com.academy.workSearch.service.SkillService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +46,14 @@ public class SkillController {
     public ResponseEntity<List<SkillDTO>> getAll() {
         logger.info("Show all skills");
         return ResponseEntity.ok(skillService.findAllEnabled(true));
+    }
+
+    @GetMapping("/worker/skills")
+    @ApiOperation(value = "Show all skills", notes = "Show information about all skills")
+    public ResponseEntity<List<SkillDTO>> getAllByUserID(@AuthenticationPrincipal User user) {
+        UUID userId = user.getUserId();
+        logger.info("Show skills of user with ID {}", userId);
+        return ResponseEntity.ok(skillService.findAllByUserId(userId));
     }
 
     @GetMapping("/admin/skills")
