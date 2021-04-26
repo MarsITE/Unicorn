@@ -1,0 +1,12 @@
+<h3>
+    <span matBadge="{{skills.length}}" matBadgeOverlap="false" matBadgeSize="small" matBadgeColor="primary">
+        <strong>My skills</strong>
+    </span>
+</h3>
+<mat-chip-list #chipList aria-label="Skills selection">
+    <mat-chip *ngFor="let skill of skills" [selectable]="selectable" 
+    [removable]="removable" color="primary">
+        {{skill.name}}
+    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+    </mat-chip>
+</mat-chip-list>

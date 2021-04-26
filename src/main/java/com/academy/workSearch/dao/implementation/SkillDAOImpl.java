@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 @Repository
@@ -35,4 +36,12 @@ public class SkillDAOImpl extends CrudDAOImpl<Skill> implements SkillDAO {
         return query.list();
     }
 
+    public List<Skill> getAllByUserId(UUID userId) {
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "select user.userInfo.skills from User user where user.userId = :userId";
+        List<Skill> skills = session.createQuery(hql)
+                .setParameter("userId",userId)
+                .getResultList();
+        return skills;
+    }
 }
