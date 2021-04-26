@@ -1,0 +1,36 @@
+.project-card {
+  text-align: left;
+  max-width: 700px;
+  max-height: 300px;
+  margin: 20px;
+}
+
+.project-header-image {
+  background-size: cover;
+}
+.mat-card{
+  margin: 40px auto;
+  background-color: rgb(230, 255, 238);
+}
+.mat-card-title{
+    margin: auto;
+}
+.mat-card-content p{
+margin: 0 16px;
+}
+
+.mat-card-footer{
+  margin:0 16px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.creating-date{
+  text-align: right;
+}
+.skills{
+  text-align: left;
+}
+.mat-card-title {
+  padding-bottom: 50px;
+}

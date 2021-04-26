@@ -68,6 +68,7 @@ import { UserProfileComponent } from './components/user/user-profile/user-profil
 import { UserListComponent } from './components/user/user-list/user-list.component';
 import { UserRegistrationComponent } from './components/user/user-registration/user-registration.component';
 import { UserLoginComponent } from './components/user/user-login/user-login.component';
+import {AllProjectsComponent} from './components/project/all-projects/all-projects.component';
 import { SkillsComponent } from './components/skills/skills.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email';
 
@@ -86,6 +87,7 @@ import { VerifyEmailComponent } from './components/verify-email/verify-email';
     ProjectEditComponent,
     SidenavListComponent,
     ConfirmComponent,
+    AllProjectsComponent,
     StartPageComponent,
     SkillsComponent,
     StartPageComponent,
