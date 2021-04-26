@@ -53,24 +53,22 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { ProjectService } from './common/services/project.service';
-import { ProjectComponent } from './project/project.component';
-import { ProjectAddComponent } from './project/project-add/project-add.component';
-import { ProjectInfoComponent } from './project/project-info/project-info.component';
-import { ProjectEditComponent } from './project/project-edit/project-edit.component';
-import { AdminComponent } from './admin/admin.component';
+import { ProjectComponent } from './components/project/project.component';
+import { ProjectAddComponent } from './components/project/project-add/project-add.component';
+import { ProjectInfoComponent } from './components/project/project-info/project-info.component';
+import { ProjectEditComponent } from './components/project/project-edit/project-edit.component';
 import { SkillService } from './common/services/skill.service';
-import { ToolbarComponent } from './components/toolbar/toolbar.component';
-import { FooterComponent } from './components/footer/footer.component';
 import { SidenavListComponent } from './components/sidenav-list/sidenav-list.component';
-import { ConfirmComponent } from './modals/confirm/confirm.component';
+import { ConfirmComponent } from './components/modals/confirm/confirm.component';
 import { ToastrModule } from 'ngx-toastr';
-import { StartPageComponent } from './start-page/start-page.component';
+import { StartPageComponent } from './components/start-page/start-page.component';
 import { HttpErrorInterceptor } from './common/services/interceptor/http-error.interceptor';
 import { UserEditComponent } from './components/user/user-edit/user-edit.component';
 import { UserProfileComponent } from './components/user/user-profile/user-profile.component';
 import { UserListComponent } from './components/user/user-list/user-list.component';
 import { UserRegistrationComponent } from './components/user/user-registration/user-registration.component';
 import { UserLoginComponent } from './components/user/user-login/user-login.component';
+import { SkillsComponent } from './components/skills/skills.component';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 @NgModule({
@@ -86,12 +84,10 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
     UserEditComponent,
     ProjectInfoComponent,
     ProjectEditComponent,
-    AdminComponent,
-    ToolbarComponent,
-    FooterComponent,
     SidenavListComponent,
     ConfirmComponent,
-    StartPageComponent
+    StartPageComponent,
+    SkillsComponent
   ],
 
   imports: [

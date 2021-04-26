@@ -28,7 +28,7 @@
       <th mat-header-cell *matHeaderCellDef> Work Status </th>
       <td mat-cell *matCellDef="let element">
         <div *ngIf="element.userInfo.workStatus && element.userInfo.workStatus != ''; else none">
-          {{ element.userInfo.workStatus }}
+          {{converToPlain(element.userInfo.workStatus)}}
         </div>
       </td>
     </ng-container>
@@ -55,8 +55,8 @@
       <th mat-header-cell *matHeaderCellDef> Roles </th>
       <td mat-cell *matCellDef="let element">
         <div *ngIf="element.roles || element.roles != ''; else none">
-          <span class *ngFor="let role of element.roles">{{role}}</span>
-          </div>
+          <span class="role" *ngFor="let role of element.roles">{{converToPlain(role)}}</span>
+        </div>
       </td>
     </ng-container>
 

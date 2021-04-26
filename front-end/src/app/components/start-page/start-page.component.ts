@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { Project } from '../common/model/project';
-import { Skill } from '../common/model/skill';
-import { ProjectService } from '../common/services/project.service';
-import { SkillService } from '../common/services/skill.service';
+import { Project } from 'src/app/common/model/project';
+import { Skill } from 'src/app/common/model/skill';
+import { ProjectService } from 'src/app/common/services/project.service';
+import { SkillService } from 'src/app/common/services/skill.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { FormBuilder, FormGroup } from '@angular/forms';

@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { User } from 'src/app/common/model/user';
 import { WorkStatus } from 'src/app/common/model/work-status';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
+import { TokenHelper } from 'src/app/common/helper/token.helper';
 
 @Component({
   selector: 'app-user-profile',
@@ -14,6 +15,7 @@ import { UserHttpService } from 'src/app/common/services/user-http.service';
 })
 export class UserProfileComponent implements OnInit, OnDestroy {
   email: string;
+  emailInUrl: string;
   user: User;
   imageUrl: string;
   image: any;
@@ -25,10 +27,12 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     { value: 'OVERTIME', viewValue: 'Overtime' },
     { value: 'BUSY', viewValue: 'Busy' }
   ];
+  isOnlyWatch: boolean;
 
   constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router, private domSanitizer: DomSanitizer,
-    private toastr: ToastrService) {
-    this.email = router.snapshot.params.email;
+              private toastr: ToastrService, private tokenHelper: TokenHelper) {
+    this.email = this.tokenHelper.getEmailFromToken();
+    this.emailInUrl = router.snapshot.params.email;
     this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl('../../../assets/default-profile-photo.jpg');
   }
   ngOnDestroy(): void {
@@ -38,7 +42,13 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getUser(this.email);
+    if (this.emailInUrl) {
+      this.getUser(this.emailInUrl);
+      this.isOnlyWatch = true;
+    } else {
+      this.getUser(this.email);
+      this.isOnlyWatch = false;
+    }
   }
 
   private getUser(email: string): void {
@@ -51,7 +61,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         }
         this.setViewForWorkStatus();
       },
-      error => console.log('error', error),
+      error => this.toastr.error('Can not load user info!', 'Something wrong'),
     ));
   }
 
@@ -62,22 +72,12 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(response));
         sessionStorage.setItem('avatar', window.URL.createObjectURL(response));
       },
-      error => console.log('error', error),
+      error => this.toastr.error('Can not load user photo!', 'Something wrong'),
     ));
   }
 
-  public edit(email: string): void {
-    this.router2.navigateByUrl(`my-profile-edit/${email}`);
-  }
-
-  public delete(email: string): void {
-    this.subscriptions.push(this.userService.deleteUser(email).subscribe(
-      (response) => {
-        this.toastr.success('Deleted', 'Success!');
-        this.router2.navigateByUrl('login');
-      },
-      error => console.log('error', error),
-    ));
+  public edit(): void {
+    this.router2.navigateByUrl(`my-profile-edit`);
   }
 
   public setViewForWorkStatus(): void {
@@ -89,5 +89,9 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
   public converToPlain(str: string): string {
     return str.toLowerCase();
+  }
+
+  public converToPlainSkills(str: string): string {
+    return `#${str.toLowerCase()}`;
   }
 }

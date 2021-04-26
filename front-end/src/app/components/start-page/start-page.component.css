@@ -37,15 +37,16 @@
       width: 100%;
       display: table;
     }    
-    /* .search-form{
+     .search-form{
       display: table-cell;
-    width: 150%;
+    width: 100%;
+    margin: 0 20%;
     }
     .search-button{
       display: table-cell;
-    width: 50%;
+    width: 10%;
     }
     .reset-button{
       display: table-cell;
-    width: 50%;
-    } */
+    width: 10%;
+    } 

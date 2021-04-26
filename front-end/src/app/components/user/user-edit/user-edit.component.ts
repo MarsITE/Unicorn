@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
+import { TokenHelper } from 'src/app/common/helper/token.helper';
 import { User } from 'src/app/common/model/user';
 import { UserInfo } from 'src/app/common/model/user-info';
 import { WorkStatus } from 'src/app/common/model/work-status';
@@ -30,8 +32,9 @@ export class UserEditComponent implements OnInit, OnDestroy {
   ];
   selectedWorkStatus: WorkStatus = this.workStatuses[0];
 
-  constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router) {
-    this.email = router.snapshot.params.email;
+  constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router, private tokenHelper: TokenHelper,
+              private toastr: ToastrService) {
+    this.email = this.tokenHelper.getEmailFromToken();
     this.today = new Date();
   }
 
@@ -66,7 +69,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
         phone,
         [Validators.pattern('[- +()0-9]+')]),
       linkToSocialNetwork: new FormControl(linkToSocialNetwork, Validators.maxLength(255)),
-      dateOfBirth: new FormControl(birthDate),
+      birthDate: new FormControl(birthDate),
       isShowInfo: new FormControl(isShowInfo),
       workStatus: new FormControl(workStatus),
       imageUrl: new FormControl(imageUrl)
@@ -75,30 +78,31 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
   private getUser(email: string): void {
     this.subscriptions.push(this.userService.getByEmail(email)
-    .subscribe(
-      response => {
-        this.user = response;
-        this.setViewForWorkStatus(this.user.userInfo.workStatus);
-        this.initForm(
-          this.user.userInfo.firstName,
-          this.user.userInfo.lastName,
-          this.user.userInfo.phone,
-          this.user.userInfo.linkToSocialNetwork,
-          new Date(this.user.userInfo.birthDate),
-          this.user.userInfo.showInfo,
-          this.user.userInfo.workStatus,
-          this.user.userInfo.imageUrl);
-      },
-      error => {
-        this.initForm();
-        console.log('error', error);
-      }
-    ));
+      .subscribe(
+        response => {
+          this.user = response;
+          this.setViewForWorkStatus(this.user.userInfo.workStatus);
+          this.initForm(
+            this.user.userInfo.firstName,
+            this.user.userInfo.lastName,
+            this.user.userInfo.phone,
+            this.user.userInfo.linkToSocialNetwork,
+            new Date(this.user.userInfo.birthDate),
+            this.user.userInfo.showInfo,
+            this.user.userInfo.workStatus,
+            this.user.userInfo.imageUrl);
+        },
+        error => {
+          this.initForm();
+          this.toastr.error(error, 'Something wrong');
+        }
+      ));
   }
 
   public submit(): void {
     this.sendImage();
     this.updateUserInfo(this.getUserInfo());
+    this.router2.navigateByUrl('my-profile');
   }
 
   private sendImage(): void {
@@ -106,19 +110,19 @@ export class UserEditComponent implements OnInit, OnDestroy {
       const formData = new FormData();
       formData.append('image', this.selectedImage);
       this.subscriptions.push(this.userService.saveImage(formData, this.user.userInfo.userInfoId)
-      .subscribe(
-        response => console.log(response),
-        error => console.log(error)
-      ));
+        .subscribe(
+          response => this.toastr.success('Image successfully saved!', 'Success!'),
+          error => this.toastr.error(error, 'Something wrong'),
+        ));
     }
   }
 
   private updateUserInfo(userInfo: UserInfo): void {
     this.subscriptions.push(this.userService.updateUserInfo(userInfo)
-    .subscribe(
-      response => console.log(response),
-      error => console.log(error)
-    ));
+      .subscribe(
+        response => this.toastr.success('User data successfully saved!', 'Success!'),
+        error => this.toastr.error(error, 'Something wrong'),
+      ));
   }
 
   private getUserInfo(): UserInfo {
@@ -190,7 +194,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
   }
 
   private getDateFromDatePicker(): string {
-    const dateStr = this.userProfileForm.controls.dateOfBirth.value;
+    const dateStr = this.userProfileForm.controls.birthDate.value;
     if (dateStr != null) {
       const date = new Date(dateStr);
       console.log(date.toISOString().substring(0, 10));

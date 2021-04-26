@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Project } from '../../common/model/project'
-import { ProjectService } from '../../common/services/project.service';
-import { ProjectStatus } from '../../common/model/project-status';
+import { Project } from '../../../common/model/project';
+import { ProjectService } from '../../../common/services/project.service';
+import { ProjectStatus } from '../../../common/model/project-status';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -28,8 +28,8 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
 
   selectedProjectStatus: ProjectStatus = this.projectStatuses[0];
 
-  constructor(private projectService: ProjectService, router: ActivatedRoute, private router2: Router) {   
-    this.id = router.snapshot.params.id; 
+  constructor(private projectService: ProjectService, router: ActivatedRoute, private router2: Router) {
+    this.id = router.snapshot.params.id;
    }
 
    ngOnInit(): void {
@@ -45,7 +45,7 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
   private getProject(id: string): void {
     this.subscriptions.push(this.projectService.getById(id).subscribe(
       (response: Project) => {
-        this.project = response;       
+        this.project = response;
         this.setViewProjectStatus();
       },
       (error) => {

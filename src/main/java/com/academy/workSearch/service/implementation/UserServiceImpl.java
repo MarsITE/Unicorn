@@ -8,7 +8,7 @@ import com.academy.workSearch.dto.UserDTO;
 import com.academy.workSearch.dto.UserRegistrationDTO;
 import com.academy.workSearch.exceptionHandling.exceptions.NoActiveAccountException;
 import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
-import com.academy.workSearch.exceptionHandling.exceptions.NoUniqueEntityException;
+import com.academy.workSearch.exceptionHandling.exceptions.NotUniqueEntityException;
 import com.academy.workSearch.model.Role;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.UserInfo;
@@ -33,7 +33,11 @@ import java.util.Set;
 
 import static com.academy.workSearch.dto.mapper.UserAuthMapper.USER_AUTH_MAPPER;
 import static com.academy.workSearch.dto.mapper.UserMapper.USER_MAPPER;
-import static com.academy.workSearch.exceptionHandling.MessageConstants.*;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.EMAIL_EXISTS;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.INCORRECT_USER_DATA;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.NOT_ACTIVE_ACCOUNT;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_ROLE;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_SUCH_ENTITY;
 
 @Service
 @AllArgsConstructor
@@ -69,7 +73,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserAuthDTO save(UserRegistrationDTO userRegistrationDTO) {
         if (isPresentUserByEmail(userRegistrationDTO.getEmail())) {
-            throw new NoUniqueEntityException(EMAIL_EXISTS + userRegistrationDTO.getEmail());
+            throw new NotUniqueEntityException(EMAIL_EXISTS);
         }
 
         User user = USER_AUTH_MAPPER.toUser(userRegistrationDTO);
@@ -134,6 +138,8 @@ public class UserServiceImpl implements UserService {
                             grantedAuthorities));
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException(INCORRECT_USER_DATA);
+        } catch (Exception e) {
+            System.out.println();
         }
         final String accessToken = jwtService.generateAccessToken(getUser(user.getEmail()));
         final String refreshToken = jwtService.generateRefreshToken(user.getEmail());

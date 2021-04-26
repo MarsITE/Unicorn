@@ -3,6 +3,7 @@ package com.academy.workSearch.model;
 import com.academy.workSearch.model.enums.ProjectStatus;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -12,9 +13,9 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "projects", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"name"}),
-        @UniqueConstraint(columnNames = {"owner_id"})
-    })
+        @UniqueConstraint(
+                columnNames = {"name", "owner_id"})
+})
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -60,9 +61,5 @@ public class Project {
     @CreationTimestamp
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
-
-    @ManyToOne
-    @JoinColumn(name = "user_info_id", insertable = false, updatable = false)
-    private UserInfo userInfo;
 
 }

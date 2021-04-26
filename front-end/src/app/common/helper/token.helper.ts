@@ -1,19 +1,24 @@
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
+export const ACCESS_TOKEN = 'access_token';
+export const REFRESH_TOKEN = 'refresh_token';
+export const USER_ROLE_ADMIN = 'ADMIN';
+export const USER_ROLE_WORKER = 'WORKER';
+export const USER_ROLE_EMPLOYER = 'EMPLOYER';
+
 @Injectable({
   providedIn: 'root'
 })
 export class TokenHelper {
   helper: JwtHelperService;
-  token = sessionStorage.getItem('access_token');
 
   constructor() {
     this.helper = new JwtHelperService();
   }
 
   public isValidToken(): boolean {
-    return this.token !== null && this.helper.isTokenExpired(this.token);
+    return sessionStorage.getItem(ACCESS_TOKEN) !== null && this.helper.isTokenExpired(sessionStorage.getItem(ACCESS_TOKEN));
   }
 
   public getIdFromToken(): string {
@@ -25,26 +30,12 @@ export class TokenHelper {
   }
 
   private getTokenData(): any {
-    return this.helper.decodeToken(this.token);
+    return this.helper.decodeToken(sessionStorage.getItem(ACCESS_TOKEN));
   }
 
-  private refreshToken(): any {
-    if (!this.helper.isTokenExpired(this.token)) {
-
-    }
-  }
-
-  public getRoles(): string[] {
-    const roles: string[] = [];
-    if (this.getTokenData().isAdmin) {
-      roles.push(this.getTokenData().name);
-    }
-    if (this.getTokenData().isWorker) {
-      roles.push(this.getTokenData().name);
-    }
-    if (this.getTokenData().isEmployer) {
-      roles.push(this.getTokenData().name);
-    }
-    return roles;
+  public isUserRole(userRole: string): boolean {
+    const tokenData: { isAdmin?, isEmployer?, isWorker?} = this.getTokenData();    
+    const roleNames = [tokenData.isAdmin?.name, tokenData.isEmployer?.name, tokenData.isWorker?.name];    
+    return roleNames.some(role => role && role.toUpperCase() === userRole.toUpperCase());
   }
 }

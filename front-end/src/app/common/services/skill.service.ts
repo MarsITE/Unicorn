@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Skill } from '../model/skill';
 import { environment } from 'src/environments/environment';
+import { ACCESS_TOKEN } from '../helper/token.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class SkillService {
   // tslint:disable-next-line: typedef
   private authHeader() {
     return {
-      headers: new HttpHeaders().set('Authorization', `Bearer ${sessionStorage.getItem('access_token')}`)
+      headers: new HttpHeaders().set('Authorization', `Bearer ${sessionStorage.getItem(ACCESS_TOKEN)}`)
     };
   }
 
@@ -27,5 +28,13 @@ export class SkillService {
   // for Admin
   public getSkillsDetails(): Observable<Skill[]> {
     return this.http.get<Skill[]>(`${environment.url}/admin/skills`, this.authHeader());
+  }
+  
+  public save(skill: Skill): Observable<Skill> {
+    return this.http.post<Skill>(`${environment.url}/admin/skills`, skill, this.authHeader()); 
+  }
+
+  public update(skill: Skill): Observable<Skill> {
+    return this.http.put<Skill>(`${environment.url}/admin/skills`, skill, this.authHeader());
   }
 }

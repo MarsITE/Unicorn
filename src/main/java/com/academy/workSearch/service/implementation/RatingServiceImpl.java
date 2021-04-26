@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_RATING;
-import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_SUCH_SKILL;
 
 @Service
 @Transactional
@@ -37,7 +36,7 @@ public class RatingServiceImpl implements RatingService {
 
     public Rating delete(UUID id) {
         Rating rating = ratingDAO.get(id)
-                .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_SKILL + id));
+                .orElseThrow(() -> new NoSuchEntityException(NO_RATING + id));
         ratingDAO.delete(id);
         return rating;
     }

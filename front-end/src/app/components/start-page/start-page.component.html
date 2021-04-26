@@ -1,11 +1,13 @@
 <div class="container" id="main-container">
 
   <div class="search-area">
-    <form [formGroup]="myForm" class="search-form">
+    <div class="search-form">
+    <form [formGroup]="myForm" >
       <ng-multiselect-dropdown name="skillName" [placeholder]="'Select skill'" [data]="skillsName"
-        formControlName="skillName" [disabled]="disabled" [settings]="dropdownSettings" class="search-area">
+        formControlName="skillName" [disabled]="disabled" [settings]="dropdownSettings" >
       </ng-multiselect-dropdown>
     </form>
+  </div>
     <div class="search-button">
       <button mat-stroked-button (click)=search()>Search</button>
     </div>

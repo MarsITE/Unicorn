@@ -3,16 +3,19 @@ package com.academy.workSearch.dto.mapper;
 import com.academy.workSearch.dto.ProjectDTO;
 import com.academy.workSearch.model.Project;
 import com.academy.workSearch.model.Skill;
+import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.enums.ProjectStatus;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.Named;
+import org.mapstruct.control.MappingControl;
 import org.mapstruct.factory.Mappers;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.mapstruct.ReportingPolicy.IGNORE;
@@ -25,21 +28,20 @@ public interface ProjectMapper {
     @Mappings({ @Mapping(target = "id", source = "projectId"),
             @Mapping(target = "name", source = "name"),
             @Mapping(target = "description", source = "description"),
+            @Mapping(target = "projectStatus", qualifiedByName = "projectStatusStr"),
             @Mapping(target = "creationDate", source = "creationDate"),
-            @Mapping(target = "owner", source = "employer"),
-            @Mapping(target = "skills", qualifiedByName = "skillsStr"),
-            @Mapping(target = "projectStatus", qualifiedByName = "projectStatusStr")
+            @Mapping(target = "ownerId", source = "employer", qualifiedByName = "ownerId"),
+            @Mapping(target = "skills", qualifiedByName = "skillsStr")
     })
     ProjectDTO toDto(Project project);
 
     @Mappings({ @Mapping(target = "projectId", source = "id"),
             @Mapping(target = "name", source = "name"),
             @Mapping(target = "description", source = "description"),
+            @Mapping(target = "projectStatus", qualifiedByName = "projectStatus"),
             @Mapping(target = "creationDate", source = "creationDate"),
-            @Mapping(target = "employer", source = "owner"),
-            @Mapping(target = "skills", qualifiedByName = "skills"),
-            @Mapping(target = "projectStatus", qualifiedByName = "projectStatus")
-    })
+            @Mapping(target = "employer", source = "ownerId", qualifiedByName = "owner"),
+            @Mapping(target = "skills", qualifiedByName = "skills")})
     Project toEntity(ProjectDTO projectDto);
 
     List<Project> toProjects(List<ProjectDTO> projectDtos);
@@ -70,5 +72,17 @@ public interface ProjectMapper {
     @Named("projectStatus")
     default ProjectStatus projectStatus(String projectStatus){
         return ProjectStatus.valueOf(projectStatus);
+    }
+
+    @Named("ownerId")
+    default String ownerId(User user){
+        return user.getUserId().toString();
+    }
+
+    @Named("owner")
+    default User owner(String ownerId) {
+      User user = new User();
+      user.setUserId(UUID.fromString(ownerId));
+      return user;
     }
 }
