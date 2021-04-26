@@ -23,4 +23,8 @@ public interface UserService {
     boolean isPresentUserByEmail(String email);
 
     UserAuthDTO refreshToken(UserAuthDTO userAuthDTO);
+
+    boolean isVerifyAccount(String token);
+
+    void removeAllNotActiveUsersWithExpiredJWTToken();
 }

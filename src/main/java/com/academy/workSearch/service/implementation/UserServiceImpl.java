@@ -9,12 +9,16 @@ import com.academy.workSearch.dto.UserRegistrationDTO;
 import com.academy.workSearch.exceptionHandling.exceptions.NoActiveAccountException;
 import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.exceptionHandling.exceptions.NotUniqueEntityException;
+import com.academy.workSearch.model.Mail;
 import com.academy.workSearch.model.Role;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.UserInfo;
 import com.academy.workSearch.model.enums.AccountStatus;
+import com.academy.workSearch.service.EmailService;
 import com.academy.workSearch.service.JwtService;
 import com.academy.workSearch.service.UserService;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,20 +28,17 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.*;
 
 import static com.academy.workSearch.dto.mapper.UserAuthMapper.USER_AUTH_MAPPER;
 import static com.academy.workSearch.dto.mapper.UserMapper.USER_MAPPER;
-import static com.academy.workSearch.exceptionHandling.MessageConstants.EMAIL_EXISTS;
-import static com.academy.workSearch.exceptionHandling.MessageConstants.INCORRECT_USER_DATA;
-import static com.academy.workSearch.exceptionHandling.MessageConstants.NOT_ACTIVE_ACCOUNT;
-import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_ROLE;
-import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_SUCH_ENTITY;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.*;
 
 @Service
 @AllArgsConstructor
@@ -49,6 +50,8 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final EmailService emailService;
+    private final FreeMarkerConfigurer freemarkerConfigurer;
 
     @PostConstruct
     private void setTypeClass() {
@@ -80,18 +83,37 @@ public class UserServiceImpl implements UserService {
         UserInfo userInfo = new UserInfo();
         userInfo.setUserInfoId(userInfoDAO.saveAndGetId(userInfo));
         user.setUserInfo(userInfo);
-        user.setAccountStatus(AccountStatus.ACTIVE);
+        user.setAccountStatus(AccountStatus.NOT_ACTIVE);
         Set<Role> roles = new HashSet<>();
-        Role role1 = roleDAO.getByName("WORKER")
+        Role worker = roleDAO.getByName("WORKER")
                 .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "WORKER"));
-        roles.add(role1);
+        roles.add(worker);
         if (userRegistrationDTO.getIsEmployer()) {
             roles.add(roleDAO.getByName("EMPLOYER")
                     .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "EMPLOYER")));
         }
         user.setRoles(roles);
         user.setPassword(passwordEncoder.encode(userRegistrationDTO.getPassword()));
+        user.setToken(jwtService.generateRegistrationToken(user.getEmail()));
         userDAO.save(user);
+
+        Mail mail = new Mail();
+        mail.setSubject("Registration confirm");
+        mail.setEmail(user.getEmail());
+        String content = "";
+        try {
+            Map<String, Object> model = new HashMap<>();
+            model.put("email", user.getEmail());
+            model.put("token", user.getToken());
+            Template template = freemarkerConfigurer.getConfiguration().getTemplate("verify-email-message.txt");
+            content = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+        } catch (IOException | TemplateException e) {
+            logger.info(e.getMessage());//todo
+            e.printStackTrace();
+        }
+        mail.setMessage(content);
+
+        emailService.sendHtmlMessage(mail);
 
         UserAuthDTO userAuthDTO = new UserAuthDTO();
         userAuthDTO.setEmail(user.getEmail());
@@ -121,7 +143,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserAuthDTO get(UserRegistrationDTO userRegistrationDTO) {
-        final User user = USER_MAPPER.toUser(getByEmail(userRegistrationDTO.getEmail()));
+        final User user = getUser(userRegistrationDTO.getEmail());
 
         if (!user.isEnabled()) {
             throw new NoActiveAccountException(NOT_ACTIVE_ACCOUNT);
@@ -138,17 +160,12 @@ public class UserServiceImpl implements UserService {
                             grantedAuthorities));
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException(INCORRECT_USER_DATA);
-        } catch (Exception e) {
-            System.out.println();
         }
-        final String accessToken = jwtService.generateAccessToken(getUser(user.getEmail()));
-        final String refreshToken = jwtService.generateRefreshToken(user.getEmail());
 
         UserAuthDTO userAuthDTO = new UserAuthDTO();
         userAuthDTO.setEmail(user.getEmail());
-        userAuthDTO.setAccessToken(accessToken);
-        userAuthDTO.setRefreshToken(refreshToken);
-
+        userAuthDTO.setAccessToken(jwtService.generateAccessToken(user));
+        userAuthDTO.setRefreshToken(jwtService.generateRefreshToken(user.getEmail()));
         return userAuthDTO;
     }
 
@@ -176,6 +193,30 @@ public class UserServiceImpl implements UserService {
             logger.info("Token successfully created");
         }
         return userAuthDTO;
+    }
+
+    @Transactional
+    @Override
+    public boolean isVerifyAccount(String token) {
+        User user = userDAO.getByToken(token).orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY));
+        boolean isValidToken = user != null;
+        if (isValidToken) {
+            user.setToken("");
+            user.setAccountStatus(AccountStatus.ACTIVE);
+            userDAO.save(user);
+        }
+        return isValidToken && jwtService.isRegistrationTokenNotExpired(token);
+    }
+
+    @Transactional
+    @Override
+    public void removeAllNotActiveUsersWithExpiredJWTToken() {
+        List<User> users = userDAO.findNotActive();
+        users.forEach(u -> {
+            if (u.getCreationDate().plusDays(1).isBefore(LocalDateTime.now())) {
+                userDAO.delete(u.getUserId());
+            }
+        });
     }
 
 

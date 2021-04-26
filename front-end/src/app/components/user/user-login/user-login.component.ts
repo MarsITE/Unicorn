@@ -62,7 +62,6 @@ export class UserLoginComponent implements OnInit, OnDestroy {
       error => {
         this.initForm(user.email);
         this.toastr.error(error, 'Something wrong');
-        console.log(error);
       }));
   }
 }

@@ -17,8 +17,12 @@ export class UserListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['firstName', 'lastName', 'email', 'workStatus', 'phone', 'dateOfBirth', 'userRole', 'generalRating'];
   private subscriptions: Subscription[] = [];
 
-  constructor(private userService: UserHttpService, private router: Router, private tokenHelper: TokenHelper,
-              private toastr: ToastrService) {
+  constructor(
+    private userService: UserHttpService,
+    private router: Router,
+    private tokenHelper: TokenHelper,
+    private toast: ToastrService
+  ) {
   }
 
   ngOnDestroy(): void {
@@ -34,11 +38,8 @@ export class UserListComponent implements OnInit, OnDestroy {
   private getUsers(): void {
     this.subscriptions.push(this.userService.getUsers()
       .subscribe(
-        response => {
-          this.users = response,
-          this.toastr.success('Image successfully saved!', 'Success!');
-        },
-        error => this.toastr.error(error, 'Something wrong'),
+        response => this.users = response,
+        error => this.toast.error(error, 'error')
       ));
   }
 

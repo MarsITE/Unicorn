@@ -1,6 +1,5 @@
 package com.academy.workSearch.dto;
 
-import com.academy.workSearch.model.Project;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +18,5 @@ public class UserInfoDTO {
     private boolean isShowInfo;
     private String workStatus;
     private String imageUrl;
-    private String generalRating;
-    private Set<String> skills;
-    private Set<ProjectShowInfoDTO> projects;
+    private Set<SkillDTO> skills;
 }

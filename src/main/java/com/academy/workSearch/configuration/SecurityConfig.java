@@ -47,7 +47,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/api/v1/registration", "/api/v1/login").permitAll()
+                .antMatchers("/api/v1/registration",
+                        "/api/v1/login",
+                        "/api/v1/verify-email/*",
+                        "/api/v1/refresh-token",
+                        "/api/v1/projects").permitAll()
                 .antMatchers("/api/v1/admin/**").hasAuthority(roleDAO.getByName("ADMIN")
                 .orElseThrow(() -> new NoSuchEntityException("Role ADMIN does mot exists!")).getName())
                 .anyRequest().authenticated()

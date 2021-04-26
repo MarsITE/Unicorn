@@ -6,9 +6,9 @@ import { SkillService } from '../../common/services/skill.service';
 import { ConfirmComponent } from '../modals/confirm/confirm.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import {COMMA, ENTER, SEMICOLON} from '@angular/cdk/keycodes';
-import {MatChipInputEvent} from '@angular/material/chips';
-import { USER_ROLE_ADMIN, USER_ROLE_EMPLOYER, TokenHelper } from '../../common/helper/token.helper';
+import { COMMA, ENTER, SEMICOLON } from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { TokenHelper, USER_ROLE_ADMIN } from '../../common/helper/token.helper';
 
 @Component({
   selector: 'app-skills',
@@ -31,7 +31,7 @@ export class SkillsComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   constructor(private skillService: SkillService, private dialog: MatDialog,
-              private toastr: ToastrService, private tokenHelper: TokenHelper) {
+    private toastr: ToastrService, private tokenHelper: TokenHelper) {
   }
 
   ngOnDestroy(): void {
@@ -43,10 +43,10 @@ export class SkillsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.isItAdmin = this.tokenHelper.isUserRole(USER_ROLE_ADMIN);
     this.isItAdmin ? this.getSkillsDetails() : this.getSkills();
-    
+
   }
 
-  private sortByEnabledAcs(s: Skill): number{
+  private sortByEnabledAcs(s: Skill): number {
     return s.enabled ? 1 : -1;
   }
 
@@ -90,17 +90,17 @@ export class SkillsComponent implements OnInit, OnDestroy {
     if (index >= 0) {
       s.enabled = true;
       this.skillService.update(s)
-      .subscribe(data => {
-        this.approvedSkills = this.approvedSkills.concat(this.unapprovedSkills.splice(index, 1)).sort(this.sortByEnabledAcs);
-        this.toastr.success('Skill has been approved successfully', 'Success!');
-      },
-      er => {
-        console.log(er);
-      });
+        .subscribe(data => {
+          this.approvedSkills = this.approvedSkills.concat(this.unapprovedSkills.splice(index, 1)).sort(this.sortByEnabledAcs);
+          this.toastr.success('Skill has been approved successfully', 'Success!');
+        },
+          er => {
+            console.log(er);
+          });
     }
   }
 
-  deleteAllUnapprovedSkill(): void{
+  deleteAllUnapprovedSkill(): void {
     const confirmDialog = this.dialog.open(ConfirmComponent, {
       data: {
         title: 'Confirm you want to delete all unapproved skills',
@@ -109,16 +109,16 @@ export class SkillsComponent implements OnInit, OnDestroy {
     });
     confirmDialog.afterClosed().subscribe(result => {
       if (!!result) {
-          this.unapprovedSkills = [];
+        this.unapprovedSkills = [];
       }
     });
   }
 
-  deleteUnapprovedSkill(s: Skill): void{
+  deleteUnapprovedSkill(s: Skill): void {
     const confirmDialog = this.dialog.open(ConfirmComponent, {
       data: {
         title: 'Confirm you want to delete the skill',
-        message: 'Are you sure, you want to delete the skill ' + s.name +  '?'
+        message: 'Are you sure, you want to delete the skill ' + s.name + '?'
       }
     });
     confirmDialog.afterClosed().subscribe(result => {
@@ -138,20 +138,20 @@ export class SkillsComponent implements OnInit, OnDestroy {
     // Add new skill
     if ((value || '').trim()) {
       const skillName: string = value.trim();
-      this.skillService.save({id: '', name: skillName, enabled: true})
-      .subscribe(data => {
-        const message = `Skill ${skillName} has been created successfully`;
-        this.approvedSkills.push({id: '', name: value.trim(), enabled: true});
-        this.approvedSkills = this.approvedSkills.sort(this.sortByEnabledAcs);  
-        this.toastr.success(message, 'Success!');
-      },
-      errMessage => { this.toastr.warning(errMessage, 'Warning!'); }
-      );
+      this.skillService.save({ skillId: '', name: skillName, enabled: true })
+        .subscribe(data => {
+          const message = `Skill ${skillName} has been created successfully`;
+          this.approvedSkills.push({ skillId: '', name: value.trim(), enabled: true });
+          this.approvedSkills = this.approvedSkills.sort(this.sortByEnabledAcs);
+          this.toastr.success(message, 'Success!');
+        },
+          errMessage => { this.toastr.warning(errMessage, 'Warning!'); }
+        );
     }
 
     // Reset the input value
     if (input) {
       input.value = '';
     }
-  }  
+  }
 }

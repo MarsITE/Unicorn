@@ -79,6 +79,10 @@ export class UserHttpService {
   }
 
   public refreshToken(userAuth: UserAuth): Observable<UserAuth> {
-    return this.http.post<UserAuth>(`${environment.url}/refresh-token`, userAuth, this.authHeader());
+    return this.http.post<UserAuth>(`${environment.url}/refresh-token`, userAuth);
+  }
+
+  public checkRegistrationToken(token: string): Observable<boolean> {
+    return this.http.get<boolean>(`${environment.url}/verify-email/${token}`);
   }
 }

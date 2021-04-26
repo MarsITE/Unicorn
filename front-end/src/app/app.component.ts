@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { TokenHelper } from './common/helper/token.helper';
 import { UserHttpService } from './common/services/user-http.service';
 
 export const HIDDEN_SIDEBAR = true;
@@ -20,7 +21,12 @@ export class AppComponent {
   isOpen: boolean;
   gap: number;
 
-  constructor(private router: Router, private userService: UserHttpService, private domSanitizer: DomSanitizer) { }
+  constructor(
+    private router: Router,
+    private userService: UserHttpService,
+    private domSanitizer: DomSanitizer,
+    private tokenHelper: TokenHelper
+  ) { }
 
   public isNotLoginOrRegistration(): boolean {
     const isShown = !this.router.url.includes('login') && !(this.router.url.includes('registration'));
@@ -28,17 +34,21 @@ export class AppComponent {
     return isShown;
   }
 
-  public logout(): void {    
-    this.toggleSidebar(HIDDEN_SIDEBAR);        
+  public logout(): void {
+    this.toggleSidebar(HIDDEN_SIDEBAR);
     this.userService.loggedIn();
     this.router.navigateByUrl('login');
   }
 
-  public showMyProfile(): void {
-    this.router.navigateByUrl('my-profile');
+  public navigateByLink(link: string): void {
+    this.router.navigateByUrl(link);
   }
 
   public toggleSidebar(hide = false): void {
-    this.isOpen = hide ? false : !this.isOpen;    
+    this.isOpen = hide ? false : !this.isOpen;
+  }
+
+  public isUserLogedIn(): boolean {
+    return this.tokenHelper.isValidToken();
   }
 }

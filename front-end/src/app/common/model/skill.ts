@@ -1,5 +1,5 @@
 export class Skill {
-    id: string;
+    skillId: string;
     name: string;
     enabled?: boolean;
   }
