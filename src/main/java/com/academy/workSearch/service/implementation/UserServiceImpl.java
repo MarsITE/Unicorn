@@ -121,25 +121,7 @@ public class UserServiceImpl implements UserService {
         user.setToken(jwtService.generateRegistrationToken(user.getEmail()));
         userDAO.save(user);
 
-        Mail mail = new Mail();
-        mail.setSubject("Registration confirm");
-        mail.setEmail(user.getEmail());
-        String content = "";
-        try {
-            Map<String, Object> model = new HashMap<>();
-            model.put("email", user.getEmail());
-            model.put("client_url", env.getProperty("CLIENT_URL"));
-            model.put("token", user.getToken());
-            model.put("time_to_improve", timeToImproveAccount);
-            Template template = freemarkerConfigurer.getConfiguration().getTemplate("verify-email-message.txt");
-            content = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
-        } catch (IOException | TemplateException e) {
-            logger.info(e.getMessage());//todo
-            e.printStackTrace();
-        }
-        mail.setMessage(content);
-
-        emailService.sendHtmlMessage(mail);
+        sendMessageWithActivationLink(user);
 
         UserAuthDTO userAuthDTO = new UserAuthDTO();
         userAuthDTO.setEmail(user.getEmail());
@@ -187,6 +169,9 @@ public class UserServiceImpl implements UserService {
     public UserAuthDTO get(UserRegistrationDTO userRegistrationDTO) {
         final User user = getUser(userRegistrationDTO.getEmail());
 
+        if (!user.isEnabled() && user.getCreationDate().plusDays(1).isBefore(LocalDateTime.now()) && !user.getToken().equals("")) {
+            sendMessageWithActivationLink(user);
+        }
         if (!user.isEnabled()) {
             throw new NoActiveAccountException(NOT_ACTIVE_ACCOUNT);
         }
@@ -278,6 +263,33 @@ public class UserServiceImpl implements UserService {
                 userDAO.delete(u.getUserId());
             }
         });
+    }
+
+    @Transactional
+    void sendMessageWithActivationLink(User user) {
+        Mail mail = new Mail();
+        mail.setSubject("Registration confirm");
+        mail.setEmail(user.getEmail());
+        String content = "";
+        try {
+            Map<String, Object> model = new HashMap<>();
+            model.put("email", user.getEmail());
+            model.put("client_url", env.getProperty("CLIENT_URL"));
+            if (user.getCreationDate() != null && user.getCreationDate().plusDays(1).isBefore(LocalDateTime.now())) {
+                user.setToken(jwtService.generateRegistrationToken(user.getEmail()));
+                userDAO.save(user);
+            }
+            model.put("token", user.getToken());
+            model.put("time_to_improve", timeToImproveAccount);
+            Template template = freemarkerConfigurer.getConfiguration().getTemplate("verify-email-message.txt");
+            content = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+        } catch (IOException | TemplateException e) {
+            logger.info(e.getMessage());
+            e.printStackTrace();
+        }
+        mail.setMessage(content);
+
+        emailService.sendHtmlMessage(mail);
     }
 
 
