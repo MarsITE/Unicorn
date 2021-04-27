@@ -18,7 +18,7 @@ export class SidenavListComponent implements OnChanges {
     if(changes.isUserLoggedIn && changes.isUserLoggedIn.currentValue){
       this.isAdmin = this.tokenHelper.isUserRole(USER_ROLE_ADMIN);
       this.isEmployer = this.tokenHelper.isUserRole(USER_ROLE_EMPLOYER);
-      this.isWorker = this.tokenHelper.isUserRole(USER_ROLE_WORKER);      
-    } 
+      this.isWorker = this.tokenHelper.isUserRole(USER_ROLE_WORKER);
+    }
   }
 }

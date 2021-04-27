@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Project } from '../../common/model/project';
 import { User } from '../../common/model/user';
 import { ProjectService } from '../../common/services/project.service';
-import { TokenHelper } from 'src/app/common/helper/token.helper';
+import { TokenHelper, USER_ROLE_EMPLOYER } from '../../common/helper/token.helper';
 
 
 @Component({
@@ -20,6 +20,7 @@ export class ProjectComponent implements OnInit {
   sort = 'desc';
   counter = 1;
   maxResult = 5;
+  isEmployer: boolean;
 
   projects: Project[] = [];
 
@@ -37,6 +38,7 @@ export class ProjectComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProjects();
+    this.isEmployer = this.tokenHelper.isUserRole(USER_ROLE_EMPLOYER);
 
     console.log('This get project.', this.projects.length);
   }
