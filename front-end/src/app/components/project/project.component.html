@@ -1,6 +1,6 @@
 <div class="container">
 
-  <div mat-card-title style="margin: auto;">
+  <div mat-card-title *ngIf="isEmployer" class = "mat-card-title-button">
     <button mat-stroked-button (click) = createProject()>Create new Project</button>
   </div>
 

@@ -54,8 +54,9 @@ public class ProjectServiceImpl implements ProjectService {
         if (!showAll && currentUser != null && !currentUser.getRoles().isEmpty()) {
             Set<Role> roles = currentUser.getRoles();
             String employerRoleName = roleDAO.getByName("EMPLOYER").orElseThrow().getName();
+            String workerRoleName = roleDAO.getByName("WORKER").orElseThrow().getName();
             for (Role role : roles) {
-                if (role.getName().equals(employerRoleName)) {
+                if (role.getName().equals(employerRoleName) || role.getName().equals(workerRoleName)) {
                     showOnlyOwnedProjects = true;
                     break;
                 }
