@@ -60,8 +60,4 @@ export class WorkerSkillsComponent implements OnInit, OnDestroy {
     errMessage => { this.toastr.warning(errMessage, 'Warning!'); }
     );  
   }
-  
-    removeSkill(skill: Skill): void {
-      // todo
-    }
 }

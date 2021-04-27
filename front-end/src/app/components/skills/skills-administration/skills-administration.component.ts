@@ -127,7 +127,6 @@ export class SkillsAdministrationComponent implements OnInit, OnDestroy {
     const input = event.input;
     const value = event.value;
 
-    // Add new skill
     if ((value || '').trim()) {
       const skillName: string = value.trim();
       this.skillService.save({skillId: '', name: skillName, enabled: true})
@@ -141,7 +140,6 @@ export class SkillsAdministrationComponent implements OnInit, OnDestroy {
       );
     }
 
-    // Reset the input value
     if (input) {
       input.value = '';
     }
