@@ -43,11 +43,25 @@ public class ProjectServiceImpl implements ProjectService {
         projectDAO.setClazz(Project.class);
     }
 
+    /**
+     *
+     * @return list of all projects
+     */
     @Override
     public List<ProjectDTO> findAll() {
         return ProjectMapper.INSTANCE.toProjectsDto(projectDAO.findAll());
     }
 
+    /**
+     *
+     * @param page  number of page
+     * @param maxResult count of projects in current page
+     * @param maxNavigationPage number of last page
+     * @param sort  asc or desc
+     * @param showAll   boolean
+     * @param currentUser user
+     * @return  list of projects
+     */
     @Override
     public List<ProjectDTO> findAllByPageWithSortOrder(int page, int maxResult, int maxNavigationPage, String sort, boolean showAll, User currentUser) {
         boolean showOnlyOwnedProjects = false;
@@ -70,17 +84,40 @@ public class ProjectServiceImpl implements ProjectService {
         return ProjectMapper.INSTANCE.toProjectsDto(allByPageWithSortOrder);
     }
 
+    /**
+     *
+     * @param page number of current page
+     * @param maxResult count of projects in current page
+     * @param maxNavigationPage number of last page
+     * @param sort  asc or desc
+     * @param ownerId id of current user
+     * @return list of projects for current user
+     */
     @Override
     public List<ProjectDTO> findAllByOwnerId(int page, int maxResult, int maxNavigationPage, String sort, String ownerId) {
         return ProjectMapper.INSTANCE.toProjectsDto(projectDAO.findAllByOwnerId(page, maxResult, maxNavigationPage, sort, ownerId));
     }
 
+    /**
+     *
+     * @param skills list of skills
+     * @param page number of current page
+     * @param maxResult count of projects in current page
+     * @param maxNavigationPage number of last page
+     * @param sort asc or desc
+     * @return list of projects for current skills
+     */
     @Override
     public List<ProjectDTO> searchBySkill(List<String> skills, int page, int maxResult, int maxNavigationPage, String sort) {
         List<ProjectDTO> sds = ProjectMapper.INSTANCE.toProjectsDto(projectDAO.searchBySkill(skills, page, maxResult, maxNavigationPage, sort));
         return sds;
     }
 
+    /**
+     *
+     * @param projectDto info of current project
+     * @return projectDto
+     */
     @Override
     public ProjectDTO save(ProjectDTO projectDto) {
         if (projectDAO.isPresentProjectByNameByUserId(projectDto.getName(), projectDto.getOwnerId())) {
@@ -97,6 +134,12 @@ public class ProjectServiceImpl implements ProjectService {
         return projectDto;
     }
 
+    /**
+     *
+     * @param projectDto current project
+     * @param skillDTO  skills that we need to add
+     * @return  projectDto
+     */
     @Override
     public ProjectDTO addSkillsToProject(ProjectDTO projectDto, SkillDTO skillDTO) {
         Project project = ProjectMapper.INSTANCE.toEntity(projectDto);
@@ -108,6 +151,11 @@ public class ProjectServiceImpl implements ProjectService {
         return projectDto;
     }
 
+    /**
+     *
+     * @param id id of current project
+     * @return projectDto
+     */
     @Override
     public ProjectDTO get(UUID id) {
         Project project = projectDAO.get(id)
@@ -116,6 +164,11 @@ public class ProjectServiceImpl implements ProjectService {
 
     }
 
+    /**
+     *
+     * @param id id of current project
+     * @return  projectDto
+     */
     @Override
     public ProjectDTO delete(UUID id) {
         Project project = projectDAO.get(id)

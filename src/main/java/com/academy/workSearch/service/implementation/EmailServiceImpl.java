@@ -24,6 +24,10 @@ public class EmailServiceImpl implements EmailService {
     JavaMailSenderImpl emailSender;
     Environment environment;
 
+    /**
+     *
+     * @param mail entity with email, subject and message for recipient
+     */
     @Override
     public void sendingMessage(Mail mail) {
         SimpleMailMessage message = new SimpleMailMessage();
@@ -34,6 +38,12 @@ public class EmailServiceImpl implements EmailService {
         emailSender.send(message);
     }
 
+    /**
+     *
+     * @param mail entity with email, subject and message for recipient
+     * @param pathToAttachment attachment
+     * @throws MessagingException
+     */
     @Override
     public void sendMessageWithAttachment(Mail mail, String pathToAttachment) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();
@@ -52,6 +62,10 @@ public class EmailServiceImpl implements EmailService {
         emailSender.send(message);
     }
 
+    /**
+     *
+     * @param mail entity with email, subject and message for recipient
+     */
     @Override
     public void sendHtmlMessage(Mail mail) {
         MimeMessage message = emailSender.createMimeMessage();
