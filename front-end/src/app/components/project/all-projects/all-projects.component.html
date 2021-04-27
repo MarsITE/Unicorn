@@ -7,16 +7,25 @@
       </mat-card-header>
 
       <mat-card-content>
-        <p>{{project?.description}}</p>
+        <p>{{setLimitOfText(project.description)}}</p>
       </mat-card-content>
-
+      <mat-card-actions>
+        <button mat-stroked-button (click)=showProjectDescription(project.id)>More</button>
+        <button mat-stroked-button>Owner</button>
+      </mat-card-actions>
       <mat-card-footer>
-        <mat-card-subtitle class="skills">{{project?.skills}}</mat-card-subtitle>
+        <mat-card-subtitle class="skills">
+          <mat-chip-list>
+            <mat-chip class="skills-chip" *ngFor="let skill of project?.skills">
+              {{converToPlainSkills(skill)}}
+            </mat-chip>
+          </mat-chip-list>
+        </mat-card-subtitle>
         <mat-card-subtitle class="creating-date"> {{project?.creationDate|date}}</mat-card-subtitle>
       </mat-card-footer>
     </mat-card>
   </div>
-  <div mat-card-title>
+  <div mat-card-title class="pagination">
     <button mat-stroked-button (click)=projectsPrev()>prev</button>
     <button mat-stroked-button>{{counter}}</button>
     <button mat-stroked-button (click)=projectsNext()>next</button>
