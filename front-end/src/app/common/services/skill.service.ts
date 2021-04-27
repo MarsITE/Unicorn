@@ -44,4 +44,8 @@ export class SkillService {
   public update(skill: Skill): Observable<Skill> {
     return this.http.put<Skill>(`${environment.url}/admin/skills`, skill, this.authHeader());
   }
+
+  public delete(id: string): Observable<any> {
+    return this.http.delete<Skill>(`${environment.url}/admin/skills/${id}`, this.authHeader());
+  }
 }

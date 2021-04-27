@@ -12,13 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -123,4 +118,16 @@ public class SkillController {
         logger.info("Update skill with ID = {}", skill.getSkillId());
         return ResponseEntity.ok(skillService.update(skill));
     }
+
+    /**
+     * @param id of skill need to delete
+     * @return void
+     */
+    @DeleteMapping("/admin/skills/{id}")
+    @ApiOperation(value = "Delete existing skill", notes = "Delete existing skill")
+    public ResponseEntity<SkillDetailsDTO> deleteSkill(@PathVariable UUID id) {
+        logger.info("Delete skill with ID = {}", id);
+        return ResponseEntity.ok(skillService.delete(id));
+    }
+
 }

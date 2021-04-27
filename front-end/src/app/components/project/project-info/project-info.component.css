@@ -6,7 +6,7 @@
 
     margin: auto;
     padding-top: 3rem;
-
+    padding-bottom: 100px;
   }
 
   .project-info {
@@ -26,3 +26,5 @@
   .description {      
     color: rgb(31, 46, 131);
   }
+
+

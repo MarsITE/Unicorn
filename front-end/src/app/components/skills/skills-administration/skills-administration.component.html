@@ -50,7 +50,7 @@
         <mat-label>Skills</mat-label>
         <mat-chip-list #chipList aria-label="Skills selection">
             <mat-chip *ngFor="let skill of approvedSkills" [selectable]="selectable" 
-            [removable]="removable" (removed)="remove(skill)" color="primary">
+            [removable]="removable" (removed)="delete(skill)" color="primary">
                 {{skill.name}}
             <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
         </mat-chip>
