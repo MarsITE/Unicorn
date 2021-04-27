@@ -20,7 +20,7 @@ export class SkillService {
 
   // for Search
   public getSkills(): Observable<Skill[]> {
-    return this.http.get<Skill[]>(`${environment.url}/skills`, this.authHeader());
+    return this.http.get<Skill[]>(`${environment.url}/skills`);
   }
 
   // for Workers

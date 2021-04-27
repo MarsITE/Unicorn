@@ -61,8 +61,7 @@ export class ProjectService {
   
   public getSearchProjects(counter: string, sort: string, maxResult: string, _skillList: String[]):Observable<Project[]> {
     return this.http.get<Project[]>(`${environment.url}/projects/search`, {
-      params: this.paginationParams(counter, sort, maxResult, _skillList),
-      headers: this.authHeader()
+      params: this.paginationParams(counter, sort, maxResult, _skillList)
     });
   }
 
