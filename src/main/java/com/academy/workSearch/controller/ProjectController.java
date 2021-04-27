@@ -82,7 +82,7 @@ public class ProjectController {
     @ApiOperation(value = "Update existing project", notes = "Update existing project")
     public ResponseEntity<ProjectDTO> updateProject(@RequestBody ProjectDTO projectDto) {
         logger.info("Update project with ID = {}", projectDto.getId());
-        projectService.save(projectDto);
+        projectService.update(projectDto);
         return new ResponseEntity<>(projectDto, HttpStatus.OK);
     }
 
