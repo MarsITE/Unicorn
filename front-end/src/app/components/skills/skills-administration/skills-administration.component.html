@@ -11,8 +11,8 @@
     </mat-expansion-panel-header>
         <div *ngIf="!!unapprovedSkills.length">
             <div class="skill-management-flex-container">
-                <button mat-raised-button color="primary" (click)=approveAllUnapprovedSkills() class="skill-management-button">Approve all</button>
-                <button mat-raised-button color="accent"  (click)=deleteAllUnapprovedSkill() class="skill-management-button">Delete all unapproved</button>
+                <button mat-stroked-button color="primary" (click)=approveAllUnapprovedSkills() class="skill-management-button">Approve all</button>
+                <button mat-stroked-button color="accent"  (click)=deleteAllUnapprovedSkill() class="skill-management-button">Delete all unapproved</button>
             </div>
             <mat-list class="skills">
             <mat-list-item *ngFor="let skill of unapprovedSkills">         

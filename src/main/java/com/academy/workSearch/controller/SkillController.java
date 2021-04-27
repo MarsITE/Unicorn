@@ -37,6 +37,9 @@ public class SkillController {
         this.skillService = skillService;
     }
 
+    /**
+     * @return all skills
+     */
     @GetMapping("/skills")
     @ApiOperation(value = "Show all skills", notes = "Show information about all skills")
     public ResponseEntity<List<SkillDTO>> getAll() {
@@ -44,6 +47,9 @@ public class SkillController {
         return ResponseEntity.ok(skillService.findAllEnabled(true));
     }
 
+    /**
+     * @return all skills #only for logged worker
+     */
     @GetMapping("/worker/skills")
     @ApiOperation(value = "Show all skills", notes = "Show information about all skills")
     public ResponseEntity<List<SkillDTO>> getAllByUserID(@AuthenticationPrincipal User user) {
@@ -52,6 +58,9 @@ public class SkillController {
         return ResponseEntity.ok(skillService.findAllByUserId(userId));
     }
 
+    /**
+     * @return all skills #only for admin
+     */
     @GetMapping("/admin/skills")
     @ApiOperation(value = "Show all skills", notes = "Show information about all skills")
     public ResponseEntity<List<SkillDetailsDTO>> getAllExtended() {
@@ -60,6 +69,10 @@ public class SkillController {
         return ResponseEntity.ok(skillsDto);
     }
 
+    /**
+     * @param id skill
+     * @return get skill
+     */
     @GetMapping("/admin/skills/{id}")
     @ApiOperation(value = "Find skill by ID", notes = "Find skill if exists")
     public ResponseEntity<SkillDetailsDTO> findById(@ApiParam(value = "ID value for skill you need to retrieve", required = true)
@@ -72,17 +85,21 @@ public class SkillController {
         return ResponseEntity.ok(skillDto);
     }
 
+    /**
+     * @param skillDto SkillDetailsDTO
+     * @return new saved skill
+     */
     @PostMapping("/admin/skills")
     @ApiOperation(value = "Add new skill", notes = "Add new skill")
     public ResponseEntity<SkillDetailsDTO> add(@RequestBody @Valid SkillDetailsDTO skillDto) {
-        try {
         logger.info("Add skill with name {}", skillDto.getName());
         return ResponseEntity.ok(skillService.save(skillDto));
-        } catch (Exception e){
-            throw new NotUniqueEntityException("Such skill exists");
-        }
     }
 
+    /**
+     * @param skill SkillDetailsDto
+     * @return updated skill
+     */
     @PutMapping("/admin/skills")
     @ApiOperation(value = "Update existing skill", notes = "Update existing skill")
     public ResponseEntity<SkillDetailsDTO> update(@RequestBody @Valid SkillDetailsDTO skill) {

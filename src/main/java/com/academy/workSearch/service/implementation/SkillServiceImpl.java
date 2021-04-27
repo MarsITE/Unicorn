@@ -27,6 +27,9 @@ public class SkillServiceImpl implements SkillService {
     private final SkillDAOImpl skillDAO;
     private final String NO_SUCH_SKILL_FORMAT = "%s = %s";
 
+    /**
+     * post construct set class type for dao
+     */
     @PostConstruct
     private void setTypeClass() {
         skillDAO.setClazz(Skill.class);
@@ -66,6 +69,10 @@ public class SkillServiceImpl implements SkillService {
         return SKILL_DETAILS_MAPPER.toDto(skillDAO.save(skillInDB));
     }
 
+    /**
+     * @param id
+     * @return skill
+     */
     public SkillDetailsDTO get(UUID id) {
         Skill skill = skillDAO.get(id)
                 .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_SKILL + id));

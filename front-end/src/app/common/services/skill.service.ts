@@ -28,8 +28,8 @@ export class SkillService {
     return this.http.get<Skill[]>(`${environment.url}/worker/skills`, this.authHeader());
   }
 
-  public addWorkerSkill(skill: Skill): Observable<Skill> {
-    return this.http.post<Skill>(`${environment.url}/worker/skills`, skill, this.authHeader()); 
+  public addWorkerSkills(skills: Skill[]): Observable<Skill> {
+    return this.http.post<Skill>(`${environment.url}/worker/skills`, skills, this.authHeader()); 
   }
 
   // for Admin

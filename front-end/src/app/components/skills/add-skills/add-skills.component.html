@@ -1,0 +1,9 @@
+<div>
+    <p>Add skills request</p>    
+    <mat-form-field class="add-skill-request-form-field">
+    <mat-label>Write skills you need separated by semicolon</mat-label>        
+    <input matInput placeholder="Example: Java; Angular; Typescrypt ..." [(ngModel)] = "skills">
+    </mat-form-field>
+    <button mat-stroked-button (click) = onSubmit() [disabled] = "!skills">Add / Request to add</button>
+    <button mat-stroked-button (click) = onCancel()>Cancel</button>    
+</div>
