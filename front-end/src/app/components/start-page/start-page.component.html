@@ -27,8 +27,9 @@
       <mat-card-content>
         <p>{{setLimitOfText(project.description)}}</p>
       </mat-card-content>
-      <mat-card-actions>
-        <button mat-stroked-button (click)=showProjectDescription(project.id)>More</button>
+      <mat-card-actions >
+        <button *ngIf="!isUserLogedIn()" mat-stroked-button (click)="navigateByLink('login')">More</button>
+        <button *ngIf="isUserLogedIn()" mat-stroked-button (click)=showProjectDescription(project.id)>More</button>
         <button mat-stroked-button>Owner</button>
       </mat-card-actions>
       <mat-card-footer>
