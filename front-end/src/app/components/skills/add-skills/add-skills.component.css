@@ -1,0 +1,23 @@
+button:focus {
+    outline: 0;
+}
+
+.modal-confirm-buttons-container {
+    display: flexbox;
+    float:right;
+    margin:5px;
+}
+
+.modal-confirm-button {
+    margin:5px; 
+}
+
+.add-skill-request-form {
+    min-width: 150px;
+    max-width: 600px;
+    width: 100%;
+  }
+
+.add-skill-request-form-field {
+    width: 100%;
+  }

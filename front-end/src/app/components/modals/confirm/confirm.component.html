@@ -2,7 +2,7 @@
 <div mat-dialog-content>
   {{data.message}}
 </div>
-<div style="float:right;margin:20px;">
-  <input style="margin:0px 10px;" type="button" value="Confirm" [mat-dialog-close]="true">
+<div class = "modal-confirm-buttons-container">
+  <input class = "modal-confirm-button" type="button" value="Confirm" [mat-dialog-close]="true">
   <input type="button" value="Cancel"  [mat-dialog-close]="false">
 </div>

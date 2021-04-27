@@ -67,6 +67,7 @@ export class SkillsAdministrationComponent implements OnInit, OnDestroy {
     });
     confirmDialog.afterClosed().subscribe(result => {
       if (!!result) {
+        this.unapprovedSkills.forEach(s => this.approveUnapprovedSkill(s));
         this.approvedSkills = this.approvedSkills.concat(...this.unapprovedSkills).sort(this.sortByEnabledAcs);
         this.unapprovedSkills = [];
       }
@@ -81,9 +82,6 @@ export class SkillsAdministrationComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this.approvedSkills = this.approvedSkills.concat(this.unapprovedSkills.splice(index, 1)).sort(this.sortByEnabledAcs);
         this.toastr.success('Skill has been approved successfully', 'Success!');
-      },
-      er => {
-        console.log(er);
       });
     }
   }
@@ -113,7 +111,13 @@ export class SkillsAdministrationComponent implements OnInit, OnDestroy {
       if (result === true) {
         const index = this.unapprovedSkills.indexOf(s);
         if (index >= 0) {
-          this.unapprovedSkills.splice(index, 1);
+          this.skillService.delete(s.skillId)
+          .subscribe(data => {
+            this.unapprovedSkills.splice(index, 1);
+            this.toastr.success('Skill has been deleted successfully', 'Success!');
+          },
+          (error) => { this.toastr.error('The skills were not deleted!', 'Error!')} 
+          );
         }
       }
     });
@@ -143,8 +147,25 @@ export class SkillsAdministrationComponent implements OnInit, OnDestroy {
     }
   }  
 
-  remove(skill: Skill): void {
-    // todo
+  delete(skill: Skill): void {
+    const confirmDialog = this.dialog.open(ConfirmComponent, {
+      data: {
+        title: 'Confirm you want to delete the skill',
+        message: 'Are you sure, you want to delete the skill ' + skill.name +  '?'
+      }
+    });
+    confirmDialog.afterClosed().subscribe(result => {
+      if (result === true) {
+          this.skillService.delete(skill.skillId)
+          .subscribe(data => {
+            this.getSkillsDetails();
+            this.toastr.success('Skill has been deleted successfully', 'Success!');
+          },
+          (error) => { this.toastr.error('The skills were not deleted!', 'Error!')} 
+          );
+        }
+    });
   }
-
 }
+
+
