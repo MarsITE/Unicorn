@@ -6,6 +6,11 @@ public enum ProjectStatus {
     TESTING ("Testing"),
     CLOSED ("Closed");
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     private String name;
 
     ProjectStatus(String name) {

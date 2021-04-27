@@ -70,6 +70,7 @@ import { UserRegistrationComponent } from './components/user/user-registration/u
 import { UserLoginComponent } from './components/user/user-login/user-login.component';
 import {AllProjectsComponent} from './components/project/all-projects/all-projects.component';
 import { SkillsComponent } from './components/skills/skills.component';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { VerifyEmailComponent } from './components/verify-email/verify-email';
 import { SkillsAdministrationComponent } from './components/skills/skills-administration/skills-administration.component';
 import { WorkerSkillsComponent } from './components/skills/worker-skills/worker-skills.component';
@@ -153,6 +154,7 @@ import { WorkerSkillsComponent } from './components/skills/worker-skills/worker-
     MatCardModule,
     FormsModule,
     ReactiveFormsModule,
+    NgMultiSelectDropDownModule,
     NgxMaskModule.forRoot(),
     ToastrModule.forRoot({
       timeOut: 10000,

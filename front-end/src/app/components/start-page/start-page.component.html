@@ -1,28 +1,56 @@
 <div class="container" id="main-container">
-    <div *ngFor="let project of projects">
-      <mat-card class="project-card">
-        <mat-card-header>
-          <mat-card-title>{{project?.name}}</mat-card-title>
-          <mat-card-subtitle>{{project?.projectStatus}}</mat-card-subtitle>
-        </mat-card-header>
-  
-        <mat-card-content>
-          <p>{{project?.description}}</p>
-        </mat-card-content>
-        
-        <mat-card-footer>
-          <mat-card-subtitle class="skills">{{project?.skills}}</mat-card-subtitle>
-          <mat-card-subtitle class="creating-date"> {{project?.creationDate|date}}</mat-card-subtitle>
-        </mat-card-footer>
-      </mat-card>
+
+  <div class="search-area">
+    <div class="search-form">
+      <form [formGroup]="myForm">
+        <ng-multiselect-dropdown name="skillName" [placeholder]="'Choose skills to find projects:'" [data]="skillsName"
+          formControlName="skillName" [disabled]="disabled" [settings]="dropdownSettings">
+        </ng-multiselect-dropdown>
+      </form>
     </div>
-    <div mat-card-title>
-      <button mat-stroked-button (click)=projectsPrev()>prev</button>
-      <button mat-stroked-button>{{counter}}</button>
-      <button mat-stroked-button (click)=projectsNext()>next</button>
-      <select [ngModel]="selectedDeviceObj" (ngModelChange)="onChangeObj($event)" name="sel3">
-        <option [ngValue]="i" *ngFor="let i of deviceObjects">{{i}}</option>
-      </select>
+    <div class="space"></div>
+    <div class="search-button">
+      <button mat-stroked-button (click)=search()>Search</button>
+    </div>
+    <div class="reset-button">
+      <button mat-stroked-button (click)=reset()>Reset</button>
     </div>
   </div>
-  
+
+  <div *ngFor="let project of projects">
+    <mat-card class="project-card">
+      <mat-card-header>
+        <mat-card-title>{{project?.name}}</mat-card-title>
+        <mat-card-subtitle>{{project?.projectStatus}}</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <p>{{setLimitOfText(project.description)}}</p>
+      </mat-card-content>
+      <mat-card-actions >
+        <button *ngIf="!isUserLogedIn()" mat-stroked-button (click)="navigateByLink('login')">More</button>
+        <button *ngIf="isUserLogedIn()" mat-stroked-button (click)=showProjectDescription(project.id)>More</button>
+        <button mat-stroked-button>Owner</button>
+      </mat-card-actions>
+      <mat-card-footer>
+        <mat-card-subtitle class="skills">
+          <mat-chip-list>
+            <mat-chip class="skills-chip" *ngFor="let skill of project?.skills">
+              {{converToPlainSkills(skill)}}
+            </mat-chip>
+          </mat-chip-list>
+        </mat-card-subtitle>
+        <mat-card-subtitle class="creating-date"> {{project?.creationDate|date}}</mat-card-subtitle>
+      </mat-card-footer>
+    </mat-card>
+  </div>
+
+  <div class="pagination">
+    <button mat-stroked-button (click)=projectsPrev()>prev</button>
+    <button mat-stroked-button>{{counter}}</button>
+    <button mat-stroked-button (click)=projectsNext()>next</button>
+    <select [ngModel]="selectedDeviceObj" (ngModelChange)="onChangeObj($event)" name="sel3">
+      <option [ngValue]="i" *ngFor="let i of deviceObjects">{{i}}</option>
+    </select>
+  </div>
+</div>
