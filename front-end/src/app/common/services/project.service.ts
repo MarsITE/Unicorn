@@ -28,10 +28,13 @@ export class ProjectService {
   }
 
   public getProjects(counter: string, sort: string, maxResult: string, showAll: boolean = true): Observable<Project[]> {
-    return this.http.get<Project[]>(`${environment.url}/projects`, {
+    let options = {
       params: this.params(counter, sort, maxResult, showAll)
+    };
+    if (sessionStorage.getItem(ACCESS_TOKEN) !== null) {
+      options['headers'] = this.authHeader();
     }
-    );
+    return this.http.get<Project[]>(`${environment.url}/projects`, options);
   }
 
   public getAllProjects(counter: string, sort: string, maxResult: string, showAll: boolean = true): Observable<Project[]> {
