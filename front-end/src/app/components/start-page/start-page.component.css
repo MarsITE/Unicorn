@@ -14,39 +14,53 @@
         background-color: rgb(230, 255, 238);
       }
       .mat-card-title{
-          margin: auto;
+         margin: auto;
       }
     .mat-card-content p{
       margin: 0 16px;
+      text-align: justify;
     }
-
     .mat-card-footer{
         margin:0 16px;
         display: flex;
         justify-content: space-between;
     }
-
+    .mat-card-actions{
+      margin: 0 16px;
+    }
     .creating-date{
-        text-align: right;
-      }
+      text-align: right;
+    }
     .skills{
-        text-align: left;
+      text-align: left;
+    }
+    .skills-chip {
+      display: flex;
+      margin-left: 5px;
     }
     .search-area{
       max-width: 100%;
-      width: 100%;
+      width: 60%;
       display: table;
+      margin-left: 260px;
+      margin-right: 50px;
     }    
      .search-form{
       display: table-cell;
-    width: 100%;
-    margin: 0 20%;
+      width: 60%;
     }
     .search-button{
       display: table-cell;
-    width: 10%;
+      width: 10%;
     }
     .reset-button{
       display: table-cell;
     width: 10%;
     } 
+    .space{
+      width: 5%;
+      display: table-cell;
+    }
+    .pagination{
+       padding-bottom: 50px;
+    }
