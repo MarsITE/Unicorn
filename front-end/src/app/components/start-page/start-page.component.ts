@@ -1,9 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Project } from '../../common/model/project';
-import { ProjectService } from '../../common/services/project.service';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Project } from 'src/app/common/model/project';
+import { Skill } from 'src/app/common/model/skill';
+import { ProjectService } from 'src/app/common/services/project.service';
+import { SkillService } from 'src/app/common/services/skill.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
-
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { TokenHelper } from 'src/app/common/helper/token.helper';
 
 @Component({
   selector: 'app-start-page',
@@ -15,17 +18,30 @@ export class StartPageComponent implements OnInit {
   counter: number = 1;
   maxResult: number = 5;
   projects: Project[] = [];
+  skills: Skill[] = [];
+  skillsName: String[] = [];
+  myForm: FormGroup;
+  disabled = false;
+  ShowFilter = false;
+  selectedItems: Array<String> = [];
+  dropdownSettings: any = {};
 
-  constructor(private projectService: ProjectService, private router: Router, private http: HttpClient, route: ActivatedRoute) {
+  constructor(private fb: FormBuilder,private tokenHelper: TokenHelper, private projectService: ProjectService, private skillService: SkillService, private router: Router, private http: HttpClient, route: ActivatedRoute) {
     route.queryParams.subscribe(params => {
       this.counter = params['page'] || this.counter;
       this.maxResult = params['maxResult'] || this.maxResult;
     });
   }
 
-
   ngOnInit(): void {
     this.getProjects(this.maxResult);
+    this.getSkills();
+    this.myForm = this.fb.group({
+      skillName: [this.selectedItems]
+    });
+    this.dropdownSettings = {
+      allowSearchFilter: true
+    };
   }
 
   private getProjects(maxResult: number) {
@@ -40,20 +56,70 @@ export class StartPageComponent implements OnInit {
       },
       (error) => {
         console.log("error", error);
-      }
+      });
+  }
 
+  private getSearchProject(maxResult: number) {
+    const params = new HttpParams()
+      .set('page', this.counter.toString())
+      .set('maxResult', maxResult.toString())
+
+    this.projectService.getSearchProjects(this.counter.toString(), null, this.maxResult.toString(), this.myForm.value.skillName).subscribe(
+      (response: Project[]) => {
+        console.log("skillresponse", response);
+        this.projects = response;
+      },
+      (error) => {
+        console.log("error", error)
+      }
     )
   }
+
+  private getSkills() {
+    this.skillService.getSkills().subscribe(
+      (response: Skill[]) => {
+        this.skills = response;
+        this.skillsName = this.skills.map(s => s.name);
+      },
+      (error) => {
+        console.log("error", error)
+      });
+  }
+
+  search() {
+    if(this.myForm.value.skillName.length == 0){
+      this.getProjects(this.maxResult);
+    }
+    else{
+      this.getSearchProject(this.maxResult);
+    }
+  }
+
+  reset() {
+    this.myForm.reset();
+    this.getProjects(this.maxResult);
+  }
+
   projectsNext() {
     this.counter++;
-    this.getProjects(this.maxResult)
+    if(this.myForm.value.skillName.length == 0){
+      this.getProjects(this.maxResult);
+    }
+    else{
+      this.getSearchProject(this.maxResult);
+    }
   }
 
   projectsPrev() {
     if (this.counter > 1) {
       this.counter--;
     }
-    this.getProjects(this.maxResult)
+    if(this.myForm.value.skillName.length == 0){
+      this.getProjects(this.maxResult);
+    }
+    else{
+      this.getSearchProject(this.maxResult);
+    }
   }
 
   deviceObjects = [5, 10, 25];
@@ -64,5 +130,26 @@ export class StartPageComponent implements OnInit {
     this.selectedDeviceObj = newObj;
     this.maxResult = this.selectedDeviceObj;
     this.getProjects(this.maxResult);
+  }
+
+  showProjectDescription(id:any) {
+    this.router.navigateByUrl(`projects/${id}`);
+  }
+  public converToPlainSkills(str: string): string {
+      return `#${str.toLowerCase()}`;
+  }
+  public setLimitOfText(str: string): string{
+    if(str.length<=200){
+      return str;
+    }
+    else{
+      return `${str.substring(0,200)}...`;
+    } 
+  }
+  public isUserLogedIn(): boolean {
+    return this.tokenHelper.isValidToken();
+  }
+  public navigateByLink(link: string): void {
+    this.router.navigateByUrl(link);
   }
 }

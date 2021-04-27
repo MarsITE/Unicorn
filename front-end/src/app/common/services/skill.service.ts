@@ -20,7 +20,7 @@ export class SkillService {
 
   // for Search
   public getSkills(): Observable<Skill[]> {
-    return this.http.get<Skill[]>(`${environment.url}/skills`, this.authHeader());
+    return this.http.get<Skill[]>(`${environment.url}/skills`);
   }
 
   // for Workers
@@ -28,8 +28,8 @@ export class SkillService {
     return this.http.get<Skill[]>(`${environment.url}/worker/skills`, this.authHeader());
   }
 
-  public addWorkerSkill(skill: Skill): Observable<Skill> {
-    return this.http.post<Skill>(`${environment.url}/worker/skills`, skill, this.authHeader()); 
+  public addWorkerSkills(skills: Skill[]): Observable<Skill> {
+    return this.http.post<Skill>(`${environment.url}/worker/skills`, skills, this.authHeader()); 
   }
 
   // for Admin
@@ -43,5 +43,9 @@ export class SkillService {
 
   public update(skill: Skill): Observable<Skill> {
     return this.http.put<Skill>(`${environment.url}/admin/skills`, skill, this.authHeader());
+  }
+
+  public delete(id: string): Observable<any> {
+    return this.http.delete<Skill>(`${environment.url}/admin/skills/${id}`, this.authHeader());
   }
 }

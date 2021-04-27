@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Project } from '../model/project';
+import { Skill } from '../model/skill';
 import { environment } from 'src/environments/environment';
 import { ACCESS_TOKEN } from '../helper/token.helper';
 
@@ -19,7 +20,7 @@ export class ProjectService {
 
 
   private params(counter: { toString: () => string; }, sort: string,
-                               maxResult: { toString: () => string; }, showAll: boolean): any {
+                 maxResult: { toString: () => string; }, showAll: boolean): any {
     return new HttpParams()
     .set('page', counter.toString())
     .set('sort', sort)
@@ -27,11 +28,22 @@ export class ProjectService {
     .set('maxResult', maxResult.toString());
   }
 
+  private paginationParams(counter: { toString: () => string; }, sort: string, maxResult: { toString: () => string; }, _skillList: String[]): any {
+    return new HttpParams()
+    .set('page', counter.toString())
+    .set('sort', sort)
+    .set('maxResult', maxResult.toString())
+    .set('skillList', _skillList.toString());
+  }
+
   public getProjects(counter: string, sort: string, maxResult: string, showAll: boolean = true): Observable<Project[]> {
-    return this.http.get<Project[]>(`${environment.url}/projects`, {
+    const options = {
       params: this.params(counter, sort, maxResult, showAll)
+    };
+    if (sessionStorage.getItem(ACCESS_TOKEN) !== null) {
+      options['headers'] = this.authHeader();
     }
-    );
+    return this.http.get<Project[]>(`${environment.url}/projects`, options);
   }
 
   public getAllProjects(counter: string, sort: string, maxResult: string, showAll: boolean = true): Observable<Project[]> {
@@ -50,8 +62,18 @@ export class ProjectService {
     );
   }
 
+  public getSearchProjects(counter: string, sort: string, maxResult: string, _skillList: String[]):Observable<Project[]> {
+    return this.http.get<Project[]>(`${environment.url}/projects/search`, {
+      params: this.paginationParams(counter, sort, maxResult, _skillList)
+    });
+  }
+
   public save(project: Project): Observable<Project> {
     return this.http.post<Project>(`${environment.url}/projects`, project, { headers: this.authHeader() });
+  }
+
+  public update(project: Project): Observable<Project> {
+    return this.http.put<Project>(`${environment.url}/projects`, project, { headers: this.authHeader() });
   }
 
   public deleteProject(id: string): Observable<any> {

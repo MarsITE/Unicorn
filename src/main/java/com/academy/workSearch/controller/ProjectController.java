@@ -50,6 +50,18 @@ public class ProjectController {
         return new ResponseEntity<>(projectsDto, HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    @ApiOperation(value = "Search project", notes = "Search project by skills")
+    public ResponseEntity<List<ProjectDTO>> searchProjectBySkill(@RequestParam(value = "page", defaultValue = "1") int page,
+                                                                 @RequestParam(value = "sort", defaultValue = "desc") String sort,
+                                                                 @RequestParam(value = "maxResult", defaultValue = "5") int maxResult,
+                                                                 @RequestParam(value = "maxNavigationPage", defaultValue = "100") int maxNavigationPage,
+                                                                 @RequestParam(value = "skillList") List<String> skills){
+        List<ProjectDTO> projectsDto = projectService.searchBySkill(skills, page, maxResult, maxNavigationPage, sort);
+        logger.info("Show projects with skills");
+        logger.info(String.valueOf(skills));
+        return new ResponseEntity<>(projectsDto, HttpStatus.OK);
+    }
     @GetMapping("/{id}")
     @ApiOperation(value = "Find project by ID", notes = "Find project if exists")
     public ResponseEntity<ProjectDTO> getProject(@PathVariable UUID id) {
@@ -70,7 +82,7 @@ public class ProjectController {
     @ApiOperation(value = "Update existing project", notes = "Update existing project")
     public ResponseEntity<ProjectDTO> updateProject(@RequestBody ProjectDTO projectDto) {
         logger.info("Update project with ID = {}", projectDto.getId());
-        projectService.save(projectDto);
+        projectService.update(projectDto);
         return new ResponseEntity<>(projectDto, HttpStatus.OK);
     }
 
