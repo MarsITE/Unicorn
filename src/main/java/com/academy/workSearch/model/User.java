@@ -3,8 +3,9 @@ package com.academy.workSearch.model;
 import com.academy.workSearch.model.enums.AccountStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
-import org.apache.commons.lang3.builder.ToStringExclude;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -63,7 +64,6 @@ public class User implements UserDetails {
     )
     private Set<Role> roles;
 
-    //todo
     @OneToOne(cascade = CascadeType.REMOVE)
     @ApiModelProperty(notes = "User info", position = 7)
     @JoinColumn(name = "user_info_id")
