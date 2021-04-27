@@ -6,6 +6,7 @@ import { SkillService } from 'src/app/common/services/skill.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { TokenHelper } from 'src/app/common/helper/token.helper';
 
 @Component({
   selector: 'app-start-page',
@@ -17,7 +18,6 @@ export class StartPageComponent implements OnInit {
   counter: number = 1;
   maxResult: number = 5;
   projects: Project[] = [];
-  project: Project;
   skills: Skill[] = [];
   skillsName: String[] = [];
   myForm: FormGroup;
@@ -26,7 +26,7 @@ export class StartPageComponent implements OnInit {
   selectedItems: Array<String> = [];
   dropdownSettings: any = {};
 
-  constructor(private fb: FormBuilder, private projectService: ProjectService, private skillService: SkillService, private router: Router, private http: HttpClient, route: ActivatedRoute) {
+  constructor(private fb: FormBuilder,private tokenHelper: TokenHelper, private projectService: ProjectService, private skillService: SkillService, private router: Router, private http: HttpClient, route: ActivatedRoute) {
     route.queryParams.subscribe(params => {
       this.counter = params['page'] || this.counter;
       this.maxResult = params['maxResult'] || this.maxResult;
@@ -145,5 +145,11 @@ export class StartPageComponent implements OnInit {
     else{
       return `${str.substring(0,200)}...`;
     } 
+  }
+  public isUserLogedIn(): boolean {
+    return this.tokenHelper.isValidToken();
+  }
+  public navigateByLink(link: string): void {
+    this.router.navigateByUrl(link);
   }
 }
