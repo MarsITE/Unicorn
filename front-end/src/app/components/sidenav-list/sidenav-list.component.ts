@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges  } from '@angular/core';
-import { USER_ROLE_ADMIN, TokenHelper } from '../../common/helper/token.helper';
+import { USER_ROLE_ADMIN, USER_ROLE_EMPLOYER, USER_ROLE_WORKER, TokenHelper } from '../../common/helper/token.helper';
 
 @Component({
   selector: 'app-sidenav-list',
@@ -7,14 +7,18 @@ import { USER_ROLE_ADMIN, TokenHelper } from '../../common/helper/token.helper';
   styleUrls: ['./sidenav-list.component.css']
 })
 export class SidenavListComponent implements OnChanges {
-  isAdmin: boolean;
+  isAdmin: boolean  = false;
+  isEmployer: boolean = false;
+  isWorker: boolean = false;
   @Input() isUserLoggedIn: boolean;
 
   constructor(private tokenHelper: TokenHelper) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.isAdmin = changes.isUserLoggedIn
-                    && changes.isUserLoggedIn.currentValue
-                    && this.tokenHelper.isUserRole(USER_ROLE_ADMIN);
+    if(changes.isUserLoggedIn && changes.isUserLoggedIn.currentValue){
+      this.isAdmin = this.tokenHelper.isUserRole(USER_ROLE_ADMIN);
+      this.isEmployer = this.tokenHelper.isUserRole(USER_ROLE_EMPLOYER);
+      this.isWorker = this.tokenHelper.isUserRole(USER_ROLE_WORKER);
+    }
   }
 }

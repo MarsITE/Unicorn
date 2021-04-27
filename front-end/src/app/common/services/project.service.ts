@@ -38,8 +38,7 @@ export class ProjectService {
 
   public getProjects(counter: string, sort: string, maxResult: string, showAll: boolean = true): Observable<Project[]> {
     return this.http.get<Project[]>(`${environment.url}/projects`, {
-      params: this.params(counter, sort, maxResult, showAll),
-      headers: this.authHeader()
+      params: this.params(counter, sort, maxResult, showAll)
     }
     );
   }

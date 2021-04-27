@@ -72,6 +72,8 @@ import {AllProjectsComponent} from './components/project/all-projects/all-projec
 import { SkillsComponent } from './components/skills/skills.component';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { VerifyEmailComponent } from './components/verify-email/verify-email';
+import { SkillsAdministrationComponent } from './components/skills/skills-administration/skills-administration.component';
+import { WorkerSkillsComponent } from './components/skills/worker-skills/worker-skills.component';
 
 @NgModule({
   declarations: [
@@ -92,7 +94,9 @@ import { VerifyEmailComponent } from './components/verify-email/verify-email';
     StartPageComponent,
     SkillsComponent,
     StartPageComponent,
-    VerifyEmailComponent
+    VerifyEmailComponent,
+    SkillsAdministrationComponent,
+    WorkerSkillsComponent
   ],
 
   imports: [

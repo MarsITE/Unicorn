@@ -4,6 +4,7 @@ import { Project } from '../../../common/model/project';
 import { ProjectService } from '../../../common/services/project.service';
 import { ProjectStatus } from '../../../common/model/project-status';
 import { Subscription } from 'rxjs';
+import { USER_ROLE_EMPLOYER, TokenHelper } from '../../../common/helper/token.helper';
 
 @Component({
   selector: 'app-project-info',
@@ -18,6 +19,7 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
   creationDate: string;
   project: Project;
   private subscriptions: Subscription[] = [];
+  isEmployer: boolean;
 
   projectStatuses: ProjectStatus[] = [
     { value: 'LOOKING_FOR_WORKER', viewValue: 'Looking for worker' },
@@ -28,12 +30,15 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
 
   selectedProjectStatus: ProjectStatus = this.projectStatuses[0];
 
-  constructor(private projectService: ProjectService, router: ActivatedRoute, private router2: Router) {
+
+  constructor(private projectService: ProjectService, router: ActivatedRoute, private router2: Router,
+              private tokenHelper: TokenHelper) {
     this.id = router.snapshot.params.id;
    }
 
    ngOnInit(): void {
     this.getProject(this.id);
+    this.isEmployer = this.tokenHelper.isUserRole(USER_ROLE_EMPLOYER);
   }
 
   ngOnDestroy(): void {

@@ -1,21 +1,25 @@
 <mat-nav-list class="worksearch-sidenav-list">
-  <mat-list-item [routerLink]="'/projects'">
-    <mat-icon>work_outline</mat-icon>
-    <span>Projects</span>
-  </mat-list-item>
-
-  <mat-list-item [routerLink]="'/all-projects'">
+  <mat-list-item *ngIf="!isAdmin"[routerLink]="'/all-projects'">
     <mat-icon>work_outline</mat-icon>
     <span>All projects</span>
   </mat-list-item>
-
+  <mat-list-item [routerLink]="'/projects'">
+    <mat-icon>work_outline</mat-icon>
+    <span *ngIf="!isAdmin">My own projects</span>
+    <span *ngIf="isAdmin">Projects</span>
+  </mat-list-item>
   <mat-list-item *ngIf="isAdmin"[routerLink]="'/users-list'">
     <mat-icon>people_outline</mat-icon>
     <span>Users</span>
   </mat-list-item>
-
   <mat-list-item *ngIf="isAdmin" [routerLink]="'/skills'">
     <mat-icon>playlist_add_check</mat-icon>
-    <span>Skills</span>
+    <span>Skills administration</span>
   </mat-list-item>
+  <mat-list-item *ngIf="isWorker" [routerLink]="'/skills'">
+    <mat-icon>playlist_add_check</mat-icon>
+    <span>My skills</span>
+  </mat-list-item>
+  </mat-nav-list>
+
 

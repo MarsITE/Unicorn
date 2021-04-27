@@ -3,7 +3,8 @@ package com.academy.workSearch.model;
 import com.academy.workSearch.model.enums.AccountStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
+import lombok.*;
+import org.apache.commons.lang3.builder.ToStringExclude;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,8 +19,10 @@ import java.util.UUID;
 
 import static com.academy.workSearch.model.enums.AccountStatus.ACTIVE;
 
-@Data
 @Entity
+@Getter
+@Setter
+@EqualsAndHashCode
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
 @ApiModel(description = "User Info")
 public class User implements UserDetails {
@@ -60,7 +63,8 @@ public class User implements UserDetails {
     )
     private Set<Role> roles;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    //todo
+    @OneToOne(cascade = CascadeType.REMOVE)
     @ApiModelProperty(notes = "User info", position = 7)
     @JoinColumn(name = "user_info_id")
     private UserInfo userInfo;

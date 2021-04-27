@@ -33,7 +33,7 @@
       </div>
     </mat-card>
 
-    <div class="buttons">
+    <div class="buttons" *ngIf="isEmployer">
       <button mat-stroked-button (click)=edit(project.id) mat-button> Edit </button>
       <button mat-stroked-button (click)=delete(project.id) mat-button>Delete</button>
     </div>
