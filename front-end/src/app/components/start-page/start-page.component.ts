@@ -17,6 +17,7 @@ export class StartPageComponent implements OnInit {
   counter: number = 1;
   maxResult: number = 5;
   projects: Project[] = [];
+  project: Project;
   skills: Skill[] = [];
   skillsName: String[] = [];
   myForm: FormGroup;
@@ -129,5 +130,20 @@ export class StartPageComponent implements OnInit {
     this.selectedDeviceObj = newObj;
     this.maxResult = this.selectedDeviceObj;
     this.getProjects(this.maxResult);
+  }
+
+  showProjectDescription(id:any) {
+    this.router.navigateByUrl(`projects/${id}`);
+  }
+  public converToPlainSkills(str: string): string {
+      return `#${str.toLowerCase()}`;
+  }
+  public setLimitOfText(str: string): string{
+    if(str.length<=200){
+      return str;
+    }
+    else{
+      return `${str.substring(0,200)}...`;
+    } 
   }
 }
