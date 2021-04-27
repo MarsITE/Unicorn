@@ -74,6 +74,7 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { VerifyEmailComponent } from './components/verify-email/verify-email';
 import { SkillsAdministrationComponent } from './components/skills/skills-administration/skills-administration.component';
 import { WorkerSkillsComponent } from './components/skills/worker-skills/worker-skills.component';
+import { AddSkillsComponent } from './components/skills/add-skills/add-skills.component';
 
 @NgModule({
   declarations: [
@@ -96,7 +97,8 @@ import { WorkerSkillsComponent } from './components/skills/worker-skills/worker-
     StartPageComponent,
     VerifyEmailComponent,
     SkillsAdministrationComponent,
-    WorkerSkillsComponent
+    WorkerSkillsComponent,
+    AddSkillsComponent
   ],
 
   imports: [
@@ -174,6 +176,6 @@ import { WorkerSkillsComponent } from './components/skills/worker-skills/worker-
     }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [ConfirmComponent]
+  entryComponents: [ConfirmComponent, AddSkillsComponent]
 })
 export class AppModule { }

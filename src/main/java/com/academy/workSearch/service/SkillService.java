@@ -1,5 +1,6 @@
 package com.academy.workSearch.service;
 
+import com.academy.workSearch.dto.ProjectDTO;
 import com.academy.workSearch.dto.SkillDTO;
 import com.academy.workSearch.dto.SkillDetailsDTO;
 import java.util.List;
@@ -15,6 +16,8 @@ public interface SkillService {
     SkillDetailsDTO save(SkillDetailsDTO skill);
 
     SkillDetailsDTO update(SkillDetailsDTO skill);
+
+    SkillDetailsDTO delete(UUID id);
 
     SkillDetailsDTO get(UUID id);
 

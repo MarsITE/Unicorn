@@ -3,6 +3,8 @@ import { Subscription } from 'rxjs';
 import { Skill } from '../../../common/model/skill';
 import { SkillService } from '../../../common/services/skill.service';
 import { ToastrService } from 'ngx-toastr';
+import {MatDialog} from '@angular/material/dialog';
+import { AddSkillsComponent } from '../add-skills/add-skills.component';
 
 @Component({
   selector: 'app-worker-skills',
@@ -16,7 +18,7 @@ export class WorkerSkillsComponent implements OnInit, OnDestroy {
   selectable = true;
   removable = true;
 
-  constructor(private skillService: SkillService, private toastr: ToastrService) { }
+  constructor(private skillService: SkillService, private toastr: ToastrService, private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.getWorkerSkills();
@@ -37,18 +39,25 @@ export class WorkerSkillsComponent implements OnInit, OnDestroy {
     ));
   }
 
-  addSkills(): void {
-    this.skillService.addWorkerSkill({skillId: '', name: 'C#', enabled: true})
-    .subscribe(data => {
-      const message = `Skill has been added successfully`;
-      //this.approvedSkills.push({id: '', name: value.trim(), enabled: true});
-      //this.approvedSkills = this.approvedSkills.sort(this.sortByEnabledAcs);  
+  showModalForm(): void {
+    const dialogRef = this.dialog.open(AddSkillsComponent, { width: '600px', data: {} });
+    dialogRef.afterClosed().subscribe(result => {      
+      if (result.submit) {        
+        const skillNames: string[] = result.skills.split(';');
+        this.addSkills(skillNames);        
+      }
+    });
+  }
+
+  addSkills(skillNames: string[]): void {
+    let skills : Skill[] = [];
+    skillNames.forEach(name => skills.push({skillId: '', name}));
+     this.skillService.addWorkerSkills(skills)
+     .subscribe(data => {
+       const message = `Skill has been added successfully`;
       this.toastr.success(message, 'Success!');
     },
     errMessage => { this.toastr.warning(errMessage, 'Warning!'); }
-    );  }
-
-  removeSkill(skill: Skill): void {
-    // todo
+    );  
   }
 }

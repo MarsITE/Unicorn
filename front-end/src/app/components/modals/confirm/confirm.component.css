@@ -1,4 +1,13 @@
 button:focus {
     outline: 0;
-  }
+}
+
+.modal-confirm-buttons-container {
+    float:right;
+    margin:20px;
+}
+
+.modal-confirm-button {
+    margin:0px 10px; 
+}
   

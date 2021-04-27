@@ -60,7 +60,7 @@ export class ProjectEditComponent implements OnInit, OnDestroy {
   }
 
   update(): void {
-    this.projectService.save(this.project)
+    this.projectService.update(this.project)
       .subscribe(data => {
         this.toastr.success('Project has been updated successfully', 'Success!');
       },
