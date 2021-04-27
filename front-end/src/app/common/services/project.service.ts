@@ -26,7 +26,7 @@ export class ProjectService {
     .set('sort', sort)
     .set('showAll', showAll.toString())
     .set('maxResult', maxResult.toString());
-  } 
+  }
 
   private paginationParams(counter: { toString: () => string; }, sort: string, maxResult: { toString: () => string; }, _skillList: String[]): any {
     return new HttpParams()
@@ -61,7 +61,7 @@ export class ProjectService {
     }
     );
   }
-  
+
   public getSearchProjects(counter: string, sort: string, maxResult: string, _skillList: String[]):Observable<Project[]> {
     return this.http.get<Project[]>(`${environment.url}/projects/search`, {
       params: this.paginationParams(counter, sort, maxResult, _skillList)
@@ -70,6 +70,10 @@ export class ProjectService {
 
   public save(project: Project): Observable<Project> {
     return this.http.post<Project>(`${environment.url}/projects`, project, { headers: this.authHeader() });
+  }
+
+  public update(project: Project): Observable<Project> {
+    return this.http.put<Project>(`${environment.url}/projects`, project, { headers: this.authHeader() });
   }
 
   public deleteProject(id: string): Observable<any> {
