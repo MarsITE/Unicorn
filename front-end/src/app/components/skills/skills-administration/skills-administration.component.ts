@@ -67,6 +67,7 @@ export class SkillsAdministrationComponent implements OnInit, OnDestroy {
     });
     confirmDialog.afterClosed().subscribe(result => {
       if (!!result) {
+        this.unapprovedSkills.forEach(s => this.approveUnapprovedSkill(s));
         this.approvedSkills = this.approvedSkills.concat(...this.unapprovedSkills).sort(this.sortByEnabledAcs);
         this.unapprovedSkills = [];
       }
@@ -148,3 +149,7 @@ export class SkillsAdministrationComponent implements OnInit, OnDestroy {
   }
 
 }
+function s(s: any) {
+  throw new Error('Function not implemented.');
+}
+

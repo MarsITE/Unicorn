@@ -2,7 +2,6 @@ package com.academy.workSearch.controller;
 
 import com.academy.workSearch.dto.SkillDTO;
 import com.academy.workSearch.dto.SkillDetailsDTO;
-import com.academy.workSearch.exceptionHandling.exceptions.NotUniqueEntityException;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.service.SkillService;
 import io.swagger.annotations.ApiOperation;
@@ -21,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Validated
 @RestController
@@ -56,6 +57,22 @@ public class SkillController {
         UUID userId = user.getUserId();
         logger.info("Show skills of user with ID {}", userId);
         return ResponseEntity.ok(skillService.findAllByUserId(userId));
+    }
+
+    /**
+     * @param skills List<SkillDetailsDTO>
+     * @return saves new skills for approve by admin; returns list of skills
+     */
+    @PostMapping("/worker/skills")
+    @ApiOperation(value = "Add new skill", notes = "Add new skill")
+    public ResponseEntity<List<SkillDetailsDTO>> addNewWokerSkills(@RequestBody @Valid List<SkillDetailsDTO> skills) {
+        logger.info("Attempt to add skills {}", skills);
+        return ResponseEntity.ok(
+                skills.stream().map(
+                    skill -> skillService.isPresentSkillByName(skill.getName()) ?
+                                skill : skillService.save(skill)
+                ).collect(Collectors.toList())
+        );
     }
 
     /**
