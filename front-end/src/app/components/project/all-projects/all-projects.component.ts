@@ -92,4 +92,18 @@ export class AllProjectsComponent implements OnInit {
     this.maxResult = this.selectedDeviceObj;
     this.getProjects(this.maxResult);
   }
+  showProjectDescription(id:any) {
+    this.router.navigateByUrl(`projects/${id}`);
+  }
+  public converToPlainSkills(str: string): string {
+      return `#${str.toLowerCase()}`;
+  }
+  public setLimitOfText(str: string): string{
+    if(str.length<=200){
+      return str;
+    }
+    else{
+      return `${str.substring(0,200)}...`;
+    } 
+  }
 }
