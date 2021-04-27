@@ -19,7 +19,7 @@ export class ProjectService {
 
 
   private params(counter: { toString: () => string; }, sort: string,
-                               maxResult: { toString: () => string; }, showAll: boolean): any {
+                 maxResult: { toString: () => string; }, showAll: boolean): any {
     return new HttpParams()
     .set('page', counter.toString())
     .set('sort', sort)
@@ -28,7 +28,7 @@ export class ProjectService {
   }
 
   public getProjects(counter: string, sort: string, maxResult: string, showAll: boolean = true): Observable<Project[]> {
-    let options = {
+    const options = {
       params: this.params(counter, sort, maxResult, showAll)
     };
     if (sessionStorage.getItem(ACCESS_TOKEN) !== null) {
