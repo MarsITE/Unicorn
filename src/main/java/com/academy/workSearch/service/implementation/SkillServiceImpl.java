@@ -1,13 +1,10 @@
 package com.academy.workSearch.service.implementation;
 
 import com.academy.workSearch.dao.implementation.SkillDAOImpl;
-import com.academy.workSearch.dto.ProjectDTO;
 import com.academy.workSearch.dto.SkillDTO;
 import com.academy.workSearch.dto.SkillDetailsDTO;
-import com.academy.workSearch.dto.mapper.ProjectMapper;
 import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.exceptionHandling.exceptions.NotUniqueEntityException;
-import com.academy.workSearch.model.Project;
 import com.academy.workSearch.model.Skill;
 import com.academy.workSearch.service.SkillService;
 import lombok.AllArgsConstructor;

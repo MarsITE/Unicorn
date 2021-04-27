@@ -15,7 +15,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -129,5 +128,4 @@ public class SkillController {
         logger.info("Delete skill with ID = {}", id);
         return ResponseEntity.ok(skillService.delete(id));
     }
-
 }
