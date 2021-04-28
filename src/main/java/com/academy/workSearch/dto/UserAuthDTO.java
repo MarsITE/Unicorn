@@ -1,10 +1,10 @@
 package com.academy.workSearch.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import org.springframework.data.redis.core.RedisHash;
 
-@Getter
-@Setter
+@Data
+@RedisHash("jwt_token")
 public class UserAuthDTO {
     private String email;
     private String accessToken;

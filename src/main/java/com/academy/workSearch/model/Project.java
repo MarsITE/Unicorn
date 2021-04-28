@@ -34,7 +34,7 @@ public class Project {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "worker_id")
-    private User worker;
+    private User worker;//one to many worker to pr
 
     @NotNull
     @OneToOne

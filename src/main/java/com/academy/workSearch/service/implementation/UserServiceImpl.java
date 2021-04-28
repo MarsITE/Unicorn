@@ -224,6 +224,7 @@ public class UserServiceImpl implements UserService {
         if (jwtService.validateRefreshToken(userAuthDTO.getRefreshToken(), userAuthDTO.getEmail())) {
             logger.info("Generating new refresh token");
             userAuthDTO.setRefreshToken(jwtService.generateRefreshToken(userAuthDTO.getEmail()));
+            jwtService.saveRefreshToken(userAuthDTO.getRefreshToken());
             logger.info("Token successfully created");
             logger.info("Generating new access token");
             User user = getUser(userAuthDTO.getEmail());

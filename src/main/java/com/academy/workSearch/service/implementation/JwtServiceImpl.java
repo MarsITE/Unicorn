@@ -9,9 +9,13 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.RedisConnectionFailureException;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,10 +27,13 @@ import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_ROLE;
 @Service
 public class JwtServiceImpl implements JwtService {
     private final RoleDAO roleDAO;
-
     private final String SECRET_KEY = "secret";
-    private static final long EXPIRATION_TIME_ACCESS_TOKEN = 3600000 * 24; // 1 hour
+    private final String KEY_REFRESH_TOKEN = "refresh_token";
+    private static final long EXPIRATION_TIME_ACCESS_TOKEN = 3600000; // 1 hour
     private static final long EXPIRATION_TIME_REGISTRATION_TOKEN = 3600000 * 24; // 1 day
+
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
     public JwtServiceImpl(RoleDAO roleDAO) {
         this.roleDAO = roleDAO;
@@ -80,7 +87,8 @@ public class JwtServiceImpl implements JwtService {
      */
     @Override
     public boolean validateRefreshToken(String token, String email) {
-        return getUsername(token).equals(email);
+        saveRefreshToken(token);
+        return getUsername(token).equals(email) && token.equals(getRefreshToken());
     }
 
     /**
@@ -130,6 +138,26 @@ public class JwtServiceImpl implements JwtService {
      */
     public String getUsername(String token) {
         return getClaim(token, Claims::getSubject);
+    }
+
+    @Override
+    public void saveRefreshToken(String token) {
+        try {
+            redisTemplate.opsForHash().put(KEY_REFRESH_TOKEN, LocalDate.now(), token);
+        } catch (RedisConnectionFailureException e) {
+
+        }
+    }
+
+
+    @Override
+    public String getRefreshToken() {
+        try {
+            return redisTemplate.opsForHash().values(KEY_REFRESH_TOKEN).get(0).toString();
+        } catch (RedisConnectionFailureException e) {
+
+        }
+        return "";
     }
 
     /**
