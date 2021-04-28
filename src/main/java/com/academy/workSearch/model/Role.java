@@ -1,12 +1,16 @@
 package com.academy.workSearch.model;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @Entity
 @Table(name = "roles", uniqueConstraints = @UniqueConstraint(columnNames = {"name"}))
 public class Role implements GrantedAuthority {

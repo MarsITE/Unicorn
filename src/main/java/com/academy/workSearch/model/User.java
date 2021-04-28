@@ -20,10 +20,10 @@ import java.util.UUID;
 
 import static com.academy.workSearch.model.enums.AccountStatus.ACTIVE;
 
-@Entity
 @Getter
 @Setter
 @EqualsAndHashCode
+@Entity
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
 @ApiModel(description = "User Info")
 public class User implements UserDetails {
@@ -71,6 +71,9 @@ public class User implements UserDetails {
 
     @Column(name = "token")
     private String token;
+
+    @Column(name = "refresh_token")
+    private String refreshToken;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
