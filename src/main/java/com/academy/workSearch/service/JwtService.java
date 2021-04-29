@@ -19,7 +19,4 @@ public interface JwtService {
 
     String getUsername(String token);
 
-    void saveRefreshToken(String token);
-
-    String getRefreshToken();
 }
