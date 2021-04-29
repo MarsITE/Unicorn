@@ -2,37 +2,16 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-<!--    <include file="changelog/create-tables.changelog-0.0.1.sql"
+    <include file="changelog/v0.7/update-tables.changelog.sql"
              relativeToChangelogFile="true"/>
-    <include file="changelog/create-tables.changelog-0.0.2.sql"
+    <include file="changelog/v0.8/update-tables.changelog.sql"
              relativeToChangelogFile="true"/>
-    <include file="changelog/create-tables.changelog-0.0.3.sql"
-             relativeToChangelogFile="true"/>
-    <include file="changelog/create-tables.changelog-0.0.4.sql"
-             relativeToChangelogFile="true"/>
-    <include file="changelog/create-tables.changelog-0.0.5.sql"
-             relativeToChangelogFile="true"/>
-    <include file="changelog/insert-default-data.changelog-0.0.3.sql"
-             relativeToChangelogFile="true"/>-->
-<!--    <include file="changelog/insert-default-data.changelog-0.0.4.sql"-->
-<!--             relativeToChangelogFile="true"/>-->
-<!--    <include file="changelog/insert-default-data.changelog-0.0.5.sql"
-             relativeToChangelogFile="true"/>-->
 
-<!--    <include file="changelog/v7/update-tables.changelog.sql"-->
-<!--             relativeToChangelogFile="true"/>-->
-<!--    <include file="changelog/v7/insert-skills.sql"-->
-<!--             relativeToChangelogFile="true"/>-->
-<!--    <include file="changelog/v7/insert-users-roles.sql"-->
-<!--             relativeToChangelogFile="true"/>-->
-
-    <changeSet id="7" author="Diana">
+    <changeSet id="8" author="Diana">
         <comment>
-            increase size email to 50;
-            increase size project name to 50;
-            add filed token to user;
-            updated on password on bcrypt
-            in table projects make project id and name unique</comment>
+            make worker in table projects list
+            users-info-projects make entity and fields id, is_approve, rating_id
+        </comment>
     </changeSet>
 
 </databaseChangeLog>

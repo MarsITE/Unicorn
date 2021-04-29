@@ -23,9 +23,9 @@ import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_ROLE;
 @Service
 public class JwtServiceImpl implements JwtService {
     private final RoleDAO roleDAO;
-
     private final String SECRET_KEY = "secret";
-    private static final long EXPIRATION_TIME_ACCESS_TOKEN = 3600000 * 24; // 1 hour
+    private final String KEY_REFRESH_TOKEN = "refresh_token";
+    private static final long EXPIRATION_TIME_ACCESS_TOKEN = 3600000; // 1 hour
     private static final long EXPIRATION_TIME_REGISTRATION_TOKEN = 3600000 * 24; // 1 day
 
     public JwtServiceImpl(RoleDAO roleDAO) {

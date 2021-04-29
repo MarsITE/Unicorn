@@ -19,5 +19,4 @@ public interface JwtService {
 
     String getUsername(String token);
 
-
 }

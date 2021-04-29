@@ -14,7 +14,7 @@ public class ScheduledTask {
     @Autowired
     private UserService userService;
 
-    @Scheduled(cron = "0 0 0 * * ?")//
+    @Scheduled(cron = "0 0 0 * * ?")
     public void removeNotImproveUser() {
         logger.info("Delete all not active users with expired JWT token by cron");
         userService.removeAllNotActiveUsersWithExpiredJWTToken();

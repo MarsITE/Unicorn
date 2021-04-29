@@ -20,10 +20,10 @@ import java.util.UUID;
 
 import static com.academy.workSearch.model.enums.AccountStatus.ACTIVE;
 
-@Entity
 @Getter
 @Setter
 @EqualsAndHashCode
+@Entity
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
 @ApiModel(description = "User Info")
 public class User implements UserDetails {
@@ -55,7 +55,7 @@ public class User implements UserDetails {
     @ApiModelProperty(notes = "Creation date", position = 5)
     private LocalDateTime creationDate;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     @ApiModelProperty(notes = "User role", position = 6)
     @JoinTable(
             name = "users_roles",
@@ -69,8 +69,8 @@ public class User implements UserDetails {
     @JoinColumn(name = "user_info_id")
     private UserInfo userInfo;
 
-    @Column(name = "token")
-    private String token;
+    @Column(name = "registration_token")
+    private String registrationToken;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

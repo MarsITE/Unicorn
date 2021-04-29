@@ -1,16 +1,21 @@
 package com.academy.workSearch.model;
 
 import com.academy.workSearch.model.enums.ProjectStatus;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @Entity
 @Table(name = "projects", uniqueConstraints = {
         @UniqueConstraint(
@@ -32,9 +37,9 @@ public class Project {
     @Column(name = "project_status")
     private ProjectStatus projectStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "worker_id")
-    private User worker;
+    @OneToMany
+    @JoinColumn(name = "user_info_project_id")
+    private List<ProjectUserInfo> workers;
 
     @NotNull
     @OneToOne
@@ -48,11 +53,6 @@ public class Project {
             inverseJoinColumns = {@JoinColumn(name = "skill_id")}
     )
     private Set<Skill> skills;
-
-
-    @OneToOne
-    @JoinColumn(name = "worker_rating_id")
-    private Rating workerRating;
 
     @OneToOne
     @JoinColumn(name = "owner_rating_id")
