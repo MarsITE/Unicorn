@@ -45,7 +45,7 @@ public class UserInfo {
     @ApiModelProperty(notes = "Date of birth of the user")
     private LocalDate birthDate;
 
-    @Column(name = "is_show_info", columnDefinition = "boolean default true")
+    @Column(name = "is_show_info")
     private boolean isShowInfo;
 
     @Enumerated(EnumType.STRING)

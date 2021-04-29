@@ -39,7 +39,7 @@ public class Project {
 
     @OneToMany
     @JoinColumn(name = "user_info_project_id")
-    private List<ProjectUserInfo> workers;//one to many worker to pr
+    private List<ProjectUserInfo> workers;
 
     @NotNull
     @OneToOne

@@ -55,7 +55,7 @@ public class User implements UserDetails {
     @ApiModelProperty(notes = "Creation date", position = 5)
     private LocalDateTime creationDate;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     @ApiModelProperty(notes = "User role", position = 6)
     @JoinTable(
             name = "users_roles",
@@ -69,11 +69,8 @@ public class User implements UserDetails {
     @JoinColumn(name = "user_info_id")
     private UserInfo userInfo;
 
-    @Column(name = "token")
-    private String token;
-
-    @Column(name = "refresh_token")
-    private String refreshToken;
+    @Column(name = "registration_token")
+    private String registrationToken;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

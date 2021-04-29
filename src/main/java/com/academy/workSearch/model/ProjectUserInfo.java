@@ -17,7 +17,7 @@ public class ProjectUserInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_info_project_id")
-    private UUID projectId;
+    private UUID userInfoProjectId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;

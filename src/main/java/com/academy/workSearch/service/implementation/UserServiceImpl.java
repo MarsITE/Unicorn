@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService {
         }
         user.setRoles(roles);
         user.setPassword(passwordEncoder.encode(userRegistrationDTO.getPassword()));
-        user.setToken(jwtService.generateRegistrationToken(user.getEmail()));
+        user.setRegistrationToken(jwtService.generateRegistrationToken(user.getEmail()));
         userDAO.save(user);
 
         sendMessageWithActivationLink(user);
@@ -169,7 +169,7 @@ public class UserServiceImpl implements UserService {
     public UserAuthDTO get(UserRegistrationDTO userRegistrationDTO) {
         final User user = getUser(userRegistrationDTO.getEmail());
 
-        if (!user.isEnabled() && user.getCreationDate().plusDays(1).isBefore(LocalDateTime.now()) && !user.getToken().equals("")) {
+        if (!user.isEnabled() && user.getCreationDate().plusDays(1).isBefore(LocalDateTime.now()) && !user.getRegistrationToken().equals("")) {
             sendMessageWithActivationLink(user);
         }
         if (!user.isEnabled()) {
@@ -244,7 +244,7 @@ public class UserServiceImpl implements UserService {
         User user = userDAO.getByToken(token).orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY));
         boolean isValidToken = user != null;
         if (isValidToken) {
-            user.setToken("");
+            user.setRegistrationToken("");
             user.setAccountStatus(AccountStatus.ACTIVE);
             userDAO.save(user);
         }
@@ -277,10 +277,10 @@ public class UserServiceImpl implements UserService {
             model.put("email", user.getEmail());
             model.put("client_url", env.getProperty("CLIENT_URL"));
             if (user.getCreationDate() != null && user.getCreationDate().plusDays(1).isBefore(LocalDateTime.now())) {
-                user.setToken(jwtService.generateRegistrationToken(user.getEmail()));
+                user.setRegistrationToken(jwtService.generateRegistrationToken(user.getEmail()));
                 userDAO.save(user);
             }
-            model.put("token", user.getToken());
+            model.put("token", user.getRegistrationToken());
             model.put("time_to_improve", timeToImproveAccount);
             Template template = freemarkerConfigurer.getConfiguration().getTemplate("verify-email-message.txt");
             content = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
