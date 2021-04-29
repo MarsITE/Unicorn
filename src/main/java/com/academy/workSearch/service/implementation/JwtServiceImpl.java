@@ -12,10 +12,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 
 import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_ROLE;
@@ -130,6 +127,29 @@ public class JwtServiceImpl implements JwtService {
      */
     public String getUsername(String token) {
         return getClaim(token, Claims::getSubject);
+    }
+
+    @Override
+    public Set<Role> getRoles(String token) {
+        Claims claims;
+        try {
+            claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        } catch (ExpiredJwtException e) {
+            throw new ExpiredJwtException(null, null, "This token is expired!");
+        }
+        Set<Role> roles = new HashSet<>();
+        if (claims != null) {
+            if (claims.get("isAdmin") != null) {
+                roles.add(roleDAO.getByName("ADMIN").orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "ADMIN")));
+            }
+            if (claims.get("isEmployer") != null) {
+                roles.add(roleDAO.getByName("EMPLOYER").orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "EMPLOYER")));
+            }
+            if (claims.get("isWorker") != null) {
+                roles.add(roleDAO.getByName("WORKER").orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "WORKER")));
+            }
+        }
+        return roles;
     }
 
     /**
