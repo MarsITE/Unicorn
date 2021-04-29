@@ -21,6 +21,20 @@
   </p>
 
   <p>
+    <mat-form-field appearance="fill">
+      <mat-label>Skills</mat-label>
+      <mat-select formControlName="skills" multiple >
+        <mat-option #matOption *ngFor="let skill of skills" [value]="skill" checked
+          (click)="setSelectedSkills(matOption)">
+          {{ skill.name }}
+        </mat-option>
+      </mat-select>
+      <mat-chip-list>
+        <mat-chip *ngFor="let skill of project.skills">{{skill.name}}</mat-chip>
+      </mat-chip-list>
+    </mat-form-field>
+  </p>
+  <p>
   <mat-form-field>
       <mat-label>Project status</mat-label>
       <mat-select [(value)]="selectedProjectStatus.value" [(ngModel)] = "project.projectStatus" #clientValue (selectionChange)="getProjectStatus($event.value)"

@@ -9,7 +9,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.Named;
-import org.mapstruct.control.MappingControl;
 import org.mapstruct.factory.Mappers;
 
 import java.util.HashSet;
@@ -25,23 +24,23 @@ public interface ProjectMapper {
 
     ProjectMapper INSTANCE = Mappers.getMapper(ProjectMapper.class);
 
-    @Mappings({ @Mapping(target = "id", source = "projectId"),
+    @Mappings({@Mapping(target = "id", source = "projectId"),
             @Mapping(target = "name", source = "name"),
             @Mapping(target = "description", source = "description"),
             @Mapping(target = "projectStatus", qualifiedByName = "projectStatusStr"),
             @Mapping(target = "creationDate", source = "creationDate"),
             @Mapping(target = "ownerId", source = "employer", qualifiedByName = "ownerId"),
-            @Mapping(target = "skills", qualifiedByName = "skillsStr")
+            @Mapping(target = "skills", source = "skills")
     })
     ProjectDTO toDto(Project project);
 
-    @Mappings({ @Mapping(target = "projectId", source = "id"),
+    @Mappings({@Mapping(target = "projectId", source = "id"),
             @Mapping(target = "name", source = "name"),
             @Mapping(target = "description", source = "description"),
             @Mapping(target = "projectStatus", qualifiedByName = "projectStatus"),
             @Mapping(target = "creationDate", source = "creationDate"),
             @Mapping(target = "employer", source = "ownerId", qualifiedByName = "owner"),
-            @Mapping(target = "skills", qualifiedByName = "skills")})
+            @Mapping(target = "skills", source = "skills")})
     Project toEntity(ProjectDTO projectDto);
 
     List<Project> toProjects(List<ProjectDTO> projectDtos);
@@ -64,25 +63,26 @@ public interface ProjectMapper {
         });
         return skills;
     }
+
     @Named("projectStatusStr")
-    default String projectStatusStr(ProjectStatus projectStatus){
+    default String projectStatusStr(ProjectStatus projectStatus) {
         return projectStatus.toString();
     }
 
     @Named("projectStatus")
-    default ProjectStatus projectStatus(String projectStatus){
+    default ProjectStatus projectStatus(String projectStatus) {
         return ProjectStatus.valueOf(projectStatus);
     }
 
     @Named("ownerId")
-    default String ownerId(User user){
+    default String ownerId(User user) {
         return user.getUserId().toString();
     }
 
     @Named("owner")
     default User owner(String ownerId) {
-      User user = new User();
-      user.setUserId(UUID.fromString(ownerId));
-      return user;
+        User user = new User();
+        user.setUserId(UUID.fromString(ownerId));
+        return user;
     }
 }
