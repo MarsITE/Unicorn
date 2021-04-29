@@ -22,6 +22,7 @@ public class ProjectUserInfo {
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
 
+    
     @ManyToOne(fetch = FetchType.LAZY)
     private UserInfo userInfo;
 
