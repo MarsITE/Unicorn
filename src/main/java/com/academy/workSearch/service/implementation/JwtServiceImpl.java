@@ -129,6 +129,11 @@ public class JwtServiceImpl implements JwtService {
         return getClaim(token, Claims::getSubject);
     }
 
+    /**
+     *
+     * @param token acess
+     * @return get set roles
+     */
     @Override
     public Set<Role> getRoles(String token) {
         Claims claims;
