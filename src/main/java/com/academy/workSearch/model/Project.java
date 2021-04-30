@@ -38,7 +38,7 @@ public class Project {
     private ProjectStatus projectStatus;
 
     @OneToMany
-    @JoinColumn(name = "user_info_project_id")
+    @JoinColumn(name = "worker_id")
     private List<ProjectUserInfo> workers;
 
     @NotNull
@@ -62,4 +62,14 @@ public class Project {
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
+    @Override
+    public String toString() {
+        return "Project{" +
+                "projectId=" + projectId +
+                ", name='" + name +
+                ", description='" + description +
+                ", projectStatus=" + projectStatus +
+                ", creationDate=" + creationDate +
+                '}';
+    }
 }

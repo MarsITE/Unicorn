@@ -8,9 +8,9 @@ import java.util.Set;
 
 public interface JwtService {
 
-    boolean validateAccessToken(String token, UserDetails userDetails);
+    boolean isValidAccessToken(String token, UserDetails userDetails);
 
-    boolean validateRefreshToken(String token, String email);
+    boolean isValidRefreshToken(String token, String email);
 
     boolean isRegistrationTokenNotExpired(String token);
 

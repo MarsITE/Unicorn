@@ -221,7 +221,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserAuthDTO refreshToken(UserAuthDTO userAuthDTO) {
-        if (jwtService.validateRefreshToken(userAuthDTO.getRefreshToken(), userAuthDTO.getEmail())) {
+        if (jwtService.isValidRefreshToken(userAuthDTO.getRefreshToken(), userAuthDTO.getEmail())) {
             logger.info("Generating new refresh token");
             userAuthDTO.setRefreshToken(jwtService.generateRefreshToken(userAuthDTO.getEmail()));
             logger.info("Token successfully created");

@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,6 +25,7 @@ import static com.academy.workSearch.model.enums.AccountStatus.ACTIVE;
 @Setter
 @EqualsAndHashCode
 @Entity
+@NoArgsConstructor
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
 @ApiModel(description = "User Info")
 public class User implements UserDetails {
@@ -71,6 +73,11 @@ public class User implements UserDetails {
 
     @Column(name = "registration_token")
     private String registrationToken;
+
+    public User(String email, Set<Role> roles) {
+        this.email = email;
+        this.roles = roles;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

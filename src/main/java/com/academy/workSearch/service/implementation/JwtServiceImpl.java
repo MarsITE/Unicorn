@@ -9,6 +9,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +21,9 @@ import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_ROLE;
 
 @Service
 public class JwtServiceImpl implements JwtService {
+    private final Logger logger = LogManager.getLogger(JwtServiceImpl.class);
     private final RoleDAO roleDAO;
     private final String SECRET_KEY = "secret";
-    private final String KEY_REFRESH_TOKEN = "refresh_token";
     private static final long EXPIRATION_TIME_ACCESS_TOKEN = 3600000; // 1 hour
     private static final long EXPIRATION_TIME_REGISTRATION_TOKEN = 3600000 * 24; // 1 day
 
@@ -66,7 +68,7 @@ public class JwtServiceImpl implements JwtService {
      * @return true if token valid
      */
     @Override
-    public boolean validateAccessToken(String token, UserDetails userDetails) {
+    public boolean isValidAccessToken(String token, UserDetails userDetails) {
         return getUsername(token).equals(userDetails.getUsername()) && !isTokenExpired(token, new Date());
     }
 
@@ -76,7 +78,7 @@ public class JwtServiceImpl implements JwtService {
      * @return true if token valid
      */
     @Override
-    public boolean validateRefreshToken(String token, String email) {
+    public boolean isValidRefreshToken(String token, String email) {
         return getUsername(token).equals(email);
     }
 
@@ -130,28 +132,28 @@ public class JwtServiceImpl implements JwtService {
     }
 
     /**
-     *
      * @param token acess
      * @return get set roles
      */
     @Override
     public Set<Role> getRoles(String token) {
-        Claims claims;
+        Claims claims = null;
         try {
             claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
         } catch (ExpiredJwtException e) {
-            throw new ExpiredJwtException(null, null, "This token is expired!");
+            logger.error(e.getMessage());
+            e.printStackTrace();
         }
         Set<Role> roles = new HashSet<>();
         if (claims != null) {
             if (claims.get("isAdmin") != null) {
-                roles.add(roleDAO.getByName("ADMIN").orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "ADMIN")));
+                roles.add(getRoleByName("ADMIN"));
             }
             if (claims.get("isEmployer") != null) {
-                roles.add(roleDAO.getByName("EMPLOYER").orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "EMPLOYER")));
+                roles.add(getRoleByName("EMPLOYER"));
             }
             if (claims.get("isWorker") != null) {
-                roles.add(roleDAO.getByName("WORKER").orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "WORKER")));
+                roles.add(getRoleByName("WORKER"));
             }
         }
         return roles;
@@ -206,16 +208,13 @@ public class JwtServiceImpl implements JwtService {
         roles.forEach(role -> {
             switch (role.getName()) {
                 case "ADMIN":
-                    claims.put("isAdmin", roleDAO.getByName("ADMIN")
-                            .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "ADMIN")));
+                    claims.put("isAdmin", getRoleByName("ADMIN"));
                     break;
                 case "EMPLOYER":
-                    claims.put("isEmployer", roleDAO.getByName("EMPLOYER")
-                            .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "EMPLOYER")));
+                    claims.put("isEmployer", getRoleByName("EMPLOYER"));
                     break;
                 case "WORKER":
-                    claims.put("isWorker", roleDAO.getByName("WORKER")
-                            .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "WORKER")));
+                    claims.put("isWorker", getRoleByName("WORKER"));
                     break;
                 default:
                     break;
@@ -223,5 +222,8 @@ public class JwtServiceImpl implements JwtService {
         });
     }
 
-
+    private Role getRoleByName(String name) {
+        return roleDAO.getByName(name)
+                .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + name));
+    }
 }
