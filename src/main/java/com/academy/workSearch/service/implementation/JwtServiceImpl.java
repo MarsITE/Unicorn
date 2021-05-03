@@ -100,11 +100,11 @@ public class JwtServiceImpl implements JwtService {
      * @return 1 option from token exp: id, roles
      */
     private <T> T getClaim(String token, Function<Claims, T> claimResolver) {
-        Claims claims;
+        Claims claims = null;
         try {
             claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
         } catch (ExpiredJwtException e) {
-            throw new ExpiredJwtException(null, null, "This token is expired!");
+//            throw new ExpiredJwtException(null, null, "This token is expired!");
         }
         return claimResolver.apply(claims);
     }
@@ -141,8 +141,7 @@ public class JwtServiceImpl implements JwtService {
         try {
             claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
         } catch (ExpiredJwtException e) {
-            logger.error(e.getMessage());
-            e.printStackTrace();
+            logger.trace(Arrays.toString(Arrays.stream(e.getStackTrace()).toArray()));
         }
         Set<Role> roles = new HashSet<>();
         if (claims != null) {

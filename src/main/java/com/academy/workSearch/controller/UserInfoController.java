@@ -13,9 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.ValidationException;
-import java.util.Arrays;
-
 @RestController
 @RequestMapping("/api/v1/user-profile")
 @AllArgsConstructor
@@ -30,15 +27,10 @@ public class UserInfoController {
     @PutMapping("/")
     @ApiOperation(value = "Update existing user info", notes = "Update existing user info")
     public ResponseEntity<UserInfoDTO> updateUserInfo(@RequestBody UserInfoDTO user) {
-        try {
-            logger.info("Update user-info = {} ", user.getUserInfoId());
-            userInfoService.save(user);
-            return ResponseEntity.ok().build();
-        } catch (ValidationException e) {
-            logger.trace(Arrays.toString(Arrays.stream(e.getStackTrace()).toArray()));
-            logger.info("Update user-info = {} ", user.getUserInfoId() + " failed!");
-            return ResponseEntity.badRequest().build();
-        }
+        logger.info("Update user-info = {} ", user.getUserInfoId());
+        userInfoService.save(user);
+        return ResponseEntity.ok().build();
+
     }
 
     /**
@@ -46,13 +38,13 @@ public class UserInfoController {
      * @param id    user id
      * @return status updating
      */
-    @PutMapping("/save-photo/{id}")
+    @PutMapping("/save-photo/{id}/{maxFileLength}")
     @ApiOperation(value = "Save user photo", notes = "Save user photo")
-    public ResponseEntity<MultipartFile> savePhoto(@RequestPart("image") MultipartFile image, @PathVariable(name = "id") String id) {
-        if (userInfoService.updateImage(image, id)) {
-            return ResponseEntity.ok().build();
+    public ResponseEntity<String> savePhoto(@RequestPart("image") MultipartFile image, @PathVariable(name = "id") String id, @PathVariable(name = "maxFileLength") long maxFileLength) {
+        if (userInfoService.updateImage(image, id, maxFileLength)) {
+            return ResponseEntity.ok().body("Photo saved!");
         } else {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("Photo not saved! It should be less than 2MB and be in format jpg, png, jpeg");
         }
     }
 
