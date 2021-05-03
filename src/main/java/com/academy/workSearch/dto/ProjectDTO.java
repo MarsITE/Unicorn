@@ -1,7 +1,5 @@
 package com.academy.workSearch.dto;
 
-import com.academy.workSearch.model.Skill;
-import com.academy.workSearch.model.User;
 import jdk.jfr.Timestamp;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,6 +34,6 @@ public class ProjectDTO {
     @NotNull
     private String ownerId;
 
-    private Set<String> skills;
+    private Set<SkillDTO> skills;
 
 }

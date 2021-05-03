@@ -8,5 +8,5 @@ export class Project {
     projectStatus: string;
     creationDate: string;
     ownerId: string;
-    skills: Skill[];
+    skills: Skill[] = [];
   }

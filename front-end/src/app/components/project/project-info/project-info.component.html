@@ -33,6 +33,14 @@
       </div>
     </mat-card>
 
+    <mat-card class="project-info">
+      <div *ngIf="project">
+        <label><b class="description">Project skills:</b> </label>
+        <span *ngFor = "let skill of project.skills, let isLast = last"> {{skill.name}}{{isLast ? '' : ', '}}
+        </span>
+      </div>
+    </mat-card>
+
     <div class="buttons" *ngIf="isEmployer">
       <button mat-stroked-button (click)=edit(project.id) mat-button> Edit </button>
       <button mat-stroked-button (click)=delete(project.id) mat-button>Delete</button>
@@ -40,5 +48,4 @@
 
   </div>
 
-
-
+</div>

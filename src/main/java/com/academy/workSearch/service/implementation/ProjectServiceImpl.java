@@ -44,7 +44,6 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     /**
-     *
      * @return list of all projects
      */
     @Override
@@ -53,14 +52,13 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     /**
-     *
-     * @param page  number of page
-     * @param maxResult count of projects in current page
+     * @param page              number of page
+     * @param maxResult         count of projects in current page
      * @param maxNavigationPage number of last page
-     * @param sort  asc or desc
-     * @param showAll   boolean
-     * @param currentUser user
-     * @return  list of projects
+     * @param sort              asc or desc
+     * @param showAll           boolean
+     * @param currentUser       user
+     * @return list of projects
      */
     @Override
     public List<ProjectDTO> findAllByPageWithSortOrder(int page, int maxResult, int maxNavigationPage, String sort, boolean showAll, User currentUser) {
@@ -86,12 +84,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     /**
-     *
-     * @param page number of current page
-     * @param maxResult count of projects in current page
+     * @param page              number of current page
+     * @param maxResult         count of projects in current page
      * @param maxNavigationPage number of last page
-     * @param sort  asc or desc
-     * @param ownerId id of current user
+     * @param sort              asc or desc
+     * @param ownerId           id of current user
      * @return list of projects for current user
      */
     @Override
@@ -100,12 +97,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     /**
-     *
-     * @param skills list of skills
-     * @param page number of current page
-     * @param maxResult count of projects in current page
+     * @param skills            list of skills
+     * @param page              number of current page
+     * @param maxResult         count of projects in current page
      * @param maxNavigationPage number of last page
-     * @param sort asc or desc
+     * @param sort              asc or desc
      * @return list of projects for current skills
      */
     @Override
@@ -115,7 +111,6 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     /**
-     *
      * @param projectDto info of current project
      * @return projectDto
      */
@@ -130,16 +125,16 @@ public class ProjectServiceImpl implements ProjectService {
         project.setName(projectDto.getName());
         project.setDescription(projectDto.getDescription());
         project.setEmployer(user);
+        project.setSkills(SkillMapper.SKILL_MAPPER.toSkills(projectDto.getSkills()));
         project.setProjectStatus(ProjectStatus.valueOf(projectDto.getProjectStatus()));
         projectDAO.save(project);
         return projectDto;
     }
 
     /**
-     *
      * @param projectDto current project
-     * @param skillDTO  skills that we need to add
-     * @return  projectDto
+     * @param skillDTO   skills that we need to add
+     * @return projectDto
      */
     @Override
     public ProjectDTO addSkillsToProject(ProjectDTO projectDto, SkillDTO skillDTO) {
@@ -165,7 +160,6 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     /**
-     *
      * @param id id of current project
      * @return projectDto
      */
@@ -178,9 +172,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     /**
-     *
      * @param id id of current project
-     * @return  projectDto
+     * @return projectDto
      */
     @Override
     public ProjectDTO delete(UUID id) {
