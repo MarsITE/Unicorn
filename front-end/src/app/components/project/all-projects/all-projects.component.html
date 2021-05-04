@@ -16,9 +16,12 @@
       <mat-card-footer>
         <mat-card-subtitle class="skills">
           <mat-chip-list>
-            <mat-chip class="skills-chip" *ngFor="let skill of project?.skills">
-              {{converToPlainSkills(skill)}}
-            </mat-chip>
+            <div *ngFor="let skill of project?.skills">
+              <mat-chip class="skills-chip"
+                [ngStyle]="{'border':isSkillPresentInUser(skill) ? '2px solid green' : '1px solid gray'}">
+                  {{converToPlainSkills(skill)}}
+              </mat-chip>
+            </div>
           </mat-chip-list>
         </mat-card-subtitle>
         <mat-card-subtitle class="creating-date"> {{project?.creationDate|date}}</mat-card-subtitle>
@@ -26,11 +29,8 @@
     </mat-card>
   </div>
   <div mat-card-title class="pagination">
-    <button mat-stroked-button (click)=projectsPrev()>prev</button>
-    <button mat-stroked-button>{{counter}}</button>
-    <button mat-stroked-button (click)=projectsNext()>next</button>
-    <select [ngModel]="selectedDeviceObj" (ngModelChange)="onChangeObj($event)" name="sel3">
-      <option [ngValue]="i" *ngFor="let i of deviceObjects">{{i}}</option>
-    </select>
+    <mat-paginator [length]="allPageCount" [pageSize]="maxResult" [pageSizeOptions]="deviceObjects"
+        (page)="pageEvent = getPaginatorData($event)">
+      </mat-paginator>
   </div>
 </div>
