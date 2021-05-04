@@ -5,6 +5,7 @@ import com.academy.workSearch.dto.UserDTO;
 import com.academy.workSearch.dto.UserRegistrationDTO;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface UserService {
 
@@ -14,11 +15,11 @@ public interface UserService {
 
     UserDTO update(UserDTO user);
 
-    UserDTO deleteByEmail(String email);
+    UserDTO delete(UUID id);
+
+    UserDTO get(UUID id);
 
     UserAuthDTO get(UserRegistrationDTO userAuth);
-
-    UserDTO getByEmail(String email);
 
     boolean isPresentUserByEmail(String email);
 

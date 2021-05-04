@@ -19,7 +19,7 @@ import { UserHttpService } from 'src/app/common/services/user-http.service';
 })
 
 export class UserEditComponent implements OnInit, OnDestroy {
-  email: string;
+  id: string;
   user: User;
   userProfileForm: FormGroup;
   imageURL: string;
@@ -48,12 +48,12 @@ export class UserEditComponent implements OnInit, OnDestroy {
     private toastr: ToastrService,
     private skillService: SkillService) {
     this.initForm();
-    this.email = this.tokenHelper.getEmailFromToken();
+    this.id = this.tokenHelper.getIdFromToken();
     this.today = new Date();
   }
 
   ngOnInit(): void {
-    this.getUser(this.email);
+    this.getUser(this.id);
   }
 
   ngOnDestroy(): void {
@@ -92,8 +92,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  private getUser(email: string): void {
-    this.subscriptions.push(this.userService.getByEmail(email)
+  private getUser(id: string): void {
+    this.subscriptions.push(this.userService.get(id)
       .subscribe(
         response => {
           this.user = response;
@@ -139,7 +139,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
       .subscribe(
         response => {
           this.toastr.success('User data successfully saved!', 'Success!');
-          this.router2.navigateByUrl('my-profile');
+          this.router2.navigateByUrl('profile');
         },
         error => this.toastr.error(error, 'Something wrong'),
       ));
