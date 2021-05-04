@@ -1,66 +1,103 @@
+.all-projects{
+  margin-top: 50px;
+}
+.mat-paginator{
+  background-color: transparent;
+}
+/* Card with all new projects */
+.project-card-all {
+  text-align: left; 
+  max-width: 700px;
+  max-height: 300px;
+  margin: 40px auto;
+  background-color: rgb(233, 254, 255);
+  }
+.mat-card-content p{
+  margin: 0 16px;
+  text-align: justify;
+  }
+.mat-card-footer{
+  margin:0 16px;
+  display: flex;
+  justify-content: space-between;
+  }
+.mat-card-actions{
+  margin: 0 16px; 
+  }
+.creating-date{
+  text-align: right;
+}
+.skills-chip-all {
+  display: flex;
+  margin-left: 5px;
+  background-color: rgb(255, 255, 255);
+  border:1px solid gray;
+  }
 
-    .project-card {
-        text-align: left;
-        max-width: 700px;
-        max-height: 300px;
-        margin: 20px;
-      }
-      
-    .project-header-image {
-        background-size: cover;
-      }
-    .mat-card{
-        margin: 40px auto;
-        background-color: rgb(230, 255, 238);
-      }
-      .mat-card-title{
-         margin: auto;
-      }
-    .mat-card-content p{
-      margin: 0 16px;
-      text-align: justify;
-    }
-    .mat-card-footer{
-        margin:0 16px;
-        display: flex;
-        justify-content: space-between;
-    }
-    .mat-card-actions{
-      margin: 0 16px;
-    }
-    .creating-date{
-      text-align: right;
-    }
-    .skills{
-      text-align: left;
-    }
-    .skills-chip {
-      display: flex;
-      margin-left: 5px;
-    }
-    .search-area{
-      max-width: 100%;
-      width: 60%;
-      display: table;
-      margin-left: 260px;
-      margin-right: 50px;
-    }    
-     .search-form{
-      display: table-cell;
-      width: 60%;
-    }
-    .search-button{
-      display: table-cell;
-      width: 10%;
-    }
-    .reset-button{
-      display: table-cell;
-    width: 10%;
-    } 
-    .space{
-      width: 5%;
-      display: table-cell;
-    }
-    .pagination{
-       padding-bottom: 50px;
-    }
+
+
+/*Card with projects for logged in user by his skills*/
+.interest-projects{
+  margin: auto 50px ;
+}
+.project-card-user{
+  max-height: 100%;
+  width: 100%;
+  height: 80%;
+  margin: 0 10px;
+  padding: 16px 0;
+  background-color: rgb(233, 254, 255);
+  }
+.skills-chip-user {
+  display: flex;
+  background-color: rgb(255, 255, 255);
+  border:1px solid gray;
+  }
+.skills-chip-user-correct {
+  display: flex;
+  background-color: rgb(255, 255, 255);
+  border:2px solid green;
+  }
+h1{
+  text-align: center;
+  font-size: xx-large;
+  margin: 15px 0;
+  }
+
+
+
+/*Serach area*/
+.search-area{
+  max-width: 100%;
+  width: 60%;
+  display: table;
+  margin-left: 260px;
+  margin-right: 50px;
+  margin-top: 30px;
+  }    
+.search-form{
+  display: table-cell;
+  width: 60%;
+  }
+.search-button{
+  display: table-cell;
+  width: 10%;
+  }
+.reset-button{
+  display: table-cell;
+  width: 10%;
+  } 
+.space{
+  width: 5%;
+  display: table-cell;
+  }
+.pagination-menu{
+  padding-bottom: 30px;
+  margin: 20px auto;
+  }
+hr.vertical {
+  height:100%;
+  width:0;
+  border:1px solid black;
+  }
+
