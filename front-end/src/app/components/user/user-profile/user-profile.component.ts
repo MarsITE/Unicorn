@@ -30,7 +30,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   isOnlyWatch: boolean;
 
   constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router, private domSanitizer: DomSanitizer,
-              private toastr: ToastrService, private tokenHelper: TokenHelper) {
+    private toastr: ToastrService, private tokenHelper: TokenHelper) {
     this.id = this.tokenHelper.getIdFromToken();
     this.emailInUrl = router.snapshot.params.email;
     this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl('../../../assets/default-profile-photo.jpg');
@@ -53,27 +53,27 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
   private getUser(id: string): void {
     this.subscriptions.push(this.userService.get(id)
-    .subscribe(
-      response => {
-        this.user = response;
-        if (this.user.userInfo.imageUrl != null && this.user.userInfo.imageUrl !== '') {
-          this.getImage(this.user.userInfo.imageUrl);
-        }
-        this.setViewForWorkStatus();
-      },
-      error => this.toastr.error('Can not load user info!', 'Something wrong'),
-    ));
+      .subscribe(
+        response => {
+          this.user = response;
+          if (this.user.userInfo.imageUrl != null && this.user.userInfo.imageUrl !== '') {
+            this.getImage(this.user.userInfo.imageUrl);
+          }
+          this.setViewForWorkStatus();
+        },
+        error => this.toastr.error('Can not load user info!', 'Something wrong'),
+      ));
   }
 
   private getImage(imageUrl: string): void {
     this.subscriptions.push(this.userService.loadImage(imageUrl)
-    .subscribe(
-      response => {
-        this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(response));
-        sessionStorage.setItem('avatar', window.URL.createObjectURL(response));
-      },
-      error => this.toastr.error('Can not load user photo!', 'Something wrong'),
-    ));
+      .subscribe(
+        response => {
+          this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(response));
+          sessionStorage.setItem('avatar', window.URL.createObjectURL(response));
+        },
+        error => this.toastr.error('Can not load user photo!', 'Something wrong'),
+      ));
   }
 
   public edit(): void {
