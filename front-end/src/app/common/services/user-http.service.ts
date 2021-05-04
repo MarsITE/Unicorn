@@ -65,8 +65,8 @@ export class UserHttpService {
     return this.http.get(`${environment.url}/user-profile/load-photo/${imageURL}`,  this.authHeaderBlob());
   }
 
-  public saveImage(photo: any, id: string): Observable<Blob> {
-    return this.http.put<any>(`${environment.url}/user-profile/save-photo/${id}`, photo, this.authHeader());
+  public saveImage(photo: any, id: string, maxPhotoLength: BigInteger): Observable<Blob> {
+    return this.http.put<any>(`${environment.url}/user-profile/save-photo/${id}/${maxPhotoLength}`, photo, this.authHeader());
   }
 
   public loggedIn(): void {

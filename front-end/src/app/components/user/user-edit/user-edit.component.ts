@@ -31,6 +31,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
   private skills: Skill[] = [];
   private subscriptions: Subscription[] = [];
+  private maxPhotoLength: any = 2048;
 
   workStatuses: WorkStatus[] = [ // todo
     { value: 'PART_TIME', viewValue: 'Part time' },
@@ -39,8 +40,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
     { value: 'BUSY', viewValue: 'Busy' }
   ];
   selectedWorkStatus: WorkStatus = this.workStatuses[0];
-
-  @ViewChild('skillsSelect') skillsSelect: MatSelect;
 
   constructor(
     private userService: UserHttpService,
@@ -127,7 +126,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
     if (this.selectedImage != null) {
       const formData = new FormData();
       formData.append('image', this.selectedImage);
-      this.subscriptions.push(this.userService.saveImage(formData, this.user.userInfo.userInfoId)
+      this.subscriptions.push(this.userService.saveImage(formData, this.user.userInfo.userInfoId, this.maxPhotoLength)
         .subscribe(
           response => this.toastr.success('Image successfully saved!', 'Success!'),
           error => this.toastr.error(error, 'Something wrong'),
@@ -177,7 +176,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
     return userInfo;
   }
 
-  public loadImage(event): void {
+  public loadImage(event: any): void {
     this.selectedImage = event.target.files[0];
     if (!(this.selectedImage.type.match('jpg') || this.selectedImage.type.match('jpeg') || this.selectedImage.type.match('png'))) {
       this.toastr.error('Invalid format of photo. Choose jpg, png or jpeg', 'error');
