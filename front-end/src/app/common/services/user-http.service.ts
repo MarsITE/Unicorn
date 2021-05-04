@@ -38,12 +38,12 @@ export class UserHttpService {
     return this.http.post<UserRegistration>(`${environment.url}/registration`, user);
   }
 
-  public getByEmail(email: string): Observable<any> {
-    return this.http.get<User>(`${environment.url}/user/${email}`, this.authHeader());
+  public get(id: string): Observable<any> {
+    return this.http.get<User>(`${environment.url}/user/${id}`, this.authHeader());
   }
 
-  public deleteUser(email: string): Observable<any> {
-    return this.http.delete<User>(`${environment.url}/user/${email}`, this.authHeader());
+  public delete(id: string): Observable<any> {
+    return this.http.delete<User>(`${environment.url}/user/${id}`, this.authHeader());
   }
 
   public login(user: UserRegistration): Observable<boolean> {

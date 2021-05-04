@@ -38,7 +38,7 @@ public class UserInfoController {
      * @param id    user id
      * @return status updating
      */
-    @PutMapping("/save-photo/{id}/{maxFileLength}")
+    @PostMapping("/save-photo/{id}/{maxFileLength}")
     @ApiOperation(value = "Save user photo", notes = "Save user photo")
     public ResponseEntity<String> savePhoto(@RequestPart("image") MultipartFile image, @PathVariable(name = "id") String id, @PathVariable(name = "maxFileLength") long maxFileLength) {
         if (userInfoService.updateImage(image, id, maxFileLength)) {

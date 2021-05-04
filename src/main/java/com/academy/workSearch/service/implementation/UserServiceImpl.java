@@ -1,7 +1,7 @@
 package com.academy.workSearch.service.implementation;
 
 import com.academy.workSearch.dao.RoleDAO;
-import com.academy.workSearch.dao.implementation.UserDAOImpl;
+import com.academy.workSearch.dao.UserDAO;
 import com.academy.workSearch.dao.implementation.UserInfoDAOImpl;
 import com.academy.workSearch.dto.UserAuthDTO;
 import com.academy.workSearch.dto.UserDTO;
@@ -45,7 +45,7 @@ import static com.academy.workSearch.exceptionHandling.MessageConstants.*;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
-    private final UserDAOImpl userDAO;
+    private final UserDAO userDAO;
     private final UserInfoDAOImpl userInfoDAO;
     private final RoleDAO roleDAO;
     private final PasswordEncoder passwordEncoder;
@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
     private final EmailService emailService;
     private final FreeMarkerConfigurer freemarkerConfigurer;
     private final Environment env;
-    private final String timeToImproveAccount = " 1 day";
+    private final static String TIME_TO_IMPROVE_ACCOUNT = " 1 day ";
 
     /**
      * post construct set class type for dao
@@ -144,21 +144,21 @@ public class UserServiceImpl implements UserService {
         return USER_MAPPER.toUserDto(newUser);
     }
 
-    /**
-     * @param email for deleting
-     * @return deleted user
-     */
-    @Override
     @Transactional
-    public UserDTO deleteByEmail(String email) {
-        User user = getUser(email);
-        userDAO.deleteByEmail(email);
-        return USER_MAPPER.toUserDto(user);
+    @Override
+    public UserDTO delete(UUID id) {
+        return USER_MAPPER.toUserDto(userDAO.delete(id));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public UserDTO get(UUID id) {
+        return USER_MAPPER.toUserDto(userDAO.get(id).orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + id)));
     }
 
     /**
      * @param userRegistrationDTO auth data
-     * @return jwt token //todo
+     * @return jwt token which include itself access and refresh tokens
      * method:
      * 1. check if user exists
      * 2. authenticate user
@@ -197,16 +197,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * @param email get user
-     * @return user
-     */
-    @Transactional(readOnly = true)
-    @Override
-    public UserDTO getByEmail(String email) {
-        return USER_MAPPER.toUserDto(getUser(email));
-    }
-
-    /**
-     * @param email get user
      * @return check if this user exists
      */
     @Override
@@ -216,7 +206,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * @param userAuthDTO refresh token and email
-     * @return if refresh token valic generate new acces token and refresh token
+     * @return if refresh token is valid generate new access token and refresh token
      */
     @Override
     @Transactional(readOnly = true)
@@ -280,7 +270,7 @@ public class UserServiceImpl implements UserService {
                 userDAO.save(user);
             }
             model.put("token", user.getRegistrationToken());
-            model.put("time_to_improve", timeToImproveAccount);
+            model.put("time_to_improve", TIME_TO_IMPROVE_ACCOUNT);
             Template template = freemarkerConfigurer.getConfiguration().getTemplate("verify-email-message.txt");
             content = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
         } catch (IOException | TemplateException e) {
