@@ -38,7 +38,7 @@ public class UserController {
      * @return jwt tokrn
      */
     @PostMapping(value = {"/login"})
-    @ApiOperation(value = "Find user by email", notes = "Find user if exists")
+    @ApiOperation(value = "Auth", notes = "Find user if exists")
     public ResponseEntity<UserAuthDTO> login(@ApiParam(value = "email value for user you need to retrieve", required = true)
                                              @RequestBody UserRegistrationDTO userRegistrationDTO) {
         UserAuthDTO userAuthDTO = userService.get(userRegistrationDTO);
@@ -77,7 +77,7 @@ public class UserController {
     @GetMapping({"/user/{id}"})
     @ApiOperation(value = "Get user", notes = "Get user")
     public ResponseEntity<UserDTO> get(@PathVariable UUID id) {
-        logger.info("Find user with email = {}", id);
+        logger.info("Find user with id = {}", id);
         return ResponseEntity.ok(userService.get(id));
     }
 
