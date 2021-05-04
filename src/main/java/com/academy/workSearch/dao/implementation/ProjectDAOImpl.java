@@ -56,9 +56,28 @@ public class ProjectDAOImpl extends CrudDAOImpl<Project> implements ProjectDAO {
     public List<Project> searchBySkill(List<String> skills, int page, int maxResult, int maxNavigationPage, String sort) {
         Session session = sessionFactory.getCurrentSession();
         Query<Project> query;
-        query = session.createQuery("select p from Project p  join p.skills sk where sk.name in :skills", Project.class).setParameter("skills", skills);
+        query = session.createQuery("select p from Project p join p.skills sk where sk.name in :skills", Project.class)
+                .setParameter("skills", skills);
         PaginationResult<Project> paginationResult = new PaginationResult<>(query, page, maxResult, maxNavigationPage);
         return paginationResult.getList();
+    }
+
+    @Override
+    public Long getAllProjectsCount() {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("select count(*) from Project");
+        return (Long)query.uniqueResult();
+    }
+
+    @Override
+    public Long getAllProjectsCountBySkills(String skills) {
+        Session session = sessionFactory.getCurrentSession();
+        String sqlQuery = String.format("select count(*) from projects p join projects_skills ps on p.project_id = ps.project_id join skills s on ps.skill_id = s.skill_id where s.name in ('%s')",skills);
+        Query query = session.createNativeQuery(sqlQuery);
+//        Query query = session.createQuery("select count(all p) from Project p join p.skills sk where sk.name in:skills")
+//                .setParameter("skills", skills);
+//        return (Long)query.uniqueResult();
+        return ((Number)query.getSingleResult()).longValue();
     }
 
     @Override

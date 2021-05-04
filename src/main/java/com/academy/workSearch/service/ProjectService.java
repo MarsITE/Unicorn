@@ -24,7 +24,13 @@ public interface ProjectService {
 
     List<ProjectDTO> searchBySkill(List<String> skills, int page, int maxResult, int maxNavigationPage, String sort);
 
+    List<ProjectDTO> findUserProjectBySkills(UUID userId, int page, int maxResult, int maxNavigationPage, String sort);
+
     ProjectDTO addSkillsToProject(ProjectDTO projectDto, SkillDTO skillDTO);
 
     ProjectDTO update(ProjectDTO projectDTO);
+
+    Long getAllProjectsCount();
+
+    Long getAllProjectsCountBySkills(UUID userId);
 }
