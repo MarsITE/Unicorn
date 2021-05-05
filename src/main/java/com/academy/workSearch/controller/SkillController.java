@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -59,14 +60,21 @@ public class SkillController {
      */
     @PostMapping("/worker/skills")
     @ApiOperation(value = "Add new skill", notes = "Add new skill")
-    public ResponseEntity<List<SkillDetailsDTO>> addNewWokerSkills(@RequestBody @Valid List<SkillDetailsDTO> skills) {
+    public ResponseEntity<List<SkillDetailsDTO>> addSkillsForWorker(@RequestBody @Valid List<SkillDetailsDTO> skills,
+                                                                    @AuthenticationPrincipal User user) {
         logger.info("Attempt to add skills {}", skills);
-        return ResponseEntity.ok(
-                skills.stream().map(
-                    skill -> skillService.isPresentSkillByName(skill.getName()) ?
-                                skill : skillService.save(skill)
-                ).collect(Collectors.toList())
-        );
+        List<SkillDetailsDTO> approvedSkills = new ArrayList<>();
+        List<SkillDetailsDTO> unapprovedSkills = new ArrayList<>();
+        skills.forEach(skill -> {
+            if(skillService.isPresentSkillByName(skill.getName())){
+                approvedSkills.add(skill);
+            } else {
+                unapprovedSkills.add(skillService.save(skill));
+            }
+        });
+        String userEmail = "ch.sergij@gmail.com"; //user.getEmail();
+        skillService.sendEmail(userEmail, approvedSkills, unapprovedSkills);
+        return ResponseEntity.ok(unapprovedSkills);
     }
 
     /**

@@ -5,15 +5,29 @@ import com.academy.workSearch.dto.SkillDTO;
 import com.academy.workSearch.dto.SkillDetailsDTO;
 import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.exceptionHandling.exceptions.NotUniqueEntityException;
+import com.academy.workSearch.model.Mail;
 import com.academy.workSearch.model.Skill;
+import com.academy.workSearch.service.EmailService;
 import com.academy.workSearch.service.SkillService;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import io.jsonwebtoken.lang.Objects;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.academy.workSearch.dto.mapper.SkillDetailsMapper.SKILL_DETAILS_MAPPER;
 import static com.academy.workSearch.dto.mapper.SkillMapper.SKILL_MAPPER;
@@ -24,6 +38,9 @@ import static com.academy.workSearch.exceptionHandling.MessageConstants.*;
 @AllArgsConstructor
 public class SkillServiceImpl implements SkillService {
     private final SkillDAOImpl skillDAO;
+    private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+    private final FreeMarkerConfigurer freemarkerConfigurer;
+    private final EmailService emailService;
     private final String NO_SUCH_SKILL_FORMAT = "%s = %s";
 
     /**
@@ -126,4 +143,43 @@ public class SkillServiceImpl implements SkillService {
         return SKILL_DETAILS_MAPPER.toDto(skill);
     }
 
+    /**
+     *
+     * @param approvedSkills list of approved skills
+     * @param unapprovedSkills list of unapproved skills
+     * @return  void
+     */
+    @Override
+    public void sendEmail(String email, List<SkillDetailsDTO> approvedSkills, List<SkillDetailsDTO>unapprovedSkills) {
+        Function<List<SkillDetailsDTO>, String> getSkillsStr = skills ->
+                SKILL_DETAILS_MAPPER.toSkills(skills).stream()
+                        .map(skill -> skill.getName())
+                        .collect(Collectors.toList())
+                        .toString().replaceAll("[\\[\\]]","");
+        Mail mail = new Mail();
+        mail.setSubject("Your new skills at Worksearch.com");
+        mail.setEmail(email);
+        String content = "";
+        String approvedSkillsStr = getSkillsStr.apply(approvedSkills);
+        String unapprovedSkillsStr = getSkillsStr.apply(unapprovedSkills);
+        try {
+            Map<String, Object> model = new HashMap<>();
+            model.put("email", email);
+            StringBuilder htmlStr = new StringBuilder("");
+            if(!approvedSkillsStr.equals("")) {
+                htmlStr.append(String.format("<h4> new skills are: %s</h4>",approvedSkillsStr));
+            }
+            if(!unapprovedSkillsStr.equals("")) {
+                htmlStr.append(String.format("<h4> new skills that are waiting for approve by admin: %s</h4>", unapprovedSkillsStr));
+            }
+            model.put("Skills", htmlStr.toString());
+            Template template = freemarkerConfigurer.getConfiguration().getTemplate("add-new-skills-message.txt");
+            content = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+        } catch (IOException | TemplateException e) {
+            logger.info(e.getMessage());
+            e.printStackTrace();
+        }
+        mail.setMessage(content);
+        emailService.sendHtmlMessage(mail);
+    }
 }

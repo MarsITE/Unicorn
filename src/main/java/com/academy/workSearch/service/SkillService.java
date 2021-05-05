@@ -24,4 +24,6 @@ public interface SkillService {
     SkillDetailsDTO getByName(String name);
 
     boolean isPresentSkillByName(String skillName);
+
+    void sendEmail(String email, List<SkillDetailsDTO> approvedSkills, List<SkillDetailsDTO>unapprovedSkills);
 }
