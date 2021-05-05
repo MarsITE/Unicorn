@@ -1,13 +1,18 @@
 package com.academy.workSearch.model;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @Entity
-@Table( name = "skills",
+@Table(name = "skills",
         uniqueConstraints = {
                 @UniqueConstraint(
                         columnNames = "name",
@@ -20,7 +25,7 @@ public class Skill {
     private UUID skillId;
 
     @NotBlank(message = "The name of skill cannot be empty")
-    @Column(name = "name", length = 20, unique=true)
+    @Column(name = "name", length = 20, unique = true)
     private String name;
 
     @Column(name = "enabled")

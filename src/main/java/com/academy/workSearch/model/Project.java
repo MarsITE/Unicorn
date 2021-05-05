@@ -1,16 +1,21 @@
 package com.academy.workSearch.model;
 
 import com.academy.workSearch.model.enums.ProjectStatus;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @Entity
 @Table(name = "projects", uniqueConstraints = {
         @UniqueConstraint(
@@ -32,9 +37,9 @@ public class Project {
     @Column(name = "project_status")
     private ProjectStatus projectStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToMany
     @JoinColumn(name = "worker_id")
-    private User worker;
+    private List<ProjectUserInfo> workers;
 
     @NotNull
     @OneToOne
@@ -49,11 +54,6 @@ public class Project {
     )
     private Set<Skill> skills;
 
-
-    @OneToOne
-    @JoinColumn(name = "worker_rating_id")
-    private Rating workerRating;
-
     @OneToOne
     @JoinColumn(name = "owner_rating_id")
     private Rating employerRating;
@@ -62,4 +62,14 @@ public class Project {
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
+    @Override
+    public String toString() {
+        return "Project{" +
+                "projectId=" + projectId +
+                ", name='" + name +
+                ", description='" + description +
+                ", projectStatus=" + projectStatus +
+                ", creationDate=" + creationDate +
+                '}';
+    }
 }

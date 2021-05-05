@@ -56,7 +56,7 @@ public class ProjectController {
                                                                  @RequestParam(value = "sort", defaultValue = "desc") String sort,
                                                                  @RequestParam(value = "maxResult", defaultValue = "5") int maxResult,
                                                                  @RequestParam(value = "maxNavigationPage", defaultValue = "100") int maxNavigationPage,
-                                                                 @RequestParam(value = "skillList") List<String> skills){
+                                                                 @RequestParam(value = "skillList") List<String> skills) {
         List<ProjectDTO> projectsDto = projectService.searchBySkill(skills, page, maxResult, maxNavigationPage, sort);
         logger.info("Show projects with skills");
         logger.info(String.valueOf(skills));

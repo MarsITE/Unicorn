@@ -6,7 +6,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
+
 import java.util.List;
+import java.util.Set;
 
 @Mapper
 public interface SkillMapper {
@@ -27,5 +29,9 @@ public interface SkillMapper {
 
     List<SkillDTO> toSkillsDto(List<Skill> skills);
 
+    Set<SkillDTO> toSkillsDto(Set<Skill> skills);
+
     List<Skill> toSkills(List<SkillDTO> toSkillsDto);
+
+    Set<Skill> toSkills(Set<SkillDTO> toSkillsDto);
 }

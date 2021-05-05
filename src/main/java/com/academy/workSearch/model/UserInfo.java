@@ -2,17 +2,22 @@ package com.academy.workSearch.model;
 
 import com.academy.workSearch.model.enums.WorkStatus;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @Entity
 @Table(name = "users_info")
 public class UserInfo {
@@ -40,7 +45,7 @@ public class UserInfo {
     @ApiModelProperty(notes = "Date of birth of the user")
     private LocalDate birthDate;
 
-    @Column(name = "is_show_info", columnDefinition = "boolean default true")
+    @Column(name = "is_show_info")
     private boolean isShowInfo;
 
     @Enumerated(EnumType.STRING)
@@ -57,13 +62,9 @@ public class UserInfo {
     @ApiModelProperty(notes = "User photo")
     private String imageUrl;
 
-    @ManyToMany
-    @JoinTable(
-            name = "users_info_projects",
-            joinColumns = {@JoinColumn(name = "user_info_id")},
-            inverseJoinColumns = {@JoinColumn(name = "project_id")}
-    )
-    private Set<Project> projects;
+    @OneToMany
+    @JoinTable(name = "project_id")
+    private List<ProjectUserInfo> projects;
 
     @ManyToMany(cascade = CascadeType.DETACH)
     @JoinTable(

@@ -21,7 +21,7 @@
       <p>
         <mat-form-field>
           <input type="text" matInput placeholder="Mobile phone" formControlName="phone" mask="(+000) 00 00 00 000" />
-          <mat-error *ngIf="userProfileForm.controls.phone.invalid">Phone must be only numbers.</mat-error>
+          <mat-error *ngIf="userProfileForm.controls.phone.invalid">Phone must be only numbers in format <i>(380 XX XX XX XXX)</i></mat-error>
         </mat-form-field>
       </p>
 
@@ -58,10 +58,6 @@
           <mat-label>Skills</mat-label>
           <mat-select formControlName="skills" multiple >
             <mat-select-trigger>
-              <!-- {{skills.value ? skills.value[0] : ''}}
-              <span *ngIf="skills.value?.length > 1" class="example-additional-selection">
-                (+{{skills.value.length - 1}} {{skills.value?.length === 2 ? 'other' : 'others'}})
-              </span> -->
             </mat-select-trigger>
             <mat-option #matOption *ngFor="let skill of skillStrings" [value]="skill" checked
               (click)="setSelectedSkills(matOption)">

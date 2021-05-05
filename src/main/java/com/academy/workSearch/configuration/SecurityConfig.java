@@ -51,7 +51,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/v1/login",
                         "/api/v1/verify-email/*",
                         "/api/v1/refresh-token",
-                        "/api/v1/projects","/api/v1/worker",
+                        "/api/v1/projects",
+                        "/api/v1/worker",
                         "/api/v1/projects/search",
                         "/api/v1/projects/count/all",
                         "/api/v1/skills").permitAll()

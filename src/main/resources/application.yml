@@ -1,34 +1,46 @@
 logging:
-    file:
-        name: workSearch.log
-        path: ./
+  file:
+    name: workSearch.log
+    path: ./
 spring:
-    datasource:
-        driver-class-name: org.postgresql.Driver
-        password: ${POSTGRES_PASSWORD}
-        url: ${POSTGRES_URL}
-        username: ${POSTGRES_LOGIN}
-    jpa:
-        database: postgresql
-        database-platform: org.hibernate.dialect.PostgreSQL10Dialect
-        hibernate:
-            ddl-auto: update
-        open-in-view: false
-        show-sql: true
-    liquibase:
-        change-log: classpath:db/db.changelog-master.xml
-    mail:
-        host: smtp.gmail.com
-        password: ${MAIL_PASSWORD}
-        port: 587
-        properties:
-            mail:
-                smtp:
-                    auth: true
-                    starttls:
-                        enable: true
-        username: ${MAIL_USERNAME}
-    mvc:
-        hiddenmethod:
-            filter:
-                enabled: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: ${POSTGRES_PASSWORD}
+    url: ${POSTGRES_URL}
+    username: ${POSTGRES_LOGIN}
+  jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    show-sql: true
+  liquibase:
+    change-log: classpath:db/db.changelog-master.xml
+    enabled: true
+  mail:
+    host: smtp.gmail.com
+    password: ${MAIL_PASSWORD}
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    username: ${MAIL_USERNAME}
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+security:
+  require-ssl: true
+server:
+  ssl:
+    enabled: true
+    keyAlias: tomcat
+    key-store-password: admin1234
+    key-store: classpath:keystore.p12
+    key-store-type: PKCS12
+  port: 8081
+

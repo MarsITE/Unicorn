@@ -38,12 +38,12 @@ export class UserHttpService {
     return this.http.post<UserRegistration>(`${environment.url}/registration`, user);
   }
 
-  public getByEmail(email: string): Observable<any> {
-    return this.http.get<User>(`${environment.url}/user/${email}`, this.authHeader());
+  public get(id: string): Observable<any> {
+    return this.http.get<User>(`${environment.url}/user/${id}`, this.authHeader());
   }
 
-  public deleteUser(email: string): Observable<any> {
-    return this.http.delete<User>(`${environment.url}/user/${email}`, this.authHeader());
+  public delete(id: string): Observable<any> {
+    return this.http.delete<User>(`${environment.url}/user/${id}`, this.authHeader());
   }
 
   public login(user: UserRegistration): Observable<boolean> {
@@ -65,8 +65,8 @@ export class UserHttpService {
     return this.http.get(`${environment.url}/user-profile/load-photo/${imageURL}`,  this.authHeaderBlob());
   }
 
-  public saveImage(photo: any, id: string): Observable<Blob> {
-    return this.http.put<any>(`${environment.url}/user-profile/save-photo/${id}`, photo, this.authHeader());
+  public saveImage(photo: any, id: string, maxPhotoLength: BigInteger): Observable<Blob> {
+    return this.http.put<any>(`${environment.url}/user-profile/save-photo/${id}/${maxPhotoLength}`, photo, this.authHeader());
   }
 
   public loggedIn(): void {

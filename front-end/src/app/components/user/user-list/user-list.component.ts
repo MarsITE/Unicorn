@@ -45,9 +45,9 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   public showUserProfile(row: any): void {
     if (this.tokenHelper.getEmailFromToken() === row.email) {
-      this.router.navigateByUrl('my-profile');
+      this.router.navigateByUrl('profile');
     } else {
-      this.router.navigateByUrl(`my-profile/${row.email}`);
+      this.router.navigateByUrl(`profile/${row.id}`);
     }
   }
 
