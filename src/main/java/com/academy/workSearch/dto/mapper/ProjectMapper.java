@@ -81,8 +81,13 @@ public interface ProjectMapper {
 
     @Named("owner")
     default User owner(String ownerId) {
-        User user = new User();
-        user.setUserId(UUID.fromString(ownerId));
+        User user;
+        if (ownerId == null) {
+            user = null;
+        } else {
+            user = new User();
+            user.setUserId(UUID.fromString(ownerId));
+        }
         return user;
     }
 }

@@ -79,11 +79,11 @@ public class ProjectController {
         return new ResponseEntity<>(projectDto, HttpStatus.OK);
     }
 
-    @PutMapping()
+    @PutMapping("/{id}")
     @ApiOperation(value = "Update existing project", notes = "Update existing project")
-    public ResponseEntity<ProjectDTO> updateProject(@RequestBody ProjectDTO projectDto) {
-        logger.info("Update project with ID = {}", projectDto.getId());
-        projectService.update(projectDto);
+    public ResponseEntity<ProjectDTO> updateProject(@PathVariable UUID id, @RequestBody ProjectDTO projectDto) {
+        logger.info("Update project with ID = {}", id);
+        projectService.update(id, projectDto);
         return new ResponseEntity<>(projectDto, HttpStatus.OK);
     }
 
