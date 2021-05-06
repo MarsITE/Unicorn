@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +45,6 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     /**
-     *
      * @param userInfo dto
      * @return saved user info
      */
@@ -56,30 +56,34 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     /**
-     *
      * @param photo image of user
-     * @param id id for change name image
+     * @param id    id for change name image
      * @return status of saving
      */
     @Override
     @Transactional
-    public boolean updateImage(MultipartFile photo, String id) {
+    public boolean updateImage(MultipartFile photo, String id, long maxFileLength) {
         boolean isImageSave = false;
         try {
             byte[] img = photo.getBytes();
             String newNameImage = id + photo.getOriginalFilename();
             Path path = Paths.get(pathToFolder + newNameImage);
-            Files.write(path, img);
-            logger.info(photo.getOriginalFilename());
-            logger.info(path.toString());
+            File file = new File(pathToFolder + newNameImage);
+            if (isFileCorrectType(file) && isFileLessThanMaxFileLength(file.length(), maxFileLength)) {
+                Files.write(path, img);
+                logger.info(photo.getOriginalFilename());
+                logger.info(path.toString());
 
-            UUID uuid = UUID.fromString(id);
-            UserInfo userInfo = userInfoDAO.get(uuid)
-                    .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + id));
-            userInfo.setImageUrl(newNameImage);
-            userInfoDAO.save(userInfo);
-
-            isImageSave = true;
+                UUID uuid = UUID.fromString(id);
+                UserInfo userInfo = userInfoDAO.get(uuid)
+                        .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + id));
+                userInfo.setImageUrl(newNameImage);
+                userInfoDAO.save(userInfo);
+                isImageSave = true;
+                logger.info("Image saved!");
+            } else {
+                logger.info("Image isn't saved!");
+            }
         } catch (IOException e) {
             logger.trace(Arrays.toString(Arrays.stream(e.getStackTrace()).toArray()));
         }
@@ -87,7 +91,6 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     /**
-     *
      * @param imageName url
      * @return photo dto
      */
@@ -107,4 +110,13 @@ public class UserInfoServiceImpl implements UserInfoService {
         return photoDTO;
     }
 
+    private boolean isFileCorrectType(File file) {
+        String mimetype = new MimetypesFileTypeMap().getContentType(file);
+        String type = mimetype.split("/")[0];
+        return type.equals("image");
+    }
+
+    private boolean isFileLessThanMaxFileLength(long fileLength, long maxFileLength) {
+        return fileLength < maxFileLength;
+    }
 }

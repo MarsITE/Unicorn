@@ -1,13 +1,16 @@
 package com.academy.workSearch.service;
 
+import com.academy.workSearch.model.Role;
 import com.academy.workSearch.model.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Set;
+
 public interface JwtService {
 
-    boolean validateAccessToken(String token, UserDetails userDetails);
+    boolean isValidAccessToken(String token, UserDetails userDetails);
 
-    boolean validateRefreshToken(String token, String email);
+    boolean isValidRefreshToken(String token, String email);
 
     boolean isRegistrationTokenNotExpired(String token);
 
@@ -18,5 +21,7 @@ public interface JwtService {
     String generateRegistrationToken(String email);
 
     String getUsername(String token);
+
+    Set<Role> getRoles(String token);
 
 }

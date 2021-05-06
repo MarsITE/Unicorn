@@ -8,7 +8,7 @@ public interface UserInfoService {
 
     UserInfoDTO save(UserInfoDTO userInfo);
 
-    boolean updateImage(MultipartFile photo, String id);
+    boolean updateImage(MultipartFile photo, String id, long maxFileLength);
 
     PhotoDTO loadPhoto(String imageName);
 }

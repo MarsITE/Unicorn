@@ -66,4 +66,14 @@ public class Project {
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
+    @Override
+    public String toString() {
+        return "Project{" +
+                "projectId=" + projectId +
+                ", name='" + name +
+                ", description='" + description +
+                ", projectStatus=" + projectStatus +
+                ", creationDate=" + creationDate +
+                '}';
+    }
 }

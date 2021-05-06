@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping({"/api/v1"})
@@ -37,7 +38,7 @@ public class UserController {
      * @return jwt tokrn
      */
     @PostMapping(value = {"/login"})
-    @ApiOperation(value = "Find user by email", notes = "Find user if exists")
+    @ApiOperation(value = "Auth", notes = "Find user if exists")
     public ResponseEntity<UserAuthDTO> login(@ApiParam(value = "email value for user you need to retrieve", required = true)
                                              @RequestBody UserRegistrationDTO userRegistrationDTO) {
         UserAuthDTO userAuthDTO = userService.get(userRegistrationDTO);
@@ -59,25 +60,25 @@ public class UserController {
     }
 
     /**
-     * @param email user
+     * @param id user
      * @return delete exoting user
      */
-    @DeleteMapping({"/user/{email}"})
+    @DeleteMapping({"/user/{id}"})
     @ApiOperation(value = "Delete existing user", notes = "Delete existing user")
-    public ResponseEntity<?> delete(@PathVariable String email) {
-        logger.info("Delete existing user {}", email);
-        return ResponseEntity.ok(userService.deleteByEmail(email));
+    public ResponseEntity<?> delete(@PathVariable UUID id) {
+        logger.info("Delete existing user {}", id);
+        return ResponseEntity.ok(userService.delete(id));
     }
 
     /**
-     * @param email user
+     * @param id user
      * @return get user
      */
-    @GetMapping({"/user/{email}"})
+    @GetMapping({"/user/{id}"})
     @ApiOperation(value = "Get user", notes = "Get user")
-    public ResponseEntity<UserDTO> get(@PathVariable String email) {
-        logger.info("Find user with email = {}", email);
-        return ResponseEntity.ok(userService.getByEmail(email));
+    public ResponseEntity<UserDTO> get(@PathVariable UUID id) {
+        logger.info("Find user with id = {}", id);
+        return ResponseEntity.ok(userService.get(id));
     }
 
     /**

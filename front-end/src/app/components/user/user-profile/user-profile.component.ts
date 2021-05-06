@@ -14,7 +14,7 @@ import { TokenHelper } from 'src/app/common/helper/token.helper';
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit, OnDestroy {
-  email: string;
+  id: string;
   emailInUrl: string;
   user: User;
   imageUrl: string;
@@ -31,7 +31,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
   constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router, private domSanitizer: DomSanitizer,
               private toastr: ToastrService, private tokenHelper: TokenHelper) {
-    this.email = this.tokenHelper.getEmailFromToken();
+    this.id = this.tokenHelper.getIdFromToken();
     this.emailInUrl = router.snapshot.params.email;
     this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl('../../../assets/default-profile-photo.jpg');
   }
@@ -46,13 +46,13 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       this.getUser(this.emailInUrl);
       this.isOnlyWatch = true;
     } else {
-      this.getUser(this.email);
+      this.getUser(this.id);
       this.isOnlyWatch = false;
     }
   }
 
-  private getUser(email: string): void {
-    this.subscriptions.push(this.userService.getByEmail(email)
+  private getUser(id: string): void {
+    this.subscriptions.push(this.userService.get(id)
     .subscribe(
       response => {
         this.user = response;
@@ -77,7 +77,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
 
   public edit(): void {
-    this.router2.navigateByUrl(`my-profile-edit`);
+    this.router2.navigateByUrl(`profile-edit`);
   }
 
   public setViewForWorkStatus(): void {

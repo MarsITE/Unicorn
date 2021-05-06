@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ import java.util.Objects;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EmailServiceImpl implements EmailService {
     final Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
-    JavaMailSender emailSender;
+    JavaMailSenderImpl emailSender;
     Environment environment;
 
     /**
@@ -42,8 +42,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     /**
-     *
-     * @param mail entity with email, subject and message for recipient
+     * @param mail             entity with email, subject and message for recipient
      * @param pathToAttachment attachment
      * @throws MessagingException
      */
@@ -79,7 +78,6 @@ public class EmailServiceImpl implements EmailService {
             emailSender.send(message);
         } catch (MessagingException e) {
             logger.trace(Arrays.toString(Arrays.stream(e.getStackTrace()).toArray()));
-
         }
 
     }
