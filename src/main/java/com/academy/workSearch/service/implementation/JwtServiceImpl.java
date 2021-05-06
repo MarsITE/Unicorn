@@ -100,13 +100,17 @@ public class JwtServiceImpl implements JwtService {
      * @return 1 option from token exp: id, roles
      */
     private <T> T getClaim(String token, Function<Claims, T> claimResolver) {
+        return claimResolver.apply(getClaims(token));
+    }
+
+    private Claims getClaims(String token) {
         Claims claims = null;
         try {
             claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
         } catch (ExpiredJwtException e) {
-//            throw new ExpiredJwtException(null, null, "This token is expired!");
+            logger.info("This token is expired!");
         }
-        return claimResolver.apply(claims);
+        return claims;
     }
 
     /**
@@ -137,12 +141,8 @@ public class JwtServiceImpl implements JwtService {
      */
     @Override
     public Set<Role> getRoles(String token) {
-        Claims claims = null;
-        try {
-            claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
-        } catch (ExpiredJwtException e) {
-            logger.trace(Arrays.toString(Arrays.stream(e.getStackTrace()).toArray()));
-        }
+        Claims claims = getClaims(token);
+
         Set<Role> roles = new HashSet<>();
         if (claims != null) {
             if (claims.get("isAdmin") != null) {
@@ -160,12 +160,8 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public String getUserId(String token) {
-        Claims claims = null;
-        try {
-            claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
-        } catch (ExpiredJwtException e) {
-            logger.trace(Arrays.toString(Arrays.stream(e.getStackTrace()).toArray()));
-        }
+        Claims claims = getClaims(token);
+
         if (claims != null) {
             if (claims.get("id") != null) {
                 return claims.get("id").toString();
