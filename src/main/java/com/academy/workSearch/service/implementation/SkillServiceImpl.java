@@ -151,29 +151,24 @@ public class SkillServiceImpl implements SkillService {
      */
     @Override
     public void sendEmail(String email, List<SkillDetailsDTO> approvedSkills, List<SkillDetailsDTO>unapprovedSkills) {
-        Function<List<SkillDetailsDTO>, String> getSkillsStr = skills ->
+        Function<List<SkillDetailsDTO>, List<String>> getSkillNames = skills ->
                 SKILL_DETAILS_MAPPER.toSkills(skills).stream()
-                        .map(skill -> skill.getName())
-                        .collect(Collectors.toList())
-                        .toString().replaceAll("[\\[\\]]","");
+                        .map(Skill::getName)
+                        .collect(Collectors.toList());
         Mail mail = new Mail();
         mail.setSubject("Your new skills at Worksearch.com");
         mail.setEmail(email);
         String content = "";
-        String approvedSkillsStr = getSkillsStr.apply(approvedSkills);
-        String unapprovedSkillsStr = getSkillsStr.apply(unapprovedSkills);
+        List<String> approvedSkillNames = getSkillNames.apply(approvedSkills);
+        List<String> unapprovedSkillNames = getSkillNames.apply(unapprovedSkills);
         try {
             Map<String, Object> model = new HashMap<>();
             model.put("email", email);
-            StringBuilder htmlStr = new StringBuilder("");
-            if(!approvedSkillsStr.equals("")) {
-                htmlStr.append(String.format("<h4> new skills are: %s</h4>",approvedSkillsStr));
-            }
-            if(!unapprovedSkillsStr.equals("")) {
-                htmlStr.append(String.format("<h4> new skills that are waiting for approve by admin: %s</h4>", unapprovedSkillsStr));
-            }
-            model.put("Skills", htmlStr.toString());
-            Template template = freemarkerConfigurer.getConfiguration().getTemplate("add-new-skills-message.txt");
+            model.put("isPresentApprovedSkills", approvedSkillNames.size() > 0);
+            model.put("approvedSkills", approvedSkillNames);
+            model.put("isPresentUnapprovedSkills",unapprovedSkillNames.size() > 0);
+            model.put("unapprovedSkills", unapprovedSkillNames);
+            Template template = freemarkerConfigurer.getConfiguration().getTemplate("add-new-skills-message.ftl");
             content = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
         } catch (IOException | TemplateException e) {
             logger.info(e.getMessage());

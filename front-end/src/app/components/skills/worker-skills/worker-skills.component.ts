@@ -55,7 +55,7 @@ export class WorkerSkillsComponent implements OnInit, OnDestroy {
      this.skillService.addWorkerSkills(skills)
      .subscribe(data => {
        const message = `Skill has been added successfully`;
-      this.toastr.success(message, 'Success!');
+       this.toastr.success(message, 'Success!');
     },
     errMessage => { this.toastr.warning(errMessage, 'Warning!'); }
     );  

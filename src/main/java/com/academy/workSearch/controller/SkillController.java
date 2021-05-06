@@ -65,13 +65,15 @@ public class SkillController {
         logger.info("Attempt to add skills {}", skills);
         List<SkillDetailsDTO> approvedSkills = new ArrayList<>();
         List<SkillDetailsDTO> unapprovedSkills = new ArrayList<>();
-        skills.forEach(skill -> {
-            if(skillService.isPresentSkillByName(skill.getName())){
-                approvedSkills.add(skill);
-            } else {
-                unapprovedSkills.add(skillService.save(skill));
-            }
-        });
+        skills.stream()
+                .peek(s -> s.setName(s.getName().trim()))
+                .forEach(skill -> {
+                    if(skillService.isPresentSkillByName(skill.getName())){
+                        approvedSkills.add(skill);
+                    } else {
+                        unapprovedSkills.add(skillService.save(skill));
+                    }
+                });
         String userEmail = "ch.sergij@gmail.com"; //user.getEmail();
         skillService.sendEmail(userEmail, approvedSkills, unapprovedSkills);
         return ResponseEntity.ok(unapprovedSkills);
