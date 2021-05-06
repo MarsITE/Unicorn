@@ -8,7 +8,7 @@ import {ToastrService} from 'ngx-toastr';
 import {MatSelect} from '@angular/material/select';
 import {Skill} from 'src/app/common/model/skill';
 import {SkillService} from 'src/app/common/services/skill.service';
-import {first} from "rxjs/operators";
+import {first} from 'rxjs/operators';
 
 @Component({
   selector: 'app-project-edit',
@@ -65,14 +65,13 @@ export class ProjectEditComponent implements OnInit {
       .subscribe(
         (response: Project) => {
           this.project = response;
-          // this.setViewForProjectStatus(this.project.projectStatus);
           console.log('Project', this.project);
           this.projectEditForm.setValue({
             name: this.project.name,
             description: this.project.description,
             skills: this.project.skills,
             projectStatus: this.getProjectStatusValue(this.project.projectStatus)
-          })
+          });
           this.loadAllSkills();
         },
         (error) => {
@@ -81,7 +80,7 @@ export class ProjectEditComponent implements OnInit {
         () => {
           console.log('complete');
         }
-      )
+      );
   }
 
   update(): void {
