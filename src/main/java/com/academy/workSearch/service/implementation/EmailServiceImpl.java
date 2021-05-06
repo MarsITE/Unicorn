@@ -5,27 +5,30 @@ import com.academy.workSearch.service.EmailService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Objects;
 
 @Service
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EmailServiceImpl implements EmailService {
-    JavaMailSenderImpl emailSender;
+    final Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
+    JavaMailSender emailSender;
     Environment environment;
 
     /**
-     *
      * @param mail entity with email, subject and message for recipient
      */
     @Override
@@ -63,7 +66,6 @@ public class EmailServiceImpl implements EmailService {
     }
 
     /**
-     *
      * @param mail entity with email, subject and message for recipient
      */
     @Override
@@ -76,7 +78,8 @@ public class EmailServiceImpl implements EmailService {
             helper.setText(mail.getMessage(), true);
             emailSender.send(message);
         } catch (MessagingException e) {
-//            throw new MessagingException("Incorect user data");
+            logger.trace(Arrays.toString(Arrays.stream(e.getStackTrace()).toArray()));
+
         }
 
     }

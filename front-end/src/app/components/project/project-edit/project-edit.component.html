@@ -1,33 +1,61 @@
-<form class="project">
+<form [formGroup]="projectEditForm" class="project">
 
   <h1 mat-card-title>Edit Project</h1>
 
   <p>
-  <mat-form-field class="name">
-    <mat-label>Project name</mat-label>
-    <input matInput placeholder="project name" type="text" [(ngModel)] = "project.name" id="name" name="name" >
-  </mat-form-field>
+    <mat-form-field class="name">
+      <mat-label>Project name</mat-label>
+      <input matInput placeholder="Project name" type="text" formControlName="name"/>
+      <mat-error *ngIf="projectEditForm.controls.name.invalid">
+        Project name must be between 2 and 20 characters.
+      </mat-error>
+    </mat-form-field>
   </p>
 
   <p>
-  <mat-form-field class="name">
-    <mat-label>Description</mat-label>
-    <textarea  matInput placeholder="Some description" type="text" [(ngModel)] = "project.description" id="description" name="description"></textarea>
-  </mat-form-field> 
+    <mat-form-field class="name">
+      <mat-label>Description</mat-label>
+      <textarea matInput placeholder="Project description" type="text" formControlName="description" id="description"
+                formGroupName="description"></textarea>
+      <mat-error *ngIf="projectEditForm.controls.description.invalid">Description must be between 2 and 2000 characters.
+      </mat-error>
+    </mat-form-field>
   </p>
 
   <p>
-  <mat-form-field>
+    <mat-form-field>
       <mat-label>Project status</mat-label>
-      <mat-select [(value)]="project.projectStatus" #clientValue (selectionChange)="getProjectStatus($event.value)"
-        name="projectStatus" class="project-status">
+      <!--    <input matInput placeholder="Project name" type="text" formControlName = "name" id="name" formGroupName="name" >-->
+      <!--    <mat-select [(value)]="selectedProjectStatus.value" (selectionChange)="getProjectStatus($event.value)"-->
+      <mat-select formControlName="projectStatus" class="project-status">
         <mat-option *ngFor="let projectStatus of projectStatuses" [value]="projectStatus.value">
           {{ projectStatus.viewValue }}
         </mat-option>
       </mat-select>
-  </mat-form-field>  
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field appearance="fill">
+      <mat-label>Skills</mat-label>
+      <mat-select formControlName="skills"
+                  [compareWith]="skillComparison"
+                  multiple>
+
+        <mat-select-trigger>
+          <mat-chip-list>
+            <mat-chip *ngFor="let skill of projectEditForm.controls.skills.value">
+              {{ skill.name }}
+            </mat-chip>
+          </mat-chip-list>
+        </mat-select-trigger>
+
+        <mat-option *ngFor="let skill of allSkills" [value]="skill">
+          {{ skill.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
   </p>
 
-  <button mat-stroked-button (click) = update()>Update</button>
+  <button mat-stroked-button (click)=update()>Update</button>
 
 </form>

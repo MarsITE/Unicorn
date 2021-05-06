@@ -148,13 +148,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectDTO update(ProjectDTO projectDTO) {
-        Project oldProject = projectDAO.get(projectDTO.getId())
-                .orElseThrow(() -> new NoSuchEntityException(NO_PROJECT + projectDTO.getId()));
+    public ProjectDTO update(UUID id, ProjectDTO projectDTO) {
+        Project oldProject = projectDAO.get(id)
+                .orElseThrow(() -> new NoSuchEntityException(NO_PROJECT + id));
         Project newProject = ProjectMapper.INSTANCE.toEntity(projectDTO);
         oldProject.setName(newProject.getName());
         oldProject.setDescription(newProject.getDescription());
         oldProject.setProjectStatus(newProject.getProjectStatus());
+        oldProject.setSkills(newProject.getSkills());
         projectDAO.save(oldProject);
         return ProjectMapper.INSTANCE.toDto(oldProject);
     }

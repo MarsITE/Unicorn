@@ -22,6 +22,7 @@ import java.util.UUID;
                 columnNames = {"name", "owner_id"})
 })
 public class Project {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "project_id")
@@ -37,8 +38,11 @@ public class Project {
     @Column(name = "project_status")
     private ProjectStatus projectStatus;
 
-    @OneToMany
-    @JoinColumn(name = "user_info_project_id")
+    @OneToMany(
+            mappedBy = "project",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private List<ProjectUserInfo> workers;
 
     @NotNull

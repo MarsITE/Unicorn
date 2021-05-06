@@ -21,15 +21,15 @@ spring:
 #        drop-first: true
     mail:
         host: smtp.gmail.com
-        password: ${MAIL_PASSWORD}
         port: 587
+        username: ${MAIL_USERNAME}
+        password: ${MAIL_PASSWORD}
         properties:
             mail:
                 smtp:
                     auth: true
                     starttls:
                         enable: true
-        username: ${MAIL_USERNAME}
     mvc:
         hiddenmethod:
             filter:
