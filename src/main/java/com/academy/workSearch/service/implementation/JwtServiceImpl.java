@@ -158,6 +158,22 @@ public class JwtServiceImpl implements JwtService {
         return roles;
     }
 
+    @Override
+    public String getUserId(String token) {
+        Claims claims = null;
+        try {
+            claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        } catch (ExpiredJwtException e) {
+            logger.trace(Arrays.toString(Arrays.stream(e.getStackTrace()).toArray()));
+        }
+        if (claims != null) {
+            if (claims.get("id") != null) {
+                return claims.get("id").toString();
+            }
+        }
+        return "";
+    }
+
     /**
      * @param token access
      * @return get expiration date
