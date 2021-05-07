@@ -144,4 +144,8 @@ export class AllProjectsComponent implements OnInit {
   allProjectListSize(): boolean{
     return this.allPageCount > 5;
   }
+  
+  isProjectDBIsEmpty(): boolean {
+    return this.allPageCount == 0;
+  }
 }

@@ -170,9 +170,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Long getAllProjectsCountBySkills(UUID userId) {
+    public Long getAllProjectsCountByUserSkills(UUID userId) {
         List<String> userSkillNames = skillService.findAllByUserId(userId).stream().map(SkillDTO::getName).collect(Collectors.toList());
         return projectDAO.getAllProjectsCountBySkills(userSkillNames);
+    }
+
+    @Override
+    public Long getAllProjectsCountBySearchSkills(List<String> searchSkills) {
+        return projectDAO.getAllProjectsCountBySkills(searchSkills);
     }
 
     /**

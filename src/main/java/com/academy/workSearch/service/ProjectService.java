@@ -29,6 +29,9 @@ public interface ProjectService {
 
     Long getAllProjectsCount();
 
-    Long getAllProjectsCountBySkills(UUID userId);
+    Long getAllProjectsCountByUserSkills(UUID userId);
+
+    Long getAllProjectsCountBySearchSkills(List<String> searchSkills);
+
     ProjectDTO update(UUID id, ProjectDTO projectDTO);
 }

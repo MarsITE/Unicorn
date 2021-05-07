@@ -17,6 +17,7 @@ import { PageEvent } from '@angular/material/paginator';
 export class StartPageComponent implements OnInit {
   pageEventAllProjects: PageEvent;
   pageEventUserProjects: PageEvent;
+  pageEventSearchProjects: PageEvent;
   id: String;
   pageIndex: number = 1;
   pageSize: number = 5;
@@ -142,7 +143,6 @@ export class StartPageComponent implements OnInit {
     this.projectService.getAllProjectsCountBySkills().subscribe(
       (response: number) => {
         this.allPageBySkillsCount = response;
-        console.log("count", response)
       },
       (error) => {
         console.log("error", error)
@@ -161,6 +161,7 @@ export class StartPageComponent implements OnInit {
 
   reset() {
     this.myForm.reset();
+    this.myForm.value.skillName.length=0;
     this.getProjects(this.pageSize);
   }
 
@@ -261,10 +262,10 @@ getPaginatorData(event?:PageEvent){
   if(event.pageIndex + 1 === this.pageIndex + 1){
     this.projectsNext();
     }
-  if(event.pageIndex + 1 === this.pageIndex - 1){
+  else if(event.pageIndex + 1 === this.pageIndex - 1){
     this.projectsPrev();
    }   
-  if(event.pageSize != this.pageSize){
+  else if(event.pageSize != this.pageSize){
     this.onChangeObjAll(event.pageSize);
   }
 }
@@ -272,8 +273,12 @@ getPaginatorData(event?:PageEvent){
 userProjectListSize():boolean{
   return this.allPageBySkillsCount > 5;
 }
+
 allProjectListSize(): boolean{
   return this.allPageCount > 5;
 }
 
+isProjectDBIsEmpty(): boolean {
+  return this.allPageCount == 0;
+}
 }

@@ -41,6 +41,10 @@ export class ProjectService {
     .set('sort', sort)
     .set('maxResult', maxResult.toString());
   }
+  private searchCountParam(_skillList: String[]):any {
+    return new HttpParams()
+    .set('skillList', _skillList.toString());
+  }
 
   public getProjects(counter: string, sort: string, maxResult: string, showAll: boolean = true): Observable<Project[]> {
     const options = {
@@ -102,7 +106,14 @@ export class ProjectService {
   }
 
   public getAllProjectsCountBySkills(): Observable<number> {
-    return this.http.get<number>(`${environment.url}/projects/count/skills`, {
+    return this.http.get<number>(`${environment.url}/projects/count/user/skills`, {
+      headers: this.authHeader()
+    });
+  }
+
+  public getAllProjectsCountBySearchSkills(_skillList: String[]): Observable<number> {
+    return this.http.get<number>(`${environment.url}/projects/count/search`,{
+      params: this.searchCountParam(_skillList),
       headers: this.authHeader()
     });
   }

@@ -1,3 +1,10 @@
+.welcome-message {
+  margin-top: 220px;
+}
+h2,h3{
+  text-align: center;
+  margin: 0;
+}
 .all-projects{
   margin-top: 50px;
 }

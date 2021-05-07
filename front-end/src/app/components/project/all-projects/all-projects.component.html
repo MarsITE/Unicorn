@@ -1,36 +1,41 @@
 <div class="container" id="main-container">
-  <div *ngFor="let project of projects">
-    <mat-card class="project-card">
-      <mat-card-header>
-        <mat-card-title>{{project?.name}}</mat-card-title>
-        <mat-card-subtitle>{{project?.projectStatus}}</mat-card-subtitle>
-      </mat-card-header>
-
-      <mat-card-content>
-        <p>{{setLimitOfText(project.description)}}</p>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-stroked-button (click)=showProjectDescription(project.id)>More</button>
-        <button mat-stroked-button>Owner</button>
-      </mat-card-actions>
-      <mat-card-footer>
-        <mat-card-subtitle class="skills">
-          <mat-chip-list>
-            <div *ngFor="let skill of project?.skills">
-              <mat-chip class="skills-chip"
-                [ngStyle]="{'border':isSkillPresentInUser(skill.name) ? '2px solid green' : '1px solid gray'}">
-                  {{converToPlainSkills(skill.name)}}
-              </mat-chip>
-            </div>
-          </mat-chip-list>
-        </mat-card-subtitle>
-        <mat-card-subtitle class="creating-date"> {{project?.creationDate|date}}</mat-card-subtitle>
-      </mat-card-footer>
-    </mat-card>
+  <div *ngIf="isProjectDBIsEmpty()" class="welcome-message">
+    <h2>It`s still empty here...</h2>
   </div>
-  <div mat-card-title class="pagination" *ngIf="allProjectListSize()">
-    <mat-paginator [length]="allPageCount" [pageSize]="pageSize" [pageSizeOptions]="deviceObjects"
+  <div *ngIf="!isProjectDBIsEmpty()">
+    <div *ngFor="let project of projects">
+      <mat-card class="project-card">
+        <mat-card-header>
+          <mat-card-title>{{project?.name}}</mat-card-title>
+          <mat-card-subtitle>{{project?.projectStatus}}</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <p>{{setLimitOfText(project.description)}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-stroked-button (click)=showProjectDescription(project.id)>More</button>
+          <button mat-stroked-button>Owner</button>
+        </mat-card-actions>
+        <mat-card-footer>
+          <mat-card-subtitle class="skills">
+            <mat-chip-list>
+              <div *ngFor="let skill of project?.skills">
+                <mat-chip class="skills-chip"
+                  [ngStyle]="{'border':isSkillPresentInUser(skill.name) ? '2px solid green' : '1px solid gray'}">
+                  {{converToPlainSkills(skill.name)}}
+                </mat-chip>
+              </div>
+            </mat-chip-list>
+          </mat-card-subtitle>
+          <mat-card-subtitle class="creating-date"> {{project?.creationDate|date}}</mat-card-subtitle>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+    <div mat-card-title class="pagination" *ngIf="allProjectListSize()">
+      <mat-paginator [length]="allPageCount" [pageSize]="pageSize" [pageSizeOptions]="deviceObjects"
         (page)="pageEventProjects = getPaginatorDataAllProjects($event)">
       </mat-paginator>
+    </div>
   </div>
 </div>

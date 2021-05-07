@@ -83,12 +83,19 @@ public class ProjectController {
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
 
-    @GetMapping("/count/skills")
-    @ApiOperation(value = "count all projects by skills", notes = "Return long as count of all projects by skills")
-    public ResponseEntity<Long> getCountOfAllProjectsBySkills(@AuthenticationPrincipal User user){
+    @GetMapping("/count/user/skills")
+    @ApiOperation(value = "count all projects by skills", notes = "Return long as count of all projects by user skills")
+    public ResponseEntity<Long> getCountOfAllProjectsByUserSkills(@AuthenticationPrincipal User user){
         UUID userId = user.getUserId();
-        Long count = projectService.getAllProjectsCountBySkills(userId);
+        Long count = projectService.getAllProjectsCountByUserSkills(userId);
         logger.info(count.toString());
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+
+    @GetMapping("/count/search")
+    @ApiOperation(value = "count all projects by search skills", notes = "Return long as count of all projects by search skills")
+    public ResponseEntity<Long> getCountOfAllProjectsBySearchSkills(@RequestParam(value = "skillList") List<String> skills){
+        Long count = projectService.getAllProjectsCountBySearchSkills(skills);
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
 

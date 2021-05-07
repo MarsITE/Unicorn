@@ -1,100 +1,105 @@
 <div class="container" id="main-container">
-
-  <div *ngIf="isUserLogedIn()" class="interest-projects">
-    <div *ngIf="isUserHasSkills()">
-      <h1>It may interest You</h1>
-      <mat-grid-list cols="5" rowHeight="9:10">
-        <mat-grid-tile *ngFor="let project of workerProjects">
-          <mat-card class="project-card-user">
-            <mat-card-header class="card-header-user">
-              <mat-card-title>{{project?.name}}</mat-card-title>
-              <mat-card-subtitle>{{project?.projectStatus}}</mat-card-subtitle>
-            </mat-card-header>
-            <mat-card-actions>
-              <button *ngIf="!isUserLogedIn()" mat-stroked-button (click)="navigateByLink('login')">More</button>
-              <button *ngIf="isUserLogedIn()" mat-stroked-button
-                (click)=showProjectDescription(project.id)>More</button>
-              <button mat-stroked-button>Owner</button>
-            </mat-card-actions>
-            <mat-card-footer>
-              <mat-card-subtitle class="skills">
-                <mat-chip-list>
-                  <div *ngFor="let skill of project?.skills">
-                    <mat-chip class="skills-chip-user"
-                      [ngStyle]="{'border':isSkillPresentInUser(skill.name) ? '2px solid green' : '1px solid gray'}">
-                      {{converToPlainSkills(skill.name)}}
-                    </mat-chip>
-                  </div>
-                </mat-chip-list>
-              </mat-card-subtitle>
-            </mat-card-footer>
-          </mat-card>
-        </mat-grid-tile>
-      </mat-grid-list>
-      <div *ngIf="userProjectListSize()">
-      <mat-paginator [length]="allPageBySkillsCount" [pageSize]="pageSize" [pageSizeOptions]="deviceObjects"
-        (page)="pageEventUserProjects = getPaginatorDataUser($event)">
-      </mat-paginator>
-    </div>
-      <!-- <hr> -->
-    </div>
+  <div *ngIf="isProjectDBIsEmpty()" class="welcome-message">
+    <h2>Welcome at Work Search!</h2>
+    <h3>Sorry, but there are no offers yet.</h3>
+    <h3>You can create your own proposal </h3>
+    <h3>or wait for someone to do so</h3>
   </div>
-
-
-  <div class="all-projects">
-    <h1>Fresh offers</h1>
-    <div class="search-area">
-      <div class="search-form">
-        <form [formGroup]="myForm">
-          <ng-multiselect-dropdown name="skillName" [placeholder]="'Choose skills to find projects:'"
-            [data]="skillsName" formControlName="skillName" [disabled]="disabled" [settings]="dropdownSettings">
-          </ng-multiselect-dropdown>
-        </form>
-      </div>
-      <div class="space"></div>
-      <div class="search-button">
-        <button mat-stroked-button (click)=search()>Search</button>
-      </div>
-      <div class="reset-button">
-        <button mat-stroked-button (click)=reset()>Reset</button>
+  <div *ngIf="!isProjectDBIsEmpty()">
+    <div *ngIf="isUserLogedIn()" class="interest-projects">
+      <div *ngIf="isUserHasSkills()">
+        <h1>It may interest You</h1>
+        <mat-grid-list cols="5" rowHeight="9:10">
+          <mat-grid-tile *ngFor="let project of workerProjects">
+            <mat-card class="project-card-user">
+              <mat-card-header class="card-header-user">
+                <mat-card-title>{{project?.name}}</mat-card-title>
+                <mat-card-subtitle>{{project?.projectStatus}}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-actions>
+                <button *ngIf="!isUserLogedIn()" mat-stroked-button (click)="navigateByLink('login')">More</button>
+                <button *ngIf="isUserLogedIn()" mat-stroked-button
+                  (click)=showProjectDescription(project.id)>More</button>
+                <button mat-stroked-button>Owner</button>
+              </mat-card-actions>
+              <mat-card-footer>
+                <mat-card-subtitle class="skills">
+                  <mat-chip-list>
+                    <div *ngFor="let skill of project?.skills">
+                      <mat-chip class="skills-chip-user"
+                        [ngStyle]="{'border':isSkillPresentInUser(skill.name) ? '2px solid green' : '1px solid gray'}">
+                        {{converToPlainSkills(skill.name)}}
+                      </mat-chip>
+                    </div>
+                  </mat-chip-list>
+                </mat-card-subtitle>
+              </mat-card-footer>
+            </mat-card>
+          </mat-grid-tile>
+        </mat-grid-list>
+        <div *ngIf="userProjectListSize()">
+          <mat-paginator [length]="allPageBySkillsCount" [pageSize]="pageSize" [pageSizeOptions]="deviceObjects"
+            (page)="pageEventUserProjects = getPaginatorDataUser($event)">
+          </mat-paginator>
+        </div>
+        <!-- <hr> -->
       </div>
     </div>
 
-    <div *ngFor="let project of projects">
-      <mat-card class="project-card-all">
-        <mat-card-header>
-          <mat-card-title>{{project?.name}}</mat-card-title>
-          <mat-card-subtitle>{{project?.projectStatus}}</mat-card-subtitle>
-        </mat-card-header>
+    <div class="all-projects">
+      <h1>Fresh offers</h1>
+      <div class="search-area">
+        <div class="search-form">
+          <form [formGroup]="myForm">
+            <ng-multiselect-dropdown name="skillName" [placeholder]="'Choose skills to find projects:'"
+              [data]="skillsName" formControlName="skillName" [disabled]="disabled" [settings]="dropdownSettings">
+            </ng-multiselect-dropdown>
+          </form>
+        </div>
+        <div class="space"></div>
+        <div class="search-button">
+          <button mat-stroked-button (click)=search()>Search</button>
+        </div>
+        <div class="reset-button">
+          <button mat-stroked-button (click)=reset()>Reset</button>
+        </div>
+      </div>
 
-        <mat-card-content>
-          <p>{{setLimitOfText(project.description)}}</p>
-        </mat-card-content>
-        <mat-card-actions>
-          <button *ngIf="!isUserLogedIn()" mat-stroked-button (click)="navigateByLink('login')">More</button>
-          <button *ngIf="isUserLogedIn()" mat-stroked-button (click)=showProjectDescription(project.id)>More</button>
-          <button mat-stroked-button>Owner</button>
-        </mat-card-actions>
-        <mat-card-footer>
-          <mat-card-subtitle class="skills">
-            <mat-chip-list>
-              <div *ngFor="let skill of project?.skills">
-                <mat-chip class="skills-chip-user"
-                  [ngStyle]="{'border':isSkillPresentInUser(skill.name) ? '2px solid green' : '1px solid gray'}">
-                  {{converToPlainSkills(skill.name)}}
-                </mat-chip>
-              </div>
-            </mat-chip-list>
-          </mat-card-subtitle>
-          <mat-card-subtitle class="creating-date"> {{project?.creationDate|date}}</mat-card-subtitle>
-        </mat-card-footer>
-      </mat-card>
-    </div>
+      <div *ngFor="let project of projects">
+        <mat-card class="project-card-all">
+          <mat-card-header>
+            <mat-card-title>{{project?.name}}</mat-card-title>
+            <mat-card-subtitle>{{project?.projectStatus}}</mat-card-subtitle>
+          </mat-card-header>
 
-    <div class="pagination-menu" *ngIf="allProjectListSize()">
-      <mat-paginator [length]="allPageCount" [pageSize]="pageSize" [pageSizeOptions]="deviceObjects"
-        (page)="pageEventAllProjects = getPaginatorData($event)">
-      </mat-paginator>
+          <mat-card-content>
+            <p>{{setLimitOfText(project.description)}}</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button *ngIf="!isUserLogedIn()" mat-stroked-button (click)="navigateByLink('login')">More</button>
+            <button *ngIf="isUserLogedIn()" mat-stroked-button (click)=showProjectDescription(project.id)>More</button>
+            <button mat-stroked-button>Owner</button>
+          </mat-card-actions>
+          <mat-card-footer>
+            <mat-card-subtitle class="skills">
+              <mat-chip-list>
+                <div *ngFor="let skill of project?.skills">
+                  <mat-chip class="skills-chip-user"
+                    [ngStyle]="{'border':isSkillPresentInUser(skill.name) ? '2px solid green' : '1px solid gray'}">
+                    {{converToPlainSkills(skill.name)}}
+                  </mat-chip>
+                </div>
+              </mat-chip-list>
+            </mat-card-subtitle>
+            <mat-card-subtitle class="creating-date"> {{project?.creationDate|date}}</mat-card-subtitle>
+          </mat-card-footer>
+        </mat-card>
+      </div>
+      <div class="pagination-menu" *ngIf="allProjectListSize()">
+        <mat-paginator [length]="allPageCount" [pageSize]="pageSize" [pageSizeOptions]="deviceObjects"
+          (page)="pageEventAllProjects = getPaginatorData($event)">
+        </mat-paginator>
+      </div>
     </div>
   </div>
 </div>
