@@ -5,7 +5,9 @@ import liquibase.database.Database;
 import liquibase.diff.output.DiffOutputControl;
 import liquibase.exception.LiquibaseException;
 import liquibase.integration.commandline.CommandLineUtils;
+import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.FileSystemResourceAccessor;
+import liquibase.resource.ResourceAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,17 +26,19 @@ public class LiquibaseGenerateChangelogConfig {
     @Bean
     public void generateChangeLog() {
         final String pathToChangeLog = System.getProperty("user.dir") + "/src/main/resources/db/db.changelog-master.xml";
+        final String pathToOutputSql = System.getProperty("user.dir") + "/src/main/resources/db/output.sql";
         Database database1;
         Database database2;
+        ResourceAccessor accessor = new ClassLoaderResourceAccessor(org.postgresql.Driver.class.getClassLoader());
         try {
-            database1 = CommandLineUtils.createDatabaseObject(org.postgresql.Driver.class.getClassLoader(), env.getProperty("POSTGRES_URL"), env.getProperty("POSTGRES_LOGIN"),
+            database1 = CommandLineUtils.createDatabaseObject(accessor, env.getProperty("POSTGRES_URL"), env.getProperty("POSTGRES_LOGIN"),
                     env.getProperty("POSTGRES_PASSWORD"), "org.postgresql.Driver", null, null, false, false, null, null, null, null, null, null, null);
 
 
-            database2 = CommandLineUtils.createDatabaseObject(org.postgresql.Driver.class.getClassLoader(), env.getProperty("POSTGRES_URL"), env.getProperty("POSTGRES_LOGIN"),
+            database2 = CommandLineUtils.createDatabaseObject(accessor, env.getProperty("POSTGRES_URL"), env.getProperty("POSTGRES_LOGIN"),
                     env.getProperty("POSTGRES_PASSWORD"), "org.postgresql.Driver", null, null, false, false, null, null, null, null, null, null, null);
 
-            File sql = new File(System.getProperty("user.dir") + "/src/main/resources/db/output.sql");
+            File sql = new File(pathToOutputSql);
             Liquibase liquibase = new Liquibase(pathToChangeLog, new FileSystemResourceAccessor(), database1);
             liquibase.update("Update", new FileWriter(sql));
 
