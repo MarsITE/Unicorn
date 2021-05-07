@@ -63,7 +63,7 @@ public class UserInfo {
     private String imageUrl;
 
     @OneToMany
-    @JoinTable(name = "project_id")
+    @JoinColumn(name = "users_info_projects_id")
     private List<ProjectUserInfo> projects;
 
     @ManyToMany(cascade = CascadeType.DETACH)

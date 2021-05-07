@@ -38,7 +38,7 @@ public class Project {
     private ProjectStatus projectStatus;
 
     @OneToMany
-    @JoinColumn(name = "worker_id")
+    @JoinColumn(name = "users_info_projects_id")
     private List<ProjectUserInfo> workers;
 
     @NotNull
