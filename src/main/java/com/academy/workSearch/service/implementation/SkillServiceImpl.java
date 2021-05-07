@@ -11,7 +11,6 @@ import com.academy.workSearch.service.EmailService;
 import com.academy.workSearch.service.SkillService;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import io.jsonwebtoken.lang.Objects;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +21,7 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -176,5 +172,24 @@ public class SkillServiceImpl implements SkillService {
         }
         mail.setMessage(content);
         emailService.sendHtmlMessage(mail);
+    }
+
+    /**
+     *
+     * @param skills list of new skills
+     * @return  saved skills
+     */
+    @Override
+    public List<SkillDetailsDTO> saveWorkerSkills(List<SkillDetailsDTO> skills, UUID userId){
+        List<Skill> savedSkills = skills.stream()
+                .peek(s -> s.setName(s.getName().trim()))
+                .map(skill -> skillDAO.getByName(skill.getName())
+                                    .orElse(SKILL_DETAILS_MAPPER.toEntity(save(skill))))
+                .collect(Collectors.toList());
+        List<Skill> approvedSkills = savedSkills.stream().filter(skill -> skill.isEnabled()).collect(Collectors.toList());
+        List<Skill> unapprovedSkills = savedSkills.stream().filter(skill -> !skill.isEnabled()).collect(Collectors.toList());
+        String userEmail = "ch.sergij@gmail.com"; //user.getEmail();
+        sendEmail(userEmail, SKILL_DETAILS_MAPPER.toSkillsDto(approvedSkills), SKILL_DETAILS_MAPPER.toSkillsDto(unapprovedSkills));
+    return SKILL_DETAILS_MAPPER.toSkillsDto(savedSkills);
     }
 }

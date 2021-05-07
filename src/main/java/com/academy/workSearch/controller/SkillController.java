@@ -63,20 +63,7 @@ public class SkillController {
     public ResponseEntity<List<SkillDetailsDTO>> addSkillsForWorker(@RequestBody @Valid List<SkillDetailsDTO> skills,
                                                                     @AuthenticationPrincipal User user) {
         logger.info("Attempt to add skills {}", skills);
-        List<SkillDetailsDTO> approvedSkills = new ArrayList<>();
-        List<SkillDetailsDTO> unapprovedSkills = new ArrayList<>();
-        skills.stream()
-                .peek(s -> s.setName(s.getName().trim()))
-                .forEach(skill -> {
-                    if(skillService.isPresentSkillByName(skill.getName())){
-                        approvedSkills.add(skill);
-                    } else {
-                        unapprovedSkills.add(skillService.save(skill));
-                    }
-                });
-        String userEmail = "ch.sergij@gmail.com"; //user.getEmail();
-        skillService.sendEmail(userEmail, approvedSkills, unapprovedSkills);
-        return ResponseEntity.ok(unapprovedSkills);
+        return ResponseEntity.ok(skillService.saveWorkerSkills(skills, user.getUserId()));
     }
 
     /**

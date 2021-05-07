@@ -26,4 +26,6 @@ public interface SkillService {
     boolean isPresentSkillByName(String skillName);
 
     void sendEmail(String email, List<SkillDetailsDTO> approvedSkills, List<SkillDetailsDTO>unapprovedSkills);
+
+    List<SkillDetailsDTO> saveWorkerSkills(List<SkillDetailsDTO> skills, UUID userId);
 }
