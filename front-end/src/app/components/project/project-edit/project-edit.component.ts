@@ -49,7 +49,7 @@ export class ProjectEditComponent implements OnInit {
     this.projectEditForm = new FormGroup({
       name: new FormControl(
         '',
-        [Validators.required, Validators.minLength(2), Validators.maxLength(20)]),
+        [Validators.required, Validators.minLength(2), Validators.maxLength(50)]),
       description: new FormControl(
         '',
         [Validators.required, Validators.minLength(20), Validators.maxLength(2000)]),
