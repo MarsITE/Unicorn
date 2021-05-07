@@ -55,7 +55,7 @@ export class ProjectAddComponent implements OnInit {
      this.projectForm = new FormGroup({
        name: new FormControl(
          name,
-         [Validators.required, Validators.minLength(2), Validators.maxLength(20)]),
+         [Validators.required, Validators.minLength(2), Validators.maxLength(50)]),
          description: new FormControl(
            description,
            [Validators.required, Validators.minLength(20), Validators.maxLength(2000)]),

@@ -62,11 +62,8 @@ public class UserInfo {
     @ApiModelProperty(notes = "User photo")
     private String imageUrl;
 
-    @OneToMany(
-            mappedBy = "userInfo",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+    @OneToMany
+    @JoinColumn(name = "users_info_projects_id")
     private List<ProjectUserInfo> projects;
 
     @ManyToMany(cascade = CascadeType.DETACH)

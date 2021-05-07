@@ -105,6 +105,7 @@ public class UserServiceImpl implements UserService {
 
         User user = USER_AUTH_MAPPER.toUser(userRegistrationDTO);
         UserInfo userInfo = new UserInfo();
+        userInfo.setShowInfo(true);
         userInfo.setUserInfoId(userInfoDAO.saveAndGetId(userInfo));
         user.setUserInfo(userInfo);
         user.setAccountStatus(AccountStatus.NOT_ACTIVE);

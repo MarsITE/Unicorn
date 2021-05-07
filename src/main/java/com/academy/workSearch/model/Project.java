@@ -38,11 +38,8 @@ public class Project {
     @Column(name = "project_status")
     private ProjectStatus projectStatus;
 
-    @OneToMany(
-            mappedBy = "project",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+    @OneToMany
+    @JoinColumn(name = "users_info_projects_id")
     private List<ProjectUserInfo> workers;
 
     @NotNull
