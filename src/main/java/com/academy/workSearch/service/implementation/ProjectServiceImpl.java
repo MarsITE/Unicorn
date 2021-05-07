@@ -20,10 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.academy.workSearch.exceptionHandling.MessageConstants.NOT_UNIQUE_PROJECT;
 import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_PROJECT;
@@ -36,6 +34,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectDAO projectDAO;
     private final UserDAOImpl userDAO;
     private final RoleDAO roleDAO;
+    private final SkillServiceImpl skillService;
 
     @PostConstruct
     private void setTypeClass() {
@@ -106,8 +105,13 @@ public class ProjectServiceImpl implements ProjectService {
      */
     @Override
     public List<ProjectDTO> searchBySkill(List<String> skills, int page, int maxResult, int maxNavigationPage, String sort) {
-        List<ProjectDTO> sds = ProjectMapper.INSTANCE.toProjectsDto(projectDAO.searchBySkill(skills, page, maxResult, maxNavigationPage, sort));
-        return sds;
+        return ProjectMapper.INSTANCE.toProjectsDto(projectDAO.searchBySkill(skills, page, maxResult, maxNavigationPage, sort));
+    }
+
+    @Override
+    public List<ProjectDTO> findUserProjectBySkills(UUID userId, int page, int maxResult, int maxNavigationPage, String sort) {
+        List<String> userSkills = skillService.findAllByUserId(userId).stream().map(SkillDTO::getName).collect(Collectors.toList());
+        return ProjectMapper.INSTANCE.toProjectsDto(projectDAO.searchBySkill(userSkills, page, maxResult, maxNavigationPage, sort));
     }
 
     /**
@@ -158,6 +162,22 @@ public class ProjectServiceImpl implements ProjectService {
         oldProject.setSkills(newProject.getSkills());
         projectDAO.save(oldProject);
         return ProjectMapper.INSTANCE.toDto(oldProject);
+    }
+
+    @Override
+    public Long getAllProjectsCount() {
+        return projectDAO.getAllProjectsCount();
+    }
+
+    @Override
+    public Long getAllProjectsCountByUserSkills(UUID userId) {
+        List<String> userSkillNames = skillService.findAllByUserId(userId).stream().map(SkillDTO::getName).collect(Collectors.toList());
+        return projectDAO.getAllProjectsCountBySkills(userSkillNames);
+    }
+
+    @Override
+    public Long getAllProjectsCountBySearchSkills(List<String> searchSkills) {
+        return projectDAO.getAllProjectsCountBySkills(searchSkills);
     }
 
     /**

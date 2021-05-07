@@ -35,6 +35,16 @@ export class ProjectService {
     .set('maxResult', maxResult.toString())
     .set('skillList', _skillList.toString());
   }
+  private par(counter: { toString: () => string; }, sort: string, maxResult: { toString: () => string; }): any {
+    return new HttpParams()
+    .set('page', counter.toString())
+    .set('sort', sort)
+    .set('maxResult', maxResult.toString());
+  }
+  private searchCountParam(_skillList: String[]):any {
+    return new HttpParams()
+    .set('skillList', _skillList.toString());
+  }
 
   public getProjects(counter: string, sort: string, maxResult: string, showAll: boolean = true): Observable<Project[]> {
     const options = {
@@ -68,6 +78,13 @@ export class ProjectService {
     });
   }
 
+  public getProjectsByUserSkills(counter: string, sort: string, maxResult: string):Observable<Project[]> {
+    return this.http.get<Project[]>(`${environment.url}/projects/worker`, {
+      params: this.par(counter, sort, maxResult), 
+      headers: this.authHeader()
+    });
+  }
+
   public save(project: Project): Observable<Project> {
     return this.http.post<Project>(`${environment.url}/projects`, project, { headers: this.authHeader() });
   }
@@ -82,6 +99,23 @@ export class ProjectService {
 
   public getById(id: string): Observable<Project> {
     return this.http.get<Project>(`${environment.url}/projects/${id}`, { headers: this.authHeader() });
+  }
+
+  public getAllProjectsCount(): Observable<number> {
+    return this.http.get<number>(`${environment.url}/projects/count/all`);
+  }
+
+  public getAllProjectsCountBySkills(): Observable<number> {
+    return this.http.get<number>(`${environment.url}/projects/count/user/skills`, {
+      headers: this.authHeader()
+    });
+  }
+
+  public getAllProjectsCountBySearchSkills(_skillList: String[]): Observable<number> {
+    return this.http.get<number>(`${environment.url}/projects/count/search`,{
+      params: this.searchCountParam(_skillList),
+      headers: this.authHeader()
+    });
   }
 }
 

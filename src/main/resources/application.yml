@@ -34,7 +34,6 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
-
 security:
   require-ssl: true
 server:

@@ -62,6 +62,42 @@ public class ProjectController {
         logger.info(String.valueOf(skills));
         return new ResponseEntity<>(projectsDto, HttpStatus.OK);
     }
+    @GetMapping("/worker")
+    @ApiOperation(value = "Find projects by user ID and user skills", notes = "Return all projects user skills")
+    public ResponseEntity<List<ProjectDTO>> findUserProjectBySkills(@RequestParam(value = "page", defaultValue = "1") int page,
+                                                                    @RequestParam(value = "sort", defaultValue = "desc") String sort,
+                                                                    @RequestParam(value = "maxResult", defaultValue = "5") int maxResult,
+                                                                    @RequestParam(value = "maxNavigationPage", defaultValue = "100") int maxNavigationPage,
+                                                                    @AuthenticationPrincipal User user){
+        UUID userId = user.getUserId();
+        List<ProjectDTO> projectDto = projectService.findUserProjectBySkills(userId, page, maxResult, maxNavigationPage, sort);
+        logger.info("Show projects by user skills");
+        return new ResponseEntity<>(projectDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/count/all")
+    @ApiOperation(value = "count all projects", notes = "Return long as count of all projects")
+    public ResponseEntity<Long> getCountOfAllProjects(){
+        Long count = projectService.getAllProjectsCount();
+        logger.info(count.toString());
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+
+    @GetMapping("/count/user/skills")
+    @ApiOperation(value = "count all projects by skills", notes = "Return long as count of all projects by user skills")
+    public ResponseEntity<Long> getCountOfAllProjectsByUserSkills(@AuthenticationPrincipal User user){
+        UUID userId = user.getUserId();
+        Long count = projectService.getAllProjectsCountByUserSkills(userId);
+        logger.info(count.toString());
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+
+    @GetMapping("/count/search")
+    @ApiOperation(value = "count all projects by search skills", notes = "Return long as count of all projects by search skills")
+    public ResponseEntity<Long> getCountOfAllProjectsBySearchSkills(@RequestParam(value = "skillList") List<String> skills){
+        Long count = projectService.getAllProjectsCountBySearchSkills(skills);
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Find project by ID", notes = "Find project if exists")
