@@ -235,14 +235,7 @@ export class StartPageComponent implements OnInit {
   }
 
   public isSkillPresentInUser(str: string): boolean {
-    for (let index = 0; index < this.userSkillsName.length; index++) {
-      if(str === this.userSkillsName[index]){
-        return true;
-      } else {
-        continue;
-      }
-    }
-    return false;
+    return this.userSkillsName.some(s => str == s);
   }
 
   public isUserHasSkills(): boolean{

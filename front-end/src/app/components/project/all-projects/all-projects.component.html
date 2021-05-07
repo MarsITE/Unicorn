@@ -18,8 +18,8 @@
           <mat-chip-list>
             <div *ngFor="let skill of project?.skills">
               <mat-chip class="skills-chip"
-                [ngStyle]="{'border':isSkillPresentInUser(skill) ? '2px solid green' : '1px solid gray'}">
-                  {{converToPlainSkills(skill)}}
+                [ngStyle]="{'border':isSkillPresentInUser(skill.name) ? '2px solid green' : '1px solid gray'}">
+                  {{converToPlainSkills(skill.name)}}
               </mat-chip>
             </div>
           </mat-chip-list>
@@ -29,8 +29,8 @@
     </mat-card>
   </div>
   <div mat-card-title class="pagination">
-    <mat-paginator [length]="allPageCount" [pageSize]="maxResult" [pageSizeOptions]="deviceObjects"
+    <!-- <mat-paginator [length]="allPageCount" [pageSize]="maxResult" [pageSizeOptions]="deviceObjects"
         (page)="pageEvent = getPaginatorData($event)">
-      </mat-paginator>
+      </mat-paginator> -->
   </div>
 </div>

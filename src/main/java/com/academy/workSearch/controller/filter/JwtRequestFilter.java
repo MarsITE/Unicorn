@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.UUID;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -35,6 +36,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 User user = new User(username, jwtService.getRoles(jwt));
+                user.setUserId(UUID.fromString(jwtService.getUserId(jwt)));
 
                 if (jwtService.isValidAccessToken(jwt, user)) {
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());

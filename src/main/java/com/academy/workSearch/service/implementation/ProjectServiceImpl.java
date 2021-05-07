@@ -15,7 +15,6 @@ import com.academy.workSearch.model.Skill;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.enums.ProjectStatus;
 import com.academy.workSearch.service.ProjectService;
-import liquibase.pro.packaged.S;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -153,13 +152,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectDTO update(ProjectDTO projectDTO) {
-        Project oldProject = projectDAO.get(projectDTO.getId())
-                .orElseThrow(() -> new NoSuchEntityException(NO_PROJECT + projectDTO.getId()));
+    public ProjectDTO update(UUID id, ProjectDTO projectDTO) {
+        Project oldProject = projectDAO.get(id)
+                .orElseThrow(() -> new NoSuchEntityException(NO_PROJECT + id));
         Project newProject = ProjectMapper.INSTANCE.toEntity(projectDTO);
         oldProject.setName(newProject.getName());
         oldProject.setDescription(newProject.getDescription());
         oldProject.setProjectStatus(newProject.getProjectStatus());
+        oldProject.setSkills(newProject.getSkills());
         projectDAO.save(oldProject);
         return ProjectMapper.INSTANCE.toDto(oldProject);
     }
@@ -171,11 +171,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Long getAllProjectsCountBySkills(UUID userId) {
-        List<String> userSkills = skillService.findAllByUserId(userId).stream().map(SkillDTO::getName).collect(Collectors.toList());
-        final String joined = userSkills.stream()
-                .map(String::valueOf)
-                .collect(Collectors.joining("','"));
-        return projectDAO.getAllProjectsCountBySkills(joined);
+        List<String> userSkillNames = skillService.findAllByUserId(userId).stream().map(SkillDTO::getName).collect(Collectors.toList());
+        return projectDAO.getAllProjectsCountBySkills(userSkillNames);
     }
 
     /**

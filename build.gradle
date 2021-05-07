@@ -23,7 +23,6 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
-
     runtimeOnly 'org.postgresql:postgresql'
     implementation group: 'org.threeten', name: 'threetenbp', version: '1.5.0'
 

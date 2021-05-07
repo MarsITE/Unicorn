@@ -2,7 +2,6 @@ package com.academy.workSearch.service;
 
 import com.academy.workSearch.dto.ProjectDTO;
 import com.academy.workSearch.dto.SkillDTO;
-import com.academy.workSearch.dto.UserDTO;
 import com.academy.workSearch.model.User;
 
 import java.util.List;
@@ -28,9 +27,8 @@ public interface ProjectService {
 
     ProjectDTO addSkillsToProject(ProjectDTO projectDto, SkillDTO skillDTO);
 
-    ProjectDTO update(ProjectDTO projectDTO);
-
     Long getAllProjectsCount();
 
     Long getAllProjectsCountBySkills(UUID userId);
+    ProjectDTO update(UUID id, ProjectDTO projectDTO);
 }

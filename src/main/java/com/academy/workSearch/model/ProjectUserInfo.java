@@ -20,10 +20,11 @@ public class ProjectUserInfo {
     private UUID userInfoProjectId;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
     private Project project;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_info_id")
     private UserInfo userInfo;
 
     @Column(name = "is_approve")

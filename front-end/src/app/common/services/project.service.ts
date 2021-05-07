@@ -85,8 +85,8 @@ export class ProjectService {
     return this.http.post<Project>(`${environment.url}/projects`, project, { headers: this.authHeader() });
   }
 
-  public update(project: Project): Observable<Project> {
-    return this.http.put<Project>(`${environment.url}/projects`, project, { headers: this.authHeader() });
+  public update(projectId: string, project: Project): Observable<Project> {
+    return this.http.put<Project>(`${environment.url}/projects/${projectId}`, project, { headers: this.authHeader() });
   }
 
   public deleteProject(id: string): Observable<any> {

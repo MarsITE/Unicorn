@@ -17,5 +17,5 @@ public interface ProjectDAO extends CrudDAO<Project> {
 
     Long getAllProjectsCount();
 
-    Long getAllProjectsCountBySkills(String skills);
+    Long getAllProjectsCountBySkills(List<String> skills);
 }

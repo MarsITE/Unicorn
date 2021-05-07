@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Repository
 public class ProjectDAOImpl extends CrudDAOImpl<Project> implements ProjectDAO {
@@ -56,7 +57,7 @@ public class ProjectDAOImpl extends CrudDAOImpl<Project> implements ProjectDAO {
     public List<Project> searchBySkill(List<String> skills, int page, int maxResult, int maxNavigationPage, String sort) {
         Session session = sessionFactory.getCurrentSession();
         Query<Project> query;
-        query = session.createQuery("select p from Project p join p.skills sk where sk.name in :skills", Project.class)
+        query = session.createQuery("select distinct p from Project p join p.skills sk where sk.name in :skills order by p.creationDate desc", Project.class)
                 .setParameter("skills", skills);
         PaginationResult<Project> paginationResult = new PaginationResult<>(query, page, maxResult, maxNavigationPage);
         return paginationResult.getList();
@@ -70,13 +71,13 @@ public class ProjectDAOImpl extends CrudDAOImpl<Project> implements ProjectDAO {
     }
 
     @Override
-    public Long getAllProjectsCountBySkills(String skills) {
+    public Long getAllProjectsCountBySkills(List<String> skills) {
         Session session = sessionFactory.getCurrentSession();
-        String sqlQuery = String.format("select count(*) from projects p join projects_skills ps on p.project_id = ps.project_id join skills s on ps.skill_id = s.skill_id where s.name in ('%s')",skills);
+        final String userSkillsString = skills.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining("', '"));
+        String sqlQuery = String.format("select count(distinct p.project_id) from projects p join projects_skills ps on p.project_id = ps.project_id join skills s on ps.skill_id = s.skill_id where s.name in ('%s')",userSkillsString);
         Query query = session.createNativeQuery(sqlQuery);
-//        Query query = session.createQuery("select count(all p) from Project p join p.skills sk where sk.name in:skills")
-//                .setParameter("skills", skills);
-//        return (Long)query.uniqueResult();
         return ((Number)query.getSingleResult()).longValue();
     }
 
