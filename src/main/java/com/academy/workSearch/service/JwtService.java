@@ -24,4 +24,6 @@ public interface JwtService {
 
     Set<Role> getRoles(String token);
 
+    String getUserId(String token);
+
 }

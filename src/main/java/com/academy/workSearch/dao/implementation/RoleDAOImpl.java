@@ -23,7 +23,7 @@ public class RoleDAOImpl extends CrudDAOImpl<Role> implements RoleDAO {
     public Optional<Role> getByName(String name) {
         Session session = sessionFactory.getCurrentSession();
         Role role = session.createQuery("from Role where name = :name", Role.class)
-                .setParameter("name", name)
+                .setParameter("name", name).setMaxResults(1)
                 .uniqueResult();
         return Optional.ofNullable(role);
     }
