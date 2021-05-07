@@ -36,10 +36,10 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
     }
 
     @Override
-    public Optional<User> getByToken(String token) {
+    public Optional<User> getByToken(String registrationToken) {
         Session session = sessionFactory.getCurrentSession();
-        User user = session.createQuery("from User where token = :token", User.class)
-                .setParameter("token", token)
+        User user = session.createQuery("from User where registrationToken = :registrationToken", User.class)
+                .setParameter("registrationToken", registrationToken)
                 .uniqueResult();
         return Optional.ofNullable(user);
     }
