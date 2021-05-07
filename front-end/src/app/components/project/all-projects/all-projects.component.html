@@ -28,9 +28,9 @@
       </mat-card-footer>
     </mat-card>
   </div>
-  <div mat-card-title class="pagination">
-    <!-- <mat-paginator [length]="allPageCount" [pageSize]="maxResult" [pageSizeOptions]="deviceObjects"
-        (page)="pageEvent = getPaginatorData($event)">
-      </mat-paginator> -->
+  <div mat-card-title class="pagination" *ngIf="allProjectListSize()">
+    <mat-paginator [length]="allPageCount" [pageSize]="pageSize" [pageSizeOptions]="deviceObjects"
+        (page)="pageEventProjects = getPaginatorDataAllProjects($event)">
+      </mat-paginator>
   </div>
 </div>

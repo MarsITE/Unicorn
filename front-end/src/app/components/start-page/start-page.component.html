@@ -33,7 +33,7 @@
       </mat-grid-list>
       <div *ngIf="userProjectListSize()">
       <mat-paginator [length]="allPageBySkillsCount" [pageSize]="pageSize" [pageSizeOptions]="deviceObjects"
-        (page)="pageEvent = getPaginatorDataUser($event)">
+        (page)="pageEventUserProjects = getPaginatorDataUser($event)">
       </mat-paginator>
     </div>
       <!-- <hr> -->
@@ -92,9 +92,9 @@
     </div>
 
     <div class="pagination-menu" *ngIf="allProjectListSize()">
-      <!-- <mat-paginator [length]="allPageCount" [pageSize]="pageSize" [pageSizeOptions]="deviceObjects"
-        (page)="pageEvent = getPaginatorData($event)">
-      </mat-paginator> -->
+      <mat-paginator [length]="allPageCount" [pageSize]="pageSize" [pageSizeOptions]="deviceObjects"
+        (page)="pageEventAllProjects = getPaginatorData($event)">
+      </mat-paginator>
     </div>
   </div>
 </div>

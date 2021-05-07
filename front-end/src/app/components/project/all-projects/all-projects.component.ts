@@ -14,12 +14,12 @@ import { PageEvent } from '@angular/material/paginator';
   styleUrls: ['./all-projects.component.scss']
 })
 export class AllProjectsComponent implements OnInit {
-  pageEvent: PageEvent;
+  pageEventProjects: PageEvent;
   id: string;
-  counter: number = 1;
+  pageIndex: number = 1;
+  pageSize: number = 5;
   sortFlag = false;
   sort = 'desc';
-  maxResult: number = 5;
   allPageCount: number;
   projects: Project[] = [];
   userSkills: Skill[] = [];
@@ -27,25 +27,25 @@ export class AllProjectsComponent implements OnInit {
 
   constructor(private projectService: ProjectService,private skillService: SkillService, private router: Router, private http: HttpClient, route: ActivatedRoute) {
     route.queryParams.subscribe(params => {
-      this.counter = params['page'] || this.counter;
+      this.pageIndex = params['page'] || this.pageIndex;
       this.sort = params.sort || this.sort;
-      this.maxResult = params['maxResult'] || this.maxResult;
+      this.pageSize = params['maxResult'] || this.pageSize;
     });
   }
 
   ngOnInit(): void {
-    this.getProjects(this.maxResult);
+    this.getProjects(this.pageSize);
     this.getUserSkills();
     this.getAllProjectsCount();
   }
 
   private getProjects(maxResult: number) {
     const params = new HttpParams()
-      .set('page', this.counter.toString())
+      .set('page', this.pageIndex.toString())
       .set('sort', this.sort)
       .set('maxResult', maxResult.toString());
 
-    this.projectService.getProjects(this.counter.toString(), this.sort, this.maxResult.toString(), true).subscribe(
+    this.projectService.getProjects(this.pageIndex.toString(), this.sort, this.pageSize.toString(), true).subscribe(
       (response: Project[]) => {
         console.log('response', response);
         this.projects = response;
@@ -82,30 +82,24 @@ export class AllProjectsComponent implements OnInit {
       });
   }
   public isSkillPresentInUser(str: string): boolean {
-    for (let index = 0; index < this.userSkillsName.length; index++) {
-      if(str === this.userSkillsName[index]){
-        return true;
-      } else {
-        continue;
-      }
-    }
-    return false;
+    return this.userSkillsName.some(s => str == s);
   }
+
   projectsSort() {
     this.sortFlag = !this.sortFlag;
     this.sort = this.sortFlag ? 'asc' : 'desc';
-    this.getProjects(this.maxResult);
+    this.getProjects(this.pageSize);
   }
   projectsNext() {
-    this.counter++;
-    this.getProjects(this.maxResult);
+    this.pageIndex++;
+    this.getProjects(this.pageSize);
   }
 
   projectsPrev() {
-    if (this.counter > 1) {
-      this.counter--;
+    if (this.pageIndex > 1) {
+      this.pageIndex--;
     }
-    this.getProjects(this.maxResult);
+    this.getProjects(this.pageSize);
   }
 
   deviceObjects = [5, 10, 25];
@@ -114,8 +108,8 @@ export class AllProjectsComponent implements OnInit {
   onChangeObj(newObj) {
     console.log(newObj);
     this.selectedDeviceObj = newObj;
-    this.maxResult = this.selectedDeviceObj;
-    this.getProjects(this.maxResult);
+    this.pageSize = this.selectedDeviceObj;
+    this.getProjects(this.pageSize);
   }
   showProjectDescription(id:any) {
     this.router.navigateByUrl(`projects/${id}`);
@@ -131,16 +125,23 @@ export class AllProjectsComponent implements OnInit {
       return `${str.substring(0,200)}...`;
     } 
   }
-  getPaginatorData(event?:PageEvent){
+  getPaginatorDataAllProjects(event?: PageEvent) {
     console.log(event);
-    if(event.pageIndex + 1 === this.counter + 1){
-      this.projectsNext();
-      }
-    else if(event.pageIndex + 1 === this.counter - 1){
-      this.projectsPrev();
-     }   
-    else if(event.pageSize != this.counter){
-      this.onChangeObj(event.pageSize);
+    if (event.pageIndex + 1 === this.pageIndex + 1) {
+      this.pageIndex++;
+      this.getProjects(this.pageSize);
     }
+    else if (event.pageIndex + 1 === this.pageIndex - 1) {
+      if (this.pageIndex > 1) {
+        this.pageIndex--;
+      }
+      this.getProjects(this.pageSize);
+    }
+    else if (event.pageSize != this.pageIndex) {
+      return this.onChangeObj(event.pageSize);
+    }
+  }
+  allProjectListSize(): boolean{
+    return this.allPageCount > 5;
   }
 }

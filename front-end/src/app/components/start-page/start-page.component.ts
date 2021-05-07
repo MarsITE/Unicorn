@@ -15,7 +15,8 @@ import { PageEvent } from '@angular/material/paginator';
   styleUrls: ['./start-page.component.css']
 })
 export class StartPageComponent implements OnInit {
-  pageEvent: PageEvent;
+  pageEventAllProjects: PageEvent;
+  pageEventUserProjects: PageEvent;
   id: String;
   pageIndex: number = 1;
   pageSize: number = 5;
@@ -260,10 +261,10 @@ getPaginatorData(event?:PageEvent){
   if(event.pageIndex + 1 === this.pageIndex + 1){
     this.projectsNext();
     }
-  else if(event.pageIndex + 1 === this.pageIndex - 1){
+  if(event.pageIndex + 1 === this.pageIndex - 1){
     this.projectsPrev();
    }   
-  else if(event.pageSize != this.pageSize){
+  if(event.pageSize != this.pageSize){
     this.onChangeObjAll(event.pageSize);
   }
 }
