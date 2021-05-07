@@ -12,12 +12,13 @@ spring:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQL10Dialect
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
     open-in-view: false
     show-sql: true
   liquibase:
     change-log: classpath:db/db.changelog-master.xml
     enabled: true
+  #        drop-first: true
   mail:
     host: smtp.gmail.com
     password: ${MAIL_PASSWORD}
@@ -33,4 +34,14 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+security:
+  require-ssl: true
+server:
+  ssl:
+    enabled: true
+    keyAlias: tomcat
+    key-store-password: admin1234
+    key-store: classpath:keystore.p12
+    key-store-type: PKCS12
+  port: 8081
 

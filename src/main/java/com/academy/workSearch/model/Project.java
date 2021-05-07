@@ -22,6 +22,7 @@ import java.util.UUID;
                 columnNames = {"name", "owner_id"})
 })
 public class Project {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "project_id")

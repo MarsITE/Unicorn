@@ -11,7 +11,7 @@
     }
   .mat-card{
       margin: 40px auto;
-      background-color: rgb(230, 255, 238);
+      background-color: rgb(233, 254, 255);
     }
     .mat-card-title{
        margin: auto;
@@ -37,7 +37,19 @@
   .skills-chip {
     display: flex;
     margin-left: 5px;
+    background-color: rgb(255, 255, 255);
+    border:1px solid gray;
   }
   .pagination{
     padding-bottom: 50px;
  }
+ .mat-paginator{
+  background-color: transparent;
+}
+.welcome-message {
+  margin-top: 280px;
+}
+h2{
+  text-align: center;
+  margin: 0;
+}

@@ -54,6 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/v1/projects",
                         "/api/v1/worker",
                         "/api/v1/projects/search",
+                        "/api/v1/projects/count/all",
                         "/api/v1/skills").permitAll()
                 .antMatchers("/api/v1/admin/**").hasAuthority(roleDAO.getByName("ADMIN")
                 .orElseThrow(() -> new NoSuchEntityException("Role ADMIN does mot exists!")).getName())
@@ -62,10 +63,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().disable()
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-//        http.requiresChannel()
-//                .anyRequest()
-//                .requiresSecure();
     }
 
 
