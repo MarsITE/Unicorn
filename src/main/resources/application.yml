@@ -12,13 +12,12 @@ spring:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQL10Dialect
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
     open-in-view: false
     show-sql: true
   liquibase:
     change-log: classpath:db/db.changelog-master.xml
     enabled: true
-  #        drop-first: true
   mail:
     host: smtp.gmail.com
     password: ${MAIL_PASSWORD}

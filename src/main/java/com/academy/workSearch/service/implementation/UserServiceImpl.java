@@ -2,7 +2,7 @@ package com.academy.workSearch.service.implementation;
 
 import com.academy.workSearch.dao.RoleDAO;
 import com.academy.workSearch.dao.UserDAO;
-import com.academy.workSearch.dao.implementation.UserInfoDAOImpl;
+import com.academy.workSearch.dao.UserInfoDAO;
 import com.academy.workSearch.dto.UserAuthDTO;
 import com.academy.workSearch.dto.UserDTO;
 import com.academy.workSearch.dto.UserRegistrationDTO;
@@ -41,20 +41,22 @@ import static com.academy.workSearch.dto.mapper.UserAuthMapper.USER_AUTH_MAPPER;
 import static com.academy.workSearch.dto.mapper.UserMapper.USER_MAPPER;
 import static com.academy.workSearch.exceptionHandling.MessageConstants.*;
 
-@Service
 @AllArgsConstructor
+@Service
 public class UserServiceImpl implements UserService {
     private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
-    private final UserDAO userDAO;
-    private final UserInfoDAOImpl userInfoDAO;
-    private final RoleDAO roleDAO;
+    private final static String TIME_TO_IMPROVE_ACCOUNT = " 1 day ";
+
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
-    private final EmailService emailService;
     private final FreeMarkerConfigurer freemarkerConfigurer;
     private final Environment env;
-    private final static String TIME_TO_IMPROVE_ACCOUNT = " 1 day ";
+    private final JwtService jwtService;
+    private final EmailService emailService;
+    private final UserDAO userDAO;
+    private final UserInfoDAO userInfoDAO;
+    private final RoleDAO roleDAO;
+
 
     /**
      * post construct set class type for dao
@@ -82,7 +84,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public List<UserDTO> findAll() {
-        return USER_MAPPER.map(userDAO.findAll());
+        return USER_MAPPER.toUsersDto(userDAO.findAll());
     }
 
     /**
@@ -154,7 +156,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     @Override
     public UserDTO get(UUID id) {
-        return USER_MAPPER.toUserDto(userDAO.get(id).orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + id)));
+        return USER_MAPPER.toUserDto(userDAO.get(id).orElseThrow(() -> new NoSuchEntityException(NO_SUCH_USER + id)));
     }
 
     /**
