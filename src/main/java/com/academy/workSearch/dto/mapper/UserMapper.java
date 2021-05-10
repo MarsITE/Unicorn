@@ -26,22 +26,28 @@ public interface UserMapper {
     UserDTO toUserDto(User user);
 
     @Mapping(target = "roles", qualifiedByName = "rolesStr")
-    List<UserDTO> map(List<User> users);//todo
+    List<UserDTO> toUsersDto(List<User> users);
 
     @Named("rolesStr")
     default Set<String> rolesStr(Set<Role> roles) {
-        return roles.stream().map(Role::getName).collect(Collectors.toSet());
+        if (roles != null) {
+            return roles.stream().map(Role::getName).collect(Collectors.toSet());
+        }
+        return new HashSet<>();
     }
 
     @Named("roles")
     default Set<Role> roles(Set<String> rolesStr) {
-        Set<Role> roles = new HashSet<>();
-        rolesStr.forEach(r -> {
-            Role role = new Role();
-            role.setName(r);
-            roles.add(role);
-        });
-        return roles;
+        if (rolesStr != null || !rolesStr.isEmpty()) {
+            Set<Role> roles = new HashSet<>();
+            rolesStr.forEach(r -> {
+                Role role = new Role();
+                role.setName(r);
+                roles.add(role);
+            });
+            return roles;
+        }
+        return new HashSet<>();
     }
 
 }
