@@ -36,6 +36,13 @@
         </td>
       </ng-container>
 
+      <ng-container matColumnDef="isApprove" *ngIf="involvedInProjects">
+        <th mat-header-cell *matHeaderCellDef> Is Approved </th>
+        <td mat-cell *matCellDef="let element">
+          <span>{{element.isApprove}}</span>
+        </td>
+      </ng-container>
+
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)=showProjectDescription(row)
         [ngClass]="{'bg-clr': row === selectedRow}"></tr>

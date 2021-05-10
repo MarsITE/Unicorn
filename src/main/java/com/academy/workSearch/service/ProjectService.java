@@ -2,7 +2,9 @@ package com.academy.workSearch.service;
 
 import com.academy.workSearch.dto.ProjectDTO;
 import com.academy.workSearch.dto.SkillDTO;
+import com.academy.workSearch.dto.WorkerProjectDTO;
 import com.academy.workSearch.model.User;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.UUID;
@@ -34,4 +36,8 @@ public interface ProjectService {
     Long getAllProjectsCountBySearchSkills(List<String> searchSkills);
 
     ProjectDTO update(UUID id, ProjectDTO projectDTO);
+
+    void joinProject(UUID projectId, User worker);
+
+    List<WorkerProjectDTO> getWorkerProjects(User worker);
 }

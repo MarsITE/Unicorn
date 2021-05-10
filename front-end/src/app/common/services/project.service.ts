@@ -5,6 +5,7 @@ import { Project } from '../model/project';
 import { Skill } from '../model/skill';
 import { environment } from 'src/environments/environment';
 import { ACCESS_TOKEN } from '../helper/token.helper';
+import {WorkerProject} from "../model/worker-project";
 
 @Injectable({
   providedIn: 'root'
@@ -56,6 +57,19 @@ export class ProjectService {
     return this.http.get<Project[]>(`${environment.url}/projects`, options);
   }
 
+  public getWorkerProjects(counter: string, sort: string): Observable<WorkerProject[]> {
+    let params = new HttpParams()
+      .set('page', counter.toString())
+      .set('sort', sort);
+    const options = {
+      params: params
+    };
+    if (sessionStorage.getItem(ACCESS_TOKEN) !== null) {
+      options['headers'] = this.authHeader();
+    }
+    return this.http.get<WorkerProject[]>(`${environment.url}/workers/projects`, options);
+  }
+
   public getAllProjects(counter: string, sort: string, maxResult: string, showAll: boolean = true): Observable<Project[]> {
     return this.http.get<Project[]>(`${environment.url}/all-projects`, {
       params: this.params(counter, sort, maxResult, showAll),
@@ -72,7 +86,7 @@ export class ProjectService {
     );
   }
 
-  public getSearchProjects(counter: string, sort: string, maxResult: string, _skillList: String[]):Observable<Project[]> {
+  public getSearchProjects(counter: string, sort: string, maxResult: string, _skillList: string[]):Observable<Project[]> {
     return this.http.get<Project[]>(`${environment.url}/projects/search`, {
       params: this.paginationParams(counter, sort, maxResult, _skillList)
     });
@@ -80,7 +94,7 @@ export class ProjectService {
 
   public getProjectsByUserSkills(counter: string, sort: string, maxResult: string):Observable<Project[]> {
     return this.http.get<Project[]>(`${environment.url}/projects/worker`, {
-      params: this.par(counter, sort, maxResult), 
+      params: this.par(counter, sort, maxResult),
       headers: this.authHeader()
     });
   }
@@ -111,11 +125,15 @@ export class ProjectService {
     });
   }
 
-  public getAllProjectsCountBySearchSkills(_skillList: String[]): Observable<number> {
-    return this.http.get<number>(`${environment.url}/projects/count/search`,{
+  public getAllProjectsCountBySearchSkills(_skillList: string[]): Observable<number> {
+    return this.http.get<number>(`${environment.url}/projects/count/search`, {
       params: this.searchCountParam(_skillList),
       headers: this.authHeader()
     });
+  }
+
+  public joinProject(projectId: string) {
+    return this.http.post<Project>(`${environment.url}/projects/${projectId}/workers`, {}, { headers: this.authHeader() });
   }
 }
 

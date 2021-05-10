@@ -16,6 +16,7 @@ import { AllProjectsComponent } from './components/project/all-projects/all-proj
 import { VerifyEmailComponent } from './components/verify-email/verify-email';
 import { SkillsAdministrationComponent } from './components/skills/skills-administration/skills-administration.component';
 import { WorkerSkillsComponent } from './components/skills/worker-skills/worker-skills.component';
+import { WorkersListComponent } from './components/workers-list/workers-list.component';
 
 const routes: Routes = [
   {
@@ -37,6 +38,14 @@ const routes: Routes = [
   }, {
     path: 'projects',
     component: ProjectComponent,
+    canActivate: [LoginGuard]
+  }, {
+    path: 'worker-projects',
+    component: ProjectComponent,
+    canActivate: [LoginGuard]
+  }, {
+    path: 'workers-list',
+    component: WorkersListComponent,
     canActivate: [LoginGuard]
   }, {
     path: 'all-projects',

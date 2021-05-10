@@ -5,17 +5,23 @@ import com.academy.workSearch.dao.RoleDAO;
 import com.academy.workSearch.dao.implementation.UserDAOImpl;
 import com.academy.workSearch.dto.ProjectDTO;
 import com.academy.workSearch.dto.SkillDTO;
+import com.academy.workSearch.dto.WorkerInfoDTO;
+import com.academy.workSearch.dto.WorkerProjectDTO;
 import com.academy.workSearch.dto.mapper.ProjectMapper;
+import com.academy.workSearch.dto.mapper.ProjectShowInfoMapper;
 import com.academy.workSearch.dto.mapper.SkillMapper;
 import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.exceptionHandling.exceptions.NotUniqueEntityException;
 import com.academy.workSearch.model.Project;
+import com.academy.workSearch.model.ProjectUserInfo;
 import com.academy.workSearch.model.Role;
 import com.academy.workSearch.model.Skill;
 import com.academy.workSearch.model.User;
+import com.academy.workSearch.model.UserInfo;
 import com.academy.workSearch.model.enums.ProjectStatus;
 import com.academy.workSearch.service.ProjectService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -162,6 +168,28 @@ public class ProjectServiceImpl implements ProjectService {
         oldProject.setSkills(newProject.getSkills());
         projectDAO.save(oldProject);
         return ProjectMapper.INSTANCE.toDto(oldProject);
+    }
+
+    @Override
+    public void joinProject(UUID projectId, User worker) {
+        Project project = projectDAO.get(projectId)
+                .orElseThrow(() -> new NoSuchEntityException(NO_PROJECT + projectId));
+        UserInfo userInfo = userDAO.get(worker.getUserId())
+                .map(User::getUserInfo)
+                .orElseThrow();
+        project.addUserInfo(userInfo);
+    }
+
+    @Override
+    public List<WorkerProjectDTO> getWorkerProjects(User worker) {
+        List<WorkerProjectDTO> result = new ArrayList<>();
+        User user = userDAO.get(worker.getUserId()).orElseThrow();
+        for (ProjectUserInfo projectUserInfo : user.getUserInfo().getProjects()) {
+            WorkerProjectDTO workerProjectDTO = ProjectShowInfoMapper.INSTANCE.toWorkerDto(projectUserInfo.getProject());
+            workerProjectDTO.setApprove(projectUserInfo.isApprove());
+            result.add(workerProjectDTO);
+        }
+        return result;
     }
 
     @Override

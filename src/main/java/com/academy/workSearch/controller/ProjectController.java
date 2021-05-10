@@ -123,6 +123,14 @@ public class ProjectController {
         return new ResponseEntity<>(projectDto, HttpStatus.OK);
     }
 
+    @PostMapping("/{id}/workers")
+    @ApiOperation(value = "Update existing project", notes = "Update existing project")
+    public void updateProject(@PathVariable("id") UUID projectId,
+                                                    @AuthenticationPrincipal User worker) {
+        logger.info("Join worker {} to project with ID = {}", worker.getUserId(), projectId);
+        projectService.joinProject(projectId, worker);
+    }
+
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete existing project", notes = "Delete existing project")
     public void deleteProject(@PathVariable UUID id) {

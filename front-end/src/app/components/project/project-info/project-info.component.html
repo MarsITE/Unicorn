@@ -3,6 +3,8 @@
   <div mat-card-title style="margin: auto;">
     <button mat-stroked-button (click) = projects()>Show projects</button>
 
+      <button mat-stroked-button (click) = projects()>Workers list</button>
+
     <mat-card class="project-info">
       <div *ngIf="project">
         <label><b class="description">Project name:</b> {{project.name}}</label>
@@ -12,6 +14,16 @@
     <mat-card class="project-info">
       <div *ngIf="project">
         <label><b class="description">Project owner:</b> {{project.ownerId}}</label>
+      </div>
+    </mat-card>
+
+    <mat-card class="project-info">
+      <div *ngIf="project">
+        <label><b class="description">Workers:</b>
+            <span class="project-info" *ngFor="let worker of getApprovedWorkers(project.workers), let isLast = last">
+              {{worker.email}}{{isLast ? '' : ', '}}
+            </span>
+        </label>
       </div>
     </mat-card>
 
@@ -40,6 +52,10 @@
         </span>
       </div>
     </mat-card>
+
+    <div class="buttons">
+      <button mat-stroked-button (click)=joinProject(project.id) mat-button>Join this project</button>
+    </div>
 
     <div class="buttons" *ngIf="isEmployer">
       <button mat-stroked-button (click)=edit(project.id) mat-button> Edit </button>

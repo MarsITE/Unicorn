@@ -8,7 +8,11 @@
     <span *ngIf="!isAdmin">My own projects</span>
     <span *ngIf="isAdmin">Projects</span>
   </mat-list-item>
-  <mat-list-item *ngIf="isAdmin"[routerLink]="'/users-list'">
+  <mat-list-item *ngIf="isWorker" [routerLink]="'/worker-projects'">
+    <mat-icon>work_outline</mat-icon>
+    <span>Involved in projects</span>
+  </mat-list-item>
+  <mat-list-item *ngIf="isAdmin" [routerLink]="'/users-list'">
     <mat-icon>people_outline</mat-icon>
     <span>Users</span>
   </mat-list-item>
