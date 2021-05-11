@@ -16,14 +16,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.*;
 
 import static com.academy.workSearch.dto.mapper.UserMapper.USER_MAPPER;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -50,6 +48,7 @@ class UserServiceImplTest {
         userDAO.setClazz(User.class);
     }
 
+
     @Test
     void findAll() {
         when(userDAO.findAll()).thenReturn(Arrays.asList(new User(), new User(), new User()));
@@ -60,11 +59,11 @@ class UserServiceImplTest {
     @Test
     void findById() {
         User user = new User();
-        user.setUserId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f0"));
+        user.setUserId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f4"));
+        user.setEmail("anna@gmail.com");
+        when(userDAO.get(user.getUserId())).thenReturn(Optional.of(user));
 
-        when(userDAO.save(user)).thenReturn(user);
-
-        assertSame(Optional.of(USER_MAPPER.toUser(userService.get(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f0")))).get(), user, "The user returned was not the same as the mock");
+        assertSame("anna@gmail.com", userService.get(user.getUserId()).getEmail(), "The user returned was not the same as the mock");
     }
 
     @Test
@@ -96,7 +95,43 @@ class UserServiceImplTest {
         userRegistrationDTO.setPassword("111111");
         userRegistrationDTO.setIsEmployer(true);
         UserAuthDTO expected = userServiceImpl.save(userRegistrationDTO);
+
         assertEquals("anna@gmail.com", expected.getEmail(), "The user returned was not the same as the mock");
     }
 
+    @Test
+    void update() {
+        User user = new User();
+        user.setEmail("admin@gmail.com");
+        user.setUserId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb1cb5f4"));
+
+        when(userDAO.getByEmail("admin@gmail.com")).thenReturn(Optional.of(user));
+        when(userDAO.save(any())).thenReturn(user);
+
+        assertEquals("admin@gmail.com", userService.update(USER_MAPPER.toUserDto(user)).getEmail(), "The email returned was not the same as the mock");
+    }
+
+    @Test
+    void delete() {
+        User user = new User();
+        user.setEmail("admin@gmail.com");
+        user.setUserId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb1cb5f4"));
+
+        when(userDAO.delete(any())).thenReturn(user);
+
+        assertEquals(user.getEmail(), userService.delete(user.getUserId()).getEmail(), "The user returned was not the same as the mock");
+    }
+
+    @Test
+    void isVerifyAccount() {
+        User user = new User();
+        user.setEmail("admin@gmail.com");
+        user.setUserId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb1cb5f4"));
+
+        when(userDAO.getByToken(anyString())).thenReturn(Optional.of(user));
+        when(userDAO.save(user)).thenReturn(user);
+        when(jwtService.isRegistrationTokenNotExpired(anyString())).thenReturn(true);
+
+        assertTrue(userService.isVerifyAccount("token"), "Account isn't verified");
+    }
 }

@@ -142,8 +142,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDTO update(UserDTO user) {
-        User oldUser = userDAO.getByEmail(user.getEmail())
-                .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + user.getEmail()));
+        User oldUser = getUser(user.getEmail());
         User newUser = USER_MAPPER.toUser(user);
         newUser.setPassword(oldUser.getPassword());
         newUser.setUserId(oldUser.getUserId());
