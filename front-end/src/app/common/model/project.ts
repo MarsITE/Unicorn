@@ -1,5 +1,6 @@
 import { User } from './user';
 import { Skill } from './skill';
+import { Worker } from './worker';
 
 export class Project {
     id: string;
@@ -9,4 +10,5 @@ export class Project {
     creationDate: string;
     ownerId: string;
     skills: Skill[] = [];
+    workers: Worker[] = [];
   }

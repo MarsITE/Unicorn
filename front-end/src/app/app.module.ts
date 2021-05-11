@@ -74,6 +74,7 @@ import { VerifyEmailComponent } from './components/verify-email/verify-email';
 import { SkillsAdministrationComponent } from './components/skills/skills-administration/skills-administration.component';
 import { WorkerSkillsComponent } from './components/skills/worker-skills/worker-skills.component';
 import { AddSkillsComponent } from './components/skills/add-skills/add-skills.component';
+import {WorkersListComponent} from './components/workers-list/workers-list.component';
 
 @NgModule({
   declarations: [
@@ -91,12 +92,13 @@ import { AddSkillsComponent } from './components/skills/add-skills/add-skills.co
     SidenavListComponent,
     ConfirmComponent,
     AllProjectsComponent,
-    StartPageComponent,    
+    StartPageComponent,
     StartPageComponent,
     VerifyEmailComponent,
     SkillsAdministrationComponent,
     WorkerSkillsComponent,
-    AddSkillsComponent
+    AddSkillsComponent,
+    WorkersListComponent
   ],
 
   imports: [

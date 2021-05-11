@@ -35,7 +35,7 @@ public class UserController {
 
     /**
      * @param userRegistrationDTO auth data
-     * @return jwt tokrn
+     * @return jwt token
      */
     @PostMapping(value = {"/login"})
     @ApiOperation(value = "Auth", notes = "Find user if exists")
@@ -61,7 +61,7 @@ public class UserController {
 
     /**
      * @param id user
-     * @return delete exoting user
+     * @return delete exiting user
      */
     @DeleteMapping({"/user/{id}"})
     @ApiOperation(value = "Delete existing user", notes = "Delete existing user")

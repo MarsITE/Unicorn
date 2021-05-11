@@ -5,6 +5,7 @@ import { ProjectService } from '../../../common/services/project.service';
 import { ProjectStatus } from '../../../common/model/project-status';
 import { Subscription } from 'rxjs';
 import { USER_ROLE_EMPLOYER, TokenHelper } from '../../../common/helper/token.helper';
+import { Worker } from '../../../common/model/worker';
 
 @Component({
   selector: 'app-project-info',
@@ -78,6 +79,16 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
     this.router2.navigateByUrl(`editProject/${id}`);
   }
 
+  workersList() {
+    this.router2.navigateByUrl(`workers-list/${this.id}`);
+  }
+
+  public joinProject(projectId: string): void {
+    this.projectService.joinProject(projectId).subscribe(() => {
+      this.router2.navigateByUrl(`worker-projects`);
+    });
+  }
+
   public delete(id: string): void {
     this.subscriptions.push(this.projectService.deleteProject(id).subscribe(
       (response) => {
@@ -93,6 +104,9 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
     ));
   }
 
+  public getApprovedWorkers(workers: Worker[]): Worker[] {
+    return workers.filter(worker => worker.isApprove);
+  }
 }
 
 

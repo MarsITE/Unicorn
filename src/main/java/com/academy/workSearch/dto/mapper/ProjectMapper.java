@@ -1,9 +1,13 @@
 package com.academy.workSearch.dto.mapper;
 
 import com.academy.workSearch.dto.ProjectDTO;
+import com.academy.workSearch.dto.ProjectWorkerDTO;
+import com.academy.workSearch.dto.WorkerInfoDTO;
 import com.academy.workSearch.model.Project;
+import com.academy.workSearch.model.ProjectUserInfo;
 import com.academy.workSearch.model.Skill;
 import com.academy.workSearch.model.User;
+import com.academy.workSearch.model.UserInfo;
 import com.academy.workSearch.model.enums.ProjectStatus;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -24,6 +28,11 @@ public interface ProjectMapper {
 
     ProjectMapper INSTANCE = Mappers.getMapper(ProjectMapper.class);
 
+    /**
+     * Keep updated with {@link ProjectShowInfoMapper#toWorkerDto}
+     * @param project
+     * @return
+     */
     @Mappings({@Mapping(target = "id", source = "projectId"),
             @Mapping(target = "name", source = "name"),
             @Mapping(target = "description", source = "description"),
@@ -47,6 +56,23 @@ public interface ProjectMapper {
 
     @Mapping(target = "skills", qualifiedByName = "skillsStr")
     List<ProjectDTO> toProjectsDto(List<Project> projects);
+
+//    List<ProjectUserInfo> toProjectUserInfos(List<ProjectUserInfoDTO> projectUserInfoDTOS);
+//
+//    @Mapping(target = "projectUserInfo", qualifiedByName = "projectUserInfoStr")
+//    List<ProjectUserInfoDTO> toProjectUserInfoDTOS(List<ProjectUserInfo> projectUserInfos);
+//
+//    @Named("projectUserInfoStr")
+//    default List<ProjectUserInfo> projectUserInfoStr(List<ProjectUserInfo> projectUserInfos){
+//        return projectUserInfos.stream().map(ProjectUserInfo::).collect(Collectors.toList());
+//    }
+
+    default WorkerInfoDTO mapWorkers(ProjectUserInfo worker) {
+        WorkerInfoDTO workerInfoDTO = new WorkerInfoDTO();
+        workerInfoDTO.setEmail(worker.getUserInfo().getUser().getEmail());
+        workerInfoDTO.setApprove(worker.isApprove());
+        return workerInfoDTO;
+    }
 
     @Named("skillsStr")
     default Set<String> skillsStr(Set<Skill> skills) {
@@ -90,4 +116,15 @@ public interface ProjectMapper {
         }
         return user;
     }
+
+   default ProjectWorkerDTO toProjectWorkerDTO(ProjectUserInfo projectUserInfo) {
+       ProjectWorkerDTO projectWorkerDTO = new ProjectWorkerDTO();
+       projectWorkerDTO.setUserInfoProjectId(projectUserInfo.getUserInfoProjectId());
+       projectWorkerDTO.setApprove(projectUserInfo.isApprove());
+       UserInfo userInfo = projectUserInfo.getUserInfo();
+       projectWorkerDTO.setFirstName(userInfo.getFirstName());
+       projectWorkerDTO.setLastName(userInfo.getLastName());
+       projectWorkerDTO.setEmail(userInfo.getUser().getEmail());
+       return projectWorkerDTO;
+   }
 }

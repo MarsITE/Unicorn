@@ -1,0 +1,57 @@
+<div class="container">
+  <table mat-table [dataSource]="workers" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="firstName">
+      <th mat-header-cell *matHeaderCellDef> First name </th>
+      <td mat-cell *matCellDef="let element" (click)=showUserProfile(element)>
+        <div *ngIf="element.firstName && element.firstName != ''; else none">
+          {{ element.firstName }}
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="lastName">
+      <th mat-header-cell *matHeaderCellDef> Last name </th>
+      <td mat-cell *matCellDef="let element" (click)=showUserProfile(element)>
+        <div *ngIf="element.lastName && element.lastName != ''; else none">
+          {{ element.lastName }}
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef> Email </th>
+      <td mat-cell *matCellDef="let element" (click)=showUserProfile(element)>{{ element.email }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="isApprove">
+      <th mat-header-cell *matHeaderCellDef> Is Approved </th>
+      <td mat-cell *matCellDef="let element" (click)=showUserProfile(element)>
+        <span>{{element.isApprove}}</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="approve">
+      <th mat-header-cell *matHeaderCellDef> Approve </th>
+      <td mat-cell *matCellDef="let element" class="action-link">
+        <button mat-stroked-button (click)=approve(element)>{{element.isApprove ? 'Unapprove' : 'Approve'}}</button>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef> Delete </th>
+      <td mat-cell *matCellDef="let element" class="action-link">
+        <button mat-stroked-button (click)=delete(element.userInfoProjectId)>Delete</button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+      [ngClass]="{'bg-clr': row === selectedRow}"></tr>
+
+  </table>
+
+  <ng-template #none>
+    <i>-</i>
+  </ng-template>
+</div>

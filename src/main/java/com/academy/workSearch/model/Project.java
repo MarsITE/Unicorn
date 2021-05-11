@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -38,8 +39,11 @@ public class Project {
     @Column(name = "project_status")
     private ProjectStatus projectStatus;
 
-    @OneToMany
-    @JoinColumn(name = "users_info_projects_id")
+    @OneToMany(
+            mappedBy = "project",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private List<ProjectUserInfo> workers;
 
     @NotNull
@@ -72,5 +76,24 @@ public class Project {
                 ", projectStatus=" + projectStatus +
                 ", creationDate=" + creationDate +
                 '}';
+    }
+
+    public void addUserInfo(UserInfo userInfo) {
+        ProjectUserInfo projectUserInfo = new ProjectUserInfo();
+        projectUserInfo.setProject(this);
+        projectUserInfo.setUserInfo(userInfo);
+        workers.add(projectUserInfo);
+    }
+
+    public void removeUserInfo(UserInfo userInfo) {
+        Iterator<ProjectUserInfo> iterator = workers.iterator();
+        while (iterator.hasNext()) {
+            ProjectUserInfo worker = iterator.next();
+            if (worker.getUserInfo().equals(userInfo)) {
+                iterator.remove();
+                worker.setProject(null);
+                worker.setUserInfo(null);
+            }
+        }
     }
 }
