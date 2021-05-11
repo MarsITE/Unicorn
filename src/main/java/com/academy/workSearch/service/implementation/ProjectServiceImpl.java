@@ -140,22 +140,6 @@ public class ProjectServiceImpl implements ProjectService {
         return projectDto;
     }
 
-    /**
-     * @param projectDto current project
-     * @param skillDTO   skills that we need to add
-     * @return projectDto
-     */
-    @Override
-    public ProjectDTO addSkillsToProject(ProjectDTO projectDto, SkillDTO skillDTO) {
-        Project project = ProjectMapper.INSTANCE.toEntity(projectDto);
-        Skill skill = SkillMapper.SKILL_MAPPER.toEntity(skillDTO);
-        Set<Skill> skills = new HashSet<>();
-        skills.add(skill);
-        project.setSkills(skills);
-        projectDAO.save(project);
-        return projectDto;
-    }
-
     @Override
     public ProjectDTO update(UUID id, ProjectDTO projectDTO) {
         Project oldProject = projectDAO.get(id)

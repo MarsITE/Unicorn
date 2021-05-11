@@ -2,7 +2,6 @@ package com.academy.workSearch.service;
 
 import com.academy.workSearch.dto.ProjectDTO;
 import com.academy.workSearch.dto.ProjectWorkerDTO;
-import com.academy.workSearch.dto.SkillDTO;
 import com.academy.workSearch.dto.WorkerProjectDTO;
 import com.academy.workSearch.model.User;
 
@@ -26,8 +25,6 @@ public interface ProjectService {
     List<ProjectDTO> searchBySkill(List<String> skills, int page, int maxResult, int maxNavigationPage, String sort);
 
     List<ProjectDTO> findUserProjectBySkills(UUID userId, int page, int maxResult, int maxNavigationPage, String sort);
-
-    ProjectDTO addSkillsToProject(ProjectDTO projectDto, SkillDTO skillDTO);
 
     Long getAllProjectsCount();
 
