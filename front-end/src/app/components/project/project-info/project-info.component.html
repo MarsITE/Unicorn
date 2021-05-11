@@ -2,8 +2,9 @@
 
   <div mat-card-title style="margin: auto;">
     <button mat-stroked-button (click) = projects()>Show projects</button>
-
-      <button mat-stroked-button (click) = projects()>Workers list</button>
+      <div class="buttons" *ngIf="isEmployer">
+      <button mat-stroked-button (click) = workersList()>Workers list</button>
+      </div>
 
     <mat-card class="project-info">
       <div *ngIf="project">

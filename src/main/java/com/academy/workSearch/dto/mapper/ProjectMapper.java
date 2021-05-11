@@ -1,12 +1,13 @@
 package com.academy.workSearch.dto.mapper;
 
 import com.academy.workSearch.dto.ProjectDTO;
+import com.academy.workSearch.dto.ProjectWorkerDTO;
 import com.academy.workSearch.dto.WorkerInfoDTO;
-import com.academy.workSearch.dto.WorkerProjectDTO;
 import com.academy.workSearch.model.Project;
 import com.academy.workSearch.model.ProjectUserInfo;
 import com.academy.workSearch.model.Skill;
 import com.academy.workSearch.model.User;
+import com.academy.workSearch.model.UserInfo;
 import com.academy.workSearch.model.enums.ProjectStatus;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -115,4 +116,15 @@ public interface ProjectMapper {
         }
         return user;
     }
+
+   default ProjectWorkerDTO toProjectWorkerDTO(ProjectUserInfo projectUserInfo) {
+       ProjectWorkerDTO projectWorkerDTO = new ProjectWorkerDTO();
+       projectWorkerDTO.setUserInfoProjectId(projectUserInfo.getUserInfoProjectId());
+       projectWorkerDTO.setApprove(projectUserInfo.isApprove());
+       UserInfo userInfo = projectUserInfo.getUserInfo();
+       projectWorkerDTO.setFirstName(userInfo.getFirstName());
+       projectWorkerDTO.setLastName(userInfo.getLastName());
+       projectWorkerDTO.setEmail(userInfo.getUser().getEmail());
+       return projectWorkerDTO;
+   }
 }

@@ -79,8 +79,14 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
     this.router2.navigateByUrl(`editProject/${id}`);
   }
 
+  workersList() {
+    this.router2.navigateByUrl(`workers-list/${this.id}`);
+  }
+
   public joinProject(projectId: string): void {
-    this.projectService.joinProject(projectId).subscribe();
+    this.projectService.joinProject(projectId).subscribe(() => {
+      this.router2.navigateByUrl(`worker-projects`);
+    });
   }
 
   public delete(id: string): void {

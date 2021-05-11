@@ -4,13 +4,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
-public class WorkerInfoDTO {
-//    private String firstName;
-//    private String lastName;
+public class ProjectWorkerDTO {
+    private UUID userInfoProjectId;
+    private String firstName;
+    private String lastName;
     private String email;
-//    private UserInfoDTO userInfoDTO;
 
     @JsonProperty("isApprove")
     private boolean isApprove;

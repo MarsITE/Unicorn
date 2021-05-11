@@ -1,10 +1,10 @@
 package com.academy.workSearch.service;
 
 import com.academy.workSearch.dto.ProjectDTO;
+import com.academy.workSearch.dto.ProjectWorkerDTO;
 import com.academy.workSearch.dto.SkillDTO;
 import com.academy.workSearch.dto.WorkerProjectDTO;
 import com.academy.workSearch.model.User;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.UUID;
@@ -40,4 +40,10 @@ public interface ProjectService {
     void joinProject(UUID projectId, User worker);
 
     List<WorkerProjectDTO> getWorkerProjects(User worker);
+
+    List<ProjectWorkerDTO> getProjectWorkers(UUID projectId);
+
+    void updateApprovedWorker(UUID projectId, UUID projectUserInfoId);
+
+    void deleteRequestedWorker(UUID projectId, UUID projectUserInfoId);
 }

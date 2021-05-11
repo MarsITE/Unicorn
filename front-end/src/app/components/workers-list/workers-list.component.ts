@@ -1,10 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { Subscription } from 'rxjs/internal/Subscription';
-import { TokenHelper } from 'src/app/common/helper/token.helper';
-import { User } from 'src/app/common/model/user';
-import { UserHttpService } from 'src/app/common/services/user-http.service';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ToastrService} from 'ngx-toastr';
+import {TokenHelper} from 'src/app/common/helper/token.helper';
+import {UserHttpService} from 'src/app/common/services/user-http.service';
+import {first} from "rxjs/operators";
+import {ProjectWorker} from "../../common/model/project-worker";
 
 
 @Component({
@@ -12,46 +12,57 @@ import { UserHttpService } from 'src/app/common/services/user-http.service';
   templateUrl: './workers-list.component.html',
   styleUrls: ['./workers-list.component.scss']
 })
-export class WorkersListComponent implements OnInit, OnDestroy {
-    users: User[] = [];
-    displayedColumns: string[] = ['firstName', 'lastName', 'email', 'workStatus', 'phone', 'dateOfBirth', 'userRole', 'generalRating'];
-    private subscriptions: Subscription[] = [];
+export class WorkersListComponent implements OnInit {
 
-    constructor(
-      private userService: UserHttpService,
-      private router: Router,
-      private tokenHelper: TokenHelper,
-      private toast: ToastrService
-    ) {
-    }
+  projectId: string;
 
-    ngOnDestroy(): void {
-      this.subscriptions.forEach(s => {
-        s.unsubscribe();
-      });
-    }
+  workers: ProjectWorker[] = [];
+  displayedColumns: string[] = ['firstName', 'lastName', 'email', 'isApprove', 'approve', 'delete'];
 
-    ngOnInit(): void {
-      this.getUsers();
-    }
+  constructor(
+    private userService: UserHttpService,
+    private router: ActivatedRoute,
+    private router2: Router,
+    private tokenHelper: TokenHelper,
+    private toast: ToastrService
+  ) {
+    this.projectId = router.snapshot.params.projectId;
 
-    private getUsers(): void {
-      this.subscriptions.push(this.userService.getUsers()
-        .subscribe(
-          response => this.users = response,
-          error => this.toast.error(error, 'error')
-        ));
-    }
+  }
 
-    public showUserProfile(row: any): void {
-      if (this.tokenHelper.getEmailFromToken() === row.email) {
-        this.router.navigateByUrl('profile');
-      } else {
-        this.router.navigateByUrl(`profile/${row.id}`);
-      }
-    }
+  ngOnInit(): void {
+    this.getWorkers();
+  }
 
-    public converToPlain(str: string): string {
-      return str.replace('_', ' ').toLowerCase();
+  private getWorkers(): void {
+    this.userService.getProjectWorkers(this.projectId)
+      .pipe(first())
+      .subscribe(
+        response => this.workers = response
+      );
+  }
+
+  public showUserProfile(row: any): void {
+    if (this.tokenHelper.getEmailFromToken() === row.email) {
+      this.router2.navigateByUrl('profile');
+    } else {
+      this.router2.navigateByUrl(`profile/${row.id}`);
     }
   }
+
+  public converToPlain(str: string): string {
+    return str.replace('_', ' ').toLowerCase();
+  }
+
+  approve(worker: ProjectWorker) {
+    this.userService.approveWorkerForProject(this.projectId, worker.userInfoProjectId)
+      .pipe(first())
+      .subscribe(() => this.getWorkers());
+  }
+
+  delete(userInfoProjectId: any) {
+    this.userService.deleteWorkerForProject(this.projectId, userInfoProjectId)
+      .pipe(first())
+      .subscribe(() => this.getWorkers());
+  }
+}

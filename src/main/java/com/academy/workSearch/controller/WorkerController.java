@@ -1,6 +1,5 @@
 package com.academy.workSearch.controller;
 
-import com.academy.workSearch.dto.ProjectDTO;
 import com.academy.workSearch.dto.WorkerProjectDTO;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.service.ProjectService;

@@ -4,8 +4,8 @@ import com.academy.workSearch.dao.ProjectDAO;
 import com.academy.workSearch.dao.RoleDAO;
 import com.academy.workSearch.dao.implementation.UserDAOImpl;
 import com.academy.workSearch.dto.ProjectDTO;
+import com.academy.workSearch.dto.ProjectWorkerDTO;
 import com.academy.workSearch.dto.SkillDTO;
-import com.academy.workSearch.dto.WorkerInfoDTO;
 import com.academy.workSearch.dto.WorkerProjectDTO;
 import com.academy.workSearch.dto.mapper.ProjectMapper;
 import com.academy.workSearch.dto.mapper.ProjectShowInfoMapper;
@@ -21,7 +21,6 @@ import com.academy.workSearch.model.UserInfo;
 import com.academy.workSearch.model.enums.ProjectStatus;
 import com.academy.workSearch.service.ProjectService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -190,6 +189,44 @@ public class ProjectServiceImpl implements ProjectService {
             result.add(workerProjectDTO);
         }
         return result;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<ProjectWorkerDTO> getProjectWorkers(UUID projectId) {
+        List<ProjectWorkerDTO> res = new ArrayList<>();
+        Project project = projectDAO.get(projectId).orElseThrow();
+        for (ProjectUserInfo worker : project.getWorkers()) {
+            ProjectWorkerDTO projectWorkerDTO = ProjectMapper.INSTANCE.toProjectWorkerDTO(worker);
+            res.add(projectWorkerDTO);
+        }
+        return res;
+    }
+
+    @Transactional
+    @Override
+    public void updateApprovedWorker(UUID projectId, UUID projectUserInfoId) {
+        Project project = projectDAO.get(projectId).orElseThrow();
+        for (ProjectUserInfo worker : project.getWorkers()) {
+            if (worker.getUserInfoProjectId().equals(projectUserInfoId)) {
+                worker.setApprove(!worker.isApprove());
+                break;
+            }
+        }
+        projectDAO.save(project);
+    }
+
+    @Transactional
+    @Override
+    public void deleteRequestedWorker(UUID projectId, UUID projectUserInfoId) {
+        Project project = projectDAO.get(projectId).orElseThrow();
+        for (ProjectUserInfo worker : project.getWorkers()) {
+            if (worker.getUserInfoProjectId().equals(projectUserInfoId)) {
+                project.removeUserInfo(worker.getUserInfo());
+                break;
+            }
+        }
+        projectDAO.save(project);
     }
 
     @Override

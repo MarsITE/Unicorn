@@ -47,7 +47,7 @@ export class ProjectComponent implements OnInit {
 
  private getProjects() {
   let req;
-   if (this.involvedInProjects) {
+  if (this.involvedInProjects) {
      req = this.projectService.getWorkerProjects(this.counter.toString(), this.sort);
      if (this.displayedColumns.indexOf('isApprove') < 0) {
        this.displayedColumns.push('isApprove');
@@ -60,7 +60,7 @@ export class ProjectComponent implements OnInit {
      }
    }
 
-   req.subscribe(
+  req.subscribe(
       (response: Project[]) => {
         this.projects = response;
       },
