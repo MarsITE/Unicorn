@@ -18,7 +18,6 @@ spring:
   liquibase:
     change-log: classpath:db/db.changelog-master.xml
     enabled: true
-  #        drop-first: true
   mail:
     host: smtp.gmail.com
     password: ${MAIL_PASSWORD}

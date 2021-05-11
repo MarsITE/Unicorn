@@ -10,7 +10,9 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 import java.util.Set;
 
-@Mapper
+import static org.mapstruct.ReportingPolicy.IGNORE;
+
+@Mapper(unmappedTargetPolicy = IGNORE)
 public interface SkillMapper {
     SkillMapper SKILL_MAPPER = Mappers.getMapper(SkillMapper.class);
 
