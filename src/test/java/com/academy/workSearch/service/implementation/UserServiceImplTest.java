@@ -5,6 +5,7 @@ import com.academy.workSearch.dao.UserDAO;
 import com.academy.workSearch.dao.UserInfoDAO;
 import com.academy.workSearch.dto.UserAuthDTO;
 import com.academy.workSearch.dto.UserRegistrationDTO;
+import com.academy.workSearch.exceptionHandling.exceptions.NotUniqueEntityException;
 import com.academy.workSearch.model.Role;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.UserInfo;
@@ -16,8 +17,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.academy.workSearch.dto.mapper.UserMapper.USER_MAPPER;
@@ -43,6 +48,9 @@ class UserServiceImplTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private AuthenticationManager authenticationManager;
+
     @BeforeEach
     void init() {
         userDAO.setClazz(User.class);
@@ -61,6 +69,7 @@ class UserServiceImplTest {
         User user = new User();
         user.setUserId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f4"));
         user.setEmail("anna@gmail.com");
+
         when(userDAO.get(user.getUserId())).thenReturn(Optional.of(user));
 
         assertSame("anna@gmail.com", userService.get(user.getUserId()).getEmail(), "The user returned was not the same as the mock");
@@ -133,5 +142,99 @@ class UserServiceImplTest {
         when(jwtService.isRegistrationTokenNotExpired(anyString())).thenReturn(true);
 
         assertTrue(userService.isVerifyAccount("token"), "Account isn't verified");
+    }
+
+    @Test
+    void isUniqueEmail() {
+        User user = new User();
+        user.setEmail("a@gmail.com");
+
+        when(userDAO.getByEmail(anyString())).thenReturn(Optional.of(user));
+
+        assertTrue(userService.isPresentUserByEmail(user.getEmail()));
+    }
+
+    @Test
+    void checkBadCredentialsException() {
+        UserRegistrationDTO userRegistrationDTO = new UserRegistrationDTO();
+        userRegistrationDTO.setEmail("a@gmail.com");
+        userRegistrationDTO.setPassword("111111");
+
+        User user = new User();
+        user.setEmail("a@gmail.com");
+        user.setPassword("111111");
+        user.setAccountStatus(AccountStatus.ACTIVE);
+        user.setCreationDate(LocalDateTime.now());
+        user.setRegistrationToken("token");
+        Set<Role> roles = new HashSet<>();
+        roles.add(new Role(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f4"), "WORKER"));
+        user.setRoles(roles);
+
+        when(userDAO.getByEmail(anyString())).thenReturn(Optional.of(user));
+        Authentication authentication = mock(Authentication.class);
+        authentication.setAuthenticated(false);
+        when(authenticationManager.authenticate(any())).thenReturn(authentication);
+
+        Exception exception = assertThrows(BadCredentialsException.class, () -> {
+            userService.get(userRegistrationDTO);
+        });
+
+        assertEquals("Incorrect username or password", exception.getMessage());
+    }
+
+    @Test
+    void checkNotUniqueEntityException() {
+        UserRegistrationDTO userRegistrationDTO = new UserRegistrationDTO();
+        userRegistrationDTO.setEmail("a@gmail.com");
+        userRegistrationDTO.setPassword("111111");
+        when(userDAO.getByEmail("a@gmail.com")).thenReturn(Optional.of(new User()));
+
+        assertThrows(NotUniqueEntityException.class, () -> {
+            userService.save(userRegistrationDTO);
+        });
+    }
+
+    @Test
+    void generateJwtToken() {
+        UserRegistrationDTO userRegistrationDTO = new UserRegistrationDTO();
+        userRegistrationDTO.setEmail("a@gmail.com");
+        userRegistrationDTO.setPassword("111111");
+
+        User user = new User();
+        user.setEmail("a@gmail.com");
+        user.setPassword("111111");
+        user.setAccountStatus(AccountStatus.ACTIVE);
+        user.setCreationDate(LocalDateTime.now());
+        user.setRegistrationToken("token");
+        Set<Role> roles = new HashSet<>();
+        roles.add(new Role(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f4"), "WORKER"));
+        user.setRoles(roles);
+
+        when(userDAO.getByEmail(anyString())).thenReturn(Optional.of(user));
+        Authentication authentication = mock(Authentication.class);
+        authentication.setAuthenticated(true);
+        when(authenticationManager.authenticate(any())).thenReturn(authentication);
+        when(jwtService.generateAccessToken(user)).thenReturn("access");
+        when(jwtService.generateRefreshToken(user.getEmail())).thenReturn("refresh");
+
+        UserAuthDTO authDTO = userService.get(userRegistrationDTO);
+
+        assertEquals("access", authDTO.getAccessToken());
+        assertEquals("refresh", authDTO.getRefreshToken());
+    }
+
+    @Test
+    void refreshToken() {
+        User user = new User();
+        user.setEmail("a@gmail.com");
+
+        when(jwtService.isValidRefreshToken(any(), any())).thenReturn(true);
+        when(userDAO.getByEmail(any())).thenReturn(Optional.of(user));
+        when(jwtService.generateAccessToken(any())).thenReturn("access");
+        when(jwtService.generateRefreshToken(any())).thenReturn("refresh");
+
+        UserAuthDTO authDTO = new UserAuthDTO();
+        assertEquals("access", userService.refreshToken(authDTO).getAccessToken());
+        assertEquals("refresh", userService.refreshToken(authDTO).getRefreshToken());
     }
 }
