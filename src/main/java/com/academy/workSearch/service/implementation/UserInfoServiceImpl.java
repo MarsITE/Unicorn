@@ -50,7 +50,7 @@ public class UserInfoServiceImpl implements UserInfoService {
      */
     @Transactional
     @Override
-    public UserInfoDTO save(UserInfoDTO userInfo) {
+    public UserInfoDTO update(UserInfoDTO userInfo) {
         return USER_INFO_MAPPER
                 .toUserInfoDto(userInfoDAO.save(USER_INFO_MAPPER.toUserInfo(userInfo)));
     }
