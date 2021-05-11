@@ -123,7 +123,7 @@ export class AllProjectsComponent implements OnInit {
     }
     else{
       return `${str.substring(0,200)}...`;
-    } 
+    }
   }
   getPaginatorDataAllProjects(event?: PageEvent) {
     console.log(event);
@@ -144,7 +144,7 @@ export class AllProjectsComponent implements OnInit {
   allProjectListSize(): boolean{
     return this.allPageCount > 5;
   }
-  
+
   isProjectDBIsEmpty(): boolean {
     return this.allPageCount == 0;
   }
