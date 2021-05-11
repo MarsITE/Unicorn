@@ -1,55 +1,58 @@
 <div *ngIf="user" class="profile">
-  <mat-card class="user-profile">
-    <picture class="photo">
-      <img class="img-photo" mat-card-image [src]="imageBlobUrl" alt="User photo">
-    </picture>
-    <div class="user-info">
-      <div *ngIf="user.userInfo.firstName && user.userInfo.lastName &&
+    <mat-card class="user-profile">
+        <picture class="photo">
+            <img class="img-photo" mat-card-image [src]="imageBlobUrl" alt="User photo">
+        </picture>
+        <div class="user-info">
+            <div *ngIf="user.userInfo.firstName && user.userInfo.lastName &&
       user.userInfo.firstName !== '' && user.userInfo.lastName !== ''; else showEmail">
-        <label class="username">{{user.userInfo.firstName }} {{user.userInfo.lastName}}</label>
-      </div>
-      <ng-template #showEmail>
-        <i>{{user.email}}</i>
-      </ng-template>
-    </div>
+                <label class="username">{{user.userInfo.firstName }} {{user.userInfo.lastName}}</label>
+            </div>
+            <ng-template #showEmail>
+                <i>{{user.email}}</i>
+            </ng-template>
+        </div>
 
-    <div class="userRoles">
-      <span class *ngFor="let role of user.roles"> {{converToPlain(role)}} </span>
-    </div>
+        <div class="userRoles">
+            <span class *ngFor="let role of user.roles"> {{converToPlain(role)}} </span>
+        </div>
 
-    <div class="skills">
-      <mat-chip-list>
-        <mat-chip class="skills-chip" *ngFor="let skill of user.userInfo.skills"> {{converToPlainSkills(skill.name)}}
-        </mat-chip>
-      </mat-chip-list>
-    </div>
+        <div class="skills">
+            <mat-chip-list>
+                <mat-chip class="skills-chip" *ngFor="let skill of user.userInfo.skills"> {{converToPlainSkills(skill.name)}}
+                </mat-chip>
+            </mat-chip-list>
+        </div>
 
-    <div class="aditional-data" *ngIf="user.userInfo.showInfo">
-      <label>Email: {{user.email}}</label>
-      <div *ngIf="user.userInfo.phone && user.userInfo.phone != ''">
-        <label>Phone: {{user.userInfo.phone}}</label>
-      </div>
-      <div *ngIf="user.userInfo.linkToSocialNetwork && user.userInfo.linkToSocialNetwork != ''">
-        <label>Url: {{user.userInfo.linkToSocialNetwork}}</label>
-      </div>
-      <div *ngIf="user.userInfo.birthDate && user.userInfo.birthDate != ''">
-        <label>Date of birth: {{user.userInfo.birthDate}}</label>
-      </div>
-      <div *ngIf="user.userInfo.showInfo && user.userInfo.showInfo != ''">
-        <label>Public profile: {{user.userInfo.showInfo}}</label>
-      </div>
-      <div *ngIf="user.userInfo.workStatus && user.userInfo.workStatus != ''">
-        <label>Work status: {{user.userInfo.workStatus}}</label>
-      </div>
-    </div>
+        <div class="aditional-data" *ngIf="user.userInfo.showInfo">
+            <label>Email: {{user.email}}</label>
+            <div *ngIf="user.userInfo.phone">
+                <label>Phone: {{user.userInfo.phone}}</label>
+            </div>
+            <div *ngIf="user.userInfo.linkToSocialNetwork">
+                <label>Url: {{user.userInfo.linkToSocialNetwork}}</label>
+            </div>
+            <div *ngIf="user.userInfo.birthDate">
+                <label>Date of birth: {{user.userInfo.birthDate}}</label>
+            </div>
+            <div *ngIf="user.userInfo.showInfo">
+                <label>Public profile: {{user.userInfo.showInfo}}</label>
+            </div>
+            <div *ngIf="user.userInfo.workStatus">
+                <label>Work status: {{user.userInfo.workStatus}}</label>
+            </div>
+        </div>
 
-    <h3 align="center"><a href="projects">Projects</a></h3>
+        <div class="projects">
+            <h3 *ngIf="isWorker" align="right"><a href="projects">My projects</a></h3>
+            <h3 *ngIf="isEmployer" align="right"><a href="worker-projects">Involed projects</a></h3>
+        </div>
 
-    <div *ngIf="!isOnlyWatch">
-      <div class="buttons">
-        <button (click)=edit() mat-raised-button color="primary"> Edit </button>
-      </div>
-    </div>
-  </mat-card>
+        <div *ngIf="!isOnlyWatch">
+            <div class="buttons">
+                <button (click)=edit() mat-raised-button color="primary"> Edit </button>
+            </div>
+        </div>
+    </mat-card>
 
 </div>

@@ -43,4 +43,14 @@ public class UserInfoServiceImplTest {
 
         assertEquals("Diana", userInfoService.update(userInfoDTO).getFirstName(), "Can't update userInfo");
     }
+
+    @Test
+    void loadPhoto() {
+
+    }
+
+    @Test
+    void savePhoto() {
+//        when(userInfoDAO.get(any())).thenReturn();
+    }
 }

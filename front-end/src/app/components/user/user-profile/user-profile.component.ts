@@ -1,3 +1,4 @@
+import { USER_ROLE_EMPLOYER, USER_ROLE_WORKER } from './../../../common/helper/token.helper';
 import { Component, OnDestroy, OnInit, SecurityContext } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeUrl, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
@@ -15,11 +16,13 @@ import { TokenHelper } from 'src/app/common/helper/token.helper';
 })
 export class UserProfileComponent implements OnInit, OnDestroy {
   id: string;
-  emailInUrl: string;
+  idInUrl: string;
   user: User;
   imageUrl: string;
   image: any;
   imageBlobUrl: SafeResourceUrl;
+  isWorker: boolean;
+  isEmployer: boolean;
   private subscriptions: Subscription[] = [];
   workStatuses: WorkStatus[] = [
     { value: 'PART_TIME', viewValue: 'Part time' },
@@ -32,8 +35,10 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router, private domSanitizer: DomSanitizer,
               private toastr: ToastrService, private tokenHelper: TokenHelper) {
     this.id = this.tokenHelper.getIdFromToken();
-    this.emailInUrl = router.snapshot.params.email;
+    this.idInUrl = router.snapshot.params.id;
     this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl('../../../assets/default-profile-photo.jpg');
+    this.isWorker = this.tokenHelper.isUserRole(USER_ROLE_WORKER);
+    this.isEmployer = this.tokenHelper.isUserRole(USER_ROLE_EMPLOYER);
   }
   ngOnDestroy(): void {
     this.subscriptions.forEach(s => {
@@ -42,8 +47,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (this.emailInUrl) {
-      this.getUser(this.emailInUrl);
+    if (this.idInUrl) {
+      this.getUser(this.idInUrl);
       this.isOnlyWatch = true;
     } else {
       this.getUser(this.id);

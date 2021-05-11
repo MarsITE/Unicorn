@@ -1,73 +1,79 @@
 .profile {
-  display: flex;
-  justify-content: center;
+    display: flex;
+    justify-content: center;
 }
 
 .user-profile {
-  height: 100%;
-  min-width: 600px;
-  max-width: 1000px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+    height: 100%;
+    min-width: 600px;
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
 }
 
 .photo {
-  padding-top: 24px;
-  align-self: center;
-  border-radius: 50%;
+    padding-top: 24px;
+    align-self: center;
+    border-radius: 50%;
 }
 
 .img-photo {
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
 }
 
 .user-info {
-  align-self: center;
-  align-content: center;
-  padding-top: 48px;
-  margin-bottom: 16px;
+    align-self: center;
+    align-content: center;
+    padding-top: 48px;
+    margin-bottom: 16px;
 }
 
 .username {
-  font-size: 30px;
-  font-style: italic;
+    font-size: 30px;
+    font-style: italic;
 }
 
 .userStatus,
 .userRoles {
-  align-self: flex-end;
+    align-self: flex-end;
 }
 
 .buttons {
-  display: flex;
-  justify-content: space-around;
-  margin: 20px;
+    display: flex;
+    justify-content: space-around;
+    margin: 20px;
 }
 
 .aditional-data {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 .raiting {
-  align-self: center;
-  margin-bottom: 8px;
+    align-self: center;
+    margin-bottom: 8px;
 }
 
 .skills {
-  margin-top: 10px;
+    margin-top: 10px;
 }
 
 .skills-chip {
-  display: flex;
-  margin-left: 5px;
+    display: flex;
+    margin-left: 5px;
 }
 
-.aditional-data, .projects {
-  margin-top: 20px;
+.aditional-data,
+.projects {
+    margin-top: 20px;
+}
+
+.projects {
+    display: flex;
+    justify-content: space-evenly;
 }
