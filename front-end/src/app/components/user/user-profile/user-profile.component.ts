@@ -21,8 +21,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   imageUrl: string;
   image: any;
   imageBlobUrl: SafeResourceUrl;
-  isWorker: boolean;
-  isEmployer: boolean;
+  isWorker = false;
+  isEmployer = false;
   private subscriptions: Subscription[] = [];
   workStatuses: WorkStatus[] = [
     { value: 'PART_TIME', viewValue: 'Part time' },
