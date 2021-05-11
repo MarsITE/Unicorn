@@ -1,57 +1,22 @@
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { ACCESS_TOKEN, REFRESH_TOKEN, TokenHelper } from '../../helper/token.helper';
-import { UserAuth } from '../../model/user-auth';
-import { UserHttpService } from '../user-http.service';
+import { AuthenticationService } from './../authentication.service';
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
 
-  constructor(private router: Router, private userService: UserHttpService, private tokenHelper: TokenHelper) { }
+  constructor(private authenticationService: AuthenticationService) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!request.url.includes('login') && !request.url.includes('registr')) {
-      this.updateAccessToken();
-    }
-    return next.handle(request)
-      .pipe(
-        catchError((error: HttpErrorResponse) => {
-          const errorMsg = error.error.message;
-          switch (error.status) {
-            case 401:
-              this.router.navigateByUrl('login');
-              break;
-            case 403:
-              this.router.navigateByUrl('not-found');
-              break;
-            default:
-              break;
-          }
-          return throwError(errorMsg);
-        }));
-
-  }
-
-  private updateAccessToken(): void {
-    if (sessionStorage.getItem(ACCESS_TOKEN) != null) {
-      if (!this.tokenHelper.isValidToken()) {
-        const userAuth: UserAuth = {
-          email: this.tokenHelper.getEmailFromToken(),
-          accessToken: '',
-          refreshToken: sessionStorage.getItem(REFRESH_TOKEN)
-        };
-        this.userService.refreshToken(userAuth)
-          .subscribe(
-            result => {
-              sessionStorage.setItem(ACCESS_TOKEN, result.accessToken);
-              sessionStorage.setItem(REFRESH_TOKEN, result.refreshToken);
-            },
-            error => console.log(error),
-          );
+    return next.handle(request).pipe(catchError(err => {
+      if ([401, 403].includes(err.status)) {
+        this.authenticationService.logout();
       }
-    }
+      const error = (err && err.error && err.error.message) || err.statusText;
+      return throwError(error);
+    }));
   }
+
 }

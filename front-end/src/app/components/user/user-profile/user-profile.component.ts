@@ -3,12 +3,11 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
-import { TokenHelper } from 'src/app/common/helper/token.helper';
 import { User } from 'src/app/common/model/user';
 import { WorkStatus } from 'src/app/common/model/work-status';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
-
-import { USER_ROLE_EMPLOYER, USER_ROLE_WORKER } from './../../../common/helper/token.helper';
+import { USER_ROLE_EMPLOYER, USER_ROLE_WORKER } from 'src/app/constants';
+import { AuthenticationService } from './../../../common/services/authentication.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -39,7 +38,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     private router2: Router,
     private domSanitizer: DomSanitizer,
     private toastr: ToastrService,
-    private tokenHelper: TokenHelper
+    private authenticationService: AuthenticationService
   ) {
     this.idInUrl = router.snapshot.params.id;
     this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl('../../../assets/default-profile-photo.jpg');
@@ -55,7 +54,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       this.getUser(this.idInUrl);
       this.isOnlyWatch = true;
     } else {
-      this.id = this.tokenHelper.getIdFromToken();
+      this.id = this.authenticationService.getIdFromToken();
       this.getUser(this.id);
       this.isOnlyWatch = false;
     }

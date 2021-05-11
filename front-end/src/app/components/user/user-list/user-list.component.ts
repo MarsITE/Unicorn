@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs/internal/Subscription';
-import { TokenHelper } from 'src/app/common/helper/token.helper';
 import { User } from 'src/app/common/model/user';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
+import { AuthenticationService } from './../../../common/services/authentication.service';
 
 @Component({
   selector: 'app-user-list',
@@ -20,7 +20,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   constructor(
     private userService: UserHttpService,
     private router: Router,
-    private tokenHelper: TokenHelper,
+    private authenticationService: AuthenticationService,
     private toast: ToastrService
   ) {
   }
@@ -44,7 +44,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   public showUserProfile(row: any): void {
-    if (this.tokenHelper.getEmailFromToken() === row.email) {
+    if (this.authenticationService.getEmailFromToken() === row.email) {
       this.router.navigateByUrl('profile');
     } else {
       this.router.navigateByUrl(`profile/${row.userId}`);

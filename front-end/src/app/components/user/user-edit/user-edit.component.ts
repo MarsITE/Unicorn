@@ -1,16 +1,15 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatSelect } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
-import { TokenHelper } from 'src/app/common/helper/token.helper';
 import { Skill } from 'src/app/common/model/skill';
 import { User } from 'src/app/common/model/user';
 import { UserInfo } from 'src/app/common/model/user-info';
 import { WorkStatus } from 'src/app/common/model/work-status';
 import { SkillService } from 'src/app/common/services/skill.service';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
+import { AuthenticationService } from './../../../common/services/authentication.service';
 
 @Component({
   selector: 'app-user-edit',
@@ -44,11 +43,11 @@ export class UserEditComponent implements OnInit, OnDestroy {
   constructor(
     private userService: UserHttpService,
     private router2: Router,
-    private tokenHelper: TokenHelper,
     private toastr: ToastrService,
+    private authenticationService: AuthenticationService,
     private skillService: SkillService) {
     this.initForm();
-    this.id = this.tokenHelper.getIdFromToken();
+    this.id = this.authenticationService.getIdFromToken();
     this.today = new Date();
   }
 

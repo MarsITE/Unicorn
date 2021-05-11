@@ -20,7 +20,7 @@
     </mat-toolbar>
 
     <mat-sidenav-container class="sidebar-contaiver" fullscreen>
-        <mat-sidenav mode="side" [opened]="isOpen" [fixedInViewport]="true" [fixedTopGap]="gap" [fixedBottomGap]="gap">
+        <mat-sidenav mode="side" [opened]="isOpen" [fixedInViewport]="true" [fixedTopGap]="options.value.gap" [fixedBottomGap]="options.value.gap">
             <app-sidenav-list [isUserLoggedIn]="isNotLoginOrRegistration()"></app-sidenav-list>
         </mat-sidenav>
         <mat-sidenav-content>

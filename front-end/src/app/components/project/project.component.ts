@@ -1,11 +1,10 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Project } from '../../common/model/project';
 import { User } from '../../common/model/user';
 import { ProjectService } from '../../common/services/project.service';
-import { TokenHelper, USER_ROLE_EMPLOYER } from '../../common/helper/token.helper';
-
+import { AuthenticationService } from './../../common/services/authentication.service';
 
 @Component({
   selector: 'app-project',
@@ -27,30 +26,30 @@ export class ProjectComponent implements OnInit {
   displayedColumns: string[] = ['name', 'projectStatus', 'creationDate', 'skills'];
 
   constructor(private projectService: ProjectService, private router: Router,
-              private http: HttpClient, route: ActivatedRoute, private tokenHelper: TokenHelper) {
+              private authenticationService: AuthenticationService, route: ActivatedRoute) {
     route.queryParams.subscribe(params => {
-    this.counter = params.page || this.counter;
-    this.sort = params.sort || this.sort;
-    this.maxResult = params.maxResult || this.maxResult;
-    this.ownerId = this.tokenHelper.getIdFromToken();
-});
+      this.counter = params.page || this.counter;
+      this.sort = params.sort || this.sort;
+      this.maxResult = params.maxResult || this.maxResult;
+      this.ownerId = this.authenticationService.getIdFromToken();
+    });
   }
 
   ngOnInit(): void {
     this.getProjects();
-    this.isEmployer = this.tokenHelper.isUserRole(USER_ROLE_EMPLOYER);
+    this.isEmployer = this.authenticationService.isRoleEmployer();
 
     console.log('This get project.', this.projects.length);
   }
 
- private getProjects() {
-  const params = new HttpParams()
-  .set('page', this.counter.toString())
-  .set('sort', this.sort)
-  .set('maxResult', this.maxResult.toString())
-  .set('Authorization', `Bearer ${sessionStorage.getItem('access_token')}`) ;
+  private getProjects() {
+    const params = new HttpParams()
+      .set('page', this.counter.toString())
+      .set('sort', this.sort)
+      .set('maxResult', this.maxResult.toString())
+      .set('Authorization', `Bearer ${sessionStorage.getItem('access_token')}`);
 
-  this.projectService.getProjects(this.counter.toString(), this.sort, this.maxResult.toString(), false).subscribe(
+    this.projectService.getProjects(this.counter.toString(), this.sort, this.maxResult.toString(), false).subscribe(
       (response: Project[]) => {
         this.projects = response;
       },
@@ -84,7 +83,7 @@ export class ProjectComponent implements OnInit {
   }
 
   projectsPrev() {
-    if (this.counter > 1){
+    if (this.counter > 1) {
       this.counter--;
     }
     this.getProjects();
