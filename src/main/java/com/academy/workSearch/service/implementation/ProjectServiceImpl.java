@@ -4,15 +4,20 @@ import com.academy.workSearch.dao.ProjectDAO;
 import com.academy.workSearch.dao.RoleDAO;
 import com.academy.workSearch.dao.implementation.UserDAOImpl;
 import com.academy.workSearch.dto.ProjectDTO;
+import com.academy.workSearch.dto.ProjectWorkerDTO;
 import com.academy.workSearch.dto.SkillDTO;
+import com.academy.workSearch.dto.WorkerProjectDTO;
 import com.academy.workSearch.dto.mapper.ProjectMapper;
+import com.academy.workSearch.dto.mapper.ProjectShowInfoMapper;
 import com.academy.workSearch.dto.mapper.SkillMapper;
 import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.exceptionHandling.exceptions.NotUniqueEntityException;
 import com.academy.workSearch.model.Project;
+import com.academy.workSearch.model.ProjectUserInfo;
 import com.academy.workSearch.model.Role;
 import com.academy.workSearch.model.Skill;
 import com.academy.workSearch.model.User;
+import com.academy.workSearch.model.UserInfo;
 import com.academy.workSearch.model.enums.ProjectStatus;
 import com.academy.workSearch.service.ProjectService;
 import lombok.AllArgsConstructor;
@@ -135,22 +140,6 @@ public class ProjectServiceImpl implements ProjectService {
         return projectDto;
     }
 
-    /**
-     * @param projectDto current project
-     * @param skillDTO   skills that we need to add
-     * @return projectDto
-     */
-    @Override
-    public ProjectDTO addSkillsToProject(ProjectDTO projectDto, SkillDTO skillDTO) {
-        Project project = ProjectMapper.INSTANCE.toEntity(projectDto);
-        Skill skill = SkillMapper.SKILL_MAPPER.toEntity(skillDTO);
-        Set<Skill> skills = new HashSet<>();
-        skills.add(skill);
-        project.setSkills(skills);
-        projectDAO.save(project);
-        return projectDto;
-    }
-
     @Override
     public ProjectDTO update(UUID id, ProjectDTO projectDTO) {
         Project oldProject = projectDAO.get(id)
@@ -162,6 +151,66 @@ public class ProjectServiceImpl implements ProjectService {
         oldProject.setSkills(newProject.getSkills());
         projectDAO.save(oldProject);
         return ProjectMapper.INSTANCE.toDto(oldProject);
+    }
+
+    @Override
+    public void joinProject(UUID projectId, User worker) {
+        Project project = projectDAO.get(projectId)
+                .orElseThrow(() -> new NoSuchEntityException(NO_PROJECT + projectId));
+        UserInfo userInfo = userDAO.get(worker.getUserId())
+                .map(User::getUserInfo)
+                .orElseThrow();
+        project.addUserInfo(userInfo);
+    }
+
+    @Override
+    public List<WorkerProjectDTO> getWorkerProjects(User worker) {
+        List<WorkerProjectDTO> result = new ArrayList<>();
+        User user = userDAO.get(worker.getUserId()).orElseThrow();
+        for (ProjectUserInfo projectUserInfo : user.getUserInfo().getProjects()) {
+            WorkerProjectDTO workerProjectDTO = ProjectShowInfoMapper.INSTANCE.toWorkerDto(projectUserInfo.getProject());
+            workerProjectDTO.setApprove(projectUserInfo.isApprove());
+            result.add(workerProjectDTO);
+        }
+        return result;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<ProjectWorkerDTO> getProjectWorkers(UUID projectId) {
+        List<ProjectWorkerDTO> res = new ArrayList<>();
+        Project project = projectDAO.get(projectId).orElseThrow();
+        for (ProjectUserInfo worker : project.getWorkers()) {
+            ProjectWorkerDTO projectWorkerDTO = ProjectMapper.INSTANCE.toProjectWorkerDTO(worker);
+            res.add(projectWorkerDTO);
+        }
+        return res;
+    }
+
+    @Transactional
+    @Override
+    public void updateApprovedWorker(UUID projectId, UUID projectUserInfoId) {
+        Project project = projectDAO.get(projectId).orElseThrow();
+        for (ProjectUserInfo worker : project.getWorkers()) {
+            if (worker.getUserInfoProjectId().equals(projectUserInfoId)) {
+                worker.setApprove(!worker.isApprove());
+                break;
+            }
+        }
+        projectDAO.save(project);
+    }
+
+    @Transactional
+    @Override
+    public void deleteRequestedWorker(UUID projectId, UUID projectUserInfoId) {
+        Project project = projectDAO.get(projectId).orElseThrow();
+        for (ProjectUserInfo worker : project.getWorkers()) {
+            if (worker.getUserInfoProjectId().equals(projectUserInfoId)) {
+                project.removeUserInfo(worker.getUserInfo());
+                break;
+            }
+        }
+        projectDAO.save(project);
     }
 
     @Override

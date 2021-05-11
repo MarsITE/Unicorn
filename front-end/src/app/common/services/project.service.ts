@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { ACCESS_TOKEN } from 'src/app/constants';
 import { environment } from 'src/environments/environment';
 import { Project } from '../model/project';
+import {WorkerProject} from '../model/worker-project';
+
 
 @Injectable({
   providedIn: 'root'
@@ -19,30 +21,30 @@ export class ProjectService {
 
 
   private params(counter: { toString: () => string; }, sort: string,
-    maxResult: { toString: () => string; }, showAll: boolean): any {
+                 maxResult: { toString: () => string; }, showAll: boolean): any {
     return new HttpParams()
-      .set('page', counter.toString())
-      .set('sort', sort)
-      .set('showAll', showAll.toString())
-      .set('maxResult', maxResult.toString());
+    .set('page', counter.toString())
+    .set('sort', sort)
+    .set('showAll', showAll.toString())
+    .set('maxResult', maxResult.toString());
   }
 
   private paginationParams(counter: { toString: () => string; }, sort: string, maxResult: { toString: () => string; }, _skillList: String[]): any {
     return new HttpParams()
-      .set('page', counter.toString())
-      .set('sort', sort)
-      .set('maxResult', maxResult.toString())
-      .set('skillList', _skillList.toString());
+    .set('page', counter.toString())
+    .set('sort', sort)
+    .set('maxResult', maxResult.toString())
+    .set('skillList', _skillList.toString());
   }
   private par(counter: { toString: () => string; }, sort: string, maxResult: { toString: () => string; }): any {
     return new HttpParams()
-      .set('page', counter.toString())
-      .set('sort', sort)
-      .set('maxResult', maxResult.toString());
+    .set('page', counter.toString())
+    .set('sort', sort)
+    .set('maxResult', maxResult.toString());
   }
-  private searchCountParam(_skillList: String[]): any {
+  private searchCountParam(_skillList: String[]):any {
     return new HttpParams()
-      .set('skillList', _skillList.toString());
+    .set('skillList', _skillList.toString());
   }
 
   public getProjects(counter: string, sort: string, maxResult: string, showAll: boolean = true): Observable<Project[]> {
@@ -53,6 +55,19 @@ export class ProjectService {
       options['headers'] = this.authHeader();
     }
     return this.http.get<Project[]>(`${environment.url}/projects`, options);
+  }
+
+  public getWorkerProjects(counter: string, sort: string): Observable<WorkerProject[]> {
+    let params = new HttpParams()
+      .set('page', counter.toString())
+      .set('sort', sort);
+    const options = {
+      params: params
+    };
+    if (sessionStorage.getItem(ACCESS_TOKEN) !== null) {
+      options['headers'] = this.authHeader();
+    }
+    return this.http.get<WorkerProject[]>(`${environment.url}/workers/projects`, options);
   }
 
   public getAllProjects(counter: string, sort: string, maxResult: string, showAll: boolean = true): Observable<Project[]> {
@@ -71,13 +86,13 @@ export class ProjectService {
     );
   }
 
-  public getSearchProjects(counter: string, sort: string, maxResult: string, _skillList: String[]): Observable<Project[]> {
+  public getSearchProjects(counter: string, sort: string, maxResult: string, _skillList: string[]):Observable<Project[]> {
     return this.http.get<Project[]>(`${environment.url}/projects/search`, {
       params: this.paginationParams(counter, sort, maxResult, _skillList)
     });
   }
 
-  public getProjectsByUserSkills(counter: string, sort: string, maxResult: string): Observable<Project[]> {
+  public getProjectsByUserSkills(counter: string, sort: string, maxResult: string):Observable<Project[]> {
     return this.http.get<Project[]>(`${environment.url}/projects/worker`, {
       params: this.par(counter, sort, maxResult),
       headers: this.authHeader()
@@ -110,11 +125,15 @@ export class ProjectService {
     });
   }
 
-  public getAllProjectsCountBySearchSkills(_skillList: String[]): Observable<number> {
+  public getAllProjectsCountBySearchSkills(_skillList: string[]): Observable<number> {
     return this.http.get<number>(`${environment.url}/projects/count/search`, {
       params: this.searchCountParam(_skillList),
       headers: this.authHeader()
     });
+  }
+
+  public joinProject(projectId: string) {
+    return this.http.post<Project>(`${environment.url}/projects/${projectId}/workers`, {}, { headers: this.authHeader() });
   }
 }
 

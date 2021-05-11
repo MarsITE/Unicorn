@@ -1,12 +1,13 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ACCESS_TOKEN } from 'src/app/constants';
+import { ACCESS_TOKEN, REFRESH_TOKEN } from 'src/app/constants';
 import { environment } from 'src/environments/environment';
 import { User } from '../model/user';
 import { UserInfo } from '../model/user-info';
 import { UserRegistration } from '../model/user-registration';
 import { AuthenticationService } from './authentication.service';
+import {ProjectWorker} from "../model/project-worker";
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,10 @@ export class UserHttpService {
 
   public getUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${environment.url}/admin/users`, this.authHeader());
+  }
+
+  public getWorkers(): Observable<Worker[]> {
+    return this.http.get<Worker[]>(`${environment.url}api/v1/workers`, this.authHeader());
   }
 
   public save(user: UserRegistration): Observable<UserRegistration> {
@@ -58,5 +63,18 @@ export class UserHttpService {
 
   public checkRegistrationToken(token: string): Observable<boolean> {
     return this.http.get<boolean>(`${environment.url}/verify-email/${token}`);
+  }
+
+  getProjectWorkers(projectId: string): Observable<ProjectWorker[]> {
+    return this.http.get<ProjectWorker[]>(`${environment.url}/projects/${projectId}/workers`, this.authHeader());
+  }
+
+  approveWorkerForProject(projectId: string, userInfoProjectId: string) {
+    return this.http.put(`${environment.url}/projects/${projectId}/workers/${userInfoProjectId}`, {},
+      this.authHeader());
+  }
+
+  deleteWorkerForProject(projectId: string, userInfoProjectId: any) {
+    return this.http.delete(`${environment.url}/projects/${projectId}/workers/${userInfoProjectId}`, this.authHeader());
   }
 }

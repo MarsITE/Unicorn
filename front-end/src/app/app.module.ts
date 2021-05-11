@@ -77,6 +77,7 @@ import { UserLoginComponent } from './components/user/user-login/user-login.comp
 import { UserProfileComponent } from './components/user/user-profile/user-profile.component';
 import { UserRegistrationComponent } from './components/user/user-registration/user-registration.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email';
+import {WorkersListComponent} from './components/workers-list/workers-list.component';
 
 @NgModule({
   declarations: [
@@ -99,7 +100,8 @@ import { VerifyEmailComponent } from './components/verify-email/verify-email';
     VerifyEmailComponent,
     SkillsAdministrationComponent,
     WorkerSkillsComponent,
-    AddSkillsComponent
+    AddSkillsComponent,
+    WorkersListComponent
   ],
 
   imports: [

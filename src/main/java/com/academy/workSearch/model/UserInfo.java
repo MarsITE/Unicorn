@@ -21,6 +21,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "users_info")
 public class UserInfo {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_info_id")
@@ -62,8 +63,11 @@ public class UserInfo {
     @ApiModelProperty(notes = "User photo")
     private String imageUrl;
 
-    @OneToMany
-    @JoinColumn(name = "users_info_projects_id")
+    @OneToMany(
+            mappedBy = "userInfo",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private List<ProjectUserInfo> projects;
 
     @ManyToMany(cascade = CascadeType.DETACH)
@@ -76,4 +80,7 @@ public class UserInfo {
 
     @Column(name = "description", length = 2000)
     private String description;
+
+    @OneToOne(mappedBy = "userInfo",fetch = FetchType.LAZY)
+    private User user;
 }

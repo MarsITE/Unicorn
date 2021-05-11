@@ -1,6 +1,7 @@
 package com.academy.workSearch.controller;
 
 import com.academy.workSearch.dto.ProjectDTO;
+import com.academy.workSearch.dto.ProjectWorkerDTO;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.service.ProjectService;
 import io.swagger.annotations.ApiOperation;
@@ -62,13 +63,14 @@ public class ProjectController {
         logger.info(String.valueOf(skills));
         return new ResponseEntity<>(projectsDto, HttpStatus.OK);
     }
+
     @GetMapping("/worker")
     @ApiOperation(value = "Find projects by user ID and user skills", notes = "Return all projects user skills")
     public ResponseEntity<List<ProjectDTO>> findUserProjectBySkills(@RequestParam(value = "page", defaultValue = "1") int page,
                                                                     @RequestParam(value = "sort", defaultValue = "desc") String sort,
                                                                     @RequestParam(value = "maxResult", defaultValue = "5") int maxResult,
                                                                     @RequestParam(value = "maxNavigationPage", defaultValue = "100") int maxNavigationPage,
-                                                                    @AuthenticationPrincipal User user){
+                                                                    @AuthenticationPrincipal User user) {
         UUID userId = user.getUserId();
         List<ProjectDTO> projectDto = projectService.findUserProjectBySkills(userId, page, maxResult, maxNavigationPage, sort);
         logger.info("Show projects by user skills");
@@ -77,7 +79,7 @@ public class ProjectController {
 
     @GetMapping("/count/all")
     @ApiOperation(value = "count all projects", notes = "Return long as count of all projects")
-    public ResponseEntity<Long> getCountOfAllProjects(){
+    public ResponseEntity<Long> getCountOfAllProjects() {
         Long count = projectService.getAllProjectsCount();
         logger.info(count.toString());
         return new ResponseEntity<>(count, HttpStatus.OK);
@@ -85,7 +87,7 @@ public class ProjectController {
 
     @GetMapping("/count/user/skills")
     @ApiOperation(value = "count all projects by skills", notes = "Return long as count of all projects by user skills")
-    public ResponseEntity<Long> getCountOfAllProjectsByUserSkills(@AuthenticationPrincipal User user){
+    public ResponseEntity<Long> getCountOfAllProjectsByUserSkills(@AuthenticationPrincipal User user) {
         UUID userId = user.getUserId();
         Long count = projectService.getAllProjectsCountByUserSkills(userId);
         logger.info(count.toString());
@@ -94,7 +96,7 @@ public class ProjectController {
 
     @GetMapping("/count/search")
     @ApiOperation(value = "count all projects by search skills", notes = "Return long as count of all projects by search skills")
-    public ResponseEntity<Long> getCountOfAllProjectsBySearchSkills(@RequestParam(value = "skillList") List<String> skills){
+    public ResponseEntity<Long> getCountOfAllProjectsBySearchSkills(@RequestParam(value = "skillList") List<String> skills) {
         Long count = projectService.getAllProjectsCountBySearchSkills(skills);
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
@@ -121,6 +123,38 @@ public class ProjectController {
         logger.info("Update project with ID = {}", id);
         projectService.update(id, projectDto);
         return new ResponseEntity<>(projectDto, HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/workers")
+    @ApiOperation(value = "Update existing project", notes = "Update existing project")
+    public void updateProject(@PathVariable("id") UUID projectId,
+                              @AuthenticationPrincipal User worker) {
+        logger.info("Join worker {} to project with ID = {}", worker.getUserId(), projectId);
+        projectService.joinProject(projectId, worker);
+    }
+
+    @GetMapping("/{id}/workers")
+    @ApiOperation(value = "Update existing project", notes = "Update existing project")
+    public ResponseEntity<List<ProjectWorkerDTO>> updateApprovedWorker(@PathVariable("id") UUID projectId) {
+//        logger.info("Join worker {} to project with ID = {}", worker.getUserId(), projectId);
+        List<ProjectWorkerDTO> res = projectService.getProjectWorkers(projectId);
+        return ResponseEntity.ok(res);
+    }
+
+    @PutMapping("/{id}/workers/{projectUserInfoId}")
+    @ApiOperation(value = "Update existing project", notes = "Update existing project")
+    public void updateApprovedWorker(@PathVariable("id") UUID projectId,
+                                     @PathVariable("projectUserInfoId") UUID projectUserInfoId) {
+
+        projectService.updateApprovedWorker(projectId, projectUserInfoId);
+    }
+
+    @DeleteMapping("/{id}/workers/{projectUserInfoId}")
+    @ApiOperation(value = "Update existing project", notes = "Update existing project")
+    public void deleteRequestedWorker(@PathVariable("id") UUID projectId,
+                                      @PathVariable("projectUserInfoId") UUID projectUserInfoId) {
+
+        projectService.deleteRequestedWorker(projectId, projectUserInfoId);
     }
 
     @DeleteMapping("/{id}")

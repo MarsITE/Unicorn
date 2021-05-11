@@ -20,18 +20,20 @@ export class ProjectComponent implements OnInit {
   counter = 1;
   maxResult = 5;
   isEmployer: boolean;
+  involvedInProjects: boolean;
 
   projects: Project[] = [];
 
-  displayedColumns: string[] = ['name', 'projectStatus', 'creationDate', 'skills'];
+  displayedColumns: string[] = ['name', 'projectStatus', 'creationDate', 'skills', 'isApprove'];
 
   constructor(private projectService: ProjectService, private router: Router,
               private authenticationService: AuthenticationService, route: ActivatedRoute) {
     route.queryParams.subscribe(params => {
-      this.counter = params.page || this.counter;
-      this.sort = params.sort || this.sort;
-      this.maxResult = params.maxResult || this.maxResult;
-      this.ownerId = this.authenticationService.getIdFromToken();
+        this.counter = params.page || this.counter;
+        this.sort = params.sort || this.sort;
+        this.maxResult = params.maxResult || this.maxResult;
+        this.ownerId = this.authenticationService.getIdFromToken();
+        this.involvedInProjects = this.router.url.indexOf('/worker-projects') > -1;
     });
   }
 
@@ -42,14 +44,22 @@ export class ProjectComponent implements OnInit {
     console.log('This get project.', this.projects.length);
   }
 
-  private getProjects() {
-    const params = new HttpParams()
-      .set('page', this.counter.toString())
-      .set('sort', this.sort)
-      .set('maxResult', this.maxResult.toString())
-      .set('Authorization', `Bearer ${sessionStorage.getItem('access_token')}`);
+ private getProjects() {
+  let req;
+  if (this.involvedInProjects) {
+     req = this.projectService.getWorkerProjects(this.counter.toString(), this.sort);
+     if (this.displayedColumns.indexOf('isApprove') < 0) {
+       this.displayedColumns.push('isApprove');
+     }
+   } else {
+     req = this.projectService.getProjects(this.counter.toString(), this.sort, this.maxResult.toString(), false);
+     let indexOf = this.displayedColumns.indexOf('isApprove');
+     if (indexOf > -1) {
+       this.displayedColumns.splice(indexOf, 1);
+     }
+   }
 
-    this.projectService.getProjects(this.counter.toString(), this.sort, this.maxResult.toString(), false).subscribe(
+  req.subscribe(
       (response: Project[]) => {
         this.projects = response;
       },
@@ -58,7 +68,8 @@ export class ProjectComponent implements OnInit {
       },
       () => {
         console.log('complete');
-        this.router.navigateByUrl(`projects?page=` + this.counter + `&maxResult=` + this.maxResult + `&sort=` + this.sort);
+        let path = this.involvedInProjects ? 'worker-projects' : 'projects';
+        this.router.navigateByUrl(`${path}?page=` + this.counter + `&maxResult=` + this.maxResult + `&sort=` + this.sort);
       }
     );
   }
@@ -83,7 +94,7 @@ export class ProjectComponent implements OnInit {
   }
 
   projectsPrev() {
-    if (this.counter > 1) {
+    if (this.counter > 1){
       this.counter--;
     }
     this.getProjects();

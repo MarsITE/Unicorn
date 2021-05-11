@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { USER_ROLE_EMPLOYER } from 'src/app/constants';
 import { Project } from '../../../common/model/project';
 import { ProjectStatus } from '../../../common/model/project-status';
 import { ProjectService } from '../../../common/services/project.service';
 import { AuthenticationService } from './../../../common/services/authentication.service';
+import { Worker } from '../../../common/model/worker';
+
 
 @Component({
   selector: 'app-project-info',
@@ -80,6 +81,16 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
     this.router2.navigateByUrl(`editProject/${id}`);
   }
 
+  workersList() {
+    this.router2.navigateByUrl(`workers-list/${this.id}`);
+  }
+
+  public joinProject(projectId: string): void {
+    this.projectService.joinProject(projectId).subscribe(() => {
+      this.router2.navigateByUrl(`worker-projects`);
+    });
+  }
+
   public delete(id: string): void {
     this.subscriptions.push(this.projectService.deleteProject(id).subscribe(
       (response) => {
@@ -95,6 +106,9 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
     ));
   }
 
+  public getApprovedWorkers(workers: Worker[]): Worker[] {
+    return workers.filter(worker => worker.isApprove);
+  }
 }
 
 

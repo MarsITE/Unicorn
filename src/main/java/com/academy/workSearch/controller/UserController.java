@@ -35,7 +35,7 @@ public class UserController {
 
     /**
      * @param userRegistrationDTO auth data
-     * @return jwt tokrn
+     * @return jwt token
      */
     @PostMapping(value = {"/login"})
     @ApiOperation(value = "Auth", notes = "Find user if exists")
