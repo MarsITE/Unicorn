@@ -61,7 +61,7 @@ public class UserController {
 
     /**
      * @param id user
-     * @return delete exoting user
+     * @return delete exiting user
      */
     @DeleteMapping({"/user/{id}"})
     @ApiOperation(value = "Delete existing user", notes = "Delete existing user")
@@ -73,6 +73,7 @@ public class UserController {
     /**
      * @param id user
      * @return get user
+     * get user by id
      */
     @GetMapping({"/user/{id}"})
     @ApiOperation(value = "Get user", notes = "Get user")
@@ -106,5 +107,11 @@ public class UserController {
         }
         logger.info(logMessage, isValid);
         return ResponseEntity.ok(isValid);
+    }
+
+    @PutMapping({"/make-admin/{id}"})
+    public ResponseEntity<UserDTO> makeAdmin(@PathVariable String id) {
+        logger.info("Make user with id: " + id + " admin!");
+        return ResponseEntity.ok(userService.makeAdmin(UUID.fromString(id)));
     }
 }

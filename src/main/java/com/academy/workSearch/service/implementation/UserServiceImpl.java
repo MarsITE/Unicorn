@@ -273,6 +273,17 @@ public class UserServiceImpl implements UserService {
         });
     }
 
+    @Transactional
+    @Override
+    public UserDTO makeAdmin(UUID id) {
+        User user = USER_MAPPER.toUser(get(id));
+        Set<Role> roles = user.getRoles();
+        roles.add(roleDAO.getByName("ADMIN")
+                .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "EMPLOYER")));
+        user.setRoles(roles);
+        return USER_MAPPER.toUserDto(userDAO.save(user));
+    }
+
     /**
      * @param user object for whom delivery message
      *             message with confirmation link for user's account

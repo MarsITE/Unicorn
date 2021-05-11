@@ -1,13 +1,14 @@
-import { USER_ROLE_EMPLOYER, USER_ROLE_WORKER } from './../../../common/helper/token.helper';
-import { Component, OnDestroy, OnInit, SecurityContext } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DomSanitizer, SafeUrl, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
-import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
+import { TokenHelper } from 'src/app/common/helper/token.helper';
 import { User } from 'src/app/common/model/user';
 import { WorkStatus } from 'src/app/common/model/work-status';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
-import { TokenHelper } from 'src/app/common/helper/token.helper';
+
+import { USER_ROLE_EMPLOYER, USER_ROLE_WORKER } from './../../../common/helper/token.helper';
 
 @Component({
   selector: 'app-user-profile',
@@ -32,13 +33,16 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   ];
   isOnlyWatch: boolean;
 
-  constructor(private userService: UserHttpService, router: ActivatedRoute, private router2: Router, private domSanitizer: DomSanitizer,
-              private toastr: ToastrService, private tokenHelper: TokenHelper) {
-    this.id = this.tokenHelper.getIdFromToken();
+  constructor(
+    protected router: ActivatedRoute,
+    private userService: UserHttpService,
+    private router2: Router,
+    private domSanitizer: DomSanitizer,
+    private toastr: ToastrService,
+    private tokenHelper: TokenHelper
+  ) {
     this.idInUrl = router.snapshot.params.id;
     this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl('../../../assets/default-profile-photo.jpg');
-    this.isWorker = this.tokenHelper.isUserRole(USER_ROLE_WORKER);
-    this.isEmployer = this.tokenHelper.isUserRole(USER_ROLE_EMPLOYER);
   }
   ngOnDestroy(): void {
     this.subscriptions.forEach(s => {
@@ -51,6 +55,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       this.getUser(this.idInUrl);
       this.isOnlyWatch = true;
     } else {
+      this.id = this.tokenHelper.getIdFromToken();
       this.getUser(this.id);
       this.isOnlyWatch = false;
     }
@@ -58,27 +63,29 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
   private getUser(id: string): void {
     this.subscriptions.push(this.userService.get(id)
-    .subscribe(
-      response => {
-        this.user = response;
-        if (this.user.userInfo.imageUrl != null && this.user.userInfo.imageUrl !== '') {
-          this.getImage(this.user.userInfo.imageUrl);
-        }
-        this.setViewForWorkStatus();
-      },
-      error => this.toastr.error('Can not load user info!', 'Something wrong'),
-    ));
+      .subscribe(
+        response => {
+          this.user = response;
+          if (this.user.userInfo.imageUrl != null && this.user.userInfo.imageUrl !== '') {
+            this.getImage(this.user.userInfo.imageUrl);
+          }
+          this.setViewForWorkStatus();
+          this.isWorker = this.isRoleWorker();
+          this.isEmployer = this.isRoleEmployer();
+        },
+        error => this.toastr.error('Can not load user info!', 'Something wrong'),
+      ));
   }
 
   private getImage(imageUrl: string): void {
     this.subscriptions.push(this.userService.loadImage(imageUrl)
-    .subscribe(
-      response => {
-        this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(response));
-        sessionStorage.setItem('avatar', window.URL.createObjectURL(response));
-      },
-      error => this.toastr.error('Can not load user photo!', 'Something wrong'),
-    ));
+      .subscribe(
+        response => {
+          this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(response));
+          sessionStorage.setItem('avatar', window.URL.createObjectURL(response));
+        },
+        error => this.toastr.error('Can not load user photo!', 'Something wrong'),
+      ));
   }
 
   public edit(): void {
@@ -98,5 +105,13 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
   public converToPlainSkills(str: string): string {
     return `#${str.toLowerCase()}`;
+  }
+
+  private isRoleWorker(): boolean {
+    return this.user.roles.find(role => role === USER_ROLE_WORKER) != null;
+  }
+
+  private isRoleEmployer(): boolean {
+    return this.user.roles.find(role => role === USER_ROLE_EMPLOYER) != null;
   }
 }
