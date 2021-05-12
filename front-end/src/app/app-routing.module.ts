@@ -12,7 +12,6 @@ import { UserLoginComponent } from './components/user/user-login/user-login.comp
 import { LoginGuard } from './common/services/guard/login.guard';
 import { StartPageComponent } from './components/start-page/start-page.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
-import { AllProjectsComponent } from './components/project/all-projects/all-projects.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email';
 import { SkillsAdministrationComponent } from './components/skills/skills-administration/skills-administration.component';
 import { WorkerSkillsComponent } from './components/skills/worker-skills/worker-skills.component';
@@ -46,10 +45,6 @@ const routes: Routes = [
   }, {
     path: 'workers-list/:projectId',
     component: WorkersListComponent,
-    canActivate: [LoginGuard]
-  }, {
-    path: 'all-projects',
-    component: AllProjectsComponent,
     canActivate: [LoginGuard]
   }, {
     path: 'addProjects',

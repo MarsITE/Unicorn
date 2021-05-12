@@ -21,6 +21,7 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
   project: Project;
   private subscriptions: Subscription[] = [];
   isEmployer: boolean;
+  isShowButton = false;
 
   projectStatuses: ProjectStatus[] = [
     { value: 'LOOKING_FOR_WORKER', viewValue: 'Looking for worker' },
@@ -53,6 +54,7 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
       (response: Project) => {
         this.project = response;
         this.setViewProjectStatus();
+        this.isShowButton = this.showButton();
       },
       (error) => {
         console.log('error', error);
@@ -71,7 +73,7 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
     });
   }
 
-  projects() {
+  projects(): void {
     this.router2.navigateByUrl(`projects`);
   }
 
@@ -79,7 +81,7 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
     this.router2.navigateByUrl(`editProject/${id}`);
   }
 
-  workersList() {
+  workersList(): void {
     this.router2.navigateByUrl(`workers-list/${this.id}`);
   }
 
@@ -107,6 +109,11 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
   public getApprovedWorkers(workers: Worker[]): Worker[] {
     return workers.filter(worker => worker.isApprove);
   }
+
+  public showButton(): boolean {
+    return this.tokenHelper.getIdFromToken() === this.project.ownerId;
+  }
+
 }
 
 

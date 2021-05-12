@@ -68,7 +68,6 @@ import { UserProfileComponent } from './components/user/user-profile/user-profil
 import { UserListComponent } from './components/user/user-list/user-list.component';
 import { UserRegistrationComponent } from './components/user/user-registration/user-registration.component';
 import { UserLoginComponent } from './components/user/user-login/user-login.component';
-import {AllProjectsComponent} from './components/project/all-projects/all-projects.component';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { VerifyEmailComponent } from './components/verify-email/verify-email';
 import { SkillsAdministrationComponent } from './components/skills/skills-administration/skills-administration.component';
@@ -91,7 +90,6 @@ import {WorkersListComponent} from './components/workers-list/workers-list.compo
     ProjectEditComponent,
     SidenavListComponent,
     ConfirmComponent,
-    AllProjectsComponent,
     StartPageComponent,
     StartPageComponent,
     VerifyEmailComponent,
