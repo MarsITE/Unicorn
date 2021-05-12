@@ -29,5 +29,4 @@ public interface UserService {
 
     void removeAllNotActiveUsersWithExpiredJWTToken();
 
-    UserDTO makeAdmin(UUID id);
 }
