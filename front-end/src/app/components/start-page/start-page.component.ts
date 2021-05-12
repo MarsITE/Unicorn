@@ -250,10 +250,6 @@ export class StartPageComponent implements OnInit {
     return this.userSkillsName.some(s => str == s);
   }
 
-  public isUserHasSkills(): boolean {
-    return this.userSkills.length != 0;
-  }
-
   getPaginatorDataUser(event?: PageEvent) {
     console.log(event);
     if (event.pageIndex + 1 === this.pageIndex + 1) {

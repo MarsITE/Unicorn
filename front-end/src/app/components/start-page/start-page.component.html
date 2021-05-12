@@ -7,7 +7,6 @@
   </div>
   <div *ngIf="!isProjectDBIsEmpty()">
     <div *ngIf="isUserLogedIn()" class="interest-projects">
-      <div *ngIf="isUserHasSkills()">
         <h1>It may interest You</h1>
         <div *ngIf = "isThereAreProjectsWithUserSkills()">
           <h3>Sorry, but there are no projects by your skills!</h3>
@@ -42,7 +41,6 @@
             </mat-card>
           </mat-grid-tile>
         </mat-grid-list>
-      </div>
         <div *ngIf="userProjectListSize()">
           <mat-paginator [length]="allPageBySkillsCount" [pageSize]="pageSize" [pageSizeOptions]="deviceObjects"
             (page)="pageEventUserProjects = getPaginatorDataUser($event)">
