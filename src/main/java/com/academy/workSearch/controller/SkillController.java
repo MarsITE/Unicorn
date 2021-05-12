@@ -2,7 +2,6 @@ package com.academy.workSearch.controller;
 
 import com.academy.workSearch.dto.SkillDTO;
 import com.academy.workSearch.dto.SkillDetailsDTO;
-import com.academy.workSearch.dto.UserDTO;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.service.SkillService;
 import io.swagger.annotations.ApiOperation;
@@ -19,7 +18,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Validated
 @RestController
@@ -55,7 +53,7 @@ public class SkillController {
     }
 
     /**
-     * @param skills List<SkillDetailsDTO>
+     * @param skills that will be added to worker
      * @return saves new skills for approve by admin; returns list of skills
      */
     @PostMapping("/worker/skills")
@@ -64,7 +62,10 @@ public class SkillController {
                                                                     @AuthenticationPrincipal User user) {
         logger.info("Attempt to add skills {}", skills);
         List<SkillDetailsDTO> addedSkills = skillService.saveSkillList(skills);
-        skillService.sendEmail(user.getEmail(),addedSkills);
+
+        Thread thread = new Thread(() -> skillService.sendEmail(user.getEmail(), addedSkills));
+        thread.start();
+
         UUID userInfoId = user.getUserInfo().getUserInfoId();
         skillService.saveWorkerSkills(addedSkills, userInfoId);
         return ResponseEntity.ok(addedSkills);
