@@ -3,10 +3,7 @@ package com.academy.workSearch.service.implementation;
 import com.academy.workSearch.dao.ProjectDAO;
 import com.academy.workSearch.dao.RoleDAO;
 import com.academy.workSearch.dao.implementation.UserDAOImpl;
-import com.academy.workSearch.dto.ProjectDTO;
-import com.academy.workSearch.dto.ProjectWorkerDTO;
-import com.academy.workSearch.dto.SkillDTO;
-import com.academy.workSearch.dto.WorkerProjectDTO;
+import com.academy.workSearch.dto.*;
 import com.academy.workSearch.dto.mapper.ProjectMapper;
 import com.academy.workSearch.dto.mapper.ProjectShowInfoMapper;
 import com.academy.workSearch.dto.mapper.SkillMapper;
@@ -115,7 +112,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ProjectDTO> findUserProjectBySkills(UUID userId, int page, int maxResult, int maxNavigationPage, String sort) {
-        List<String> userSkills = skillService.findAllByUserId(userId).stream().map(SkillDTO::getName).collect(Collectors.toList());
+        List<String> userSkills = skillService.findAllByUserId(userId).stream().map(SkillDetailsDTO::getName).collect(Collectors.toList());
         return ProjectMapper.INSTANCE.toProjectsDto(projectDAO.searchBySkill(userSkills, page, maxResult, maxNavigationPage, sort));
     }
 
@@ -220,7 +217,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Long getAllProjectsCountByUserSkills(UUID userId) {
-        List<String> userSkillNames = skillService.findAllByUserId(userId).stream().map(SkillDTO::getName).collect(Collectors.toList());
+        List<String> userSkillNames = skillService.findAllByUserId(userId).stream().map(SkillDetailsDTO::getName).collect(Collectors.toList());
         return projectDAO.getAllProjectsCountBySkills(userSkillNames);
     }
 

@@ -2,6 +2,7 @@ package com.academy.workSearch.controller;
 
 import com.academy.workSearch.dto.SkillDTO;
 import com.academy.workSearch.dto.SkillDetailsDTO;
+import com.academy.workSearch.dto.UserDTO;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.service.SkillService;
 import io.swagger.annotations.ApiOperation;
@@ -47,7 +48,7 @@ public class SkillController {
      */
     @GetMapping("/worker/skills")
     @ApiOperation(value = "Show all skills", notes = "Show information about all skills")
-    public ResponseEntity<List<SkillDTO>> getAllByUserID(@AuthenticationPrincipal User user) {
+    public ResponseEntity<List<SkillDetailsDTO>> getAllByUserID(@AuthenticationPrincipal User user) {
         UUID userId = user.getUserId();
         logger.info("Show skills of user with ID {}", userId);
         return ResponseEntity.ok(skillService.findAllByUserId(userId));
@@ -59,14 +60,27 @@ public class SkillController {
      */
     @PostMapping("/worker/skills")
     @ApiOperation(value = "Add new skill", notes = "Add new skill")
-    public ResponseEntity<List<SkillDetailsDTO>> addNewWokerSkills(@RequestBody @Valid List<SkillDetailsDTO> skills) {
+    public ResponseEntity<List<SkillDetailsDTO>> addSkillsForWorker(@RequestBody @Valid List<SkillDetailsDTO> skills,
+                                                                    @AuthenticationPrincipal User user) {
         logger.info("Attempt to add skills {}", skills);
-        return ResponseEntity.ok(
-                skills.stream().map(
-                    skill -> skillService.isPresentSkillByName(skill.getName()) ?
-                                skill : skillService.save(skill)
-                ).collect(Collectors.toList())
-        );
+        List<SkillDetailsDTO> addedSkills = skillService.saveSkillList(skills);
+        skillService.sendEmail(user.getEmail(),addedSkills);
+        UUID userInfoId = user.getUserInfo().getUserInfoId();
+        skillService.saveWorkerSkills(addedSkills, userInfoId);
+        return ResponseEntity.ok(addedSkills);
+    }
+
+    /**
+     * @param skillId of worker's skill need to delete
+     * @return void
+     */
+    @DeleteMapping("/worker/skills/{skillId}")
+    @ApiOperation(value = "Delete worker's skill", notes = "Delete worker's skill")
+    public ResponseEntity<SkillDetailsDTO> deleteWorkerSkill(@ApiParam(value = "ID value for worker's skill you need to delete", required = true)
+                                                             @PathVariable UUID skillId, @AuthenticationPrincipal User user) {
+        UUID userInfoId = user.getUserInfo().getUserInfoId();
+        logger.info("Delete skill of worker: workerId= {}, skillId = {}", user.getUserId(), skillId);
+        return ResponseEntity.ok(skillService.deleteByUserInfoIdBySkillId(userInfoId, skillId));
     }
 
     /**

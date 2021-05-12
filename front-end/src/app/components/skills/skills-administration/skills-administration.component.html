@@ -11,19 +11,19 @@
     </mat-expansion-panel-header>
         <div *ngIf="!!unapprovedSkills.length">
             <div class="skill-management-flex-container">
-                <button mat-stroked-button color="primary" (click)=approveAllUnapprovedSkills() class="skill-management-button">Approve all</button>
-                <button mat-stroked-button color="accent"  (click)=deleteAllUnapprovedSkill() class="skill-management-button">Delete all unapproved</button>
+                <button mat-stroked-button color="primary" (click)=approveAllUnapprovedSkills() class="skill-management-button">Approve all</button>                
             </div>
             <mat-list class="skills">
             <mat-list-item *ngFor="let skill of unapprovedSkills">         
-                <div>                
-                {{skill.name}}            
-                <button mat-button color="primary" class="skill-management-button" (click) = approveUnapprovedSkill(skill)>
-                    <mat-icon>task_alt</mat-icon>
-                </button>
-                <button mat-button color="warn" class="skill-management-button" (click) = deleteUnapprovedSkill(skill)>
-                    <mat-icon>delete_outline</mat-icon>
-                </button>          
+                <div>                                    
+                    <mat-chip class = "skills-chip-user-disabled" [selectable]="selectable" 
+                        [removable]="removable" (removed)="deleteUnapprovedSkill(skill)">
+                        {{skill.name}}       
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>         
+                    </mat-chip>       
+                    <button mat-button color="primary" class="skill-management-button" (click) = approveUnapprovedSkill(skill)>
+                        <mat-icon>task_alt</mat-icon>
+                    </button>
                 </div>
                 </mat-list-item>
             </mat-list>      
@@ -50,7 +50,8 @@
         <mat-label>Skills</mat-label>
         <mat-chip-list #chipList aria-label="Skills selection">
             <mat-chip *ngFor="let skill of approvedSkills" [selectable]="selectable" 
-            [removable]="removable" (removed)="delete(skill)" color="primary">
+            [removable]="removable" (removed)="delete(skill)" color="primary"
+            [ngStyle]="{'border':skill.enabled ? '2px solid green' : '1px solid gray'}">
                 {{skill.name}}
             <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
         </mat-chip>

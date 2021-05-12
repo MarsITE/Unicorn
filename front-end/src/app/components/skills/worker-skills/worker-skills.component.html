@@ -9,7 +9,8 @@
     </h3>
     <mat-chip-list #chipList aria-label="Skills selection">
         <mat-chip *ngFor="let skill of skills" [selectable]="selectable" 
-        [removable]="removable" color="primary">
+        [removable]="removable" (removed)="deleteSkill(skill)"
+        [ngStyle]="{'border':skill.enabled ? '2px solid green' : '1px solid gray'}">
             {{skill.name}}
         <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
         </mat-chip>
