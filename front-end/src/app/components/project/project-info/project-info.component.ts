@@ -1,12 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { Project } from '../../../common/model/project';
-import { ProjectStatus } from '../../../common/model/project-status';
 import { ProjectService } from '../../../common/services/project.service';
-import { AuthenticationService } from './../../../common/services/authentication.service';
+import { ProjectStatus } from '../../../common/model/project-status';
+import { Subscription } from 'rxjs';
 import { Worker } from '../../../common/model/worker';
-
+import {AuthenticationService} from "../../../common/services/authentication.service";
 
 @Component({
   selector: 'app-project-info',
@@ -34,9 +33,8 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
   selectedProjectStatus: ProjectStatus = this.projectStatuses[0];
 
 
-  constructor(private projectService: ProjectService,
-              private authenticationService: AuthenticationService, router: ActivatedRoute, private router2: Router,
-              ) {
+  constructor(private projectService: ProjectService, router: ActivatedRoute, private router2: Router,
+              private authenticationService: AuthenticationService) {
     this.id = router.snapshot.params.id;
    }
 
@@ -113,7 +111,7 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
   }
 
   public showButton(): boolean {
-    return this.tokenHelper.getIdFromToken() === this.project.ownerId;
+    return this.authenticationService.getIdFromToken() === this.project.ownerId;
   }
 
 }
