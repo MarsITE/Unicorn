@@ -69,6 +69,7 @@ export class StartPageComponent implements OnInit {
     this.projectService.getProjects(this.pageIndex.toString(), null, this.pageSize.toString(), true).subscribe(
       (response: Project[]) => {
         this.projects = response;
+        console.log("response", response)
       },
       (error) => {
         console.log("error", error);
@@ -161,7 +162,6 @@ export class StartPageComponent implements OnInit {
 
   reset() {
     this.myForm.reset();
-    this.myForm.value.skillName.length=0;
     this.getProjects(this.pageSize);
   }
 
@@ -280,5 +280,9 @@ allProjectListSize(): boolean{
 
 isProjectDBIsEmpty(): boolean {
   return this.allPageCount == 0;
+}
+
+isThereAreProjectsWithUserSkills(): boolean {
+  return this.workerProjects.length == 0;
 }
 }
