@@ -40,6 +40,7 @@ public class JwtServiceImpl implements JwtService {
     public String generateAccessToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", user.getUserId());
+        claims.put("userInfoId", user.getUserInfo().getUserInfoId());
         setRoles(claims, user.getRoles());
         return createAccessToken(claims, user.getEmail());
     }
@@ -176,6 +177,22 @@ public class JwtServiceImpl implements JwtService {
             }
         }
         return "";
+    }
+
+    /**
+     * @param token access
+     * @return id of userInfo of current user
+     */
+    @Override
+    public UUID getUserInfoId(String token) {
+        Claims claims = getClaims(token);
+        String userInfoIdStr = "";
+        if (claims != null) {
+            if (claims.get("userInfoId") != null) {
+                userInfoIdStr = claims.get("userInfoId").toString();
+            }
+        }
+        return UUID.fromString(userInfoIdStr);
     }
 
     /**
