@@ -66,6 +66,8 @@ public class EmailServiceImpl implements EmailService {
 
     /**
      * @param mail entity with email, subject and message for recipient
+     *             send message for template
+     * @exception MessagingException if smth wrong with mail sender or user data
      */
     @Override
     public void sendHtmlMessage(Mail mail) {

@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Project } from '../../../common/model/project';
-import { ProjectService } from '../../../common/services/project.service';
-import { ProjectStatus } from '../../../common/model/project-status';
 import { Subscription } from 'rxjs';
-import { USER_ROLE_EMPLOYER, TokenHelper } from '../../../common/helper/token.helper';
+import { Project } from '../../../common/model/project';
+import { ProjectStatus } from '../../../common/model/project-status';
+import { ProjectService } from '../../../common/services/project.service';
+import { AuthenticationService } from './../../../common/services/authentication.service';
 import { Worker } from '../../../common/model/worker';
+
 
 @Component({
   selector: 'app-project-info',
@@ -32,14 +33,15 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
   selectedProjectStatus: ProjectStatus = this.projectStatuses[0];
 
 
-  constructor(private projectService: ProjectService, router: ActivatedRoute, private router2: Router,
-              private tokenHelper: TokenHelper) {
+  constructor(private projectService: ProjectService,
+              private authenticationService: AuthenticationService, router: ActivatedRoute, private router2: Router,
+              ) {
     this.id = router.snapshot.params.id;
    }
 
    ngOnInit(): void {
     this.getProject(this.id);
-    this.isEmployer = this.tokenHelper.isUserRole(USER_ROLE_EMPLOYER);
+    this.isEmployer = this.authenticationService.isRoleEmployer();
   }
 
   ngOnDestroy(): void {

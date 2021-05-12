@@ -71,6 +71,7 @@ public class UserServiceImpl implements UserService {
     /**
      * @param email user auth
      * @return user
+     * @throws NoSuchEntityException get, if we try get user do not exists
      */
     @Transactional(readOnly = true)
     User getUser(String email) {
@@ -94,9 +95,11 @@ public class UserServiceImpl implements UserService {
      * 1. check if user exists
      * 2. create user info and add to current user
      * 3. add roles
-     * 4. syphed password
+     * 4. syphred password
      * 5. generate registration token
      * 6. send message to user with activation link
+     * @throws NotUniqueEntityException get, if we try get user exists
+     * @throws NoSuchEntityException    get, if we try get user do not exists
      */
     @Override
     @Transactional
@@ -134,12 +137,12 @@ public class UserServiceImpl implements UserService {
     /**
      * @param user update data about user
      * @return updated user
+     * @exception NoSuchEntityException get, if we try get user do not exists
      */
     @Override
     @Transactional
     public UserDTO update(UserDTO user) {
-        User oldUser = userDAO.getByEmail(user.getEmail())
-                .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + user.getEmail()));
+        User oldUser = getUser(user.getEmail());
         User newUser = USER_MAPPER.toUser(user);
         newUser.setPassword(oldUser.getPassword());
         newUser.setUserId(oldUser.getUserId());
@@ -147,12 +150,21 @@ public class UserServiceImpl implements UserService {
         return USER_MAPPER.toUserDto(newUser);
     }
 
+    /**
+     * @param id of possible user
+     * @return user
+     */
     @Transactional
     @Override
     public UserDTO delete(UUID id) {
         return USER_MAPPER.toUserDto(userDAO.delete(id));
     }
 
+    /**
+     * @param id of possible user
+     * @return user if exists
+     * @throws NoSuchEntityException get, if we try get user do not exists
+     */
     @Transactional(readOnly = true)
     @Override
     public UserDTO get(UUID id) {
@@ -166,6 +178,8 @@ public class UserServiceImpl implements UserService {
      * 1. check if user exists
      * 2. authenticate user
      * 3. if user data correct, generate tokens
+     * @throws NoActiveAccountException get if user do not active  account
+     * @throws BadCredentialsException  get, if we have incorrect user auth data
      */
     @Override
     @Transactional(readOnly = true)
@@ -214,7 +228,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserAuthDTO refreshToken(UserAuthDTO userAuthDTO) {
-        if (jwtService.isValidRefreshToken(userAuthDTO.getRefreshToken(), userAuthDTO.getEmail())) {
+        if (userAuthDTO.getRefreshToken() !=null && jwtService.isValidRefreshToken(userAuthDTO.getRefreshToken(), userAuthDTO.getEmail())) {
             logger.info("Generating new refresh token");
             userAuthDTO.setRefreshToken(jwtService.generateRefreshToken(userAuthDTO.getEmail()));
             logger.info("Token successfully created");
@@ -222,13 +236,16 @@ public class UserServiceImpl implements UserService {
             User user = getUser(userAuthDTO.getEmail());
             userAuthDTO.setAccessToken(jwtService.generateAccessToken(user));
             logger.info("Token successfully created");
+            return userAuthDTO;
+        } else {
+            return null;
         }
-        return userAuthDTO;
     }
 
     /**
      * @param token registration
      * @return if registration token valid active account
+     * @exception NoSuchEntityException get, if we try get user do not exists
      */
     @Transactional
     @Override
@@ -258,6 +275,23 @@ public class UserServiceImpl implements UserService {
         });
     }
 
+    @Transactional
+    @Override
+    public UserDTO makeAdmin(UUID id) {
+        User user = USER_MAPPER.toUser(get(id));
+        Set<Role> roles = user.getRoles();
+        roles.add(roleDAO.getByName("ADMIN")
+                .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + "EMPLOYER")));
+        user.setRoles(roles);
+        return USER_MAPPER.toUserDto(userDAO.save(user));
+    }
+
+    /**
+     * @param user object for whom delivery message
+     *             message with confirmation link for user's account
+     * @throws TemplateException get if we have bad template
+     * @throws IOException       get if we have not file
+     */
     @Transactional
     void sendMessageWithActivationLink(User user) {
         Mail mail = new Mail();

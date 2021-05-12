@@ -28,7 +28,7 @@ public class UserInfoController {
     @ApiOperation(value = "Update existing user info", notes = "Update existing user info")
     public ResponseEntity<UserInfoDTO> updateUserInfo(@RequestBody UserInfoDTO user) {
         logger.info("Update user-info = {} ", user.getUserInfoId());
-        userInfoService.save(user);
+        userInfoService.update(user);
         return ResponseEntity.ok().build();
 
     }

@@ -1,13 +1,13 @@
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { Component } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { TokenHelper } from './common/helper/token.helper';
-import { UserHttpService } from './common/services/user-http.service';
+import { AuthenticationService } from './common/services/authentication.service';
 
 export const HIDDEN_SIDEBAR = true;
 export const SHOWN_SIDEBAR = false;
-const GAP_WHEN_IS_SHOWN  = 50;
-const GAP_WHEN_ISNT_SHOWN  = 0;
+const GAP_WHEN_IS_SHOWN = 50;
+const GAP_WHEN_ISNT_SHOWN = 0;
 
 
 @Component({
@@ -19,25 +19,27 @@ const GAP_WHEN_ISNT_SHOWN  = 0;
 export class AppComponent {
   imageBlobUrl: SafeResourceUrl;
   isOpen: boolean;
-  gap: number;
+  options: FormGroup;
 
   constructor(
     private router: Router,
-    private userService: UserHttpService,
-    private domSanitizer: DomSanitizer,
-    private tokenHelper: TokenHelper
-  ) { }
+    private authenticationService: AuthenticationService,
+    fb: FormBuilder
+  ) {
+    this.options = fb.group({
+      gap: 0
+    });
+  }
 
   public isNotLoginOrRegistration(): boolean {
     const isShown = !this.router.url.includes('login') && !(this.router.url.includes('registration'));
-    this.gap = isShown ? GAP_WHEN_IS_SHOWN : GAP_WHEN_ISNT_SHOWN;
+    this.options.controls.gap.setValue(isShown ? GAP_WHEN_IS_SHOWN : GAP_WHEN_ISNT_SHOWN);
     return isShown;
   }
 
   public logout(): void {
     this.toggleSidebar(HIDDEN_SIDEBAR);
-    this.userService.loggedIn();
-    this.router.navigateByUrl('login');
+    this.authenticationService.logout();
   }
 
   public navigateByLink(link: string): void {
@@ -49,6 +51,6 @@ export class AppComponent {
   }
 
   public isUserLogedIn(): boolean {
-    return this.tokenHelper.isValidToken();
+    return this.authenticationService.isRefreshTokenValid();
   }
 }

@@ -28,4 +28,6 @@ public interface UserService {
     boolean isVerifyAccount(String token);
 
     void removeAllNotActiveUsersWithExpiredJWTToken();
+
+    UserDTO makeAdmin(UUID id);
 }
