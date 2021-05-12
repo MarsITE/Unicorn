@@ -1,5 +1,5 @@
-import { Component, Input, OnChanges, SimpleChanges  } from '@angular/core';
-import { USER_ROLE_ADMIN, USER_ROLE_EMPLOYER, USER_ROLE_WORKER, TokenHelper } from '../../common/helper/token.helper';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { AuthenticationService } from './../../common/services/authentication.service';
 
 @Component({
   selector: 'app-sidenav-list',
@@ -7,18 +7,18 @@ import { USER_ROLE_ADMIN, USER_ROLE_EMPLOYER, USER_ROLE_WORKER, TokenHelper } fr
   styleUrls: ['./sidenav-list.component.css']
 })
 export class SidenavListComponent implements OnChanges {
-  isAdmin: boolean  = false;
-  isEmployer: boolean = false;
-  isWorker: boolean = false;
+  isAdmin = false;
+  isEmployer = false;
+  isWorker = false;
   @Input() isUserLoggedIn: boolean;
 
-  constructor(private tokenHelper: TokenHelper) { }
+  constructor(private authenticationService: AuthenticationService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.isUserLoggedIn && changes.isUserLoggedIn.currentValue){
-      this.isAdmin = this.tokenHelper.isUserRole(USER_ROLE_ADMIN);
-      this.isEmployer = this.tokenHelper.isUserRole(USER_ROLE_EMPLOYER);
-      this.isWorker = this.tokenHelper.isUserRole(USER_ROLE_WORKER);
+    if (changes.isUserLoggedIn && changes.isUserLoggedIn.currentValue) {
+      this.isAdmin = this.authenticationService.isRoleAdmin();
+      this.isEmployer = this.authenticationService.isRoleEmployer();
+      this.isWorker = this.authenticationService.isRoleWorker();
     }
   }
 }

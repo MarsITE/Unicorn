@@ -1,9 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Skill } from '../model/skill';
+import { ACCESS_TOKEN } from 'src/app/constants';
 import { environment } from 'src/environments/environment';
-import { ACCESS_TOKEN } from '../helper/token.helper';
+import { Skill } from '../model/skill';
 
 @Injectable({
   providedIn: 'root'
@@ -29,16 +29,21 @@ export class SkillService {
   }
 
   public addWorkerSkills(skills: Skill[]): Observable<Skill> {
-    return this.http.post<Skill>(`${environment.url}/worker/skills`, skills, this.authHeader()); 
+    return this.http.post<Skill>(`${environment.url}/worker/skills`, skills, this.authHeader());
+  }
+
+  public deleteWorkerSkill(id: String): Observable<any> {
+    console.log("deleteWorkerSkill, id=", id);
+    return this.http.delete<Skill>(`${environment.url}/worker/skills/${id}`, this.authHeader()); 
   }
 
   // for Admin
   public getSkillsDetails(): Observable<Skill[]> {
     return this.http.get<Skill[]>(`${environment.url}/admin/skills`, this.authHeader());
   }
-  
+
   public save(skill: Skill): Observable<Skill> {
-    return this.http.post<Skill>(`${environment.url}/admin/skills`, skill, this.authHeader()); 
+    return this.http.post<Skill>(`${environment.url}/admin/skills`, skill, this.authHeader());
   }
 
   public update(skill: Skill): Observable<Skill> {

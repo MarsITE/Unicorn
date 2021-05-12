@@ -73,6 +73,7 @@ public class UserController {
     /**
      * @param id user
      * @return get user
+     * get user by id
      */
     @GetMapping({"/user/{id}"})
     @ApiOperation(value = "Get user", notes = "Get user")
@@ -88,7 +89,8 @@ public class UserController {
     @PostMapping({"/refresh-token"})
     public ResponseEntity<UserAuthDTO> refreshToken(@RequestBody UserAuthDTO userAuthDTO) {
         logger.info("Update expired refresh token, from user with email = {}", userAuthDTO.getEmail());
-        return ResponseEntity.ok(userService.refreshToken(userAuthDTO));
+        UserAuthDTO authDTO = userService.refreshToken(userAuthDTO);
+        return ResponseEntity.ok(authDTO);
     }
 
     /**
@@ -107,4 +109,5 @@ public class UserController {
         logger.info(logMessage, isValid);
         return ResponseEntity.ok(isValid);
     }
+
 }

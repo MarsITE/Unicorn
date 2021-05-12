@@ -1,13 +1,13 @@
-import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { HttpParams } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { PageEvent } from '@angular/material/paginator';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Project } from 'src/app/common/model/project';
 import { Skill } from 'src/app/common/model/skill';
 import { ProjectService } from 'src/app/common/services/project.service';
 import { SkillService } from 'src/app/common/services/skill.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { TokenHelper } from 'src/app/common/helper/token.helper';
-import { PageEvent } from '@angular/material/paginator';
+import { AuthenticationService } from './../../common/services/authentication.service';
 
 @Component({
   selector: 'app-start-page',
@@ -28,7 +28,7 @@ export class StartPageComponent implements OnInit {
 
   skills: Skill[] = [];
   skillsName: String[] = [];
-  
+
   userSkills: Skill[] = [];
   userSkillsName: String[] = [];
 
@@ -38,7 +38,14 @@ export class StartPageComponent implements OnInit {
   selectedItems: Array<String> = [];
   dropdownSettings: any = {};
 
-  constructor(private fb: FormBuilder,private tokenHelper: TokenHelper, private projectService: ProjectService, private skillService: SkillService, private router: Router, private http: HttpClient, route: ActivatedRoute) {
+  constructor(
+    private fb: FormBuilder,
+    private projectService: ProjectService,
+    private skillService: SkillService,
+    private router: Router,
+    private authenticationService: AuthenticationService,
+    route: ActivatedRoute
+  ) {
     route.queryParams.subscribe(params => {
       this.pageIndex = params['page'] || this.pageIndex;
       this.pageSize = params['maxResult'] || this.pageSize;
@@ -46,7 +53,7 @@ export class StartPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
     this.getUserSkills();
     this.getProjectsByWorkerSkills(this.pageSize);
     this.getProjects(this.pageSize);
@@ -69,7 +76,6 @@ export class StartPageComponent implements OnInit {
     this.projectService.getProjects(this.pageIndex.toString(), null, this.pageSize.toString(), true).subscribe(
       (response: Project[]) => {
         this.projects = response;
-        console.log("response", response)
       },
       (error) => {
         console.log("error", error);
@@ -90,7 +96,7 @@ export class StartPageComponent implements OnInit {
       }
     );
   }
-  
+
   private getProjectsByWorkerSkills(pageSize: number) {
     const params = new HttpParams()
       .set('page', this.pageIndex.toString())
@@ -152,10 +158,10 @@ export class StartPageComponent implements OnInit {
   }
 
   search() {
-    if(this.myForm.value.skillName.length == 0){
+    if (this.myForm.value.skillName.length == 0) {
       this.getProjects(this.pageSize);
     }
-    else{
+    else {
       this.getSearchProject(this.pageSize);
     }
   }
@@ -167,10 +173,10 @@ export class StartPageComponent implements OnInit {
 
   projectsNext() {
     this.pageIndex++;
-    if(this.myForm.value.skillName.length == 0){
+    if (this.myForm.value.skillName.length == 0) {
       this.getProjects(this.pageSize);
     }
-    else{
+    else {
       this.getSearchProject(this.pageSize);
     }
   }
@@ -184,10 +190,10 @@ export class StartPageComponent implements OnInit {
     if (this.pageIndex > 1) {
       this.pageIndex--;
     }
-    if(this.myForm.value.skillName.length == 0){
+    if (this.myForm.value.skillName.length == 0) {
       this.getProjects(this.pageSize);
     }
-    else{
+    else {
       this.getSearchProject(this.pageSize);
     }
   }
@@ -215,22 +221,22 @@ export class StartPageComponent implements OnInit {
     this.getProjectsByWorkerSkills(this.pageSize);
   }
 
-  showProjectDescription(id:any) {
+  showProjectDescription(id: any) {
     this.router.navigateByUrl(`projects/${id}`);
   }
   public converToPlainSkills(str: string): string {
-      return `#${str.toLowerCase()}`;
+    return `#${str.toLowerCase()}`;
   }
-  public setLimitOfText(str: string): string{
-    if(str.length<=200){
+  public setLimitOfText(str: string): string {
+    if (str.length <= 200) {
       return str;
     }
-    else{
-      return `${str.substring(0,200)}...`;
-    } 
+    else {
+      return `${str.substring(0, 200)}...`;
+    }
   }
   public isUserLogedIn(): boolean {
-    return this.tokenHelper.isValidToken();
+    return this.authenticationService.isRefreshTokenValid();
   }
   public navigateByLink(link: string): void {
     this.router.navigateByUrl(link);
@@ -240,43 +246,43 @@ export class StartPageComponent implements OnInit {
     return this.userSkillsName.some(s => str == s);
   }
 
-  public isUserHasSkills(): boolean{
+  public isUserHasSkills(): boolean {
     return this.userSkills.length != 0;
   }
 
-  getPaginatorDataUser(event?:PageEvent){
+  getPaginatorDataUser(event?: PageEvent) {
     console.log(event);
-    if(event.pageIndex + 1 === this.pageIndex + 1){
+    if (event.pageIndex + 1 === this.pageIndex + 1) {
       this.userProjectsNext();
-      }
-    else if(event.pageIndex + 1 === this.pageIndex - 1){
+    }
+    else if (event.pageIndex + 1 === this.pageIndex - 1) {
       this.userProjectsPrev();
-     }   
-    else if(event.pageSize != this.pageSize){
+    }
+    else if (event.pageSize != this.pageSize) {
       this.onChangeObjUser(event.pageSize);
     }
-}
-
-getPaginatorData(event?:PageEvent){
-  console.log(event);
-  if(event.pageIndex + 1 === this.pageIndex + 1){
-    this.projectsNext();
-    }
-  else if(event.pageIndex + 1 === this.pageIndex - 1){
-    this.projectsPrev();
-   }   
-  else if(event.pageSize != this.pageSize){
-    this.onChangeObjAll(event.pageSize);
   }
-}
 
-userProjectListSize():boolean{
-  return this.allPageBySkillsCount > 5;
-}
+  getPaginatorData(event?: PageEvent) {
+    console.log(event);
+    if (event.pageIndex + 1 === this.pageIndex + 1) {
+      this.projectsNext();
+    }
+    else if (event.pageIndex + 1 === this.pageIndex - 1) {
+      this.projectsPrev();
+    }
+    else if (event.pageSize != this.pageSize) {
+      this.onChangeObjAll(event.pageSize);
+    }
+  }
 
-allProjectListSize(): boolean{
-  return this.allPageCount > 5;
-}
+  userProjectListSize(): boolean {
+    return this.allPageBySkillsCount > 5;
+  }
+
+  allProjectListSize(): boolean {
+    return this.allPageCount > 5;
+  }
 
 isProjectDBIsEmpty(): boolean {
   return this.allPageCount == 0;

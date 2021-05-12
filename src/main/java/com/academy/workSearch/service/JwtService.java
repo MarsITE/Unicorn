@@ -5,6 +5,7 @@ import com.academy.workSearch.model.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Set;
+import java.util.UUID;
 
 public interface JwtService {
 
@@ -25,5 +26,7 @@ public interface JwtService {
     Set<Role> getRoles(String token);
 
     String getUserId(String token);
+
+    UUID getUserInfoId(String token);
 
 }

@@ -28,4 +28,5 @@ public interface UserService {
     boolean isVerifyAccount(String token);
 
     void removeAllNotActiveUsersWithExpiredJWTToken();
+
 }

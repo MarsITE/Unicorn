@@ -26,3 +26,13 @@ mat-list-item > div {
     margin: 0;
     display:grid;
 }
+
+.skills-chip-user-enabled {  
+  background-color: rgb(255, 255, 255);
+  border:2px solid green;
+}
+
+.skills-chip-user-disabled {  
+  background-color: rgb(255, 255, 255);
+  border:1px solid gray;
+}

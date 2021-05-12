@@ -3,8 +3,10 @@ package com.academy.workSearch.service.implementation;
 import com.academy.workSearch.controller.UserInfoController;
 import com.academy.workSearch.dao.UserInfoDAO;
 import com.academy.workSearch.dto.PhotoDTO;
+import com.academy.workSearch.dto.SkillDetailsDTO;
 import com.academy.workSearch.dto.UserInfoDTO;
 import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
+import com.academy.workSearch.model.Skill;
 import com.academy.workSearch.model.UserInfo;
 import com.academy.workSearch.service.UserInfoService;
 import lombok.AllArgsConstructor;
@@ -22,11 +24,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import static com.academy.workSearch.dto.mapper.SkillDetailsMapper.SKILL_DETAILS_MAPPER;
 import static com.academy.workSearch.dto.mapper.UserInfoMapper.USER_INFO_MAPPER;
 import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_SUCH_ENTITY;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_SUCH_USER;
 
 @Service
 @AllArgsConstructor
@@ -50,7 +54,7 @@ public class UserInfoServiceImpl implements UserInfoService {
      */
     @Transactional
     @Override
-    public UserInfoDTO save(UserInfoDTO userInfo) {
+    public UserInfoDTO update(UserInfoDTO userInfo) {
         return USER_INFO_MAPPER
                 .toUserInfoDto(userInfoDAO.save(USER_INFO_MAPPER.toUserInfo(userInfo)));
     }
@@ -59,6 +63,8 @@ public class UserInfoServiceImpl implements UserInfoService {
      * @param photo image of user
      * @param id    id for change name image
      * @return status of saving
+     * @throws NoSuchEntityException get, if we try get user do not exists
+     * @throws IOException           if file does not exists
      */
     @Override
     @Transactional
@@ -76,7 +82,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
                 UUID uuid = UUID.fromString(id);
                 UserInfo userInfo = userInfoDAO.get(uuid)
-                        .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + id));
+                        .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_USER + id));
                 userInfo.setImageUrl(newNameImage);
                 userInfoDAO.save(userInfo);
                 isImageSave = true;
@@ -93,6 +99,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     /**
      * @param imageName url
      * @return photo dto
+     * @exception  IOException if file does not exists
      */
     @Override
     public PhotoDTO loadPhoto(String imageName) {
@@ -110,13 +117,39 @@ public class UserInfoServiceImpl implements UserInfoService {
         return photoDTO;
     }
 
+    /**
+     * @param file image
+     * @return if file correct type
+     */
     private boolean isFileCorrectType(File file) {
         String mimetype = new MimetypesFileTypeMap().getContentType(file);
         String type = mimetype.split("/")[0];
         return type.equals("image");
     }
 
+    /**
+     * @param fileLength    length of image
+     * @param maxFileLength maxFileLength
+     * @return check if fileLength =< maxFileLength
+     */
     private boolean isFileLessThanMaxFileLength(long fileLength, long maxFileLength) {
-        return fileLength < maxFileLength;
+        return fileLength > 0 && fileLength <= maxFileLength;
     }
+
+    @Transactional
+    public List<SkillDetailsDTO> addSkills(UUID userInfoId, List<SkillDetailsDTO> skills){
+        UserInfo userInfo = userInfoDAO.get(userInfoId).get();
+        Set<Skill> skillsSet = userInfo.getSkills();
+        skillsSet.addAll(SKILL_DETAILS_MAPPER.toSkills(skills));
+        return skillsSet.stream().map(SKILL_DETAILS_MAPPER::toDto).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public SkillDetailsDTO deleteSkill(UUID userInfoId, SkillDetailsDTO skill){
+        UserInfo userInfo = userInfoDAO.get(userInfoId).get();
+        Set<Skill> skillsSet = userInfo.getSkills();
+        skillsSet.remove(SKILL_DETAILS_MAPPER.toEntity(skill));
+        return skill;
+    }
+
 }

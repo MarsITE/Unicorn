@@ -4,8 +4,8 @@ import { Project } from '../../../common/model/project';
 import { ProjectService } from '../../../common/services/project.service';
 import { ProjectStatus } from '../../../common/model/project-status';
 import { Subscription } from 'rxjs';
-import { USER_ROLE_EMPLOYER, TokenHelper } from '../../../common/helper/token.helper';
 import { Worker } from '../../../common/model/worker';
+import {AuthenticationService} from "../../../common/services/authentication.service";
 
 @Component({
   selector: 'app-project-info',
@@ -21,6 +21,7 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
   project: Project;
   private subscriptions: Subscription[] = [];
   isEmployer: boolean;
+  isShowButton = false;
 
   projectStatuses: ProjectStatus[] = [
     { value: 'LOOKING_FOR_WORKER', viewValue: 'Looking for worker' },
@@ -33,13 +34,13 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
 
 
   constructor(private projectService: ProjectService, router: ActivatedRoute, private router2: Router,
-              private tokenHelper: TokenHelper) {
+              private authenticationService: AuthenticationService) {
     this.id = router.snapshot.params.id;
    }
 
    ngOnInit(): void {
     this.getProject(this.id);
-    this.isEmployer = this.tokenHelper.isUserRole(USER_ROLE_EMPLOYER);
+    this.isEmployer = this.authenticationService.isRoleEmployer();
   }
 
   ngOnDestroy(): void {
@@ -53,6 +54,7 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
       (response: Project) => {
         this.project = response;
         this.setViewProjectStatus();
+        this.isShowButton = this.showButton();
       },
       (error) => {
         console.log('error', error);
@@ -71,7 +73,7 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
     });
   }
 
-  projects() {
+  projects(): void {
     this.router2.navigateByUrl(`projects`);
   }
 
@@ -79,7 +81,7 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
     this.router2.navigateByUrl(`editProject/${id}`);
   }
 
-  workersList() {
+  workersList(): void {
     this.router2.navigateByUrl(`workers-list/${this.id}`);
   }
 
@@ -107,6 +109,11 @@ export class ProjectInfoComponent implements OnInit, OnDestroy {
   public getApprovedWorkers(workers: Worker[]): Worker[] {
     return workers.filter(worker => worker.isApprove);
   }
+
+  public showButton(): boolean {
+    return this.authenticationService.getIdFromToken() === this.project.ownerId;
+  }
+
 }
 
 

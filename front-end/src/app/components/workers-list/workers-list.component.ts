@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
-import {TokenHelper} from 'src/app/common/helper/token.helper';
 import {UserHttpService} from 'src/app/common/services/user-http.service';
 import {first} from "rxjs/operators";
 import {ProjectWorker} from "../../common/model/project-worker";
+import { AuthenticationService } from 'src/app/common/services/authentication.service';
 
 
 @Component({
@@ -23,8 +23,8 @@ export class WorkersListComponent implements OnInit {
     private userService: UserHttpService,
     private router: ActivatedRoute,
     private router2: Router,
-    private tokenHelper: TokenHelper,
-    private toast: ToastrService
+    private toast: ToastrService,
+    private authenticationService: AuthenticationService
   ) {
     this.projectId = router.snapshot.params.projectId;
 
@@ -43,7 +43,7 @@ export class WorkersListComponent implements OnInit {
   }
 
   public showUserProfile(row: any): void {
-    if (this.tokenHelper.getEmailFromToken() === row.email) {
+    if (this.authenticationService.getEmailFromToken() === row.email) {
       this.router2.navigateByUrl('profile');
     } else {
       this.router2.navigateByUrl(`profile/${row.id}`);

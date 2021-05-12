@@ -5,26 +5,42 @@ import com.academy.workSearch.dto.SkillDTO;
 import com.academy.workSearch.dto.SkillDetailsDTO;
 import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
 import com.academy.workSearch.exceptionHandling.exceptions.NotUniqueEntityException;
+import com.academy.workSearch.model.Mail;
 import com.academy.workSearch.model.Skill;
+import com.academy.workSearch.service.EmailService;
 import com.academy.workSearch.service.SkillService;
+import com.academy.workSearch.service.UserInfoService;
+import com.academy.workSearch.service.UserService;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
-import java.util.UUID;
+import java.io.IOException;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.academy.workSearch.dto.mapper.SkillDetailsMapper.SKILL_DETAILS_MAPPER;
 import static com.academy.workSearch.dto.mapper.SkillMapper.SKILL_MAPPER;
 import static com.academy.workSearch.exceptionHandling.MessageConstants.*;
 
 @Service
-@Transactional
 @AllArgsConstructor
 public class SkillServiceImpl implements SkillService {
     private final SkillDAOImpl skillDAO;
-    private final String NO_SUCH_SKILL_FORMAT = "%s = %s";
+    private final Logger logger = LoggerFactory.getLogger(SkillServiceImpl.class);
+    private final FreeMarkerConfigurer freemarkerConfigurer;
+    private final EmailService emailService;
+    private final UserInfoService userInfoService;
+    private final UserService userService;
 
     /**
      * post construct set class type for dao
@@ -39,6 +55,7 @@ public class SkillServiceImpl implements SkillService {
      *
      * @return list of all skills
      */
+    @Transactional(readOnly = true)
     public List<SkillDetailsDTO> findAll() {
         return SKILL_DETAILS_MAPPER.toSkillsDto(skillDAO.findAll());
     }
@@ -47,6 +64,7 @@ public class SkillServiceImpl implements SkillService {
      * @param enabled  status of skill (true or false)
      * @return list of all skills which corresponds status enabled
      */
+    @Transactional(readOnly = true)
     public List<SkillDTO> findAllEnabled(Boolean enabled) {
         return SKILL_MAPPER.toSkillsDto(skillDAO.getAllEnabled(enabled));
     }
@@ -55,8 +73,9 @@ public class SkillServiceImpl implements SkillService {
      * @param userId  id of user
      * @return list of all skills for user with corresponding id
      */
-    public List<SkillDTO> findAllByUserId(UUID userId) {
-        return SKILL_MAPPER.toSkillsDto(skillDAO.getAllByUserId(userId));
+    @Transactional(readOnly = true)
+    public List<SkillDetailsDTO> findAllByUserId(UUID userId) {
+        return SKILL_DETAILS_MAPPER.toSkillsDto(skillDAO.getAllByUserId(userId));
     }
 
     /**
@@ -64,14 +83,62 @@ public class SkillServiceImpl implements SkillService {
      * @return true or false
      */
     @Override
+    @Transactional(readOnly = true)
     public boolean isPresentSkillByName(String skillName) {
         return skillDAO.getByName(skillName).isPresent();
+    }
+
+    /**
+     *
+     * @param skills list of new skills
+     * @param userInfoId userInfoId of worker(user)
+     * @return  saved skills
+     */
+    @Override
+    @Transactional
+    public List<SkillDetailsDTO> saveWorkerSkills(List<SkillDetailsDTO> skills, UUID userInfoId) {
+        return userInfoService.addSkills(userInfoId, skills);
+    }
+
+    @Override
+    @Transactional
+    public SkillDetailsDTO deleteByUserInfoIdBySkillId(UUID userInfoId, UUID skillId) {
+        Skill skill = skillDAO.get(skillId)
+                .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_SKILL + skillId));
+        return userInfoService.deleteSkill(userInfoId, SKILL_DETAILS_MAPPER.toDto(skill));
+    }
+
+    @Override
+    public void sendEmail(String email, List<SkillDetailsDTO> skills) {
+        Function<Stream<SkillDetailsDTO>, List<String>> getSkillNames = skillsStream ->
+                skillsStream.map(SkillDetailsDTO::getName).collect(Collectors.toList());
+        List<String> approvedSkillNames = getSkillNames.apply(skills.stream().filter(SkillDetailsDTO::isEnabled));
+        List<String> unapprovedSkillNames = getSkillNames.apply(skills.stream().filter(skill -> !skill.isEnabled()));
+        try {
+            Map<String, Object> model = new HashMap<>();
+            model.put("email", email);
+            model.put("isPresentApprovedSkills", !approvedSkillNames.isEmpty());
+            model.put("approvedSkills", approvedSkillNames);
+            model.put("isPresentUnapprovedSkills",!unapprovedSkillNames.isEmpty());
+            model.put("unapprovedSkills", unapprovedSkillNames);
+            Template template = freemarkerConfigurer.getConfiguration().getTemplate("add-new-skills-message.ftl");
+            String content = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+            Mail mail = new Mail();
+            mail.setSubject("Your new skills at Worksearch.com");
+            mail.setEmail(email);
+            mail.setMessage(content);
+            emailService.sendHtmlMessage(mail);
+        } catch (IOException | TemplateException e) {
+            logger.info(e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     /**
      * @param skill  skill you need to save in DB
      * @return skillDAO of saved skill
      */
+    @Transactional
     public SkillDetailsDTO save(SkillDetailsDTO skill) {
         if (isPresentSkillByName(skill.getName())) {
             throw new NotUniqueEntityException(SKILL_EXISTS);
@@ -80,14 +147,37 @@ public class SkillServiceImpl implements SkillService {
     }
 
     /**
+     * @param skills  list of skill you need to save in DB
+     * @return list of saved skill
+     */
+    @Override
+    @Transactional
+    public List<SkillDetailsDTO> saveSkillList(List<SkillDetailsDTO> skills) {
+        return skills.stream()
+                .map(skill -> skill.getName().trim())
+                .map(skillName -> {
+                    Optional<Skill> skillInDB = skillDAO.getByName(skillName);
+                    if(skillInDB.isEmpty()){
+                        Skill newSkill = new Skill();
+                        newSkill.setName(skillName);
+                        return skillDAO.save(newSkill);
+                    }
+                    return skillInDB.get();
+                })
+                .map(SKILL_DETAILS_MAPPER::toDto)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * @param skill skill you need to update in DB
      * @return skillDAO of updated skill
      */
+    @Override
+    @Transactional
     public SkillDetailsDTO update(SkillDetailsDTO skill) {
         UUID id = skill.getSkillId();
         Skill skillInDB = skillDAO.get(id)
-                .orElseThrow(() ->
-                        new NoSuchEntityException(String.format(NO_SUCH_SKILL_FORMAT, NO_SUCH_SKILL + "id", id)));
+                .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_SKILL + id));
         skillInDB.setName(skill.getName());
         skillInDB.setEnabled(skill.isEnabled());
         return SKILL_DETAILS_MAPPER.toDto(skillDAO.save(skillInDB));
@@ -97,6 +187,8 @@ public class SkillServiceImpl implements SkillService {
      * @param id
      * @return skill
      */
+    @Override
+    @Transactional(readOnly = true)
     public SkillDetailsDTO get(UUID id) {
         Skill skill = skillDAO.get(id)
                 .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_SKILL + id));
@@ -107,6 +199,8 @@ public class SkillServiceImpl implements SkillService {
      * @param name name of skill you need to recive from DB
      * @return skill with corresponding name
      */
+    @Override
+    @Transactional(readOnly = true)
     public SkillDetailsDTO getByName(String name) {
         Skill skillByName = skillDAO.getByName(name)
                 .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_SKILL + name));
@@ -119,6 +213,7 @@ public class SkillServiceImpl implements SkillService {
      * @return  SkillDetailsDTO of deleted skill
      */
     @Override
+    @Transactional
     public SkillDetailsDTO delete(UUID id) {
         Skill skill = skillDAO.get(id)
                 .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_SKILL + id));

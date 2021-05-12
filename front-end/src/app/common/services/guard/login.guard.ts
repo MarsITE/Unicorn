@@ -1,24 +1,25 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
-import { TokenHelper, ACCESS_TOKEN, REFRESH_TOKEN } from '../../helper/token.helper';
-import { UserAuth } from '../../model/user-auth';
-import { UserHttpService } from '../user-http.service';
+import { AuthenticationService } from './../authentication.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginGuard implements CanActivate {
 
-  constructor(private router: Router, private tokenHelper: TokenHelper) {}
+  constructor(private router: Router, private authenticationService: AuthenticationService) { }
 
-  canActivate(): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-
-    if (this.tokenHelper.isValidToken) {
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    const user = this.authenticationService.userValue;
+    if (user) {
       return true;
+    } else {
+      this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+      return false;
     }
-    this.router.navigateByUrl('login');
-    return false;
   }
-
 }

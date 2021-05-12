@@ -11,9 +11,11 @@ public interface SkillService {
 
     List<SkillDTO> findAllEnabled(Boolean enabled);
 
-    List<SkillDTO> findAllByUserId(UUID userId);
+    List<SkillDetailsDTO> findAllByUserId(UUID userId);
 
     SkillDetailsDTO save(SkillDetailsDTO skill);
+
+    List<SkillDetailsDTO> saveSkillList(List<SkillDetailsDTO> skills);
 
     SkillDetailsDTO update(SkillDetailsDTO skill);
 
@@ -24,4 +26,10 @@ public interface SkillService {
     SkillDetailsDTO getByName(String name);
 
     boolean isPresentSkillByName(String skillName);
+
+    List<SkillDetailsDTO> saveWorkerSkills(List<SkillDetailsDTO> skills, UUID userInfoId);
+
+    SkillDetailsDTO deleteByUserInfoIdBySkillId(UUID userInfoId, UUID skillId);
+
+    void sendEmail(String email, List<SkillDetailsDTO> skills);
 }

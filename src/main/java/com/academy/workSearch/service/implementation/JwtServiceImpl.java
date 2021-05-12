@@ -40,6 +40,7 @@ public class JwtServiceImpl implements JwtService {
     public String generateAccessToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", user.getUserId());
+        claims.put("userInfoId", user.getUserInfo().getUserInfoId());
         setRoles(claims, user.getRoles());
         return createAccessToken(claims, user.getEmail());
     }
@@ -103,6 +104,10 @@ public class JwtServiceImpl implements JwtService {
         return claimResolver.apply(getClaims(token));
     }
 
+    /**
+     * @param token access
+     * @return get token's body
+     */
     private Claims getClaims(String token) {
         Claims claims = null;
         try {
@@ -158,6 +163,10 @@ public class JwtServiceImpl implements JwtService {
         return roles;
     }
 
+    /**
+     * @param token access
+     * @return id of current user
+     */
     @Override
     public String getUserId(String token) {
         Claims claims = getClaims(token);
@@ -168,6 +177,22 @@ public class JwtServiceImpl implements JwtService {
             }
         }
         return "";
+    }
+
+    /**
+     * @param token access
+     * @return id of userInfo of current user
+     */
+    @Override
+    public UUID getUserInfoId(String token) {
+        Claims claims = getClaims(token);
+        String userInfoIdStr = "";
+        if (claims != null) {
+            if (claims.get("userInfoId") != null) {
+                userInfoIdStr = claims.get("userInfoId").toString();
+            }
+        }
+        return UUID.fromString(userInfoIdStr);
     }
 
     /**
@@ -233,6 +258,10 @@ public class JwtServiceImpl implements JwtService {
         });
     }
 
+    /**
+     * @param name of role
+     * @return get role from db
+     */
     private Role getRoleByName(String name) {
         return roleDAO.getByName(name)
                 .orElseThrow(() -> new NoSuchEntityException(NO_ROLE + name));
