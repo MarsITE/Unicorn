@@ -188,5 +188,5 @@ build/
 *.jpg
 *.jpeg
 *.png
-
+file.txt
 output.sql

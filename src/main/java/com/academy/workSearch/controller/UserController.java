@@ -110,9 +110,4 @@ public class UserController {
         return ResponseEntity.ok(isValid);
     }
 
-    @PutMapping({"/make-admin/{id}"})
-    public ResponseEntity<UserDTO> makeAdmin(@PathVariable String id) {
-        logger.info("Make user with id: " + id + " admin!");
-        return ResponseEntity.ok(userService.makeAdmin(UUID.fromString(id)));
-    }
 }
