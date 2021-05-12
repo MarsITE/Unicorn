@@ -8,6 +8,7 @@ import { WorkStatus } from 'src/app/common/model/work-status';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
 import { USER_ROLE_EMPLOYER, USER_ROLE_WORKER } from 'src/app/constants';
 import { AuthenticationService } from './../../../common/services/authentication.service';
+import { Skill } from '../../../common/model/skill';
 
 @Component({
   selector: 'app-user-profile',
@@ -23,6 +24,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   imageBlobUrl: SafeResourceUrl;
   isWorker = false;
   isEmployer = false;
+  skills: Skill[] = []; 
   private subscriptions: Subscription[] = [];
   workStatuses: WorkStatus[] = [
     { value: 'PART_TIME', viewValue: 'Part time' },
@@ -68,6 +70,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
           if (this.user.userInfo.imageUrl != null && this.user.userInfo.imageUrl !== '') {
             this.getImage(this.user.userInfo.imageUrl);
           }
+          this.skills =  this.user.userInfo.skills.sort((a: Skill) => (a.enabled ? -1 : 1));
           this.setViewForWorkStatus();
           this.isWorker = this.isRoleWorker();
           this.isEmployer = this.isRoleEmployer();

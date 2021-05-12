@@ -19,7 +19,8 @@
 
         <div class="skills">
             <mat-chip-list>
-                <mat-chip class="skills-chip" *ngFor="let skill of user.userInfo.skills"> {{converToPlainSkills(skill.name)}}
+                <mat-chip class="skills-chip" *ngFor="let skill of skills"
+                [ngStyle]="{'border':skill.enabled ? '2px solid green' : '1px solid gray'}"> {{converToPlainSkills(skill.name)}}
                 </mat-chip>
             </mat-chip-list>
         </div>
