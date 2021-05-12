@@ -54,30 +54,6 @@ public class UserInfoServiceImplTest {
     }
 
     @Test
-    void loadPhoto() {
-
-    }
-
-    @Test
-    void savePhoto() {
-        when(userInfoDAO.get(any())).thenReturn(Optional.of(new UserInfo()));
-        when(userInfoDAO.save(any())).thenReturn(new UserInfo());
-        Path path = Paths.get("resources/test.photo/images.png");
-        String name = "images.png";
-        String originalFileName = "images.png";
-        String contentType = "image";
-        byte[] content = null;
-        try {
-            content = Files.readAllBytes(path);
-        } catch (final IOException ignored) {
-        }
-        MultipartFile result = new MockMultipartFile(name,
-                originalFileName, contentType, content);
-
-        assertFalse(userInfoService.updateImage(result, "f6cea10a-2f9d-4feb-82ba-b600bb4cb5f4", 120), "Image updated");
-    }
-
-    @Test
     void checkLengthFile() {
         Path path = Paths.get("resources/test.photo/images.png");
         String name = "images.png";
