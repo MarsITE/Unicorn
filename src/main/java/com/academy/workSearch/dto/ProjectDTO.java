@@ -35,6 +35,8 @@ public class ProjectDTO {
     @NotNull
     private String ownerId;
 
+    private String ownerEmail;
+
     private Set<SkillDTO> skills;
 
     private List<WorkerInfoDTO> workers;

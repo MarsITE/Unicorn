@@ -1,14 +1,14 @@
-import { User } from './user';
-import { Skill } from './skill';
-import { Worker } from './worker';
+import {Skill} from './skill';
+import {Worker} from './worker';
 
 export class Project {
-    id: string;
-    name: string;
-    description: string;
-    projectStatus: string;
-    creationDate: string;
-    ownerId: string;
-    skills: Skill[] = [];
-    workers: Worker[] = [];
-  }
+  id: string;
+  name: string;
+  description: string;
+  projectStatus: string;
+  creationDate: string;
+  ownerId: string;
+  ownerEmail: string;
+  skills: Skill[] = [];
+  workers: Worker[] = [];
+}
