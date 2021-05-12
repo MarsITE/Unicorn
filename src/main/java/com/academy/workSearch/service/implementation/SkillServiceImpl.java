@@ -10,7 +10,6 @@ import com.academy.workSearch.model.Skill;
 import com.academy.workSearch.service.EmailService;
 import com.academy.workSearch.service.SkillService;
 import com.academy.workSearch.service.UserInfoService;
-import com.academy.workSearch.service.UserService;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
@@ -40,7 +39,6 @@ public class SkillServiceImpl implements SkillService {
     private final FreeMarkerConfigurer freemarkerConfigurer;
     private final EmailService emailService;
     private final UserInfoService userInfoService;
-    private final UserService userService;
 
     /**
      * post construct set class type for dao
@@ -220,5 +218,4 @@ public class SkillServiceImpl implements SkillService {
         skillDAO.delete(id);
         return SKILL_DETAILS_MAPPER.toDto(skill);
     }
-
 }
