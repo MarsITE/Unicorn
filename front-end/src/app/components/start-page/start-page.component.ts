@@ -138,7 +138,6 @@ export class StartPageComponent implements OnInit {
     this.projectService.getAllProjectsCount().subscribe(
       (response: number) => {
         this.allPageCount = response;
-        console.log("count", response)
       },
       (error) => {
         console.log("error", error)
@@ -224,6 +223,11 @@ export class StartPageComponent implements OnInit {
   showProjectDescription(id: any) {
     this.router.navigateByUrl(`projects/${id}`);
   }
+
+  public showUserProfile(id: string): void {
+      this.router.navigateByUrl(`profile/${id}`);
+  }
+
   public converToPlainSkills(str: string): string {
     return `#${str.toLowerCase()}`;
   }

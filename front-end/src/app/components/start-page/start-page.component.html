@@ -25,7 +25,7 @@
                 <button *ngIf="!isUserLogedIn()" mat-stroked-button (click)="navigateByLink('login')">More</button>
                 <button *ngIf="isUserLogedIn()" mat-stroked-button
                   (click)=showProjectDescription(project.id)>More</button>
-                <button mat-stroked-button>Owner</button>
+                <button mat-stroked-button (click)=showUserProfile(project.ownerId)>Owner</button>
               </mat-card-actions>
               <mat-card-footer>
                 <mat-card-subtitle class="skills">
@@ -84,7 +84,7 @@
           <mat-card-actions>
             <button *ngIf="!isUserLogedIn()" mat-stroked-button (click)="navigateByLink('login')">More</button>
             <button *ngIf="isUserLogedIn()" mat-stroked-button (click)=showProjectDescription(project.id)>More</button>
-            <button mat-stroked-button>Owner</button>
+            <button mat-stroked-button (click)=showUserProfile(project.ownerId)>Owner</button>
           </mat-card-actions>
           <mat-card-footer>
             <mat-card-subtitle class="skills">
