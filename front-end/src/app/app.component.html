@@ -1,39 +1,36 @@
 <div fxLayout="column" fxFlexFill>
 
-  <mat-toolbar class="header" color="primary">
-    <button *ngIf="isUserLogedIn()" mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon"
-      (click)="toggleSidebar()">
+    <mat-toolbar class="header" color="primary">
+        <button *ngIf="isUserLogedIn()" mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon" (click)="toggleSidebar()">
       <mat-icon>menu</mat-icon>
     </button>
-    <span (click)="navigateByLink('')">Work Search</span>
-    <span class="custom-spacer"></span>
-    <button *ngIf="isUserLogedIn()" mat-icon-button class="admin-icon account-circle"
-      aria-label="icon-button with account circle" (click)="navigateByLink('profile')"> </button>
-    <button *ngIf="isUserLogedIn()" mat-icon-button class="admin-icon account-circle" aria-label="icon-button with account circle" (click)="navigateByLink('profile')">
+        <span (click)="navigateByLink('')">Work Search</span>
+        <span class="custom-spacer"></span>
+        <button *ngIf="isUserLogedIn()" mat-icon-button class="admin-icon account-circle" aria-label="icon-button with account circle" (click)="navigateByLink('profile')"> </button>
+        <button *ngIf="isUserLogedIn()" mat-icon-button class="admin-icon account-circle" aria-label="icon-button with account circle" (click)="navigateByLink('profile')">
       <mat-icon><span class="material-icons">account_circle</span></mat-icon>
     </button>
-    <button *ngIf="isUserLogedIn()" mat-icon-button class="admin-icon logout"
-      aria-label="icon-button with account circle" (click)="logout()">
+        <button *ngIf="isUserLogedIn()" mat-icon-button class="admin-icon logout" aria-label="icon-button with account circle" (click)="logout()">
       <mat-icon><span class="material-icons">logout</span></mat-icon>
     </button>
-    <button *ngIf="!isUserLogedIn()"  mat-button (click)="navigateByLink('registration')">Sign Up</button>
-    <label *ngIf="!isUserLogedIn()">/</label>
-    <button *ngIf="!isUserLogedIn()"  mat-button (click)="navigateByLink('login')"> Sign In</button>
+        <button *ngIf="!isUserLogedIn()" mat-button (click)="navigateByLink('registration')">Sign Up</button>
+        <label *ngIf="!isUserLogedIn()">/</label>
+        <button *ngIf="!isUserLogedIn()" mat-button (click)="navigateByLink('login')"> Sign In</button>
 
-  </mat-toolbar>
+    </mat-toolbar>
 
-  <mat-sidenav-container class="sidebar-contaiver" fullscreen>
-    <mat-sidenav mode="side" [opened]="isOpen" [fixedInViewport]="true" [fixedTopGap]="gap" [fixedBottomGap]="gap">
-      <app-sidenav-list [isUserLoggedIn]="isNotLoginOrRegistration()"></app-sidenav-list>
-    </mat-sidenav>
-    <mat-sidenav-content>
-      <router-outlet></router-outlet>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
+    <mat-sidenav-container class="sidebar-contaiver" fullscreen>
+        <mat-sidenav mode="side" [opened]="isOpen" [fixedInViewport]="true" [fixedTopGap]="options.value.gap" [fixedBottomGap]="options.value.gap">
+            <app-sidenav-list [isUserLoggedIn]="isNotLoginOrRegistration()"></app-sidenav-list>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <router-outlet></router-outlet>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
 
-  <mat-toolbar class="footer">
-    <span>2021</span>
-    <span class="custom-spacer"></span>
-    <span>SoftServe</span>
-  </mat-toolbar>
+    <mat-toolbar class="footer">
+        <span>2021</span>
+        <span class="custom-spacer"></span>
+        <span>SoftServe</span>
+    </mat-toolbar>
 </div>

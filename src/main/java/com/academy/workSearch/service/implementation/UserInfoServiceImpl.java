@@ -50,7 +50,7 @@ public class UserInfoServiceImpl implements UserInfoService {
      */
     @Transactional
     @Override
-    public UserInfoDTO save(UserInfoDTO userInfo) {
+    public UserInfoDTO update(UserInfoDTO userInfo) {
         return USER_INFO_MAPPER
                 .toUserInfoDto(userInfoDAO.save(USER_INFO_MAPPER.toUserInfo(userInfo)));
     }
@@ -59,6 +59,8 @@ public class UserInfoServiceImpl implements UserInfoService {
      * @param photo image of user
      * @param id    id for change name image
      * @return status of saving
+     * @throws NoSuchEntityException get, if we try get user do not exists
+     * @throws IOException           if file does not exists
      */
     @Override
     @Transactional
@@ -93,6 +95,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     /**
      * @param imageName url
      * @return photo dto
+     * @exception  IOException if file does not exists
      */
     @Override
     public PhotoDTO loadPhoto(String imageName) {
@@ -110,12 +113,21 @@ public class UserInfoServiceImpl implements UserInfoService {
         return photoDTO;
     }
 
+    /**
+     * @param file image
+     * @return if file correct type
+     */
     private boolean isFileCorrectType(File file) {
         String mimetype = new MimetypesFileTypeMap().getContentType(file);
         String type = mimetype.split("/")[0];
         return type.equals("image");
     }
 
+    /**
+     * @param fileLength    length of image
+     * @param maxFileLength maxFileLength
+     * @return check if fileLength < maxFileLength
+     */
     private boolean isFileLessThanMaxFileLength(long fileLength, long maxFileLength) {
         return fileLength < maxFileLength;
     }

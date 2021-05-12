@@ -1,14 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {Router} from '@angular/router';
-import { ProjectStatus } from '../../../common/model/project-status';
-import { Project } from '../../../common/model/project';
-import { ProjectService } from '../../../common/services/project.service';
-import { ToastrService } from 'ngx-toastr';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { TokenHelper } from 'src/app/common/helper/token.helper';
+import { MatSelect } from '@angular/material/select';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Skill } from 'src/app/common/model/skill';
 import { SkillService } from 'src/app/common/services/skill.service';
-import { MatSelect } from '@angular/material/select';
+import { Project } from '../../../common/model/project';
+import { ProjectStatus } from '../../../common/model/project-status';
+import { ProjectService } from '../../../common/services/project.service';
+import { AuthenticationService } from './../../../common/services/authentication.service';
 
 @Component({
   selector: 'app-project-add',
@@ -33,54 +33,55 @@ export class ProjectAddComponent implements OnInit {
   @ViewChild('skillsSelect') skillsSelect: MatSelect;
 
   constructor(private router: Router, private projectService: ProjectService,
-              private toastr: ToastrService, private tokenHelper: TokenHelper,
+              private toastr: ToastrService,
+              private authenticationService: AuthenticationService,
               private skillService: SkillService) {
     this.project.projectStatus = this.selectedProjectStatus.value;
     this.initForm();
-   }
-   ngOnInit(): void {
-     console.log('add');
-     this.loadAllSkills();
-     console.log('Load skills', this.loadAllSkills);
-     // this.project.skills = this.mapSkills();
-   }
+  }
+  ngOnInit(): void {
+    console.log('add');
+    this.loadAllSkills();
+    console.log('Load skills', this.loadAllSkills);
+    // this.project.skills = this.mapSkills();
+  }
 
-   private initForm(
-     name: string = '',
-     description: string = '',
-     skillStrings: string[] = [],
-     projectStatus: string = this.selectedProjectStatus.viewValue,
+  private initForm(
+    name: string = '',
+    description: string = '',
+    skillStrings: string[] = [],
+    projectStatus: string = this.selectedProjectStatus.viewValue,
 
-   ): void {
-     this.projectForm = new FormGroup({
-       name: new FormControl(
-         name,
-         [Validators.required, Validators.minLength(2), Validators.maxLength(50)]),
-         description: new FormControl(
-           description,
-           [Validators.required, Validators.minLength(20), Validators.maxLength(2000)]),
-           projectStatus: new FormControl(),
-           skills: new FormControl(skillStrings),
+  ): void {
+    this.projectForm = new FormGroup({
+      name: new FormControl(
+        name,
+        [Validators.required, Validators.minLength(2), Validators.maxLength(50)]),
+      description: new FormControl(
+        description,
+        [Validators.required, Validators.minLength(20), Validators.maxLength(2000)]),
+      projectStatus: new FormControl(),
+      skills: new FormControl(skillStrings),
 
-     });
-   }
+    });
+  }
 
   create(): void {
-    this.project.ownerId = this.tokenHelper.getIdFromToken();
+    this.project.ownerId = this.authenticationService.getIdFromToken();
     this.projectService.save(this.project)
       .subscribe(data => {
         this.toastr.success('Project has been created successfully', 'Success!');
       },
-      (error) => {
-        this.initForm(
-          this.project.name,
-          this.project.description
-        );
-        this.toastr.error('Project is not unique', 'Error');
-      },
-      () => {
-        this.router.navigateByUrl('projects');
-      });
+        (error) => {
+          this.initForm(
+            this.project.name,
+            this.project.description
+          );
+          this.toastr.error('Project is not unique', 'Error');
+        },
+        () => {
+          this.router.navigateByUrl('projects');
+        });
   }
 
   private loadAllSkills(): void {

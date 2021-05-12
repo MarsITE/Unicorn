@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface UserInfoService {
 
-    UserInfoDTO save(UserInfoDTO userInfo);
+    UserInfoDTO update(UserInfoDTO userInfo);
 
     boolean updateImage(MultipartFile photo, String id, long maxFileLength);
 

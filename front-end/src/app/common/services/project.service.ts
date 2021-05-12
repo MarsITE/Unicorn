@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Project } from '../model/project';
-import { Skill } from '../model/skill';
+import { ACCESS_TOKEN } from 'src/app/constants';
 import { environment } from 'src/environments/environment';
-import { ACCESS_TOKEN } from '../helper/token.helper';
+import { Project } from '../model/project';
 import {WorkerProject} from '../model/worker-project';
+
 
 @Injectable({
   providedIn: 'root'
