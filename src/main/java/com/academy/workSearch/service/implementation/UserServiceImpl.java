@@ -308,7 +308,7 @@ public class UserServiceImpl implements UserService {
             }
             model.put("token", user.getRegistrationToken());
             model.put("time_to_improve", TIME_TO_IMPROVE_ACCOUNT);
-            Template template = freemarkerConfigurer.getConfiguration().getTemplate("verify-email-message.txt");
+            Template template = freemarkerConfigurer.getConfiguration().getTemplate("verify-email-message.ftl");
             content = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
         } catch (IOException | TemplateException e) {
             logger.info(e.getMessage());

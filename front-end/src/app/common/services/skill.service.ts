@@ -32,6 +32,11 @@ export class SkillService {
     return this.http.post<Skill>(`${environment.url}/worker/skills`, skills, this.authHeader());
   }
 
+  public deleteWorkerSkill(id: String): Observable<any> {
+    console.log("deleteWorkerSkill, id=", id);
+    return this.http.delete<Skill>(`${environment.url}/worker/skills/${id}`, this.authHeader()); 
+  }
+
   // for Admin
   public getSkillsDetails(): Observable<Skill[]> {
     return this.http.get<Skill[]>(`${environment.url}/admin/skills`, this.authHeader());

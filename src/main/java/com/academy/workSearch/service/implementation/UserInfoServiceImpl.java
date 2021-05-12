@@ -3,8 +3,10 @@ package com.academy.workSearch.service.implementation;
 import com.academy.workSearch.controller.UserInfoController;
 import com.academy.workSearch.dao.UserInfoDAO;
 import com.academy.workSearch.dto.PhotoDTO;
+import com.academy.workSearch.dto.SkillDetailsDTO;
 import com.academy.workSearch.dto.UserInfoDTO;
 import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
+import com.academy.workSearch.model.Skill;
 import com.academy.workSearch.model.UserInfo;
 import com.academy.workSearch.service.UserInfoService;
 import lombok.AllArgsConstructor;
@@ -22,9 +24,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import static com.academy.workSearch.dto.mapper.SkillDetailsMapper.SKILL_DETAILS_MAPPER;
 import static com.academy.workSearch.dto.mapper.UserInfoMapper.USER_INFO_MAPPER;
 import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_SUCH_ENTITY;
 
@@ -131,4 +134,21 @@ public class UserInfoServiceImpl implements UserInfoService {
     private boolean isFileLessThanMaxFileLength(long fileLength, long maxFileLength) {
         return fileLength < maxFileLength;
     }
+
+    @Transactional
+    public List<SkillDetailsDTO> addSkills(UUID userInfoId, List<SkillDetailsDTO> skills){
+        UserInfo userInfo = userInfoDAO.get(userInfoId).get();
+        Set<Skill> skillsSet = userInfo.getSkills();
+        skillsSet.addAll(SKILL_DETAILS_MAPPER.toSkills(skills));
+        return skillsSet.stream().map(SKILL_DETAILS_MAPPER::toDto).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public SkillDetailsDTO deleteSkill(UUID userInfoId, SkillDetailsDTO skill){
+        UserInfo userInfo = userInfoDAO.get(userInfoId).get();
+        Set<Skill> skillsSet = userInfo.getSkills();
+        skillsSet.remove(SKILL_DETAILS_MAPPER.toEntity(skill));
+        return skill;
+    }
+
 }
