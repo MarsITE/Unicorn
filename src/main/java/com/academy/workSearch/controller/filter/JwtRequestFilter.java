@@ -1,6 +1,7 @@
 package com.academy.workSearch.controller.filter;
 
 import com.academy.workSearch.model.User;
+import com.academy.workSearch.model.UserInfo;
 import com.academy.workSearch.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,7 +38,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 User user = new User(username, jwtService.getRoles(jwt));
                 user.setUserId(UUID.fromString(jwtService.getUserId(jwt)));
-
+                UUID userInfoId = jwtService.getUserInfoId(jwt);
+                UserInfo userInfo = new UserInfo();
+                userInfo.setUserInfoId(userInfoId);
+                user.setUserInfo(userInfo);
                 if (jwtService.isValidAccessToken(jwt, user)) {
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                     usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

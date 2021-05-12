@@ -5,6 +5,7 @@ import com.academy.workSearch.dao.RoleDAO;
 import com.academy.workSearch.dao.implementation.UserDAOImpl;
 import com.academy.workSearch.dto.ProjectDTO;
 import com.academy.workSearch.dto.SkillDTO;
+import com.academy.workSearch.dto.SkillDetailsDTO;
 import com.academy.workSearch.dto.mapper.ProjectMapper;
 import com.academy.workSearch.dto.mapper.SkillMapper;
 import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException;
@@ -110,8 +111,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ProjectDTO> findUserProjectBySkills(UUID userId, int page, int maxResult, int maxNavigationPage, String sort) {
-        List<String> userSkills = skillService.findAllByUserId(userId).stream().map(SkillDTO::getName).collect(Collectors.toList());
-        return ProjectMapper.INSTANCE.toProjectsDto(projectDAO.searchBySkill(userSkills, page, maxResult, maxNavigationPage, sort));
+        List<String> userSkillNames = skillService.findAllByUserId(userId).stream()
+                .map(SkillDetailsDTO::getName)
+                .collect(Collectors.toList());
+        return ProjectMapper.INSTANCE.toProjectsDto(projectDAO.searchBySkill(userSkillNames, page, maxResult, maxNavigationPage, sort));
     }
 
     /**
@@ -171,7 +174,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Long getAllProjectsCountByUserSkills(UUID userId) {
-        List<String> userSkillNames = skillService.findAllByUserId(userId).stream().map(SkillDTO::getName).collect(Collectors.toList());
+        List<String> userSkillNames = skillService.findAllByUserId(userId).stream()
+                .map(SkillDetailsDTO::getName)
+                .collect(Collectors.toList());
         return projectDAO.getAllProjectsCountBySkills(userSkillNames);
     }
 

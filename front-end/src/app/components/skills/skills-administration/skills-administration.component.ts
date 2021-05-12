@@ -101,18 +101,18 @@ export class SkillsAdministrationComponent implements OnInit, OnDestroy {
     });
   }
 
-  deleteUnapprovedSkill(s: Skill, needToConfirm: boolean): void{
+  deleteUnapprovedSkill(skill: Skill): void{
     const confirmDialog = this.dialog.open(ConfirmComponent, {
       data: {
         title: 'Confirm you want to delete the skill',
-        message: 'Are you sure, you want to delete the skill ' + s.name +  '?'
+        message: 'Are you sure, you want to delete the skill ' + skill.name +  '?'
       }
     });
     confirmDialog.afterClosed().subscribe(result => {
-      if (result === true) {
-        const index = this.unapprovedSkills.indexOf(s);
+      if (!!result) {
+        const index = this.unapprovedSkills.indexOf(skill);
         if (index >= 0) {
-          this.skillService.delete(s.skillId)
+          this.skillService.delete(skill.skillId)
           .subscribe(data => {
             this.unapprovedSkills.splice(index, 1);
             this.toastr.success('Skill has been deleted successfully', 'Success!');

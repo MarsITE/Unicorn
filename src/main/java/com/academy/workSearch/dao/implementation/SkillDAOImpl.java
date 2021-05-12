@@ -23,20 +23,20 @@ public class SkillDAOImpl extends CrudDAOImpl<Skill> implements SkillDAO {
 
     public Optional<Skill> getByName(String name) {
         Session session = sessionFactory.getCurrentSession();
-        Skill skill = session.createQuery("from Skill where name = :name", Skill.class)
+        Skill skill = session.createQuery("select skill from Skill skill where skill.name = :name", Skill.class)
                 .setParameter("name", name)
                 .uniqueResult();
         return Optional.ofNullable(skill);
     }
 
-    public List<Skill> getAllEnabled(Boolean enabled) {
+    public List<Skill> getAllByEnabled(Boolean enabled) {
         Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("from Skill where enabled = :enabled");
+        Query query = session.createQuery("select skill from Skill skill where skill.enabled = :enabled");
         query.setParameter("enabled", enabled);
         return query.list();
     }
 
-    public List<Skill> getAllByUserId(UUID userId) {
+    public List<Skill> getAllByUserId(UUID userId){
         Session session = sessionFactory.getCurrentSession();
         String hql = "select user.userInfo.skills from User user where user.userId = :userId";
         List<Skill> skills = session.createQuery(hql)

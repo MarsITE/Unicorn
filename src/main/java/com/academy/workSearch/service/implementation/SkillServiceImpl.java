@@ -9,6 +9,8 @@ import com.academy.workSearch.model.Mail;
 import com.academy.workSearch.model.Skill;
 import com.academy.workSearch.service.EmailService;
 import com.academy.workSearch.service.SkillService;
+import com.academy.workSearch.service.UserInfoService;
+import com.academy.workSearch.service.UserService;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
@@ -24,6 +26,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.academy.workSearch.dto.mapper.SkillDetailsMapper.SKILL_DETAILS_MAPPER;
 import static com.academy.workSearch.dto.mapper.SkillMapper.SKILL_MAPPER;
@@ -34,10 +37,11 @@ import static com.academy.workSearch.exceptionHandling.MessageConstants.*;
 @AllArgsConstructor
 public class SkillServiceImpl implements SkillService {
     private final SkillDAOImpl skillDAO;
-    private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(SkillServiceImpl.class);
     private final FreeMarkerConfigurer freemarkerConfigurer;
     private final EmailService emailService;
-    private final String NO_SUCH_SKILL_FORMAT = "%s = %s";
+    private final UserInfoService userInfoService;
+    private final UserService userService;
 
     /**
      * post construct set class type for dao
@@ -52,6 +56,7 @@ public class SkillServiceImpl implements SkillService {
      *
      * @return list of all skills
      */
+    @Transactional
     public List<SkillDetailsDTO> findAll() {
         return SKILL_DETAILS_MAPPER.toSkillsDto(skillDAO.findAll());
     }
@@ -60,23 +65,24 @@ public class SkillServiceImpl implements SkillService {
      * @param enabled  status of skill (true or false)
      * @return list of all skills which corresponds status enabled
      */
-    public List<SkillDTO> findAllEnabled(Boolean enabled) {
-        return SKILL_MAPPER.toSkillsDto(skillDAO.getAllEnabled(enabled));
+    @Transactional
+    public List<SkillDTO> findAllByEnabled(Boolean enabled) {
+        return SKILL_MAPPER.toSkillsDto(skillDAO.getAllByEnabled(enabled));
     }
 
     /**
      * @param userId  id of user
      * @return list of all skills for user with corresponding id
      */
-    public List<SkillDTO> findAllByUserId(UUID userId) {
-        return SKILL_MAPPER.toSkillsDto(skillDAO.getAllByUserId(userId));
+    @Transactional
+    public List<SkillDetailsDTO> findAllByUserId(UUID userId){
+        return SKILL_DETAILS_MAPPER.toSkillsDto(skillDAO.getAllByUserId(userId));
     }
 
     /**
      * @param skillName  name of skill you need to check in DB
      * @return true or false
      */
-    @Override
     public boolean isPresentSkillByName(String skillName) {
         return skillDAO.getByName(skillName).isPresent();
     }
@@ -85,6 +91,7 @@ public class SkillServiceImpl implements SkillService {
      * @param skill  skill you need to save in DB
      * @return skillDAO of saved skill
      */
+    @Transactional
     public SkillDetailsDTO save(SkillDetailsDTO skill) {
         if (isPresentSkillByName(skill.getName())) {
             throw new NotUniqueEntityException(SKILL_EXISTS);
@@ -93,14 +100,50 @@ public class SkillServiceImpl implements SkillService {
     }
 
     /**
+     * @param skills  list of skill you need to save in DB
+     * @return list of saved skill
+     */
+    @Transactional
+    public List<SkillDetailsDTO> saveSkillList(List<SkillDetailsDTO> skills){
+//        List<SkillDetailsDTO> savedSkills = new ArrayList<>();
+//        Stream<String> skillNames = skills.stream().map(SkillDetailsDTO::getName).map(String::trim);
+//        skillNames.forEach(skillName -> {
+//            Optional<Skill> skill = skillDAO.getByName(skillName);
+//            SkillDetailsDTO savedSkill;
+//            if(skill.isPresent()){
+//                savedSkill = SKILL_DETAILS_MAPPER.toDto(skill.get());
+//            } else {
+//                Skill newSkill = new Skill();
+//                newSkill.setName(skillName);
+//                savedSkill = SKILL_DETAILS_MAPPER.toDto(skillDAO.save(newSkill));
+//            }
+//            savedSkills.add(savedSkill);
+//        });
+//        return savedSkills;
+        return skills.stream()
+                .map(skill -> skill.getName().trim())
+                .map(skillName -> {
+                    Optional<Skill> skillInDB = skillDAO.getByName(skillName);
+                    if(skillInDB.isEmpty()){
+                        Skill newSkill = new Skill();
+                        newSkill.setName(skillName);
+                        return skillDAO.save(newSkill);
+                    }
+                    return skillInDB.get();
+                })
+                .map(SKILL_DETAILS_MAPPER::toDto)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * @param skill skill you need to update in DB
      * @return skillDAO of updated skill
      */
+    @Transactional
     public SkillDetailsDTO update(SkillDetailsDTO skill) {
         UUID id = skill.getSkillId();
         Skill skillInDB = skillDAO.get(id)
-                .orElseThrow(() ->
-                        new NoSuchEntityException(String.format(NO_SUCH_SKILL_FORMAT, NO_SUCH_SKILL + "id", id)));
+                .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_SKILL + id));
         skillInDB.setName(skill.getName());
         skillInDB.setEnabled(skill.isEnabled());
         return SKILL_DETAILS_MAPPER.toDto(skillDAO.save(skillInDB));
@@ -132,6 +175,7 @@ public class SkillServiceImpl implements SkillService {
      * @return  SkillDetailsDTO of deleted skill
      */
     @Override
+    @Transactional
     public SkillDetailsDTO delete(UUID id) {
         Skill skill = skillDAO.get(id)
                 .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_SKILL + id));
@@ -141,37 +185,32 @@ public class SkillServiceImpl implements SkillService {
 
     /**
      *
-     * @param approvedSkills list of approved skills
-     * @param unapprovedSkills list of unapproved skills
+     * @param skills list skills
      * @return  void
      */
-    @Override
-    public void sendEmail(String email, List<SkillDetailsDTO> approvedSkills, List<SkillDetailsDTO>unapprovedSkills) {
-        Function<List<SkillDetailsDTO>, List<String>> getSkillNames = skills ->
-                SKILL_DETAILS_MAPPER.toSkills(skills).stream()
-                        .map(Skill::getName)
-                        .collect(Collectors.toList());
-        Mail mail = new Mail();
-        mail.setSubject("Your new skills at Worksearch.com");
-        mail.setEmail(email);
-        String content = "";
-        List<String> approvedSkillNames = getSkillNames.apply(approvedSkills);
-        List<String> unapprovedSkillNames = getSkillNames.apply(unapprovedSkills);
+    public void sendEmail(String email, List<SkillDetailsDTO> skills) {
+        Function<Stream<SkillDetailsDTO>, List<String>> getSkillNames = skillsStream ->
+               skillsStream.map(SkillDetailsDTO::getName).collect(Collectors.toList());
+        List<String> approvedSkillNames = getSkillNames.apply(skills.stream().filter(SkillDetailsDTO::isEnabled));
+        List<String> unapprovedSkillNames = getSkillNames.apply(skills.stream().filter(skill -> !skill.isEnabled()));
         try {
             Map<String, Object> model = new HashMap<>();
             model.put("email", email);
-            model.put("isPresentApprovedSkills", approvedSkillNames.size() > 0);
+            model.put("isPresentApprovedSkills", !approvedSkillNames.isEmpty());
             model.put("approvedSkills", approvedSkillNames);
-            model.put("isPresentUnapprovedSkills",unapprovedSkillNames.size() > 0);
+            model.put("isPresentUnapprovedSkills",!unapprovedSkillNames.isEmpty());
             model.put("unapprovedSkills", unapprovedSkillNames);
             Template template = freemarkerConfigurer.getConfiguration().getTemplate("add-new-skills-message.ftl");
-            content = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+            String content = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+            Mail mail = new Mail();
+            mail.setSubject("Your new skills at Worksearch.com");
+            mail.setEmail("ch.sergij@gmail.com" /* email */);
+            mail.setMessage(content);
+            emailService.sendHtmlMessage(mail);
         } catch (IOException | TemplateException e) {
             logger.info(e.getMessage());
             e.printStackTrace();
         }
-        mail.setMessage(content);
-        emailService.sendHtmlMessage(mail);
     }
 
     /**
@@ -180,16 +219,16 @@ public class SkillServiceImpl implements SkillService {
      * @return  saved skills
      */
     @Override
-    public List<SkillDetailsDTO> saveWorkerSkills(List<SkillDetailsDTO> skills, UUID userId){
-        List<Skill> savedSkills = skills.stream()
-                .peek(s -> s.setName(s.getName().trim()))
-                .map(skill -> skillDAO.getByName(skill.getName())
-                                    .orElse(SKILL_DETAILS_MAPPER.toEntity(save(skill))))
-                .collect(Collectors.toList());
-        List<Skill> approvedSkills = savedSkills.stream().filter(skill -> skill.isEnabled()).collect(Collectors.toList());
-        List<Skill> unapprovedSkills = savedSkills.stream().filter(skill -> !skill.isEnabled()).collect(Collectors.toList());
-        String userEmail = "ch.sergij@gmail.com"; //user.getEmail();
-        sendEmail(userEmail, SKILL_DETAILS_MAPPER.toSkillsDto(approvedSkills), SKILL_DETAILS_MAPPER.toSkillsDto(unapprovedSkills));
-    return SKILL_DETAILS_MAPPER.toSkillsDto(savedSkills);
+    @Transactional
+    public List<SkillDetailsDTO> saveWorkerSkills(List<SkillDetailsDTO> skills, UUID userInfoId){
+        return userInfoService.addSkills(userInfoId, skills);
+    }
+
+    @Override
+    @Transactional
+    public SkillDetailsDTO deleteByUserInfoIdBySkillId(UUID userInfoId, UUID skillId){
+        Skill skill = skillDAO.get(skillId)
+                .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_SKILL + skillId));
+        return userInfoService.deleteSkill(userInfoId, SKILL_DETAILS_MAPPER.toDto(skill));
     }
 }

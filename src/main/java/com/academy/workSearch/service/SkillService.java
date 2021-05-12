@@ -3,17 +3,23 @@ package com.academy.workSearch.service;
 import com.academy.workSearch.dto.ProjectDTO;
 import com.academy.workSearch.dto.SkillDTO;
 import com.academy.workSearch.dto.SkillDetailsDTO;
+import com.academy.workSearch.dto.UserInfoDTO;
+import com.academy.workSearch.model.User;
+import com.academy.workSearch.model.UserInfo;
+
 import java.util.List;
 import java.util.UUID;
 
 public interface SkillService {
     List<SkillDetailsDTO> findAll();
 
-    List<SkillDTO> findAllEnabled(Boolean enabled);
+    List<SkillDTO> findAllByEnabled(Boolean enabled);
 
-    List<SkillDTO> findAllByUserId(UUID userId);
+    List<SkillDetailsDTO> findAllByUserId(UUID userId);
 
     SkillDetailsDTO save(SkillDetailsDTO skill);
+
+    List<SkillDetailsDTO> saveSkillList(List<SkillDetailsDTO> skills);
 
     SkillDetailsDTO update(SkillDetailsDTO skill);
 
@@ -25,7 +31,9 @@ public interface SkillService {
 
     boolean isPresentSkillByName(String skillName);
 
-    void sendEmail(String email, List<SkillDetailsDTO> approvedSkills, List<SkillDetailsDTO>unapprovedSkills);
+    List<SkillDetailsDTO> saveWorkerSkills(List<SkillDetailsDTO> skills, UUID userInfoId);
 
-    List<SkillDetailsDTO> saveWorkerSkills(List<SkillDetailsDTO> skills, UUID userId);
+    SkillDetailsDTO deleteByUserInfoIdBySkillId(UUID userInfoId, UUID skillId);
+
+    void sendEmail(String email, List<SkillDetailsDTO> skills);
 }

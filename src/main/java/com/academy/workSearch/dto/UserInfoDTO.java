@@ -18,5 +18,5 @@ public class UserInfoDTO {
     private boolean isShowInfo;
     private String workStatus;
     private String imageUrl;
-    private Set<SkillDTO> skills;
+    private Set<SkillDetailsDTO> skills;
 }

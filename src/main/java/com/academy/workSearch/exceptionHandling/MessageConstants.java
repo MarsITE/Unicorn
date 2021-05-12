@@ -7,6 +7,7 @@ public class MessageConstants {
     public static final String EMAIL_EXISTS = "This email address is already registered!";
     public static final String SKILL_EXISTS = "This skill is already exists!";
     public static final String NO_SUCH_SKILL = "There is no skill with id : ";
+    public static final String NO_SUCH_USER_INFO = "There is no user info with id : ";
     public static final String NO_PROJECT = "There is no project with id : ";
     public static final String NO_ROLE = "There is no role with name : ";
     public static final String NO_RATING = "There is no rating : ";
