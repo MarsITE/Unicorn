@@ -34,8 +34,7 @@ export class WorkerSkillsComponent implements OnInit, OnDestroy {
   getWorkerSkills(): void {
     this.subscriptions.push(this.skillService.getWorkerSkills().subscribe(
       (response: Skill[]) => {
-        this.skills = response.sort((a: Skill) => (a.enabled ? 1 : -1));
-        console.log(this.skills);
+        this.skills = response.sort((a: Skill) => (a.enabled ? -1 : 1));
       },
       (error) => { this.toastr.error('Skills were not received!', 'Error!'); }
     ));
