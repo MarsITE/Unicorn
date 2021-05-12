@@ -9,6 +9,11 @@
     <div *ngIf="isUserLogedIn()" class="interest-projects">
       <div *ngIf="isUserHasSkills()">
         <h1>It may interest You</h1>
+        <div *ngIf = "isThereAreProjectsWithUserSkills()">
+          <h3>Sorry, but there are no projects by your skills!</h3>
+          <h3>Check our "Fresh Offers"</h3>
+        </div>
+        <div *ngIf = "!isThereAreProjectsWithUserSkills()">
         <mat-grid-list cols="5" rowHeight="9:10">
           <mat-grid-tile *ngFor="let project of workerProjects">
             <mat-card class="project-card-user">
@@ -20,7 +25,7 @@
                 <button *ngIf="!isUserLogedIn()" mat-stroked-button (click)="navigateByLink('login')">More</button>
                 <button *ngIf="isUserLogedIn()" mat-stroked-button
                   (click)=showProjectDescription(project.id)>More</button>
-                <button mat-stroked-button>Owner</button>
+                <button mat-stroked-button (click)=showUserProfile(project.ownerId)>Owner</button>
               </mat-card-actions>
               <mat-card-footer>
                 <mat-card-subtitle class="skills">
@@ -37,6 +42,7 @@
             </mat-card>
           </mat-grid-tile>
         </mat-grid-list>
+      </div>
         <div *ngIf="userProjectListSize()">
           <mat-paginator [length]="allPageBySkillsCount" [pageSize]="pageSize" [pageSizeOptions]="deviceObjects"
             (page)="pageEventUserProjects = getPaginatorDataUser($event)">
@@ -78,7 +84,7 @@
           <mat-card-actions>
             <button *ngIf="!isUserLogedIn()" mat-stroked-button (click)="navigateByLink('login')">More</button>
             <button *ngIf="isUserLogedIn()" mat-stroked-button (click)=showProjectDescription(project.id)>More</button>
-            <button mat-stroked-button>Owner</button>
+            <button mat-stroked-button (click)=showUserProfile(project.ownerId)>Owner</button>
           </mat-card-actions>
           <mat-card-footer>
             <mat-card-subtitle class="skills">
