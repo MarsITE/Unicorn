@@ -39,6 +39,7 @@ public interface ProjectMapper {
             @Mapping(target = "projectStatus", qualifiedByName = "projectStatusStr"),
             @Mapping(target = "creationDate", source = "creationDate"),
             @Mapping(target = "ownerId", source = "employer", qualifiedByName = "ownerId"),
+            @Mapping(target = "ownerEmail", source = "employer", qualifiedByName = "ownerEmail"),
             @Mapping(target = "skills", source = "skills")
     })
     ProjectDTO toDto(Project project);
@@ -103,6 +104,11 @@ public interface ProjectMapper {
     @Named("ownerId")
     default String ownerId(User user) {
         return user.getUserId().toString();
+    }
+
+    @Named("ownerEmail")
+    default String ownerEmail(User user) {
+        return user.getEmail();
     }
 
     @Named("owner")

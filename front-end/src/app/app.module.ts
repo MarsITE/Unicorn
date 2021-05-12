@@ -61,7 +61,6 @@ import { ProjectService } from './common/services/project.service';
 import { SkillService } from './common/services/skill.service';
 import { UserHttpService } from './common/services/user-http.service';
 import { ConfirmComponent } from './components/modals/confirm/confirm.component';
-import { AllProjectsComponent } from './components/project/all-projects/all-projects.component';
 import { ProjectAddComponent } from './components/project/project-add/project-add.component';
 import { ProjectEditComponent } from './components/project/project-edit/project-edit.component';
 import { ProjectInfoComponent } from './components/project/project-info/project-info.component';
@@ -94,7 +93,6 @@ import {WorkersListComponent} from './components/workers-list/workers-list.compo
     ProjectEditComponent,
     SidenavListComponent,
     ConfirmComponent,
-    AllProjectsComponent,
     StartPageComponent,
     StartPageComponent,
     VerifyEmailComponent,
