@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 import static com.academy.workSearch.dto.mapper.SkillDetailsMapper.SKILL_DETAILS_MAPPER;
 import static com.academy.workSearch.dto.mapper.UserInfoMapper.USER_INFO_MAPPER;
 import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_SUCH_ENTITY;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_SUCH_USER;
 
 @Service
 @AllArgsConstructor
@@ -81,7 +82,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
                 UUID uuid = UUID.fromString(id);
                 UserInfo userInfo = userInfoDAO.get(uuid)
-                        .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_ENTITY + id));
+                        .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_USER + id));
                 userInfo.setImageUrl(newNameImage);
                 userInfoDAO.save(userInfo);
                 isImageSave = true;
@@ -129,10 +130,10 @@ public class UserInfoServiceImpl implements UserInfoService {
     /**
      * @param fileLength    length of image
      * @param maxFileLength maxFileLength
-     * @return check if fileLength < maxFileLength
+     * @return check if fileLength =< maxFileLength
      */
     private boolean isFileLessThanMaxFileLength(long fileLength, long maxFileLength) {
-        return fileLength < maxFileLength;
+        return fileLength > 0 && fileLength <= maxFileLength;
     }
 
     @Transactional
