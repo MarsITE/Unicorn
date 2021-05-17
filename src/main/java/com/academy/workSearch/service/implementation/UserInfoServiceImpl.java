@@ -76,18 +76,19 @@ public class UserInfoServiceImpl implements UserInfoService {
             byte[] img = photo.getBytes();
             String newNameImage = id + photo.getOriginalFilename();
             Path path = Paths.get(pathToFolder + newNameImage);
-            if (isFileCorrectType(new File(pathToFolder + newNameImage)) && isFileLessThanMaxFileLength(photo.getSize(), maxFileLength)) {
+            if (isFileCorrectType(new File(path.toString())) && isFileLessThanMaxFileLength(photo.getSize(), maxFileLength)) {
                 Files.write(path, img);
-                logger.info(photo.getOriginalFilename());
-                logger.info(path.toString());
 
                 UUID uuid = UUID.fromString(id);
                 UserInfo userInfo = userInfoDAO.get(uuid)
                         .orElseThrow(() -> new NoSuchEntityException(NO_SUCH_USER + id));
+                String oldImageUrl = userInfo.getImageUrl();
                 userInfo.setImageUrl(newNameImage);
                 userInfoDAO.save(userInfo);
-                isImageSave = true;
+
                 logger.info("Image saved!");
+                isImageSave = true;
+                deletePreviousPhoto(oldImageUrl);
             } else {
                 logger.info("Image isn't saved!");
             }
@@ -134,23 +135,33 @@ public class UserInfoServiceImpl implements UserInfoService {
      * @return check if fileLength =< maxFileLength
      */
     private boolean isFileLessThanMaxFileLength(long fileLength, long maxFileLength) {
-        return fileLength > 0 && fileLength <= maxFileLength;
+        return fileLength <= maxFileLength;
     }
 
     @Transactional
     public List<SkillDetailsDTO> addSkills(UUID userInfoId, List<SkillDetailsDTO> skills){
-        UserInfo userInfo = userInfoDAO.get(userInfoId).get();
+        UserInfo userInfo = userInfoDAO.get(userInfoId).orElseThrow(() -> new NoSuchEntityException(NO_SUCH_USER + userInfoId));
         Set<Skill> skillsSet = userInfo.getSkills();
         skillsSet.addAll(SKILL_DETAILS_MAPPER.toSkills(skills));
         return skillsSet.stream().map(SKILL_DETAILS_MAPPER::toDto).collect(Collectors.toList());
     }
 
     @Transactional
-    public SkillDetailsDTO deleteSkill(UUID userInfoId, SkillDetailsDTO skill){
-        UserInfo userInfo = userInfoDAO.get(userInfoId).get();
+    public SkillDetailsDTO deleteSkill(UUID userInfoId, SkillDetailsDTO skill) {
+        UserInfo userInfo = userInfoDAO.get(userInfoId).orElseThrow(() -> new NoSuchEntityException(NO_SUCH_USER + userInfoId));
         Set<Skill> skillsSet = userInfo.getSkills();
         skillsSet.remove(SKILL_DETAILS_MAPPER.toEntity(skill));
         return skill;
+    }
+
+    private void deletePreviousPhoto(String imageUrl) {
+        logger.info("Preparing to delete previous user photo");
+        File file = new File(imageUrl);
+        if (file.delete()) {
+            logger.info("Previous photo deleted");
+        } else {
+            logger.info("Previous photo did not delete");
+        }
     }
 
 }

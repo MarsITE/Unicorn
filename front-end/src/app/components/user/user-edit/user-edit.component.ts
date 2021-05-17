@@ -185,8 +185,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
       this.selectedImage = undefined;
       return;
     }
-    if (this.selectedImage.size > 2097152) {
-      this.toastr.error('File is too big! Alowed size less 2 MB', 'error');
+    if (this.selectedImage.size > this.maxPhotoLength) {
+      this.toastr.error(`File is too big! Alowed size less ${this.maxPhotoLength} b`, 'error');
       this.selectedImage = undefined;
       return;
     }

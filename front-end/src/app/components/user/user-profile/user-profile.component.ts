@@ -7,9 +7,8 @@ import { User } from 'src/app/common/model/user';
 import { WorkStatus } from 'src/app/common/model/work-status';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
 import { USER_ROLE_EMPLOYER, USER_ROLE_WORKER } from 'src/app/constants';
-
-import { Skill } from '../../../common/model/skill';
 import { AuthenticationService } from './../../../common/services/authentication.service';
+import { Skill } from '../../../common/model/skill';
 
 @Component({
   selector: 'app-user-profile',
@@ -70,13 +69,9 @@ export class UserProfileComponent implements OnInit, OnDestroy {
           if (this.user.userInfo.imageUrl != null && this.user.userInfo.imageUrl !== '') {
             this.getImage(this.user.userInfo.imageUrl);
           }
-          this.skills = this.user.userInfo.skills.sort((a: Skill) => (a.enabled ? -1 : 1));
+          this.skills =  this.user.userInfo.skills.sort((a: Skill) => (a.enabled ? -1 : 1));
           this.setViewForWorkStatus();
-          if (this.authenticationService.getIdFromToken() === id) {
-            this.isOnlyWatch = true;
-          } else {
-            this.isOnlyWatch = false;
-          }
+          this.isOnlyWatch = this.authenticationService.getIdFromToken() === id;
           this.isWorker = this.isRoleWorker();
           this.isEmployer = this.isRoleEmployer();
           this.isAuthUser = this.authenticationService.userValue.email === this.user.email;
@@ -88,7 +83,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
             this.isShowInfo = false;
           }
         },
-        error => this.toastr.error('Can not load user info!', 'Something wrong'),
+        error => this.toastr.error('Can not load user info!', error),
       ));
   }
 
@@ -97,9 +92,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       .subscribe(
         response => {
           this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(response));
-          sessionStorage.setItem('avatar', window.URL.createObjectURL(response));
         },
-        error => this.toastr.error('Can not load user photo!', 'Something wrong'),
+        error => this.toastr.error('Can not load user photo!', error),
       ));
   }
 

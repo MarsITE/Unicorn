@@ -40,7 +40,7 @@ public class UserInfoController {
      */
     @PutMapping("/save-photo/{id}/{maxFileLength}")
     @ApiOperation(value = "Save user photo", notes = "Save user photo")
-    public ResponseEntity<String> savePhoto(@RequestPart("image") MultipartFile image, @PathVariable(name = "id") String id, @PathVariable(name = "maxFileLength") long maxFileLength) {
+    public ResponseEntity<String> savePhoto(@RequestPart("image") MultipartFile image, @PathVariable(name = "id") String id, @PathVariable(name = "maxFileLength") int maxFileLength) {
         if (userInfoService.updateImage(image, id, maxFileLength)) {
             return ResponseEntity.ok().body("Photo saved!");
         } else {
