@@ -58,7 +58,7 @@ export class UserHttpService {
   }
 
   public saveImage(photo: any, id: string, maxPhotoLength: any): Observable<Blob> {
-    return this.http.post<any>(`${environment.url}/user-profile/save-photo/${id}/${maxPhotoLength}`, photo, this.authHeader());
+    return this.http.put<any>(`${environment.url}/user-profile/save-photo/${id}/${maxPhotoLength}`, photo, this.authHeader());
   }
 
   public checkRegistrationToken(token: string): Observable<boolean> {

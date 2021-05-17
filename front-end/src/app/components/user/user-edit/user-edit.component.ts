@@ -32,7 +32,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
 
   private skills: Skill[] = [];
   private subscriptions: Subscription[] = [];
-  private maxPhotoLength: any = 2048;
+  private maxPhotoLength: any = 2048 * 2048 * 2;
 
   workStatuses: WorkStatus[] = [ // todo
     { value: 'PART_TIME', viewValue: 'Part time' },

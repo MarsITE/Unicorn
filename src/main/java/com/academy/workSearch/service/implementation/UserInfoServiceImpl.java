@@ -24,12 +24,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.academy.workSearch.dto.mapper.SkillDetailsMapper.SKILL_DETAILS_MAPPER;
 import static com.academy.workSearch.dto.mapper.UserInfoMapper.USER_INFO_MAPPER;
-import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_SUCH_ENTITY;
 import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_SUCH_USER;
 
 @Service
@@ -74,8 +76,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             byte[] img = photo.getBytes();
             String newNameImage = id + photo.getOriginalFilename();
             Path path = Paths.get(pathToFolder + newNameImage);
-            File file = new File(pathToFolder + newNameImage);
-            if (isFileCorrectType(file) && isFileLessThanMaxFileLength(file.length(), maxFileLength)) {
+            if (isFileCorrectType(new File(pathToFolder + newNameImage)) && isFileLessThanMaxFileLength(photo.getSize(), maxFileLength)) {
                 Files.write(path, img);
                 logger.info(photo.getOriginalFilename());
                 logger.info(path.toString());
