@@ -9,6 +9,7 @@ import { UserInfo } from 'src/app/common/model/user-info';
 import { WorkStatus } from 'src/app/common/model/work-status';
 import { SkillService } from 'src/app/common/services/skill.service';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
+import { USER_ROLE_WORKER } from 'src/app/constants';
 import { AuthenticationService } from './../../../common/services/authentication.service';
 
 @Component({
@@ -18,7 +19,6 @@ import { AuthenticationService } from './../../../common/services/authentication
 })
 
 export class UserEditComponent implements OnInit, OnDestroy {
-  maxPhotoLength = 2 * 1024 * 1024;//2 Mb
   id: string;
   user: User;
   userProfileForm: FormGroup;
@@ -28,9 +28,11 @@ export class UserEditComponent implements OnInit, OnDestroy {
   today: Date;
   skillStrings: string[] = [];
   selectedSkills: string[] = [];
+  isWorker = false;
 
   private skills: Skill[] = [];
   private subscriptions: Subscription[] = [];
+  private maxPhotoLength: any = 2048 * 2048 * 2;
 
   workStatuses: WorkStatus[] = [ // todo
     { value: 'PART_TIME', viewValue: 'Part time' },
@@ -108,6 +110,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
             this.user.userInfo.workStatus,
             this.user.userInfo.imageUrl);
           this.loadAllSkills();
+          this.isWorker = this.isRoleWorker();
         },
         error => {
           this.initForm();
@@ -266,6 +269,10 @@ export class UserEditComponent implements OnInit, OnDestroy {
       }
     });
     return newSkills;
+  }
+
+  private isRoleWorker(): boolean {
+    return this.user.roles.find(role => role === USER_ROLE_WORKER) != null;
   }
 
 }

@@ -19,13 +19,12 @@
 
         <div class="skills">
             <mat-chip-list>
-                <mat-chip class="skills-chip" *ngFor="let skill of skills"
-                [ngStyle]="{'border':skill.enabled ? '2px solid green' : '1px solid gray'}"> {{converToPlainSkills(skill.name)}}
+                <mat-chip class="skills-chip" *ngFor="let skill of skills" [ngStyle]="{'border':skill.enabled ? '2px solid green' : '1px solid gray'}"> {{converToPlainSkills(skill.name)}}
                 </mat-chip>
             </mat-chip-list>
         </div>
 
-        <div class="aditional-data" *ngIf="user.userInfo.showInfo">
+        <div class="aditional-data" *ngIf="isShowInfo">
             <label>Email: {{user.email}}</label>
             <div *ngIf="user.userInfo.phone">
                 <label>Phone: {{user.userInfo.phone}}</label>
@@ -36,20 +35,17 @@
             <div *ngIf="user.userInfo.birthDate">
                 <label>Date of birth: {{user.userInfo.birthDate}}</label>
             </div>
-            <div *ngIf="user.userInfo.showInfo">
-                <label>Public profile: {{user.userInfo.showInfo}}</label>
-            </div>
             <div *ngIf="user.userInfo.workStatus">
                 <label>Work status: {{user.userInfo.workStatus}}</label>
             </div>
         </div>
 
         <div class="projects">
-            <h3 *ngIf="isEmployer" align="right"><a href="projects">Own projects</a></h3>
-            <h3 *ngIf="isWorker" align="right"><a href="worker-projects">Involed projects</a></h3>
+            <h3 *ngIf="isEmployer"><a href="projects">Own projects</a></h3>
+            <h3 *ngIf="isWorker"><a href="worker-projects">Involed projects</a></h3>
         </div>
 
-        <div *ngIf="!isOnlyWatch">
+        <div *ngIf="isOnlyWatch">
             <div class="buttons">
                 <button (click)=edit() mat-raised-button color="primary"> Edit </button>
             </div>
