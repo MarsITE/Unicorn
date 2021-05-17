@@ -24,7 +24,7 @@
             </mat-chip-list>
         </div>
 
-        <div class="aditional-data" *ngIf="user.userInfo.showInfo">
+        <div class="aditional-data" *ngIf="isShowInfo">
             <label>Email: {{user.email}}</label>
             <div *ngIf="user.userInfo.phone">
                 <label>Phone: {{user.userInfo.phone}}</label>
@@ -34,9 +34,6 @@
             </div>
             <div *ngIf="user.userInfo.birthDate">
                 <label>Date of birth: {{user.userInfo.birthDate}}</label>
-            </div>
-            <div *ngIf="user.userInfo.showInfo">
-                <label>Public profile: {{user.userInfo.showInfo}}</label>
             </div>
             <div *ngIf="user.userInfo.workStatus">
                 <label>Work status: {{user.userInfo.workStatus}}</label>
@@ -48,7 +45,7 @@
             <h3 *ngIf="isWorker"><a href="worker-projects">Involed projects</a></h3>
         </div>
 
-        <div *ngIf="!isOnlyWatch">
+        <div *ngIf="isOnlyWatch">
             <div class="buttons">
                 <button (click)=edit() mat-raised-button color="primary"> Edit </button>
             </div>

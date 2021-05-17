@@ -7,8 +7,9 @@ import { User } from 'src/app/common/model/user';
 import { WorkStatus } from 'src/app/common/model/work-status';
 import { UserHttpService } from 'src/app/common/services/user-http.service';
 import { USER_ROLE_EMPLOYER, USER_ROLE_WORKER } from 'src/app/constants';
-import { AuthenticationService } from './../../../common/services/authentication.service';
+
 import { Skill } from '../../../common/model/skill';
+import { AuthenticationService } from './../../../common/services/authentication.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -24,7 +25,9 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   imageBlobUrl: SafeResourceUrl;
   isWorker = false;
   isEmployer = false;
-  skills: Skill[] = []; 
+  isAuthUser = false;
+  isShowInfo = false;
+  skills: Skill[] = [];
   private subscriptions: Subscription[] = [];
   workStatuses: WorkStatus[] = [
     { value: 'PART_TIME', viewValue: 'Part time' },
@@ -35,14 +38,14 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   isOnlyWatch: boolean;
 
   constructor(
-    protected router: ActivatedRoute,
+    protected route: ActivatedRoute,
     private userService: UserHttpService,
     private router2: Router,
     private domSanitizer: DomSanitizer,
     private toastr: ToastrService,
     private authenticationService: AuthenticationService
   ) {
-    this.idInUrl = router.snapshot.params.id;
+    this.idInUrl = route.snapshot.params.id;
     this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl('../../../assets/default-profile-photo.jpg');
   }
   ngOnDestroy(): void {
@@ -54,11 +57,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.idInUrl) {
       this.getUser(this.idInUrl);
-      this.isOnlyWatch = true;
     } else {
-      this.id = this.authenticationService.getIdFromToken();
-      this.getUser(this.id);
-      this.isOnlyWatch = false;
+      this.getUser(this.authenticationService.getIdFromToken());
     }
   }
 
@@ -70,10 +70,23 @@ export class UserProfileComponent implements OnInit, OnDestroy {
           if (this.user.userInfo.imageUrl != null && this.user.userInfo.imageUrl !== '') {
             this.getImage(this.user.userInfo.imageUrl);
           }
-          this.skills =  this.user.userInfo.skills.sort((a: Skill) => (a.enabled ? -1 : 1));
+          this.skills = this.user.userInfo.skills.sort((a: Skill) => (a.enabled ? -1 : 1));
           this.setViewForWorkStatus();
+          if (this.authenticationService.getIdFromToken() === id) {
+            this.isOnlyWatch = true;
+          } else {
+            this.isOnlyWatch = false;
+          }
           this.isWorker = this.isRoleWorker();
           this.isEmployer = this.isRoleEmployer();
+          this.isAuthUser = this.authenticationService.userValue.email === this.user.email;
+          if (this.isAuthUser) {
+            this.isShowInfo = true;
+          } else if (this.isAuthUser && this.user.userInfo.showInfo) {
+            this.isShowInfo = true;
+          } else {
+            this.isShowInfo = false;
+          }
         },
         error => this.toastr.error('Can not load user info!', 'Something wrong'),
       ));
