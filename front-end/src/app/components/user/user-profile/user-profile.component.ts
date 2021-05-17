@@ -77,7 +77,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
           this.isAuthUser = this.authenticationService.userValue.email === this.user.email;
           if (this.isAuthUser) {
             this.isShowInfo = true;
-          } else if (this.isAuthUser && this.user.userInfo.showInfo) {
+          } else if (this.user.userInfo.showInfo) {
             this.isShowInfo = true;
           } else {
             this.isShowInfo = false;
