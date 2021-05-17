@@ -51,23 +51,6 @@ public class UserInfoServiceImplTest {
         assertEquals("Diana", userInfoService.update(userInfoDTO).getFirstName(), "Can't update userInfo");
     }
 
-//    @Test
-//    void checkLengthFile() {
-//        Path path = Paths.get("resources/test.photo/images.png");
-//        String name = "images.png";
-//        String originalFileName = "images.png";
-//        String contentType = "image";
-//        byte[] content = null;
-//        try {
-//            content = Files.readAllBytes(path);
-//        } catch (final IOException ignored) {
-//        }
-//        MultipartFile result = new MockMultipartFile(name,
-//                originalFileName, contentType, content);
-//
-//        assertFalse(userInfoService.updateImage(result, "test-id", 1), "Image is updated");
-//    }
-
     @Test
     void checkIfImage() {
         Path path = Paths.get("resources/test.photo/file.txt");
@@ -79,9 +62,8 @@ public class UserInfoServiceImplTest {
             content = Files.readAllBytes(path);
         } catch (final IOException ignored) {
         }
-        MultipartFile result = new MockMultipartFile(name,
-                originalFileName, contentType, content);
+        MultipartFile result = new MockMultipartFile(name, originalFileName, contentType, content);
 
-        assertFalse(userInfoService.updateImage(result, "test-id", 10), "Image is updated");;
+        assertFalse(userInfoService.updateImage(result, "f6cea10a-2f9d-4feb-82ba-b600bb4cb5f4", 10), "Image is updated");
     }
 }
