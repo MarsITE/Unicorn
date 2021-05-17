@@ -24,7 +24,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   imageBlobUrl: SafeResourceUrl;
   isWorker = false;
   isEmployer = false;
-  skills: Skill[] = []; 
+  skills: Skill[] = [];
   private subscriptions: Subscription[] = [];
   workStatuses: WorkStatus[] = [
     { value: 'PART_TIME', viewValue: 'Part time' },
@@ -75,7 +75,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
           this.isWorker = this.isRoleWorker();
           this.isEmployer = this.isRoleEmployer();
         },
-        error => this.toastr.error('Can not load user info!', 'Something wrong'),
+        error => this.toastr.error('Can not load user info!', error),
       ));
   }
 
@@ -84,9 +84,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       .subscribe(
         response => {
           this.imageBlobUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(response));
-          sessionStorage.setItem('avatar', window.URL.createObjectURL(response));
         },
-        error => this.toastr.error('Can not load user photo!', 'Something wrong'),
+        error => this.toastr.error('Can not load user photo!', error),
       ));
   }
 
