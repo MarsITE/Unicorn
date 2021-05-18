@@ -127,8 +127,7 @@ public class UserServiceImpl implements UserService {
         user.setRegistrationToken(jwtService.generateRegistrationToken(user.getEmail()));
         userDAO.save(user);
 
-        Thread thread = new Thread(() -> sendMessageWithActivationLink(user));
-        thread.start();
+        sendMessageWithActivationLink(user);
 
         UserAuthDTO userAuthDTO = new UserAuthDTO();
         userAuthDTO.setEmail(user.getEmail());

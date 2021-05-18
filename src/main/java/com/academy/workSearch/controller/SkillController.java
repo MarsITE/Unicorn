@@ -63,8 +63,7 @@ public class SkillController {
         logger.info("Attempt to add skills {}", skills);
         List<SkillDetailsDTO> addedSkills = skillService.saveSkillList(skills);
 
-        Thread thread = new Thread(() -> skillService.sendEmail(user.getEmail(), addedSkills));
-        thread.start();
+        skillService.sendEmail(user.getEmail(), addedSkills);
 
         UUID userInfoId = user.getUserInfo().getUserInfoId();
         skillService.saveWorkerSkills(addedSkills, userInfoId);

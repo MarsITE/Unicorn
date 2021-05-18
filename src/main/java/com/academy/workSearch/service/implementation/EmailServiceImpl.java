@@ -12,6 +12,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -20,6 +21,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Objects;
 
+@Async
 @Service
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -69,6 +71,7 @@ public class EmailServiceImpl implements EmailService {
      *             send message for template
      * @exception MessagingException if smth wrong with mail sender or user data
      */
+
     @Override
     public void sendHtmlMessage(Mail mail) {
         MimeMessage message = emailSender.createMimeMessage();
