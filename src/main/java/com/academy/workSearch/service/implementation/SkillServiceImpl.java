@@ -7,9 +7,8 @@ import com.academy.workSearch.exceptionHandling.exceptions.NoSuchEntityException
 import com.academy.workSearch.exceptionHandling.exceptions.NotUniqueEntityException;
 import com.academy.workSearch.model.Mail;
 import com.academy.workSearch.model.Skill;
-import com.academy.workSearch.service.EmailService;
+import com.academy.workSearch.service.*;
 import com.academy.workSearch.service.SkillService;
-import com.academy.workSearch.service.UserInfoService;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.AllArgsConstructor;
@@ -29,7 +28,8 @@ import java.util.stream.Stream;
 
 import static com.academy.workSearch.dto.mapper.SkillDetailsMapper.SKILL_DETAILS_MAPPER;
 import static com.academy.workSearch.dto.mapper.SkillMapper.SKILL_MAPPER;
-import static com.academy.workSearch.exceptionHandling.MessageConstants.*;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_SUCH_SKILL;
+import static com.academy.workSearch.exceptionHandling.MessageConstants.SKILL_EXISTS;
 
 @Service
 @AllArgsConstructor

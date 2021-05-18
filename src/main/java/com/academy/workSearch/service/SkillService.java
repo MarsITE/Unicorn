@@ -1,8 +1,8 @@
 package com.academy.workSearch.service;
 
-import com.academy.workSearch.dto.ProjectDTO;
 import com.academy.workSearch.dto.SkillDTO;
 import com.academy.workSearch.dto.SkillDetailsDTO;
+
 import java.util.List;
 import java.util.UUID;
 
