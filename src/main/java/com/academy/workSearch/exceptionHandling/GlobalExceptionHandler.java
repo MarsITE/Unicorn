@@ -2,6 +2,7 @@ package com.academy.workSearch.exceptionHandling;
 
 import com.academy.workSearch.exceptionHandling.exceptions.*;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,8 +23,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(message, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(FileIsNotImageException.class)
-    public ResponseEntity<ErrorMessage> handleBadRequestException(FileIsNotImageException ex, WebRequest request) {
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ErrorMessage> handleBadRequestException(JwtException ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(
                 HttpStatus.BAD_REQUEST,
                 ex.getMessage(),
