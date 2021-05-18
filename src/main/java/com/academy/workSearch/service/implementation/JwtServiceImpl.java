@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.function.Function;
 
+import static com.academy.workSearch.exceptionHandling.MessageConstants.EXPIRED_JWT_TOKEN;
 import static com.academy.workSearch.exceptionHandling.MessageConstants.NO_ROLE;
 
 @Service
@@ -125,11 +126,10 @@ public class JwtServiceImpl implements JwtService {
      * @return true if not expired
      */
     private Boolean isTokenExpired(String token, Date date) {
-        try {
-            return getExpiration(token).before(date);
-        } catch (ExpiredJwtException e) {
-            throw new ExpiredJwtException(null, null, "This token is expired!");
+        if (getExpiration(token).before(date)) {
+            throw new ExpiredJwtException(null, null, EXPIRED_JWT_TOKEN);
         }
+        return false;
     }
 
     /**
@@ -141,7 +141,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     /**
-     * @param token acess
+     * @param token access
      * @return get set roles
      */
     @Override
@@ -170,13 +170,10 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public String getUserId(String token) {
         Claims claims = getClaims(token);
-
-        if (claims != null) {
-            if (claims.get("id") != null) {
-                return claims.get("id").toString();
-            }
+        if (!(claims != null && claims.get("id") != null)) {
+            throw new IllegalArgumentException();
         }
-        return "";
+        return claims.get("id").toString();
     }
 
     /**
@@ -186,13 +183,10 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public UUID getUserInfoId(String token) {
         Claims claims = getClaims(token);
-        String userInfoIdStr = "";
-        if (claims != null) {
-            if (claims.get("userInfoId") != null) {
-                userInfoIdStr = claims.get("userInfoId").toString();
-            }
+        if (!(claims != null && claims.get("userInfoId") != null)) {
+            throw new IllegalArgumentException();
         }
-        return UUID.fromString(userInfoIdStr);
+        return UUID.fromString(claims.get("userInfoId").toString());
     }
 
     /**

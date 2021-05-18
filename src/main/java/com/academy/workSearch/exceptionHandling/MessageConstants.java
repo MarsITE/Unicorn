@@ -15,6 +15,6 @@ public class MessageConstants {
     public static final String INCORRECT_USER_DATA = "Incorrect username or password";
     public static final String NOT_ACTIVE_ACCOUNT = "Your account is not active! Check you email.";
     public static final String NOT_UNIQUE_PROJECT = "Project is not unique! ";
-    public static final String FILE_IS_NOT_IMAGE = "This file is not image! ";
+    public static final String EXPIRED_JWT_TOKEN = "Jwt token is expired! ";
 
 }

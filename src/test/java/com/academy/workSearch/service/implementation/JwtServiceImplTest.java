@@ -10,13 +10,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -36,9 +32,8 @@ public class JwtServiceImplTest {
         userInfo.setUserInfoId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f8"));
         user.setUserInfo(userInfo);
         user.setEmail("a@gmail.com");
-        Set<Role> roles = new HashSet<>();
         Role worker = new Role(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f4"), "WORKER");
-        roles.add(worker);
+        Set<Role> roles = new HashSet<>(Collections.singletonList(worker));
         user.setRoles(roles);
 
         when(roleDAO.getByName(any())).thenReturn(Optional.of(worker));
@@ -47,7 +42,7 @@ public class JwtServiceImplTest {
     }
 
     @Test
-    void checkGeneratingRefreshsToken() {
+    void checkGeneratingRefreshToken() {
         assertNotNull(jwtService.generateRefreshToken("a@gmail.com"), "Token is not create");
     }
 
@@ -98,16 +93,15 @@ public class JwtServiceImplTest {
     }
 
     @Test
-    void getRoles() {
+    void getRoleWorker() {
         User user = new User();
         user.setUserId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f7"));
         UserInfo userInfo = new UserInfo();
         userInfo.setUserInfoId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f8"));
         user.setUserInfo(userInfo);
         user.setEmail("a@gmail.com");
-        Set<Role> roles = new HashSet<>();
         Role worker = new Role(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f4"), "WORKER");
-        roles.add(worker);
+        Set<Role> roles = new HashSet<>(Collections.singletonList(worker));
         user.setRoles(roles);
 
         when(roleDAO.getByName(any())).thenReturn(Optional.of(worker));
@@ -115,6 +109,149 @@ public class JwtServiceImplTest {
         String token = jwtService.generateAccessToken(user);
 
         assertEquals(roles.size(), jwtService.getRoles(token).size(), "bad token");
+    }
+
+    @Test
+    void getRoleEmployer() {
+        User user = new User();
+        user.setUserId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f7"));
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserInfoId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f8"));
+        user.setUserInfo(userInfo);
+        user.setEmail("a@gmail.com");
+        Role employer = new Role(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f2"), "EMPLOYER");
+        Set<Role> roles = new HashSet<>(Collections.singletonList(employer));
+        user.setRoles(roles);
+
+        when(roleDAO.getByName(any())).thenReturn(Optional.of(employer));
+
+        String token = jwtService.generateAccessToken(user);
+
+        assertEquals(roles.size(), jwtService.getRoles(token).size(), "bad token");
+    }
+
+    @Test
+    void getRoleAdmin() {
+        User user = new User();
+        user.setUserId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f7"));
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserInfoId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f8"));
+        user.setUserInfo(userInfo);
+        user.setEmail("a@gmail.com");
+        Role admin = new Role(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f1"), "ADMIN");
+        Set<Role> roles = new HashSet<>(Collections.singletonList(admin));
+        user.setRoles(roles);
+
+        when(roleDAO.getByName(any())).thenReturn(Optional.of(admin));
+
+        String token = jwtService.generateAccessToken(user);
+
+        assertEquals(roles.size(), jwtService.getRoles(token).size(), "bad token");
+    }
+
+
+    @Test
+    public void checkUserInfoId() {
+        User user = new User();
+        user.setUserId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f7"));
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserInfoId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f7"));
+        user.setUserInfo(userInfo);
+        user.setEmail("a@gmail.com");
+        Role admin = new Role(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f1"), "ADMIN");
+        Set<Role> roles = new HashSet<>(Collections.singletonList(admin));
+        user.setRoles(roles);
+
+        when(roleDAO.getByName(any())).thenReturn(Optional.of(admin));
+
+        String token = jwtService.generateAccessToken(user);
+
+        assertEquals(userInfo.getUserInfoId(), jwtService.getUserInfoId(token), "bad token");
+    }
+
+    @Test
+    void checkIfUserInfoIdEmpty() {
+        User user = new User();
+        user.setUserId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f7"));
+        UserInfo userInfo = new UserInfo();
+        Exception exception1 = assertThrows(IllegalArgumentException.class, () -> {
+            userInfo.setUserInfoId(UUID.fromString(""));
+        });
+
+        assertEquals("Invalid UUID string: ", exception1.getMessage(), "userInfoId correct");
+        user.setUserInfo(userInfo);
+        user.setEmail("a@gmail.com");
+        Role admin = new Role(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f1"), "ADMIN");
+        Set<Role> roles = new HashSet<>(Collections.singletonList(admin));
+        user.setRoles(roles);
+
+        when(roleDAO.getByName(any())).thenReturn(Optional.of(admin));
+
+        String token = jwtService.generateAccessToken(user);
+
+        Exception exception2 = assertThrows(IllegalArgumentException.class, () -> {
+            jwtService.getUserInfoId(token);
+        });
+
+        assertNull(exception2.getMessage(), "userInfoId correct");
+
+    }
+    @Test
+    void checkIfUserIdEmpty() {
+        User user = new User();
+        Exception exception1 = assertThrows(IllegalArgumentException.class, () -> {
+            user.setUserId(UUID.fromString(""));
+        });
+        assertEquals("Invalid UUID string: ", exception1.getMessage(), "userInfoId correct");
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserInfoId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f7"));
+        user.setUserInfo(userInfo);
+        user.setEmail("a@gmail.com");
+        Role admin = new Role(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f1"), "ADMIN");
+        Set<Role> roles = new HashSet<>(Collections.singletonList(admin));
+        user.setRoles(roles);
+
+        when(roleDAO.getByName(any())).thenReturn(Optional.of(admin));
+
+        String token = jwtService.generateAccessToken(user);
+
+        Exception exception2 = assertThrows(IllegalArgumentException.class, () -> {
+            jwtService.getUserId(token);
+        });
+
+        assertNull(exception2.getMessage(), "userInfoId correct");
+    }
+
+    @Test
+    void getExpiration() {
+        String token = jwtService.generateRegistrationToken("a@gmail.com");
+
+        assertTrue(jwtService.isRegistrationTokenNotExpired(token), "token expired");
+    }
+
+    @Test
+    void isValidRefreshToken() {
+        String email = "a@gmail.com";
+        String token = jwtService.generateRegistrationToken(email);
+        assertTrue(jwtService.isValidRefreshToken(token, email), "token is not valid");
+    }
+
+    @Test
+    void isValidAccessToken() {
+        User user = new User();
+        user.setUserId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f7"));
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserInfoId(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f7"));
+        user.setUserInfo(userInfo);
+        user.setEmail("a@gmail.com");
+        Role admin = new Role(UUID.fromString("f6cea10a-2f9d-4feb-82ba-b600bb4cb5f1"), "ADMIN");
+        Set<Role> roles = new HashSet<>(Collections.singletonList(admin));
+        user.setRoles(roles);
+
+        when(roleDAO.getByName(any())).thenReturn(Optional.of(admin));
+
+        String token = jwtService.generateAccessToken(user);
+        assertTrue(jwtService.isValidAccessToken(token, user));
     }
 
 }
