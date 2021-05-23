@@ -131,6 +131,7 @@ public interface ProjectMapper {
        projectWorkerDTO.setFirstName(userInfo.getFirstName());
        projectWorkerDTO.setLastName(userInfo.getLastName());
        projectWorkerDTO.setEmail(userInfo.getUser().getEmail());
+       projectWorkerDTO.setId(userInfo.getUser().getUserId());
        return projectWorkerDTO;
    }
 }
