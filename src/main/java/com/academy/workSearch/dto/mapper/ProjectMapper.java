@@ -58,16 +58,6 @@ public interface ProjectMapper {
     @Mapping(target = "skills", qualifiedByName = "skillsStr")
     List<ProjectDTO> toProjectsDto(List<Project> projects);
 
-//    List<ProjectUserInfo> toProjectUserInfos(List<ProjectUserInfoDTO> projectUserInfoDTOS);
-//
-//    @Mapping(target = "projectUserInfo", qualifiedByName = "projectUserInfoStr")
-//    List<ProjectUserInfoDTO> toProjectUserInfoDTOS(List<ProjectUserInfo> projectUserInfos);
-//
-//    @Named("projectUserInfoStr")
-//    default List<ProjectUserInfo> projectUserInfoStr(List<ProjectUserInfo> projectUserInfos){
-//        return projectUserInfos.stream().map(ProjectUserInfo::).collect(Collectors.toList());
-//    }
-
     default WorkerInfoDTO mapWorkers(ProjectUserInfo worker) {
         WorkerInfoDTO workerInfoDTO = new WorkerInfoDTO();
         workerInfoDTO.setEmail(worker.getUserInfo().getUser().getEmail());
