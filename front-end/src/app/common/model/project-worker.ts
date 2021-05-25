@@ -3,5 +3,5 @@ export class ProjectWorker {
   firstName: string;
   lastName: string;
   email: string;
-  isApprove: boolean
+  isApprove: boolean;
 }

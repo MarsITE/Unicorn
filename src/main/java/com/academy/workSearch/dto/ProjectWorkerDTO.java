@@ -13,6 +13,7 @@ public class ProjectWorkerDTO {
     private String firstName;
     private String lastName;
     private String email;
+    private UUID id;
 
     @JsonProperty("isApprove")
     private boolean isApprove;
