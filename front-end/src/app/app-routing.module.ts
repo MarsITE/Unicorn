@@ -43,6 +43,10 @@ const routes: Routes = [
     component: ProjectComponent,
     canActivate: [LoginGuard]
   }, {
+    path: 'workers/:workerId/projects',
+    component: ProjectComponent,
+    canActivate: [LoginGuard]
+  }, {
     path: 'workers-list/:projectId',
     component: WorkersListComponent,
     canActivate: [LoginGuard]

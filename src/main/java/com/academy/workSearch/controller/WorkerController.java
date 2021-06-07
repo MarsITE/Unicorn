@@ -11,10 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
@@ -30,6 +32,14 @@ public class WorkerController {
     public ResponseEntity<List<WorkerProjectDTO>> getWorkerProjects(@AuthenticationPrincipal User worker) {
         logger.info("Get worker's projects with ID = {}", worker.getUserId());
         List<WorkerProjectDTO> result = projectService.getWorkerProjects(worker);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/projects")
+    @ApiOperation(value = "Get worker's projects", notes = "Update existing project")
+    public ResponseEntity<List<WorkerProjectDTO>> getWorkerProjects(@PathVariable("id") UUID workerId) {
+        logger.info("Get worker's projects with ID = {}", workerId);
+        List<WorkerProjectDTO> result = projectService.getWorkerProjects(workerId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
