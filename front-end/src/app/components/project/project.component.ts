@@ -44,14 +44,11 @@ export class ProjectComponent implements OnInit {
     this.getProjects();
     this.isEmployer = this.authenticationService.isRoleEmployer();
 
-    console.log('This get project.', this.projects.length);
   }
 
  private getProjects() {
   let req;
-   console.log("##############################");
-   console.log(this.workerId);
-   if (this.workerId) {
+  if (this.workerId) {
      req = this.projectService.getWorkersProjects(this.workerId, this.counter.toString(), this.sort);
      if (this.displayedColumns.indexOf('isApprove') < 0) {
        this.displayedColumns.push('isApprove');
@@ -77,7 +74,6 @@ export class ProjectComponent implements OnInit {
         console.log('error', error);
       },
       () => {
-        console.log('complete');
         let path;
         if (this.router.url.indexOf('/workers') > -1) {
           path = this.router.url;
