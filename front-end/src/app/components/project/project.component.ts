@@ -21,6 +21,7 @@ export class ProjectComponent implements OnInit {
   maxResult = 5;
   isEmployer: boolean;
   involvedInProjects: boolean;
+  workerId: string;
 
   projects: Project[] = [];
 
@@ -33,7 +34,9 @@ export class ProjectComponent implements OnInit {
         this.sort = params.sort || this.sort;
         this.maxResult = params.maxResult || this.maxResult;
         this.ownerId = this.authenticationService.getIdFromToken();
-        this.involvedInProjects = this.router.url.indexOf('/worker-projects') > -1;
+        this.involvedInProjects = this.router.url.indexOf('/worker-projects') > -1 ||
+          this.router.url.indexOf('/workers') > -1;
+        this.workerId = route.snapshot.params.workerId;
     });
   }
 
@@ -41,12 +44,16 @@ export class ProjectComponent implements OnInit {
     this.getProjects();
     this.isEmployer = this.authenticationService.isRoleEmployer();
 
-    console.log('This get project.', this.projects.length);
   }
 
  private getProjects() {
   let req;
-  if (this.involvedInProjects) {
+  if (this.workerId) {
+     req = this.projectService.getWorkersProjects(this.workerId, this.counter.toString(), this.sort);
+     if (this.displayedColumns.indexOf('isApprove') < 0) {
+       this.displayedColumns.push('isApprove');
+     }
+   } else if (this.involvedInProjects) {
      req = this.projectService.getWorkerProjects(this.counter.toString(), this.sort);
      if (this.displayedColumns.indexOf('isApprove') < 0) {
        this.displayedColumns.push('isApprove');
@@ -67,8 +74,14 @@ export class ProjectComponent implements OnInit {
         console.log('error', error);
       },
       () => {
-        console.log('complete');
-        let path = this.involvedInProjects ? 'worker-projects' : 'projects';
+        let path;
+        if (this.router.url.indexOf('/workers') > -1) {
+          path = this.router.url;
+        } else if (this.involvedInProjects) {
+          path = 'worker-projects';
+        } else {
+          path = 'projects';
+        }
         this.router.navigateByUrl(`${path}?page=` + this.counter + `&maxResult=` + this.maxResult + `&sort=` + this.sort);
       }
     );
