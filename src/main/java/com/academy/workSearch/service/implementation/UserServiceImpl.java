@@ -53,6 +53,7 @@ public class UserServiceImpl implements UserService {
     private final Environment env;
     private final JwtService jwtService;
     private final EmailService emailService;
+
     private final UserDAO userDAO;
     private final UserInfoDAO userInfoDAO;
     private final RoleDAO roleDAO;

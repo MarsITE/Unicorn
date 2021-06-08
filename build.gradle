@@ -62,8 +62,7 @@ dependencies {
 
     implementation group: 'org.freemarker', name: 'freemarker', version: '2.3.28'
 
-//    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '2.4.5'
-//    implementation group: 'redis.clients', name: 'jedis', version: '3.6.0'
+    implementation group: 'redis.clients', name: 'jedis', version: '3.6.0'
 
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.8.0-M1'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.9.0'
@@ -72,7 +71,6 @@ dependencies {
     implementation group: 'com.h2database', name: 'h2', version: '1.4.200'
     testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '5.4.6'
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.4.5'
-
 
 }
 
