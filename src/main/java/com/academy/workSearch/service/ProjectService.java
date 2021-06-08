@@ -38,6 +38,8 @@ public interface ProjectService {
 
     List<WorkerProjectDTO> getWorkerProjects(User worker);
 
+    List<WorkerProjectDTO> getWorkerProjects(UUID workerId);
+
     List<ProjectWorkerDTO> getProjectWorkers(UUID projectId);
 
     void updateApprovedWorker(UUID projectId, UUID projectUserInfoId);

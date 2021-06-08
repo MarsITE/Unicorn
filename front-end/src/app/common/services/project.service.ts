@@ -70,6 +70,19 @@ export class ProjectService {
     return this.http.get<WorkerProject[]>(`${environment.url}/workers/projects`, options);
   }
 
+  public getWorkersProjects(workerId: string, counter: string, sort: string): Observable<WorkerProject[]> {
+    let params = new HttpParams()
+      .set('page', counter.toString())
+      .set('sort', sort);
+    const options = {
+      params: params
+    };
+    if (sessionStorage.getItem(ACCESS_TOKEN) !== null) {
+      options['headers'] = this.authHeader();
+    }
+    return this.http.get<WorkerProject[]>(`${environment.url}/workers/${workerId}/projects`, options);
+  }
+
   public getAllProjects(counter: string, sort: string, maxResult: string, showAll: boolean = true): Observable<Project[]> {
     return this.http.get<Project[]>(`${environment.url}/all-projects`, {
       params: this.params(counter, sort, maxResult, showAll),
