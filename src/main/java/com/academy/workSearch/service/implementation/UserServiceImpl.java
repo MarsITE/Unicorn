@@ -210,6 +210,8 @@ public class UserServiceImpl implements UserService {
         userAuthDTO.setEmail(user.getEmail());
         userAuthDTO.setAccessToken(jwtService.generateAccessToken(user));
         userAuthDTO.setRefreshToken(jwtService.generateRefreshToken(user.getEmail()));
+        jwtService.saveRefreshToken(userAuthDTO.getRefreshToken());
+        logger.info("Token successfully saved");
         return userAuthDTO;
     }
 
@@ -233,6 +235,8 @@ public class UserServiceImpl implements UserService {
             logger.info("Generating new refresh token");
             userAuthDTO.setRefreshToken(jwtService.generateRefreshToken(userAuthDTO.getEmail()));
             logger.info("Token successfully created");
+            jwtService.saveRefreshToken(userAuthDTO.getRefreshToken());
+            logger.info("Token successfully saved");
             logger.info("Generating new access token");
             User user = getUser(userAuthDTO.getEmail());
             userAuthDTO.setAccessToken(jwtService.generateAccessToken(user));
