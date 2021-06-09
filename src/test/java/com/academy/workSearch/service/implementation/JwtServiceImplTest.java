@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.*;
 
+import static com.academy.workSearch.service.RedisService.KEY_REFRESH_TOKEN;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -23,6 +24,9 @@ public class JwtServiceImplTest {
 
     @Mock
     private RoleDAO roleDAO;
+
+    @Mock
+    private RedisServiceImpl redisService;
 
     @Test
     void checkGeneratingAccessToken() {
@@ -233,6 +237,7 @@ public class JwtServiceImplTest {
     void isValidRefreshToken() {
         String email = "a@gmail.com";
         String token = jwtService.generateRegistrationToken(email);
+        when(redisService.getValue(KEY_REFRESH_TOKEN)).thenReturn(token);
         assertTrue(jwtService.isValidRefreshToken(token, email), "token is not valid");
     }
 
