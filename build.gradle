@@ -72,6 +72,7 @@ dependencies {
     implementation group: 'com.h2database', name: 'h2', version: '1.4.200'
     testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '5.4.6'
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.4.5'
+    implementation group: 'org.springframework.data', name: 'spring-data-commons', version: '2.5.1'
 
 
 }
