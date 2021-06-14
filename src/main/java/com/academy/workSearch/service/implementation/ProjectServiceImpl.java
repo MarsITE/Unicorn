@@ -181,6 +181,11 @@ public class ProjectServiceImpl implements ProjectService {
         return result;
     }
 
+    @Override
+    public List<WorkerProjectDTO> getWorkerProjects(UUID workerId) {
+        return getWorkerProjects(userDAO.get(workerId).orElseThrow());
+    }
+
     @Transactional(readOnly = true)
     @Override
     public List<ProjectWorkerDTO> getProjectWorkers(UUID projectId) {

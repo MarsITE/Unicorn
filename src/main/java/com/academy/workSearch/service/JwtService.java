@@ -29,4 +29,8 @@ public interface JwtService {
 
     UUID getUserInfoId(String token);
 
+    boolean saveRefreshToken(String token);
+
+    String getRefreshToken();
+
 }
