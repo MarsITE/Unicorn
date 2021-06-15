@@ -12,12 +12,14 @@ import com.academy.workSearch.exceptionHandling.exceptions.NotUniqueEntityExcept
 import com.academy.workSearch.model.Project;
 import com.academy.workSearch.model.ProjectUserInfo;
 import com.academy.workSearch.model.Role;
-import com.academy.workSearch.model.Skill;
 import com.academy.workSearch.model.User;
 import com.academy.workSearch.model.UserInfo;
 import com.academy.workSearch.model.enums.ProjectStatus;
 import com.academy.workSearch.service.ProjectService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,13 +77,14 @@ public class ProjectServiceImpl implements ProjectService {
                 }
             }
         }
-        List<Project> allByPageWithSortOrder;
+        Pageable pageable = PageRequest.of(page, maxResult);
+        Page<Project> pageAllByPageWithSort;
         if (showOnlyOwnedProjects) {
-            allByPageWithSortOrder = projectDAO.findAllByOwnerId(page, maxResult, maxNavigationPage, sort, currentUser.getUserId().toString());
+            pageAllByPageWithSort = projectDAO.findAllByOwnerId(pageable, sort, currentUser.getUserId().toString());
         } else {
-            allByPageWithSortOrder = projectDAO.findAllByPageWithSortOrder(page, maxResult, maxNavigationPage, sort);
+            pageAllByPageWithSort = projectDAO.findAllByPageWithSortOrder(pageable, sort);
         }
-        return ProjectMapper.INSTANCE.toProjectsDto(allByPageWithSortOrder);
+        return ProjectMapper.INSTANCE.toProjectsDto(pageAllByPageWithSort.getContent());
     }
 
     /**
@@ -94,7 +97,9 @@ public class ProjectServiceImpl implements ProjectService {
      */
     @Override
     public List<ProjectDTO> findAllByOwnerId(int page, int maxResult, int maxNavigationPage, String sort, String ownerId) {
-        return ProjectMapper.INSTANCE.toProjectsDto(projectDAO.findAllByOwnerId(page, maxResult, maxNavigationPage, sort, ownerId));
+        Pageable pageable = PageRequest.of(page, maxResult);
+        Page<Project> pageFindAllByOwnerId = projectDAO.findAllByOwnerId(pageable,sort,ownerId);
+        return ProjectMapper.INSTANCE.toProjectsDto(pageFindAllByOwnerId.getContent());
     }
 
     /**
@@ -107,13 +112,17 @@ public class ProjectServiceImpl implements ProjectService {
      */
     @Override
     public List<ProjectDTO> searchBySkill(List<String> skills, int page, int maxResult, int maxNavigationPage, String sort) {
-        return ProjectMapper.INSTANCE.toProjectsDto(projectDAO.searchBySkill(skills, page, maxResult, maxNavigationPage, sort));
+        Pageable pageable = PageRequest.of(page,maxResult);
+        Page<Project> pageSearchBySkill = projectDAO.searchBySkill(skills,pageable,sort);
+        return ProjectMapper.INSTANCE.toProjectsDto(pageSearchBySkill.getContent());
     }
 
     @Override
     public List<ProjectDTO> findUserProjectBySkills(UUID userId, int page, int maxResult, int maxNavigationPage, String sort) {
         List<String> userSkills = skillService.findAllByUserId(userId).stream().map(SkillDetailsDTO::getName).collect(Collectors.toList());
-        return ProjectMapper.INSTANCE.toProjectsDto(projectDAO.searchBySkill(userSkills, page, maxResult, maxNavigationPage, sort));
+        Pageable pageable = PageRequest.of(page, maxResult);
+        Page<Project> pageFindUserProjectBySkills = projectDAO.searchBySkill(userSkills,pageable,sort);
+        return ProjectMapper.INSTANCE.toProjectsDto(pageFindUserProjectBySkills.getContent());
     }
 
     /**

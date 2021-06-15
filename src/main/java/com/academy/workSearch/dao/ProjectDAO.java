@@ -1,19 +1,21 @@
 package com.academy.workSearch.dao;
 
 import com.academy.workSearch.model.Project;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface ProjectDAO extends CrudDAO<Project> {
-    List<Project> findAllByPageWithSortOrder(int page, int maxResult, int maxNavigationPage, String sort);
+    Page<Project> findAllByPageWithSortOrder(Pageable pageable, String sort);
 
-    List<Project> findAllByOwnerId(int page, int maxResult, int maxNavigationPage, String sort, String ownerId);
+    Page<Project> findAllByOwnerId(Pageable pageable, String sort, String ownerId);
 
-    List<Project> findAllByWorkerId(int page, int maxResult, int maxNavigationPage, String sort, String workerId);
+    Page<Project> findAllByWorkerId(Pageable pageable, String sort, String workerId);
 
     boolean isPresentProjectByNameByUserId(String name, String id);
 
-    List<Project> searchBySkill(List<String> skills, int page, int maxResult, int maxNavigationPage, String sort);
+    Page<Project> searchBySkill(List<String> skills, Pageable pageable, String sort);
 
     Long getAllProjectsCount();
 
